@@ -7,14 +7,24 @@ type ChartProps = {
   lineChartLabels: string[];
 };
 
-const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLabels, lineChartOptions }) => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
+const LineChart: React.FC<ChartProps> = ({
+  lineChartData,
+  lineChartLabels,
+  lineChartOptions,
+}) => {
+  const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstance = useRef<Chart | null>(null);
 
   useEffect(() => {
     if (chartRef.current) {
+      // Destroy the existing chart if it exists
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+      
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
-        new Chart(ctx, {
+        chartInstance.current = new Chart(ctx, {
           type: "line",
           data: {
             labels: lineChartLabels,
@@ -32,9 +42,16 @@ const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLabels, lin
         });
       }
     }
-  }, [lineChartData, lineChartOptions]);
+
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+
+  }, [lineChartData, lineChartLabels, lineChartOptions]);
 
   return <canvas ref={chartRef} style={{ width: "100%", height: "100%" }} />;
 };
 
-export default ColumnChart;
+export default LineChart;
