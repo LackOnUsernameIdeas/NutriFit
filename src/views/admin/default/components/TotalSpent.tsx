@@ -16,7 +16,7 @@ import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
   lineChartData,
-  lineChartLables,
+  lineChartLabels,
   lineChartOptions,
 } from "variables/charts";
 
@@ -121,7 +121,7 @@ export default function TotalSpent(props: { [x: string]: any }) {
           w="100%"
         >
           <LineChart
-            lineChartLables={lineChartLables}
+            lineChartLabels={lineChartLabels}
             lineChartData={lineChartData}
             lineChartOptions={lineChartOptions}
           />

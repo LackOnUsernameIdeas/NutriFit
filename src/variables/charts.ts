@@ -435,7 +435,7 @@ export const lineChartOptionsTotalSpent: any = {
 
 export const lineChartData: number[] = [7, 2, 6, 2];
 
-export const lineChartLables: string[] = ['babati', 'maikati', 'lelqti'];
+export const lineChartLabels: string[] = ['babati', 'maikati', 'lelqti'];
 
 export const lineChartOptions: object = {
 	maintainAsceptRatio: false,

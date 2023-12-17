@@ -4,10 +4,10 @@ import Chart from "chart.js/auto"; // Import Chart.js
 type ChartProps = {
   lineChartData: number[];
   lineChartOptions: object;
-  lineChartLables: string[];
+  lineChartLabels: string[];
 };
 
-const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLables, lineChartOptions }) => {
+const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLabels, lineChartOptions }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLables, lin
         new Chart(ctx, {
           type: "line",
           data: {
-            labels: lineChartLables,
+            labels: lineChartLabels,
             datasets: [
               {
                 label: "Chart Data",
