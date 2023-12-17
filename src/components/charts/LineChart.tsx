@@ -20,7 +20,7 @@ const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLabels, lin
             labels: lineChartLabels,
             datasets: [
               {
-                label: "Chart Data",
+                label: "Chart Dataaaaaaaaaaa",
                 data: lineChartData,
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
