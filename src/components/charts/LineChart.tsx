@@ -2,11 +2,12 @@ import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto"; // Import Chart.js
 
 type ChartProps = {
-  chartData: any[];
-  chartOptions: any;
+  lineChartData: number[];
+  lineChartOptions: object;
+  lineChartLables: string[];
 };
 
-const ColumnChart: React.FC<ChartProps> = ({ chartData, chartOptions }) => {
+const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLables, lineChartOptions }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -16,22 +17,22 @@ const ColumnChart: React.FC<ChartProps> = ({ chartData, chartOptions }) => {
         new Chart(ctx, {
           type: "line",
           data: {
-            labels: ["babati", "dqdoti", "strinkati"],
+            labels: lineChartLables,
             datasets: [
               {
                 label: "Chart Data",
-                data: [1, 2, 0],
+                data: lineChartData,
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
                 borderWidth: 1,
               },
             ],
           },
-          options: chartOptions,
+          options: lineChartOptions,
         });
       }
     }
-  }, [chartData, chartOptions]);
+  }, [lineChartData, lineChartOptions]);
 
   return <canvas ref={chartRef} style={{ width: "100%", height: "100%" }} />;
 };

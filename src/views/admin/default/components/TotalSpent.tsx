@@ -15,8 +15,9 @@ import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
-  lineChartDataTotalSpent,
-  lineChartOptionsTotalSpent,
+  lineChartData,
+  lineChartLables,
+  lineChartOptions,
 } from "variables/charts";
 
 export default function TotalSpent(props: { [x: string]: any }) {
@@ -120,8 +121,9 @@ export default function TotalSpent(props: { [x: string]: any }) {
           w="100%"
         >
           <LineChart
-            chartData={lineChartDataTotalSpent}
-            chartOptions={lineChartOptionsTotalSpent}
+            lineChartLables={lineChartLables}
+            lineChartData={lineChartData}
+            lineChartOptions={lineChartOptions}
           />
         </Box>
       </Flex>

@@ -432,3 +432,29 @@ export const lineChartOptionsTotalSpent: any = {
 	},
 	color: [ '#7551FF', '#39B8FF' ]
 };
+
+export const lineChartData: number[] = [7, 2, 6, 2];
+
+export const lineChartLables: string[] = ['babati', 'maikati', 'lelqti'];
+
+export const lineChartOptions: object = {
+	maintainAsceptRatio: false,
+	scales: {
+		x: {
+			offset: false
+		},
+		y: {
+			offset: false
+		}
+	},
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart'
+      }
+    }
+}
