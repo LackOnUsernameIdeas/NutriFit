@@ -24,7 +24,7 @@ const ColumnChart: React.FC<ChartProps> = ({
             labels: lineChartLabels,
             datasets: [
               {
-                label: "Chart Dataaaaaaaaaaa",
+                label: "Chart Data",
                 data: lineChartData,
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
