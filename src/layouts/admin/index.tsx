@@ -8,7 +8,6 @@ import { SidebarContext } from 'contexts/SidebarContext';
 import { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import routes from 'routes';
-import ChartJSBar from '../../components/charts/ChartJSBar';
 
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {
@@ -79,7 +78,6 @@ export default function Dashboard(props: { [x: string]: any }) {
 					transitionDuration='.2s, .2s, .35s'
 					transitionProperty='top, bottom, width'
 					transitionTimingFunction='linear, linear, ease'>
-						
 					<Portal>
 						<Box>
 							<Navbar

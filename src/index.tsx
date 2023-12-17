@@ -1,31 +1,23 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import "./polyfills";
-import "./assets/base.scss";
-import Main from "./DemoPages/Main";
-import configureStore from "./config/configureStore";
-import * as serviceWorker from "./serviceWorker";
+import ReactDOM from "react-dom";
+import "./assets/css/App.css";
+import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import AuthLayout from "./layouts/auth";
+import AdminLayout from "./layouts/admin";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "./theme/theme";
 
-const store = configureStore();
-const rootElement = document.getElementById("root");
-
-const renderApp = (Component: React.ComponentType) => (
-  <Provider store={store}>
-    <HashRouter>
-      <Component />
-    </HashRouter>
-  </Provider>
+ReactDOM.render(
+  <ChakraProvider theme={theme}>
+    <React.StrictMode>
+      <HashRouter>
+        <Switch>
+          <Route path={`/auth`} component={AuthLayout} />
+          <Route path={`/admin`} component={AdminLayout} />
+          <Redirect from="/" to="/admin" />
+        </Switch>
+      </HashRouter>
+    </React.StrictMode>
+  </ChakraProvider>,
+  document.getElementById("root")
 );
-
-const root = createRoot(rootElement).render(renderApp(Main));
-
-if (module.hot) {
-  module.hot.accept("./DemoPages/Main", () => {
-    const NextApp = require("./DemoPages/Main").default;
-    root.render(renderApp(NextApp));
-  });
-}
-serviceWorker.unregister();
-
