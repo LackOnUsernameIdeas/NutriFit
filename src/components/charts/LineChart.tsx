@@ -7,7 +7,11 @@ type ChartProps = {
   lineChartLabels: string[];
 };
 
-const ColumnChart: React.FC<ChartProps> = ({ lineChartData, lineChartLabels, lineChartOptions }) => {
+const ColumnChart: React.FC<ChartProps> = ({
+  lineChartData,
+  lineChartLabels,
+  lineChartOptions,
+}) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
