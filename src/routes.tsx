@@ -52,7 +52,7 @@ const routes = [
     layout: "/admin",
     path: "/weight",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: WeightStats,
+    component: WeightStats
   },
   {
     name: "Sign In",
