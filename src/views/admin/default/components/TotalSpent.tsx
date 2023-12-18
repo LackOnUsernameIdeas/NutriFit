@@ -1,9 +1,8 @@
 // Chakra imports
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
-import { booksCollection } from '../../../../database/getCollection';
-import { NewBookType } from '../../../../types/book';
-
+import { booksCollection } from "../../../../database/getCollection";
+import { NewBookType } from "../../../../types/book";
 
 import {
   Box,
@@ -24,27 +23,28 @@ import {
   lineChartData,
   lineChartLabels,
   lineChartOptions,
-  updateChartData
+  updateChartData,
 } from "variables/charts";
 
 export default function TotalSpent(props: { [x: string]: any }) {
   const { ...rest } = props;
 
-
   const [books, setBooks] = useState<NewBookType[]>([]);
 
-  useEffect(() => 
-    onSnapshot(booksCollection, (snapshot: QuerySnapshot<DocumentData>) => {
-      setBooks(      
-        snapshot.docs.map(doc => {
-          return { id: doc.id, ...doc.data() };
-        })
-      );
-    }), []
+  useEffect(
+    () =>
+      onSnapshot(booksCollection, (snapshot: QuerySnapshot<DocumentData>) => {
+        setBooks(
+          snapshot.docs.map((doc) => {
+            return { id: doc.id, ...doc.data() };
+          })
+        );
+      }),
+    []
   );
 
-  const titles = books.map(book => (book.title));
-  const ranks = books.map(book => (book.rank));
+  const titles = books.map((book) => book.title);
+  const ranks = books.map((book) => book.rank);
 
   console.log(ranks, titles);
 
