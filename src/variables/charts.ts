@@ -449,10 +449,12 @@ export const lineChartOptions: object = {
 	maintainAsceptRatio: false,
 	scales: {
 		x: {
-			offset: false
+
 		},
 		y: {
-			offset: false
+			type: 'linear',
+			display: true,
+			position: "left"
 		}
 	},
     responsive: true,

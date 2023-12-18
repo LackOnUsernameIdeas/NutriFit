@@ -11,6 +11,8 @@ import {
 import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
+import WeightStats from "views/admin/weightStats";
+
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -46,11 +48,11 @@ const routes = [
     component: DataTables,
   },
   {
-    name: "Profile",
+    name: "Weight Stats",
     layout: "/admin",
-    path: "/profile",
+    path: "/weight",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: null,
+    component: WeightStats,
   },
   {
     name: "Sign In",
