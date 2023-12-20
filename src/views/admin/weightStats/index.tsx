@@ -28,6 +28,8 @@ import {
   FormLabel,
   Icon,
   Text,
+  Button,
+  ButtonGroup,
   Link,
   Select,
   SimpleGrid,
@@ -48,50 +50,7 @@ import {
 // --from Kaloyan hands --
 
 import { useState, useEffect } from 'react';
-
-type HealthInfo = {
-  "Hamwi": number,
-  "Devine": number,
-  "Miller": number,
-  "Robinson": number
-};
-
-type BodyMass = {
-  "Body Fat (U.S. Navy Method)": number,
-  "Body Fat Mass": number,
-  "Lean Body Mass": number
-};
-
-type DailyCaloryRequirement = {
-  "BMR": number,
-  "goals": {
-      "maintain weight": number,
-      "Mild weight loss": {
-          "loss weight": string,
-          "calory": number
-      },
-      "Weight loss": {
-          "loss weight": string,
-          "calory": number
-      },
-      "Extreme weight loss": {
-          "loss weight": string,
-          "calory": number
-      },
-      "Mild weight gain": {
-          "gain weight": string,
-          "calory": number
-      },
-      "Weight gain": {
-          "gain weight": string,
-          "calory": number
-      },
-      "Extreme weight gain": {
-          "gain weight": string,
-          "calory": number
-      }
-  }
-};
+import { HealthInfo, BodyMass, DailyCaloryRequirement, ActivityLevel } from '../../../types/weightStats';
 
 // --from Kaloyan hands --
 
@@ -145,6 +104,12 @@ export default function WeightStats() {
         }
     }
   });  
+  
+  const [activityLevel, setActivityLevel] = useState<ActivityLevel>('level_1');
+
+  const handleActivityLevelChange = (level: ActivityLevel) => {
+    setActivityLevel(level);
+  };
 
   useEffect(() => {
     fetch('https://fitness-calculator.p.rapidapi.com/idealweight?gender=male&height=185', {
@@ -196,7 +161,7 @@ export default function WeightStats() {
   }, []);  
 
   useEffect(() => {
-    fetch('https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=level_1', {
+    fetch(`https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=${activityLevel}`, {
       method: 'GET',
       headers: {
         'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
@@ -207,32 +172,32 @@ export default function WeightStats() {
     .then((res) => res.json())
         .then((data) => {
             const dailyCaloryRequirement: DailyCaloryRequirement = {
-              "BMR": data.data.BMR,
+              "BMR": data.data.BMR.toFixed(2),
               "goals": {
-                  "maintain weight": data.data.goals["maintain weight"],
+                  "maintain weight": data.data.goals["maintain weight"].toFixed(2),
                   "Mild weight loss": {
                       "loss weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Mild weight loss"].calory
+                      "calory": data.data.goals["Mild weight loss"].calory.toFixed(2)
                   },
                   "Weight loss": {
                       "loss weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Weight loss"].calory
+                      "calory": data.data.goals["Weight loss"].calory.toFixed(2)
                   },
                   "Extreme weight loss": {
                       "loss weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Extreme weight loss"].calory
+                      "calory": data.data.goals["Extreme weight loss"].calory.toFixed(2)
                   },
                   "Mild weight gain": {
                       "gain weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Mild weight gain"].calory
+                      "calory": data.data.goals["Mild weight gain"].calory.toFixed(2)
                   },
                   "Weight gain": {
                       "gain weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Weight gain"].calory
+                      "calory": data.data.goals["Weight gain"].calory.toFixed(2)
                   },
                   "Extreme weight gain": {
                       "gain weight": "1 kg",
-                      "calory": data.data.goals["Extreme weight gain"].calory
+                      "calory": data.data.goals["Extreme weight gain"].calory.toFixed(2)
                   }
               }
             }
@@ -243,7 +208,7 @@ export default function WeightStats() {
         .catch((err) => {
            console.log(err.message);
         });
-  }, []);    
+  }, [activityLevel]);    
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -362,11 +327,54 @@ export default function WeightStats() {
       </SimpleGrid>
 
       <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>Колко калории трябва да приемате на ден според целите:</Text>
+      <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+        <Flex justify="left">
+          <ButtonGroup spacing="4">
+            <Button
+              colorScheme={activityLevel === 'level_1' ? 'blue' : 'gray'}
+              onClick={() => handleActivityLevelChange('level_1')}
+            >
+              Level 1
+            </Button>
+            <Button
+              colorScheme={activityLevel === 'level_2' ? 'blue' : 'gray'}
+              onClick={() => handleActivityLevelChange('level_2')}
+            >
+              Level 2
+            </Button>
+            <Button
+              colorScheme={activityLevel === 'level_3' ? 'blue' : 'gray'}
+              onClick={() => handleActivityLevelChange('level_3')}
+            >
+              Level 3
+            </Button>
+            <Button
+              colorScheme={activityLevel === 'level_4' ? 'blue' : 'gray'}
+              onClick={() => handleActivityLevelChange('level_4')}
+            >
+              Level 4
+            </Button>
+            <Button
+              colorScheme={activityLevel === 'level_5' ? 'blue' : 'gray'}
+              onClick={() => handleActivityLevelChange('level_5')}
+            >
+              Level 5
+            </Button>
+            <Button
+              colorScheme={activityLevel === 'level_6' ? 'blue' : 'gray'}
+              onClick={() => handleActivityLevelChange('level_6')}
+            >
+              Level 6
+            </Button>
+          </ButtonGroup>
+        </Flex>
+      </Box>       
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
         gap="20px"
         mb="20px"
-      >
+        mt="20px"
+      >       
         <MiniStatistics
           startContent={
             <IconBox
@@ -420,7 +428,7 @@ export default function WeightStats() {
               }
             />
           }
-          name="Сваляне на тегл"
+          name="Сваляне на тегло"
           value={dailyCaloryRequirement.goals["Weight loss"].calory}
         />
         <MiniStatistics
