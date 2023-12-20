@@ -1,14 +1,14 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw",
-    authDomain: "central-pod-372511.firebaseapp.com",
-    databaseURL: "https://central-pod-372511-default-rtdb.firebaseio.com",
-    projectId: "central-pod-372511",
-    storageBucket: "central-pod-372511.appspot.com",
-    messagingSenderId: "512911743972",
-    appId: "1:512911743972:web:7c40bbc36c724fc22c05f1",
-    measurementId: "G-YTN1ZX837R"
+    apiKey: "AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA",
+    authDomain: "nutrifit-ed16d.firebaseapp.com",
+    projectId: "nutrifit-ed16d",
+    storageBucket: "nutrifit-ed16d.appspot.com",
+    messagingSenderId: "545280060552",
+    appId: "1:545280060552:web:6310a9073b1c04855e833d",
+    measurementId: "G-M517PKG0NX"
 };
 
 // init firebase
