@@ -13,7 +13,6 @@ import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
 
-
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
 
@@ -38,7 +37,7 @@ const routes = [
       />
     ),
     component: NFTMarketplace,
-    secondary: true,
+    secondary: true
   },
   {
     name: "Data Tables",
