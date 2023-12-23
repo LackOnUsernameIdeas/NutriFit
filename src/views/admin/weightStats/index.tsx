@@ -48,6 +48,7 @@ import {
   MdFileCopy,
 } from "react-icons/md";
 
+
 // --from Kaloyan hands --
 
 
@@ -55,6 +56,7 @@ import { useState, useEffect } from "react";
 import { HealthInfo, BodyMass, DailyCaloryRequirement, MacroNutrients, ActivityLevel } from '../../../types/weightStats';
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
 import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
+import CalorieRequirements from "./components/CalorieRequirements";
 
 // --from Kaloyan hands --
 
@@ -79,8 +81,7 @@ export default function WeightStats() {
       "Lean Body Mass": null,
     });
 
-  const [dailyCaloryRequirement, setDailyCaloryRequirement] =
-    useState<DailyCaloryRequirement>({
+  const [dailyCaloryRequirement, setDailyCaloryRequirement] = useState<DailyCaloryRequirement>({
       BMR: null,
       goals: {
         "maintain weight": null,
@@ -278,34 +279,12 @@ export default function WeightStats() {
       headers: {
         'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
         'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab', 
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
     })
     .then((res) => res.json())
         .then((data) => {
-
-            const gosho: MacroNutrients = {
-              "balanced": {
-                "protein": data.data.balanced.protein.toFixed(2),
-                "fat": data.data.balanced.fat.toFixed(2),
-                "carbs": data.data.balanced.carbs.toFixed(2)
-              },
-              "lowfat": {
-                  "protein": data.data.lowfat.protein.toFixed(2),
-                  "fat": data.data.lowfat.fat.toFixed(2),
-                  "carbs": data.data.lowfat.carbs.toFixed(2)
-              },
-              "lowcarbs": {
-                  "protein": data.data.lowcarbs.protein.toFixed(2),
-                  "fat": data.data.lowcarbs.fat.toFixed(2),
-                  "carbs": data.data.lowcarbs.carbs.toFixed(2)
-              },
-              "highprotein": {
-                  "protein": data.data.highprotein.protein.toFixed(2),
-                  "fat": data.data.highprotein.fat.toFixed(2),
-                  "carbs": data.data.highprotein.carbs.toFixed(2)
-              }
-            };
+          
 
             const tableDataaaa = [
               {
@@ -335,7 +314,6 @@ export default function WeightStats() {
             ]
             
             setTableData(tableDataaaa);
-            setMacroNutrients(gosho);
             console.log(macroNutrients);
 
         })
@@ -522,122 +500,7 @@ export default function WeightStats() {
             </ButtonGroup>
           </Flex>
         </Box> 
-          
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="20px">
-          
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Базов метаболизъм"
-            value={dailyCaloryRequirement.BMR}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Запазване на тегло"
-            value={dailyCaloryRequirement.goals["maintain weight"]}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Леко сваляне на тегл"
-            value={dailyCaloryRequirement.goals["Mild weight loss"].calory}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Сваляне на тегло"
-            value={dailyCaloryRequirement.goals["Weight loss"].calory}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Екстремно сваляне на тегло"
-            value={dailyCaloryRequirement.goals["Extreme weight loss"].calory}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Леко качване на тегло"
-            value={dailyCaloryRequirement.goals["Mild weight gain"].calory}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Качване на тегло"
-            value={dailyCaloryRequirement.goals["Weight gain"].calory}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                }
-              />
-            }
-            name="Екстремно качване на тегло"
-            value={dailyCaloryRequirement.goals["Extreme weight gain"].calory}
-          />
-        </SimpleGrid>
+        <CalorieRequirements calorieRequirement={dailyCaloryRequirement} />
       </Card>
       <ColumnsTable tableData={tableData} 
       />
