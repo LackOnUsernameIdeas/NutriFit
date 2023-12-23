@@ -29,7 +29,7 @@ export default function ColumnTable(props: { tableData: any }) {
 	const [ sorting, setSorting ] = React.useState<SortingState>([]);
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-	let defaultData= tableData;
+	// let defaultData= tableData;
 	const columns = [
 		columnHelper.accessor('name', {
 			id: 'name',
@@ -102,7 +102,7 @@ export default function ColumnTable(props: { tableData: any }) {
 			)
 		})
 	];
-	const [ data, setData ] = React.useState(() => [ ...defaultData ]);
+	const [ data, setData ] = React.useState(() => tableData);
 	const table = useReactTable({
 		data,
 		columns,
@@ -114,6 +114,11 @@ export default function ColumnTable(props: { tableData: any }) {
 		getSortedRowModel: getSortedRowModel(),
 		debugTable: true
 	});
+
+	React.useEffect(() => {
+		setData(tableData);
+	}, [tableData]);
+
 	return (
 		<Card flexDirection='column' w='100%' px='0px' overflowX={{ sm: 'scroll', lg: 'hidden' }}>
 			<Flex px='25px' mb="8px" justifyContent='space-between' align='center'>

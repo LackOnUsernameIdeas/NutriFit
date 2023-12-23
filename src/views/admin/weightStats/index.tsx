@@ -24,7 +24,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Flex,
   FormLabel,
   Icon,
@@ -56,50 +55,6 @@ import { useState, useEffect } from "react";
 import { HealthInfo, BodyMass, DailyCaloryRequirement, MacroNutrients, ActivityLevel } from '../../../types/weightStats';
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
 import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
-
-type HealthInfo = {
-  Hamwi: number;
-  Devine: number;
-  Miller: number;
-  Robinson: number;
-};
-
-type BodyMass = {
-  "Body Fat (U.S. Navy Method)": number;
-  "Body Fat Mass": number;
-  "Lean Body Mass": number;
-};
-
-type DailyCaloryRequirement = {
-  BMR: number;
-  goals: {
-    "maintain weight": number;
-    "Mild weight loss": {
-      "loss weight": string;
-      calory: number;
-    };
-    "Weight loss": {
-      "loss weight": string;
-      calory: number;
-    };
-    "Extreme weight loss": {
-      "loss weight": string;
-      calory: number;
-    };
-    "Mild weight gain": {
-      "gain weight": string;
-      calory: number;
-    };
-    "Weight gain": {
-      "gain weight": string;
-      calory: number;
-    };
-    "Extreme weight gain": {
-      "gain weight": string;
-      calory: number;
-    };
-  };
-};
 
 // --from Kaloyan hands --
 
@@ -329,7 +284,7 @@ export default function WeightStats() {
     .then((res) => res.json())
         .then((data) => {
 
-            const macroNutrients: MacroNutrients = {
+            const gosho: MacroNutrients = {
               "balanced": {
                 "protein": data.data.balanced.protein.toFixed(2),
                 "fat": data.data.balanced.fat.toFixed(2),
@@ -352,7 +307,7 @@ export default function WeightStats() {
               }
             };
 
-            const tableData = [
+            const tableDataaaa = [
               {
                 name: 'Balanced',
                 quantity: data.data.balanced.protein.toFixed(2),
@@ -378,8 +333,9 @@ export default function WeightStats() {
                 date: data.data.highprotein.carbs.toFixed(2), 
               }, 
             ]
-
-            setMacroNutrients(macroNutrients);
+            
+            setTableData(tableDataaaa);
+            setMacroNutrients(gosho);
             console.log(macroNutrients);
 
         })
@@ -521,12 +477,9 @@ export default function WeightStats() {
         w="100%"
         mb="20px"
       >
-          
         <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
           Колко калории трябва да приемате на ден според целите:
         </Text>
-
-        <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>Колко калории трябва да приемате на ден според целите:</Text>
         <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
           <Flex justify="left">
             <ButtonGroup spacing="4">
@@ -686,120 +639,8 @@ export default function WeightStats() {
           />
         </SimpleGrid>
       </Card>
-      <Card alignItems="center" flexDirection="column" w="100%">
-        <Flex align="center" w="100%" px="15px" py="10px">
-          <Text
-            me="auto"
-            color={textColor}
-            fontSize="xl"
-            fontWeight="700"
-            lineHeight="100%"
-          >
-            Test kopche (will finish tmrw)
-          </Text>
-          <Button
-            alignItems="center"
-            justifyContent="center"
-            w="70px"
-            h="40px"
-            lineHeight="100%"
-            borderRadius="10px"
-          >
-            kopche
-          </Button>
-        </Flex>
-      </Card>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
-        gap="20px"
-        mb="20px"
-        mt="20px"
-      >  
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-              }
-            />
-          }
-          name="balanced"
-          value={macroNutrients.balanced.protein}
-        /> 
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-              }
-            />
-          }
-          name="lowfat"
-          value={macroNutrients.lowfat.protein}
-        /> 
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-              }
-            />
-          }
-          name="lowcarbs"
-          value={macroNutrients.lowcarbs.protein}
-        /> 
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-              }
-            />
-          }
-          name="highprotein"
-          value={macroNutrients.highprotein.protein}
-        />                         
-      </SimpleGrid> 
-       
-      {<ColumnsTable tableData={[
-        {
-          name: 'Balanced',
-          quantity: macroNutrients.balanced.protein,
-          progress: macroNutrients.balanced.fat,
-          date: macroNutrients.balanced.carbs,
-        },
-        {
-          name: 'Lowfat',
-          quantity: macroNutrients.lowfat.protein,
-          progress: macroNutrients.lowfat.fat,
-          date: macroNutrients.lowfat.carbs,
-        },
-        {
-          name: 'Lowcarbs',
-          quantity: macroNutrients.lowcarbs.protein,
-          progress: macroNutrients.lowcarbs.fat,
-          date: macroNutrients.lowcarbs.carbs,
-        },
-        {
-          name: 'High Protein',
-          quantity: macroNutrients.highprotein.protein,
-          progress: macroNutrients.highprotein.fat,
-          date: macroNutrients.highprotein.carbs,
-        },
-      ]} 
-      />}
+      <ColumnsTable tableData={tableData} 
+      />
         
       {/* <Flex
         mt='45px'
