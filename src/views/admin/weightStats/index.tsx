@@ -50,7 +50,9 @@ import {
 // --from Kaloyan hands --
 
 import { useState, useEffect } from 'react';
-import { HealthInfo, BodyMass, DailyCaloryRequirement, ActivityLevel } from '../../../types/weightStats';
+import { HealthInfo, BodyMass, DailyCaloryRequirement, MacroNutrients, ActivityLevel } from '../../../types/weightStats';
+import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
+import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
 
 // --from Kaloyan hands --
 
@@ -104,12 +106,58 @@ export default function WeightStats() {
         }
     }
   });  
-  
-  const [activityLevel, setActivityLevel] = useState<ActivityLevel>('level_1');
 
-  const handleActivityLevelChange = (level: ActivityLevel) => {
-    setActivityLevel(level);
-  };
+  const [macroNutrients, setMacroNutrients] = useState<MacroNutrients>({
+    "balanced": {
+      "protein": 0,
+      "fat": 0,
+      "carbs": 0
+    },
+    "lowfat": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+    },
+    "lowcarbs": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+    },
+    "highprotein": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 0
+    }
+  });  
+
+  const [tableData, setTableData] = useState([
+    {
+      name: 'Balanced',
+      quantity: macroNutrients.balanced.protein,
+      progress: macroNutrients.balanced.fat,
+      date: macroNutrients.balanced.carbs, 
+    },
+    {
+      name:'Lowfat',
+      quantity: macroNutrients.lowfat.protein,
+      progress: macroNutrients.lowfat.fat,
+      date: macroNutrients.lowfat.carbs, 
+    },
+    {
+      name: 'Lowcarbs',
+      quantity: macroNutrients.lowcarbs.protein,
+      progress: macroNutrients.lowcarbs.fat,
+      date: macroNutrients.lowcarbs.carbs, 
+    },
+    {
+      name: 'High Protein',
+      quantity: macroNutrients.highprotein.protein,
+      progress: macroNutrients.highprotein.fat,
+      date: macroNutrients.highprotein.carbs, 
+    }, 
+  ]);
+  
+  const [activityLevel, setActivityLevel] = useState<ActivityLevel>(1);
 
   useEffect(() => {
     fetch('https://fitness-calculator.p.rapidapi.com/idealweight?gender=male&height=185', {
@@ -161,7 +209,7 @@ export default function WeightStats() {
   }, []);  
 
   useEffect(() => {
-    fetch(`https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=${activityLevel}`, {
+    fetch(`https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=level_${activityLevel}`, {
       method: 'GET',
       headers: {
         'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
@@ -209,6 +257,77 @@ export default function WeightStats() {
            console.log(err.message);
         });
   }, [activityLevel]);    
+
+  useEffect(() => {
+    fetch(`https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${activityLevel}&goal=weightlose&weight=107&height=185`, {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
+        'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab', 
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => res.json())
+        .then((data) => {
+
+            const macroNutrients: MacroNutrients = {
+              "balanced": {
+                "protein": data.data.balanced.protein.toFixed(2),
+                "fat": data.data.balanced.fat.toFixed(2),
+                "carbs": data.data.balanced.carbs.toFixed(2)
+              },
+              "lowfat": {
+                  "protein": data.data.lowfat.protein.toFixed(2),
+                  "fat": data.data.lowfat.fat.toFixed(2),
+                  "carbs": data.data.lowfat.carbs.toFixed(2)
+              },
+              "lowcarbs": {
+                  "protein": data.data.lowcarbs.protein.toFixed(2),
+                  "fat": data.data.lowcarbs.fat.toFixed(2),
+                  "carbs": data.data.lowcarbs.carbs.toFixed(2)
+              },
+              "highprotein": {
+                  "protein": data.data.highprotein.protein.toFixed(2),
+                  "fat": data.data.highprotein.fat.toFixed(2),
+                  "carbs": data.data.highprotein.carbs.toFixed(2)
+              }
+            };
+
+            const tableData = [
+              {
+                name: 'Balanced',
+                quantity: data.data.balanced.protein.toFixed(2),
+                progress: data.data.balanced.fat.toFixed(2),
+                date: data.data.balanced.carbs.toFixed(2), 
+              },
+              {
+                name:'Lowfat',
+                quantity: data.data.lowfat.protein.toFixed(2),
+                progress: data.data.lowfat.fat.toFixed(2),
+                date: data.data.lowfat.carbs.toFixed(2), 
+              },
+              {
+                name: 'Lowcarbs',
+                quantity: data.data.lowcarbs.protein.toFixed(2),
+                progress: data.data.lowcarbs.fat.toFixed(2),
+                date:data.data.lowcarbs.carbs.toFixed(2), 
+              },
+              {
+                name: 'High Protein',
+                quantity: data.data.highprotein.protein.toFixed(2),
+                progress: data.data.highprotein.fat.toFixed(2),
+                date: data.data.highprotein.carbs.toFixed(2), 
+              }, 
+            ]
+
+            setMacroNutrients(macroNutrients);
+            console.log(macroNutrients);
+
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+  }, [activityLevel]);   
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -331,38 +450,38 @@ export default function WeightStats() {
         <Flex justify="left">
           <ButtonGroup spacing="4">
             <Button
-              colorScheme={activityLevel === 'level_1' ? 'blue' : 'gray'}
-              onClick={() => handleActivityLevelChange('level_1')}
+              colorScheme={activityLevel === 1 ? 'blue' : 'gray'}
+              onClick={() => setActivityLevel(1)}
             >
               Level 1
             </Button>
             <Button
-              colorScheme={activityLevel === 'level_2' ? 'blue' : 'gray'}
-              onClick={() => handleActivityLevelChange('level_2')}
+              colorScheme={activityLevel === 2 ? 'blue' : 'gray'}
+              onClick={() => setActivityLevel(2)}
             >
               Level 2
             </Button>
             <Button
-              colorScheme={activityLevel === 'level_3' ? 'blue' : 'gray'}
-              onClick={() => handleActivityLevelChange('level_3')}
+              colorScheme={activityLevel === 3 ? 'blue' : 'gray'}
+              onClick={() => setActivityLevel(3)}
             >
               Level 3
             </Button>
             <Button
-              colorScheme={activityLevel === 'level_4' ? 'blue' : 'gray'}
-              onClick={() => handleActivityLevelChange('level_4')}
+              colorScheme={activityLevel === 4 ? 'blue' : 'gray'}
+              onClick={() => setActivityLevel(4)}
             >
               Level 4
             </Button>
             <Button
-              colorScheme={activityLevel === 'level_5' ? 'blue' : 'gray'}
-              onClick={() => handleActivityLevelChange('level_5')}
+              colorScheme={activityLevel === 5 ? 'blue' : 'gray'}
+              onClick={() => setActivityLevel(5)}
             >
               Level 5
             </Button>
             <Button
-              colorScheme={activityLevel === 'level_6' ? 'blue' : 'gray'}
-              onClick={() => handleActivityLevelChange('level_6')}
+              colorScheme={activityLevel === 6 ? 'blue' : 'gray'}
+              onClick={() => setActivityLevel(6)}
             >
               Level 6
             </Button>
@@ -487,7 +606,125 @@ export default function WeightStats() {
           name="Екстремно качване на тегло"
           value={dailyCaloryRequirement.goals["Extreme weight gain"].calory}
         />             
-      </SimpleGrid>      
+      </SimpleGrid>
+      <SimpleGrid
+        columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
+        gap="20px"
+        mb="20px"
+        mt="20px"
+      >  
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              }
+            />
+          }
+          name="balanced"
+          value={macroNutrients.balanced.protein}
+        /> 
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              }
+            />
+          }
+          name="lowfat"
+          value={macroNutrients.lowfat.protein}
+        /> 
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              }
+            />
+          }
+          name="lowcarbs"
+          value={macroNutrients.lowcarbs.protein}
+        /> 
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              }
+            />
+          }
+          name="highprotein"
+          value={macroNutrients.highprotein.protein}
+        />                         
+      </SimpleGrid> 
+       
+      {<ColumnsTable tableData={[
+        {
+          name: 'Balanced',
+          quantity: macroNutrients.balanced.protein,
+          progress: macroNutrients.balanced.fat,
+          date: macroNutrients.balanced.carbs,
+        },
+        {
+          name: 'Lowfat',
+          quantity: macroNutrients.lowfat.protein,
+          progress: macroNutrients.lowfat.fat,
+          date: macroNutrients.lowfat.carbs,
+        },
+        {
+          name: 'Lowcarbs',
+          quantity: macroNutrients.lowcarbs.protein,
+          progress: macroNutrients.lowcarbs.fat,
+          date: macroNutrients.lowcarbs.carbs,
+        },
+        {
+          name: 'High Protein',
+          quantity: macroNutrients.highprotein.protein,
+          progress: macroNutrients.highprotein.fat,
+          date: macroNutrients.highprotein.carbs,
+        },
+      ]} 
+      />}
+
+{/* [
+          {
+            name: 'Balanced',
+            quantity: macroNutrients.balanced.protein,
+            progress: macroNutrients.balanced.fat,
+            date: macroNutrients.balanced.carbs, 
+          },
+          {
+            name:'Lowfat',
+            quantity: macroNutrients.lowfat.protein,
+            progress: macroNutrients.lowfat.fat,
+            date: macroNutrients.lowfat.carbs, 
+          },
+          {
+            name: 'Lowcarbs',
+            quantity: macroNutrients.lowcarbs.protein,
+            progress: macroNutrients.lowcarbs.fat,
+            date: macroNutrients.lowcarbs.carbs, 
+          },
+          {
+            name: 'High Protein',
+            quantity: macroNutrients.highprotein.protein,
+            progress: macroNutrients.highprotein.fat,
+            date: macroNutrients.highprotein.carbs, 
+          }, 
+        ] */}
       {/* <Flex
         mt='45px'
         mb='20px'

@@ -42,4 +42,27 @@ export type DailyCaloryRequirement = {
     }
 };
 
-export type ActivityLevel = 'level_1' | 'level_2' | 'level_3' | 'level_4' | 'level_5' | 'level_6';
+export type MacroNutrients = {
+    "balanced": {
+        "protein": number,
+        "fat": number,
+        "carbs": number
+    },
+    "lowfat": {
+        "protein": number,
+        "fat": number,
+        "carbs": number
+    },
+    "lowcarbs": {
+        "protein": number,
+        "fat": number,
+        "carbs": number
+    },
+    "highprotein": {
+        "protein": number,
+        "fat": number,
+        "carbs": number
+    }
+};
+
+export type ActivityLevel = 1 | 2 | 3 | 4 | 5 | 6;
