@@ -164,7 +164,6 @@ export default function WeightStats() {
           Miller: data.data.Miller,
           Robinson: data.data.Robinson,
         };
-        console.log(bodyMassInfo);
         setPerfectWeight(bodyMassInfo);
       })
       .catch((err) => {
@@ -193,7 +192,6 @@ export default function WeightStats() {
           "Body Fat Mass": data.data["Body Fat Mass"],
           "Lean Body Mass": data.data["Lean Body Mass"],
         };
-        console.log(bodyMassInfo);
         setBodyFatMassAndLeanMass(bodyMassInfo);
       })
       .catch((err) => {
@@ -266,8 +264,6 @@ export default function WeightStats() {
           };
         });
   
-        console.log(dailyCaloryRequirementsData, 'qqqqqqqqqq');
-        // Set the state with the collected data
         setDailyCaloryRequirements(dailyCaloryRequirementsData);
       } catch (err: any) {
         console.error(err.message);
@@ -335,7 +331,6 @@ export default function WeightStats() {
         ]));
   
         setTableData(tableData);
-        console.log(tableData, 'tabledataaaaaaa')
       } catch (err: any) {
         console.error(err.message);
       }

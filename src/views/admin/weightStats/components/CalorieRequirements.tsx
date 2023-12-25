@@ -22,7 +22,6 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
 
     const selectedLevelData = dailyCaloryRequirements[props.selectedActivityLevel - 1];
 
-    console.log(dailyCaloryRequirements, selectedLevelData, 'tezi')
     return (
         <Card>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="20px">
