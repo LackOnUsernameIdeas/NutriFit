@@ -7,22 +7,22 @@ import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import { MdHealing } from "react-icons/md";
-import { DailyCaloryRequirement, DailyCaloryRequirements } from '../../../../types/weightStats';
+import { DailyCaloryRequirements } from '../../../../types/weightStats';
 import { useState, useEffect } from "react";
 
 export default function CalorieRequirements( props: { calorieRequirements: DailyCaloryRequirements[], selectedActivityLevel: number } ) {
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
     
-    const [dailyCaloryRequirement, setDailyCaloryRequirement] = useState<DailyCaloryRequirements[]>(props.calorieRequirements);
+    const [dailyCaloryRequirements, setDailyCaloryRequirement] = useState<DailyCaloryRequirements[]>(props.calorieRequirements);
 
     useEffect(() => {
 		setDailyCaloryRequirement(props.calorieRequirements);
 	}, [props.calorieRequirements, props.selectedActivityLevel]);
 
-    const selectedLevelData = dailyCaloryRequirement[props.selectedActivityLevel - 1];
+    const selectedLevelData = dailyCaloryRequirements[props.selectedActivityLevel - 1];
 
-    console.log(dailyCaloryRequirement, selectedLevelData, 'tezi')
+    console.log(dailyCaloryRequirements, selectedLevelData, 'tezi')
     return (
         <Card>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="20px">

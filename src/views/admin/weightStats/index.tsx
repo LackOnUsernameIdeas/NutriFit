@@ -53,7 +53,7 @@ import {
 
 
 import { useState, useEffect } from "react";
-import { HealthInfo, BodyMass, DailyCaloryRequirement, DailyCaloryRequirements, MacroNutrients } from '../../../types/weightStats';
+import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
 import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
 import CalorieRequirements from "./components/CalorieRequirements";
@@ -79,37 +79,6 @@ export default function WeightStats() {
       "Body Fat (U.S. Navy Method)": null,
       "Body Fat Mass": null,
       "Lean Body Mass": null,
-    });
-
-  const [dailyCaloryRequirement, setDailyCaloryRequirement] = useState<DailyCaloryRequirement>({
-      BMR: null,
-      goals: {
-        "maintain weight": null,
-        "Mild weight loss": {
-          "loss weight": "",
-          calory: null,
-        },
-        "Weight loss": {
-          "loss weight": "",
-          calory: null,
-        },
-        "Extreme weight loss": {
-          "loss weight": "",
-          calory: null,
-        },
-        "Mild weight gain": {
-          "gain weight": "",
-          calory: null,
-        },
-        "Weight gain": {
-          "gain weight": "",
-          calory: null,
-        },
-        "Extreme weight gain": {
-          "gain weight": "",
-          calory: null,
-        },
-      },
     });
 
   const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<DailyCaloryRequirements[]>(Array.from({ length: 6 }, (_, index) => ({
@@ -145,55 +114,32 @@ export default function WeightStats() {
     }))
   ); 
 
-  const [macroNutrients, setMacroNutrients] = useState<MacroNutrients>({
-    "balanced": {
-      "protein": 0,
-      "fat": 0,
-      "carbs": 0
-    },
-    "lowfat": {
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0
-    },
-    "lowcarbs": {
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0
-    },
-    "highprotein": {
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0
-    }
-  });  
-
-  const [tableData, setTableData] = useState([
+  const [tableData, setTableData] = useState<MacroNutrientsData[]>(Array.from({ length: 6 }, (_) => ([
     {
       name: 'Balanced',
-      quantity: macroNutrients.balanced.protein,
-      progress: macroNutrients.balanced.fat,
-      date: macroNutrients.balanced.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     },
     {
       name:'Lowfat',
-      quantity: macroNutrients.lowfat.protein,
-      progress: macroNutrients.lowfat.fat,
-      date: macroNutrients.lowfat.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     },
     {
       name: 'Lowcarbs',
-      quantity: macroNutrients.lowcarbs.protein,
-      progress: macroNutrients.lowcarbs.fat,
-      date: macroNutrients.lowcarbs.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     },
     {
       name: 'High Protein',
-      quantity: macroNutrients.highprotein.protein,
-      progress: macroNutrients.highprotein.fat,
-      date: macroNutrients.highprotein.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     }, 
-  ]);
+  ])));
   
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
@@ -331,56 +277,73 @@ export default function WeightStats() {
     fetchCaloriesForActivityLevels(); // Call the helper function
   }, []);
     
-
   useEffect(() => {
-    fetch(`https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${activityLevel}&goal=weightlose&weight=107&height=185`, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
-        'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab', 
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((res) => res.json())
-        .then((data) => {
-          
-
-            const tableDataaaa = [
-              {
-                name: 'Balanced',
-                quantity: data.data.balanced.protein.toFixed(2),
-                progress: data.data.balanced.fat.toFixed(2),
-                date: data.data.balanced.carbs.toFixed(2), 
+    const fetchMacroNutrients = async () => {
+      try {
+        // Create an array to store promises for each request
+        const requests = [];
+  
+        // Iterate over the 6 activity levels
+        for (let i = 1; i <= 6; i++) {
+          const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${i}&goal=weightlose&weight=107&height=185`;
+  
+          // Push the promise for each request to the array
+          requests.push(
+            fetch(url, {
+              method: 'GET',
+              headers: {
+                'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
+                'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab',
+                'Content-Type': 'application/json',
               },
-              {
-                name:'Lowfat',
-                quantity: data.data.lowfat.protein.toFixed(2),
-                progress: data.data.lowfat.fat.toFixed(2),
-                date: data.data.lowfat.carbs.toFixed(2), 
-              },
-              {
-                name: 'Lowcarbs',
-                quantity: data.data.lowcarbs.protein.toFixed(2),
-                progress: data.data.lowcarbs.fat.toFixed(2),
-                date:data.data.lowcarbs.carbs.toFixed(2), 
-              },
-              {
-                name: 'High Protein',
-                quantity: data.data.highprotein.protein.toFixed(2),
-                progress: data.data.highprotein.fat.toFixed(2),
-                date: data.data.highprotein.carbs.toFixed(2), 
-              }, 
-            ]
-            
-            setTableData(tableDataaaa);
-            console.log(macroNutrients);
-
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
-  }, [activityLevel]);   
-
+            })
+          );
+        }
+  
+        // Wait for all requests to complete
+        const responses = await Promise.all(requests);
+  
+        // Extract the JSON data from each response
+        const data = await Promise.all(responses.map((res) => res.json()));
+  
+        // Process the data as needed and set the state
+        const tableData: MacroNutrientsData[] = data.map((item) => ([
+          {
+            name: 'Balanced',
+            quantity: item.data.balanced.protein.toFixed(2),
+            progress: item.data.balanced.fat.toFixed(2),
+            date: item.data.balanced.carbs.toFixed(2),
+          },
+          {
+            name: 'Lowfat',
+            quantity: item.data.lowfat.protein.toFixed(2),
+            progress: item.data.lowfat.fat.toFixed(2),
+            date: item.data.lowfat.carbs.toFixed(2),
+          },
+          {
+            name: 'Lowcarbs',
+            quantity: item.data.lowcarbs.protein.toFixed(2),
+            progress: item.data.lowcarbs.fat.toFixed(2),
+            date: item.data.lowcarbs.carbs.toFixed(2),
+          },
+          {
+            name: 'High Protein',
+            quantity: item.data.highprotein.protein.toFixed(2),
+            progress: item.data.highprotein.fat.toFixed(2),
+            date: item.data.highprotein.carbs.toFixed(2),
+          },
+        ]));
+  
+        setTableData(tableData);
+        console.log(tableData, 'tabledataaaaaaa')
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+  
+    fetchMacroNutrients(); // Call the helper function
+  }, []);
+  
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Card
@@ -540,7 +503,7 @@ export default function WeightStats() {
           />
         )}
       </Card>
-      <ColumnsTable tableData={tableData} 
+      <ColumnsTable tableData={tableData[activityLevel - 1]} 
       />
     </Box>
   );
