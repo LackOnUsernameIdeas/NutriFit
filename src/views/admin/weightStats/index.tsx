@@ -117,27 +117,27 @@ export default function WeightStats() {
   const [tableData, setTableData] = useState<MacroNutrientsData[]>(Array.from({ length: 6 }, (_) => ([
     {
       name: 'Balanced',
-      quantity: 0,
-      progress: 0,
-      date: 0, 
+      protein: 0,
+      fat: 0,
+      carbs: 0
     },
     {
       name:'Lowfat',
-      quantity: 0,
-      progress: 0,
-      date: 0, 
+      protein: 0,
+      fat: 0,
+      carbs: 0
     },
     {
       name: 'Lowcarbs',
-      quantity: 0,
-      progress: 0,
-      date: 0, 
+      protein: 0,
+      fat: 0,
+      carbs: 0
     },
     {
       name: 'High Protein',
-      quantity: 0,
-      progress: 0,
-      date: 0, 
+      protein: 0,
+      fat: 0,
+      carbs: 0
     }, 
   ])));
   
@@ -306,27 +306,27 @@ export default function WeightStats() {
         const tableData: MacroNutrientsData[] = data.map((item) => ([
           {
             name: 'Balanced',
-            quantity: item.data.balanced.protein.toFixed(2),
-            progress: item.data.balanced.fat.toFixed(2),
-            date: item.data.balanced.carbs.toFixed(2),
+            protein: item.data.balanced.protein.toFixed(2),
+            fat: item.data.balanced.fat.toFixed(2),
+            carbs: item.data.balanced.carbs.toFixed(2)
           },
           {
             name: 'Lowfat',
-            quantity: item.data.lowfat.protein.toFixed(2),
-            progress: item.data.lowfat.fat.toFixed(2),
-            date: item.data.lowfat.carbs.toFixed(2),
+            protein: item.data.lowfat.protein.toFixed(2),
+            fat: item.data.lowfat.fat.toFixed(2),
+            carbs: item.data.lowfat.carbs.toFixed(2)
           },
           {
             name: 'Lowcarbs',
-            quantity: item.data.lowcarbs.protein.toFixed(2),
-            progress: item.data.lowcarbs.fat.toFixed(2),
-            date: item.data.lowcarbs.carbs.toFixed(2),
+            protein: item.data.lowcarbs.protein.toFixed(2),
+            fat: item.data.lowcarbs.fat.toFixed(2),
+            carbs: item.data.lowcarbs.carbs.toFixed(2)
           },
           {
             name: 'High Protein',
-            quantity: item.data.highprotein.protein.toFixed(2),
-            progress: item.data.highprotein.fat.toFixed(2),
-            date: item.data.highprotein.carbs.toFixed(2),
+            protein: item.data.highprotein.protein.toFixed(2),
+            fat: item.data.highprotein.fat.toFixed(2),
+            carbs: item.data.highprotein.carbs.toFixed(2)
           },
         ]));
   
@@ -498,7 +498,13 @@ export default function WeightStats() {
           />
         )}
       </Card>
-      <ColumnsTable tableData={tableData[activityLevel - 1]} columnsNames={['babati', 'dedati', 'chichoti', 'lelqti']}/>
+      <ColumnsTable tableName='Macro Nutrients' tableData={tableData[activityLevel - 1]} columnsData={[
+          { name: 'name', label: 'Diet type' },
+          { name: 'protein', label: 'Protein' },
+          { name: 'fat', label: 'Fat' },
+          { name: 'carbs', label: 'Carbohydrates' }	
+        ]} 
+      />
     </Box>
   );
 }

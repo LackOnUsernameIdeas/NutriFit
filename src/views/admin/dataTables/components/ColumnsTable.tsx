@@ -13,28 +13,17 @@ import {
 // Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
+ 
+const columnHelper = createColumnHelper();
 
 // const columns = columnsDataCheck;
-export default function ColumnTable(props: { tableData: any, columnsNames: string[] }) {
-
-
-	 
-	const columnHelper = createColumnHelper();
+export default function ColumnTable(props: { tableName: string, tableData: any, columnsData: { name: string, label: string }[] }) {
 	
-
-	const { tableData, columnsNames } = props;
+	const { tableName, tableData, columnsData } = props;
 	const [ sorting, setSorting ] = React.useState<SortingState>([]);
 	const [ data, setData ] = React.useState(() => tableData);
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-	// let defaultData= tableData;
-
-	const columnsData = [
-		{ name: 'name', label: 'Diet type' },
-		{ name: 'progress', label: 'Protein' },
-		{ name: 'quantity', label: 'Fat' },
-		{ name: 'date', label: 'Carbohydrates' }
-	]
 
 	const columns = columnsData.map(column => {
 		return columnHelper.accessor(column.name as any, {
@@ -57,78 +46,7 @@ export default function ColumnTable(props: { tableData: any, columnsNames: strin
 			)
 		})
 	});
-	// const columnss = [
-	// 	columnHelper.accessor('name', {
-	// 		id: 'name',
-	// 		header: () => (
-	// 			<Text
-	// 				justifyContent='space-between'
-	// 				align='center'
-	// 				fontSize={{ sm: '10px', lg: '12px' }}
-	// 				color='gray.400'>
-	// 				NAME
-	// 			</Text>
-	// 		),
-	// 		cell: (info: any) => (
-	// 			<Flex align='center'> 
-	// 				<Text color={textColor} fontSize='sm' fontWeight='700'>
-	// 					{info.getValue()}
-	// 				</Text>
-	// 			</Flex>
-	// 		)
-	// 	}),
-	// 	columnHelper.accessor('progress', {
-	// 		id: 'progress',
-	// 		header: () => (
-	// 			<Text
-	// 				justifyContent='space-between'
-	// 				align='center'
-	// 				fontSize={{ sm: '10px', lg: '12px' }}
-	// 				color='gray.400'>
-	// 				PROGRESS
-	// 			</Text>
-	// 		),
-	// 		cell: (info) => (
-	// 			<Text color={textColor} fontSize='sm' fontWeight='700'>
-	// 				{info.getValue()}
-	// 			</Text>
-	// 		)
-	// 	}),
-	// 	columnHelper.accessor('quantity', {
-	// 		id: 'quantity',
-	// 		header: () => (
-	// 			<Text
-	// 				justifyContent='space-between'
-	// 				align='center'
-	// 				fontSize={{ sm: '10px', lg: '12px' }}
-	// 				color='gray.400'>
-	// 				QUANTITY
-	// 			</Text>
-	// 		),
-	// 		cell: (info) => (
-	// 			<Text color={textColor} fontSize='sm' fontWeight='700'>
-	// 				{info.getValue()}
-	// 			</Text>
-	// 		)
-	// 	}),
-	// 	columnHelper.accessor('date', {
-	// 		id: 'date',
-	// 		header: () => (
-	// 			<Text
-	// 				justifyContent='space-between'
-	// 				align='center'
-	// 				fontSize={{ sm: '10px', lg: '12px' }}
-	// 				color='gray.400'>
-	// 				DATE
-	// 			</Text>
-	// 		),
-	// 		cell: (info) => (
-	// 			<Text color={textColor} fontSize='sm' fontWeight='700'>
-	// 				{info.getValue()}
-	// 			</Text>
-	// 		)
-	// 	})
-	// ];
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -149,7 +67,7 @@ export default function ColumnTable(props: { tableData: any, columnsNames: strin
 		<Card flexDirection='column' w='100%' px='0px' overflowX={{ sm: 'scroll', lg: 'hidden' }}>
 			<Flex px='25px' mb="8px" justifyContent='space-between' align='center'>
 				<Text color={textColor} fontSize='22px' mb="4px" fontWeight='700' lineHeight='100%'>
-					Check Table
+					{tableName}
 				</Text>
 				<Menu />
 			</Flex>

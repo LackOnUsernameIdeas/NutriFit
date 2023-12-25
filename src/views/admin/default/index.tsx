@@ -153,7 +153,7 @@ export default function UserReports() {
       <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap="20px" mb="20px">
         <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap="20px" mb="20px">
           <PieCard />
-          <ColumnsTable tableData={tableDataColumns} columnsNames={['babati', 'dedati', 'chichoti', 'lelqti']}/>
+          <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]}/>
         </SimpleGrid>
         <Tasks />
       </SimpleGrid>

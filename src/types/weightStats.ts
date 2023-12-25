@@ -46,26 +46,26 @@ export type DailyCaloryRequirements = {
 export type MacroNutrientsData = [
     {
         name: string,
-        quantity: number,
-        progress: number,
-        date: number, 
+        protein: number,
+        fat: number,
+        carbs: number
     },
     {
         name: string,
-        quantity: number,
-        progress: number,
-        date: number, 
+        protein: number,
+        fat: number,
+        carbs: number
     },
     {
         name: string,
-        quantity: number,
-        progress: number,
-        date: number, 
+        protein: number,
+        fat: number,
+        carbs: number
     },
     {
         name: string,
-        quantity: number,
-        progress: number,
-        date: number, 
+        protein: number,
+        fat: number,
+        carbs: number
     }
 ];
