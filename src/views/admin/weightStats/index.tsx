@@ -53,7 +53,7 @@ import {
 
 
 import { useState, useEffect } from "react";
-import { HealthInfo, BodyMass, DailyCaloryRequirement, MacroNutrients, ActivityLevel } from '../../../types/weightStats';
+import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
 import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
 import CalorieRequirements from "./components/CalorieRequirements";
@@ -81,88 +81,67 @@ export default function WeightStats() {
       "Lean Body Mass": null,
     });
 
-  const [dailyCaloryRequirement, setDailyCaloryRequirement] = useState<DailyCaloryRequirement>({
-      BMR: null,
-      goals: {
-        "maintain weight": null,
-        "Mild weight loss": {
-          "loss weight": "",
-          calory: null,
-        },
-        "Weight loss": {
-          "loss weight": "",
-          calory: null,
-        },
-        "Extreme weight loss": {
-          "loss weight": "",
-          calory: null,
-        },
-        "Mild weight gain": {
-          "gain weight": "",
-          calory: null,
-        },
-        "Weight gain": {
-          "gain weight": "",
-          calory: null,
-        },
-        "Extreme weight gain": {
-          "gain weight": "",
-          calory: null,
-        },
+  const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<DailyCaloryRequirements[]>(Array.from({ length: 6 }, (_, index) => ({
+    level: index + 1,
+    BMR: 0,
+    goals: {
+      'maintain weight': 0,
+      'Mild weight loss': {
+        'loss weight': '0',
+        'calory': 0,
       },
-    });
+      'Weight loss': {
+        'loss weight': '0',
+        'calory': 0,
+      },
+      'Extreme weight loss': {
+        'loss weight': '0',
+        'calory': 0,
+      },
+      'Mild weight gain': {
+        'gain weight': '0',
+        'calory': 0,
+      },
+      'Weight gain': {
+        'gain weight': '0',
+        'calory': 0,
+      },
+      'Extreme weight gain': {
+        'gain weight': '0',
+        'calory': 0,
+      },
+    },
+    }))
+  ); 
 
-  const [macroNutrients, setMacroNutrients] = useState<MacroNutrients>({
-    "balanced": {
-      "protein": 0,
-      "fat": 0,
-      "carbs": 0
-    },
-    "lowfat": {
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0
-    },
-    "lowcarbs": {
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0
-    },
-    "highprotein": {
-        "protein": 0,
-        "fat": 0,
-        "carbs": 0
-    }
-  });  
-
-  const [tableData, setTableData] = useState([
+  const [tableData, setTableData] = useState<MacroNutrientsData[]>(Array.from({ length: 6 }, (_) => ([
     {
       name: 'Balanced',
-      quantity: macroNutrients.balanced.protein,
-      progress: macroNutrients.balanced.fat,
-      date: macroNutrients.balanced.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     },
     {
       name:'Lowfat',
-      quantity: macroNutrients.lowfat.protein,
-      progress: macroNutrients.lowfat.fat,
-      date: macroNutrients.lowfat.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     },
     {
       name: 'Lowcarbs',
-      quantity: macroNutrients.lowcarbs.protein,
-      progress: macroNutrients.lowcarbs.fat,
-      date: macroNutrients.lowcarbs.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     },
     {
       name: 'High Protein',
-      quantity: macroNutrients.highprotein.protein,
-      progress: macroNutrients.highprotein.fat,
-      date: macroNutrients.highprotein.carbs, 
+      quantity: 0,
+      progress: 0,
+      date: 0, 
     }, 
-  ]);
+  ])));
   
-  const [activityLevel, setActivityLevel] = useState<ActivityLevel>(1);
+  const [activityLevel, setActivityLevel] = useState<number>(1);
 
   useEffect(() => {
     fetch(
@@ -185,7 +164,6 @@ export default function WeightStats() {
           Miller: data.data.Miller,
           Robinson: data.data.Robinson,
         };
-        console.log(bodyMassInfo);
         setPerfectWeight(bodyMassInfo);
       })
       .catch((err) => {
@@ -214,7 +192,6 @@ export default function WeightStats() {
           "Body Fat Mass": data.data["Body Fat Mass"],
           "Lean Body Mass": data.data["Lean Body Mass"],
         };
-        console.log(bodyMassInfo);
         setBodyFatMassAndLeanMass(bodyMassInfo);
       })
       .catch((err) => {
@@ -223,105 +200,145 @@ export default function WeightStats() {
   }, []);
 
   useEffect(() => {
+    const fetchCaloriesForActivityLevels = async () => {
+      try {
+        // Create an array to store promises for each request
+        const requests = [];
+  
+        // Iterate over the 6 activity levels
+        for (let i = 1; i <= 6; i++) {
+          const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=level_${i}`;
+  
+          // Push the promise for each request to the array
+          requests.push(
+            fetch(url, {
+              method: 'GET',
+              headers: {
+                'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
+                'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab',
+                'Content-Type': 'application/json',
+              },
+            })
+          );
+        }
+  
+        // Wait for all requests to complete
+        const responses = await Promise.all(requests);
+  
+        // Extract the JSON data from each response
+        const data = await Promise.all(responses.map((res) => res.json()));
 
-    fetch(`https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=level_${activityLevel}`, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
-        'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab', 
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((res) => res.json())
-        .then((data) => {
-            const dailyCaloryRequirement: DailyCaloryRequirement = {
-              "BMR": data.data.BMR.toFixed(2),
-              "goals": {
-                  "maintain weight": data.data.goals["maintain weight"].toFixed(2),
-                  "Mild weight loss": {
-                      "loss weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Mild weight loss"].calory.toFixed(2)
-                  },
-                  "Weight loss": {
-                      "loss weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Weight loss"].calory.toFixed(2)
-                  },
-                  "Extreme weight loss": {
-                      "loss weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Extreme weight loss"].calory.toFixed(2)
-                  },
-                  "Mild weight gain": {
-                      "gain weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Mild weight gain"].calory.toFixed(2)
-                  },
-                  "Weight gain": {
-                      "gain weight": data.data.goals["Mild weight loss"]["loss weight"],
-                      "calory": data.data.goals["Weight gain"].calory.toFixed(2)
-                  },
-                  "Extreme weight gain": {
-                      "gain weight": "1 kg",
-                      "calory": data.data.goals["Extreme weight gain"].calory.toFixed(2)
-                  }
+        // Process the data as needed and set the state
+        // (This example assumes that the data structure is the same for all activity levels)
+        const dailyCaloryRequirementsData = data.map((levelData, index): DailyCaloryRequirements => {
+          return {
+            level: index + 1,
+            BMR: levelData.data.BMR,
+            goals: {
+              "maintain weight": levelData.data.goals["maintain weight"],
+              "Mild weight loss": {
+                  "loss weight": levelData.data.goals["Mild weight loss"]["loss weight"],
+                  "calory": levelData.data.goals["Mild weight loss"].calory
+              },
+              "Weight loss": {
+                  "loss weight": levelData.data.goals["Weight loss"]["loss weight"],
+                  "calory": levelData.data.goals["Weight loss"].calory
+              },
+              "Extreme weight loss": {
+                  "loss weight": levelData.data.goals["Extreme weight loss"]["loss weight"],
+                  "calory": levelData.data.goals["Extreme weight loss"].calory
+              },
+              "Mild weight gain": {
+                  "gain weight": levelData.data.goals["Mild weight gain"]["gain weight"],
+                  "calory": levelData.data.goals["Mild weight gain"].calory
+              },
+              "Weight gain": {
+                  "gain weight": levelData.data.goals["Weight gain"]["gain weight"],
+                  "calory": levelData.data.goals["Weight gain"].calory
+              },
+              "Extreme weight gain": {
+                  "gain weight": levelData.data.goals["Extreme weight gain"]["gain weight"],
+                  "calory": levelData.data.goals["Extreme weight gain"].calory
               }
-            }
-
-            console.log(dailyCaloryRequirement);
-            setDailyCaloryRequirement(dailyCaloryRequirement);
-        })
-        .catch((err) => {
-           console.log(err.message);
+            },
+          };
         });
-  }, [activityLevel]);    
-
+  
+        setDailyCaloryRequirements(dailyCaloryRequirementsData);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+  
+    fetchCaloriesForActivityLevels(); // Call the helper function
+  }, []);
+    
   useEffect(() => {
-    fetch(`https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${activityLevel}&goal=weightlose&weight=107&height=185`, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
-        'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab', 
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((res) => res.json())
-        .then((data) => {
-          
-
-            const tableDataaaa = [
-              {
-                name: 'Balanced',
-                quantity: data.data.balanced.protein.toFixed(2),
-                progress: data.data.balanced.fat.toFixed(2),
-                date: data.data.balanced.carbs.toFixed(2), 
+    const fetchMacroNutrients = async () => {
+      try {
+        // Create an array to store promises for each request
+        const requests = [];
+  
+        // Iterate over the 6 activity levels
+        for (let i = 1; i <= 6; i++) {
+          const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${i}&goal=weightlose&weight=107&height=185`;
+  
+          // Push the promise for each request to the array
+          requests.push(
+            fetch(url, {
+              method: 'GET',
+              headers: {
+                'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
+                'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab',
+                'Content-Type': 'application/json',
               },
-              {
-                name:'Lowfat',
-                quantity: data.data.lowfat.protein.toFixed(2),
-                progress: data.data.lowfat.fat.toFixed(2),
-                date: data.data.lowfat.carbs.toFixed(2), 
-              },
-              {
-                name: 'Lowcarbs',
-                quantity: data.data.lowcarbs.protein.toFixed(2),
-                progress: data.data.lowcarbs.fat.toFixed(2),
-                date:data.data.lowcarbs.carbs.toFixed(2), 
-              },
-              {
-                name: 'High Protein',
-                quantity: data.data.highprotein.protein.toFixed(2),
-                progress: data.data.highprotein.fat.toFixed(2),
-                date: data.data.highprotein.carbs.toFixed(2), 
-              }, 
-            ]
-            
-            setTableData(tableDataaaa);
-            console.log(macroNutrients);
-
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
-  }, [activityLevel]);   
-
+            })
+          );
+        }
+  
+        // Wait for all requests to complete
+        const responses = await Promise.all(requests);
+  
+        // Extract the JSON data from each response
+        const data = await Promise.all(responses.map((res) => res.json()));
+  
+        // Process the data as needed and set the state
+        const tableData: MacroNutrientsData[] = data.map((item) => ([
+          {
+            name: 'Balanced',
+            quantity: item.data.balanced.protein.toFixed(2),
+            progress: item.data.balanced.fat.toFixed(2),
+            date: item.data.balanced.carbs.toFixed(2),
+          },
+          {
+            name: 'Lowfat',
+            quantity: item.data.lowfat.protein.toFixed(2),
+            progress: item.data.lowfat.fat.toFixed(2),
+            date: item.data.lowfat.carbs.toFixed(2),
+          },
+          {
+            name: 'Lowcarbs',
+            quantity: item.data.lowcarbs.protein.toFixed(2),
+            progress: item.data.lowcarbs.fat.toFixed(2),
+            date: item.data.lowcarbs.carbs.toFixed(2),
+          },
+          {
+            name: 'High Protein',
+            quantity: item.data.highprotein.protein.toFixed(2),
+            progress: item.data.highprotein.fat.toFixed(2),
+            date: item.data.highprotein.carbs.toFixed(2),
+          },
+        ]));
+  
+        setTableData(tableData);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    };
+  
+    fetchMacroNutrients(); // Call the helper function
+  }, []);
+  
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Card
@@ -461,87 +478,28 @@ export default function WeightStats() {
         <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
           <Flex justify="left">
             <ButtonGroup spacing="4">
-              <Button
-                colorScheme={activityLevel === 1 ? 'blue' : 'gray'}
-                onClick={() => setActivityLevel(1)}
-              >
-                Level 1
-              </Button>
-              <Button
-                colorScheme={activityLevel === 2 ? 'blue' : 'gray'}
-                onClick={() => setActivityLevel(2)}
-              >
-                Level 2
-              </Button>
-              <Button
-                colorScheme={activityLevel === 3 ? 'blue' : 'gray'}
-                onClick={() => setActivityLevel(3)}
-              >
-                Level 3
-              </Button>
-              <Button
-                colorScheme={activityLevel === 4 ? 'blue' : 'gray'}
-                onClick={() => setActivityLevel(4)}
-              >
-                Level 4
-              </Button>
-              <Button
-                colorScheme={activityLevel === 5 ? 'blue' : 'gray'}
-                onClick={() => setActivityLevel(5)}
-              >
-                Level 5
-              </Button>
-              <Button
-                colorScheme={activityLevel === 6 ? 'blue' : 'gray'}
-                onClick={() => setActivityLevel(6)}
-              >
-                Level 6
-              </Button>
+              {/* Render buttons based on activity levels */}
+              {[1, 2, 3, 4, 5, 6].map((level) => (
+                <Button
+                  key={level}
+                  colorScheme={activityLevel === level ? 'blue' : 'gray'}
+                  onClick={() => setActivityLevel(level)}
+                >
+                  Level {level}
+                </Button>
+              ))}
             </ButtonGroup>
           </Flex>
-        </Box> 
-        <CalorieRequirements calorieRequirement={dailyCaloryRequirement} />
+        </Box>
+        {activityLevel && (
+          <CalorieRequirements
+            calorieRequirements={dailyCaloryRequirements}
+            selectedActivityLevel={activityLevel}
+          />
+        )}
       </Card>
-      <ColumnsTable tableData={tableData} 
+      <ColumnsTable tableData={tableData[activityLevel - 1]} 
       />
-        
-      {/* <Flex
-        mt='45px'
-        mb='20px'
-        justifyContent='space-between'
-        direction={{ base: 'column', md: 'row' }}
-        align={{ base: 'start', md: 'center' }}>
-        <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'
-      >
-          Trending NFTs
-        </Text>
-      </Flex>
-      <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
-        <NFT
-          name='Abstract Colors'
-          author='By Esthera Jackson'
-          bidders={[]}
-          image={Nft1}
-          currentbid='0.91 ETH'
-          download='#'
-        />
-        <NFT
-          name='ETH AI Brain'
-          author='By Nick Wilson'
-          bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
-          image={Nft2}
-          currentbid='0.91 ETH'
-          download='#'
-        />
-        <NFT
-          name='Mesh Gradients '
-          author='By Will Smith'
-          bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
-          image={Nft3}
-          currentbid='0.91 ETH'
-          download='#'
-        />
-      </SimpleGrid> */}
     </Box>
   );
 }
