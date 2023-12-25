@@ -42,6 +42,38 @@ export type DailyCaloryRequirement = {
     }
 };
 
+export type DailyCaloryRequirements = {
+    'level': number;
+    'BMR': number;
+    'goals': {
+      'maintain weight': number;
+      'Mild weight loss': {
+        'loss weight': string;
+        'calory': number;
+      };
+      'Weight loss': {
+        'loss weight': string;
+        'calory': number;
+      };
+      'Extreme weight loss': {
+        'loss weight': string;
+        'calory': number;
+      };
+      'Mild weight gain': {
+        'gain weight': string;
+        'calory': number;
+      };
+      'Weight gain': {
+        'gain weight': string;
+        'calory': number;
+      };
+      'Extreme weight gain': {
+        'gain weight': string;
+        'calory': number;
+      };
+    };
+};
+
 export type MacroNutrients = {
     "balanced": {
         "protein": number,
@@ -64,5 +96,3 @@ export type MacroNutrients = {
         "carbs": number
     }
 };
-
-export type ActivityLevel = 1 | 2 | 3 | 4 | 5 | 6;

@@ -7,19 +7,22 @@ import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import { MdHealing } from "react-icons/md";
-import {DailyCaloryRequirement} from '../../../../types/weightStats';
+import { DailyCaloryRequirement, DailyCaloryRequirements } from '../../../../types/weightStats';
 import { useState, useEffect } from "react";
 
-export default function CalorieRequirements( props: { calorieRequirement: DailyCaloryRequirement } ) {
+export default function CalorieRequirements( props: { calorieRequirements: DailyCaloryRequirements[], selectedActivityLevel: number } ) {
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
     
-    const [dailyCaloryRequirement, setDailyCaloryRequirement] = useState<DailyCaloryRequirement>(props.calorieRequirement);
+    const [dailyCaloryRequirement, setDailyCaloryRequirement] = useState<DailyCaloryRequirements[]>(props.calorieRequirements);
 
     useEffect(() => {
-		setDailyCaloryRequirement(props.calorieRequirement);
-	}, [props.calorieRequirement]);
+		setDailyCaloryRequirement(props.calorieRequirements);
+	}, [props.calorieRequirements, props.selectedActivityLevel]);
 
+    const selectedLevelData = dailyCaloryRequirement[props.selectedActivityLevel - 1];
+
+    console.log(dailyCaloryRequirement, selectedLevelData, 'tezi')
     return (
         <Card>
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="20px">
@@ -35,7 +38,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Базов метаболизъм"
-                value={dailyCaloryRequirement.BMR}
+                value={selectedLevelData.BMR.toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -49,7 +52,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Запазване на тегло"
-                value={dailyCaloryRequirement.goals["maintain weight"]}
+                value={selectedLevelData.goals["maintain weight"].toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -63,7 +66,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Леко сваляне на тегл"
-                value={dailyCaloryRequirement.goals["Mild weight loss"].calory}
+                value={selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -77,7 +80,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Сваляне на тегло"
-                value={dailyCaloryRequirement.goals["Weight loss"].calory}
+                value={selectedLevelData.goals["Weight loss"].calory.toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -91,7 +94,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Екстремно сваляне на тегло"
-                value={dailyCaloryRequirement.goals["Extreme weight loss"].calory}
+                value={selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -105,7 +108,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Леко качване на тегло"
-                value={dailyCaloryRequirement.goals["Mild weight gain"].calory}
+                value={selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -119,7 +122,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Качване на тегло"
-                value={dailyCaloryRequirement.goals["Weight gain"].calory}
+                value={selectedLevelData.goals["Weight gain"].calory.toFixed(2)}
             />
             <MiniStatistics
                 startContent={
@@ -133,7 +136,7 @@ export default function CalorieRequirements( props: { calorieRequirement: DailyC
                 />
                 }
                 name="Екстремно качване на тегло"
-                value={dailyCaloryRequirement.goals["Extreme weight gain"].calory}
+                value={selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)}
             />
             </SimpleGrid>
         </Card>
