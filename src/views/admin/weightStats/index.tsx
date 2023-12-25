@@ -498,8 +498,7 @@ export default function WeightStats() {
           />
         )}
       </Card>
-      <ColumnsTable tableData={tableData[activityLevel - 1]} 
-      />
+      <ColumnsTable tableData={tableData[activityLevel - 1]} columnsNames={['babati', 'dedati', 'chichoti', 'lelqti']}/>
     </Box>
   );
 }

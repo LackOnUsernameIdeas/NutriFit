@@ -38,7 +38,7 @@ export default function Settings() {
 			<SimpleGrid mb='20px' columns={{ sm: 1, md: 2 }} spacing={{ base: '20px', xl: '20px' }}>
 				<DevelopmentTable   tableData={tableDataDevelopment} />
 				<CheckTable tableData={tableDataCheck} />
-				<ColumnsTable  tableData={tableDataColumns} />
+				<ColumnsTable  tableData={tableDataColumns} columnsNames={['babati', 'dedati', 'chichoti', 'lelqti']}/>
 				<ComplexTable tableData={tableDataComplex} />
 			</SimpleGrid>
 		</Box>

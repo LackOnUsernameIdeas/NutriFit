@@ -14,32 +14,38 @@ import {
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
 
-type RowObj = {
-	name: string;
-	progress: string;
-	quantity: number;
-	date: string; 
-};
- 
-const columnHelper = createColumnHelper<RowObj>();
-
 // const columns = columnsDataCheck;
-export default function ColumnTable(props: { tableData: any }) {
-	const { tableData } = props;
+export default function ColumnTable(props: { tableData: any, columnsNames: string[] }) {
+
+
+	 
+	const columnHelper = createColumnHelper();
+	
+
+	const { tableData, columnsNames } = props;
 	const [ sorting, setSorting ] = React.useState<SortingState>([]);
+	const [ data, setData ] = React.useState(() => tableData);
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 	// let defaultData= tableData;
-	const columns = [
-		columnHelper.accessor('name', {
-			id: 'name',
+
+	const columnsData = [
+		{ name: 'name', label: 'Diet type' },
+		{ name: 'progress', label: 'Protein' },
+		{ name: 'quantity', label: 'Fat' },
+		{ name: 'date', label: 'Carbohydrates' }
+	]
+
+	const columns = columnsData.map(column => {
+		return columnHelper.accessor(column.name as any, {
+			id: column.name,
 			header: () => (
 				<Text
 					justifyContent='space-between'
 					align='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					NAME
+					{column.label}
 				</Text>
 			),
 			cell: (info: any) => (
@@ -49,60 +55,80 @@ export default function ColumnTable(props: { tableData: any }) {
 					</Text>
 				</Flex>
 			)
-		}),
-		columnHelper.accessor('progress', {
-			id: 'progress',
-			header: () => (
-				<Text
-					justifyContent='space-between'
-					align='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					PROGRESS
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700'>
-					{info.getValue()}
-				</Text>
-			)
-		}),
-		columnHelper.accessor('quantity', {
-			id: 'quantity',
-			header: () => (
-				<Text
-					justifyContent='space-between'
-					align='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					QUANTITY
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700'>
-					{info.getValue()}
-				</Text>
-			)
-		}),
-		columnHelper.accessor('date', {
-			id: 'date',
-			header: () => (
-				<Text
-					justifyContent='space-between'
-					align='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					DATE
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700'>
-					{info.getValue()}
-				</Text>
-			)
 		})
-	];
-	const [ data, setData ] = React.useState(() => tableData);
+	});
+	// const columnss = [
+	// 	columnHelper.accessor('name', {
+	// 		id: 'name',
+	// 		header: () => (
+	// 			<Text
+	// 				justifyContent='space-between'
+	// 				align='center'
+	// 				fontSize={{ sm: '10px', lg: '12px' }}
+	// 				color='gray.400'>
+	// 				NAME
+	// 			</Text>
+	// 		),
+	// 		cell: (info: any) => (
+	// 			<Flex align='center'> 
+	// 				<Text color={textColor} fontSize='sm' fontWeight='700'>
+	// 					{info.getValue()}
+	// 				</Text>
+	// 			</Flex>
+	// 		)
+	// 	}),
+	// 	columnHelper.accessor('progress', {
+	// 		id: 'progress',
+	// 		header: () => (
+	// 			<Text
+	// 				justifyContent='space-between'
+	// 				align='center'
+	// 				fontSize={{ sm: '10px', lg: '12px' }}
+	// 				color='gray.400'>
+	// 				PROGRESS
+	// 			</Text>
+	// 		),
+	// 		cell: (info) => (
+	// 			<Text color={textColor} fontSize='sm' fontWeight='700'>
+	// 				{info.getValue()}
+	// 			</Text>
+	// 		)
+	// 	}),
+	// 	columnHelper.accessor('quantity', {
+	// 		id: 'quantity',
+	// 		header: () => (
+	// 			<Text
+	// 				justifyContent='space-between'
+	// 				align='center'
+	// 				fontSize={{ sm: '10px', lg: '12px' }}
+	// 				color='gray.400'>
+	// 				QUANTITY
+	// 			</Text>
+	// 		),
+	// 		cell: (info) => (
+	// 			<Text color={textColor} fontSize='sm' fontWeight='700'>
+	// 				{info.getValue()}
+	// 			</Text>
+	// 		)
+	// 	}),
+	// 	columnHelper.accessor('date', {
+	// 		id: 'date',
+	// 		header: () => (
+	// 			<Text
+	// 				justifyContent='space-between'
+	// 				align='center'
+	// 				fontSize={{ sm: '10px', lg: '12px' }}
+	// 				color='gray.400'>
+	// 				DATE
+	// 			</Text>
+	// 		),
+	// 		cell: (info) => (
+	// 			<Text color={textColor} fontSize='sm' fontWeight='700'>
+	// 				{info.getValue()}
+	// 			</Text>
+	// 		)
+	// 	})
+	// ];
 	const table = useReactTable({
 		data,
 		columns,
