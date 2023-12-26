@@ -139,6 +139,11 @@ export default function WeightStats() {
   
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
+  const headers = {
+    "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
+    "X-RapidAPI-Key": "9f28f7d48amsh2d3e88bff5dc3e3p128d8ajsn8d2c53ac54e5",
+    "Content-Type": "application/json",
+  }
   // Fetch Perfect Weight Data
   const fetchPerfectWeightData = async () => {
     try {
@@ -146,12 +151,7 @@ export default function WeightStats() {
         "https://fitness-calculator.p.rapidapi.com/idealweight?gender=male&height=185",
         {
           method: "GET",
-          headers: {
-            "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
-            "X-RapidAPI-Key":
-              "e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab", // Replace with your actual RapidAPI key
-            "Content-Type": "application/json",
-          },
+          headers: headers,
         }
       )
       .then((res) => res.json())
@@ -184,12 +184,7 @@ export default function WeightStats() {
         "https://fitness-calculator.p.rapidapi.com/bodyfat?age=16&gender=male&weight=107&height=185&neck=50&waist=96&hip=92",
         {
           method: "GET",
-          headers: {
-            "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
-            "X-RapidAPI-Key":
-              "e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab",
-            "Content-Type": "application/json",
-          },
+          headers: headers,
         }
       )
       .then((res) => res.json())
@@ -227,11 +222,7 @@ export default function WeightStats() {
         requests.push(
           fetch(url, {
             method: 'GET',
-            headers: {
-              'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
-              'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab',
-              'Content-Type': 'application/json',
-            },
+            headers: headers,
           })
         );
       }
@@ -302,11 +293,7 @@ export default function WeightStats() {
         requests.push(
           fetch(url, {
             method: 'GET',
-            headers: {
-              'X-RapidAPI-Host': 'fitness-calculator.p.rapidapi.com',
-              'X-RapidAPI-Key': 'e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab',
-              'Content-Type': 'application/json',
-            },
+            headers: headers,
           })
         );
       }
