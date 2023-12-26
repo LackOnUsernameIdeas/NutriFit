@@ -35,9 +35,6 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
-import Usa from "assets/img/dashboards/usa.png";
-// Custom components
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
@@ -55,8 +52,8 @@ import {
 import { useState, useEffect } from "react";
 import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
-import tableDataColumns from 'views/admin/dataTables/variables/tableDataColumns';
 import CalorieRequirements from "./components/CalorieRequirements";
+import Loading from "./components/Loading";
 
 // --from Kaloyan hands --
 
@@ -142,6 +139,15 @@ export default function WeightStats() {
   ])));
   
   const [activityLevel, setActivityLevel] = useState<number>(1);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
+  }, []);
 
   useEffect(() => {
     fetch(
@@ -338,168 +344,173 @@ export default function WeightStats() {
   
     fetchMacroNutrients(); // Call the helper function
   }, []);
-  
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <Card
-        p="20px"
-        alignItems="center"
-        flexDirection="column"
-        w="100%"
-        mb="20px"
-      >
-        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-          Какво е вашето перфектно тегло според формулите:
-        </Text>
-        <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="160px" mb="0px">
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Box>
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+              Какво е вашето перфектно тегло според формулите:
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="160px" mb="0px">
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Hamwi"
+                value={perfectWeight.Hamwi}
               />
-            }
-            name="Hamwi"
-            value={perfectWeight.Hamwi}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Devine"
+                value={perfectWeight.Devine}
               />
-            }
-            name="Devine"
-            value={perfectWeight.Devine}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Miller"
+                value={perfectWeight.Miller}
               />
-            }
-            name="Miller"
-            value={perfectWeight.Miller}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Robinson"
+                value={perfectWeight.Robinson}
               />
-            }
-            name="Robinson"
-            value={perfectWeight.Robinson}
-          />
-        </SimpleGrid>
-      </Card>
-      <Card
-        p="20px"
-        alignItems="center"
-        flexDirection="column"
-        w="100%"
-        mb="20px"
-      >
-        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-          Колко от вашето тегло е :
-        </Text>
-        <SimpleGrid columns={{ base: 1, md: 1, lg: 3 }} gap="160" mb="0">
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+            </SimpleGrid>
+          </Card>
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+              Колко от вашето тегло е :
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 1, lg: 3 }} gap="160" mb="0">
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Body Fat %"
+                value={bodyFatMassAndLeanMass["Body Fat (U.S. Navy Method)"]}
               />
-            }
-            name="Body Fat %"
-            value={bodyFatMassAndLeanMass["Body Fat (U.S. Navy Method)"]}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Body Fat Mass"
+                value={bodyFatMassAndLeanMass["Body Fat Mass"]}
               />
-            }
-            name="Body Fat Mass"
-            value={bodyFatMassAndLeanMass["Body Fat Mass"]}
-          />
-          <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                    }
+                  />
                 }
+                name="Lean Body Mass"
+                value={bodyFatMassAndLeanMass["Lean Body Mass"]}
               />
-            }
-            name="Lean Body Mass"
-            value={bodyFatMassAndLeanMass["Lean Body Mass"]}
+            </SimpleGrid>
+          </Card>
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+              Колко калории трябва да приемате на ден според целите:
+            </Text>
+            <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+              <Flex justify="left">
+                <ButtonGroup spacing="4">
+                  {/* Render buttons based on activity levels */}
+                  {[1, 2, 3, 4, 5, 6].map((level) => (
+                    <Button
+                      key={level}
+                      colorScheme={activityLevel === level ? 'blue' : 'gray'}
+                      onClick={() => setActivityLevel(level)}
+                    >
+                      Level {level}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Flex>
+            </Box>
+            {activityLevel && (
+              <CalorieRequirements
+                calorieRequirements={dailyCaloryRequirements}
+                selectedActivityLevel={activityLevel}
+              />
+            )}
+          </Card>
+          <ColumnsTable tableData={tableData[activityLevel - 1]} 
           />
-        </SimpleGrid>
-      </Card>
-      <Card
-        p="20px"
-        alignItems="center"
-        flexDirection="column"
-        w="100%"
-        mb="20px"
-      >
-        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-          Колко калории трябва да приемате на ден според целите:
-        </Text>
-        <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
-          <Flex justify="left">
-            <ButtonGroup spacing="4">
-              {/* Render buttons based on activity levels */}
-              {[1, 2, 3, 4, 5, 6].map((level) => (
-                <Button
-                  key={level}
-                  colorScheme={activityLevel === level ? 'blue' : 'gray'}
-                  onClick={() => setActivityLevel(level)}
-                >
-                  Level {level}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Flex>
         </Box>
-        {activityLevel && (
-          <CalorieRequirements
-            calorieRequirements={dailyCaloryRequirements}
-            selectedActivityLevel={activityLevel}
-          />
-        )}
-      </Card>
-      <ColumnsTable tableData={tableData[activityLevel - 1]} 
-      />
-    </Box>
-  );
+      )}    
+    </Box> 
+  );           
 }
