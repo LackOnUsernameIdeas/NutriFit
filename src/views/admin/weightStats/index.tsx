@@ -19,10 +19,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-
 import { useState, useEffect } from "react";
-
-// Chakra imports
 import {
   Avatar,
   Box,
@@ -37,7 +34,6 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
-
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
@@ -49,18 +45,11 @@ import {
   MdHealing,
   MdFileCopy,
 } from "react-icons/md";
-
-// Custom Types/Interfaces
 import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
-
-import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
-import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "./components/Loading";
 
-// --from Kaloyan hands --
-
 export default function WeightStats() {
-  // Chakra Color Mode
+  
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -155,7 +144,7 @@ export default function WeightStats() {
     "X-RapidAPI-Key": "9f28f7d48amsh2d3e88bff5dc3e3p128d8ajsn8d2c53ac54e5",
     "Content-Type": "application/json",
   }
-  // Fetch Perfect Weight Data
+
   const fetchPerfectWeightData = async () => {
     try {
       fetch(
@@ -188,8 +177,6 @@ export default function WeightStats() {
     }
   };
 
-
-  // Fetch Body Fat Mass and Lean Mass Data
   const fetchBodyFatAndLeanMassData = async () => {
     try {
       fetch(
@@ -223,14 +210,11 @@ export default function WeightStats() {
 
   const fetchCaloriesForActivityLevels = async () => {
     try {
-      // Create an array to store promises for each request
       const requests = [];
 
-      // Iterate over the 6 activity levels
       for (let i = 1; i <= 6; i++) {
         const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=level_${i}`;
 
-        // Push the promise for each request to the array
         requests.push(
           fetch(url, {
             method: 'GET',
@@ -239,14 +223,10 @@ export default function WeightStats() {
         );
       }
 
-      // Wait for all requests to complete
       const responses = await Promise.all(requests);
 
-      // Extract the JSON data from each response
       const data = await Promise.all(responses.map((res) => res.json()));
 
-      // Process the data as needed and set the state
-      // (This example assumes that the data structure is the same for all activity levels)
       const dailyCaloryRequirementsData = data.map((levelData, index): DailyCaloryRequirements => {
         return {
           level: index + 1,
@@ -294,14 +274,11 @@ export default function WeightStats() {
 
   const fetchMacroNutrients = async () => {
     try {
-      // Create an array to store promises for each request
       const requests = [];
 
-      // Iterate over the 6 activity levels
       for (let i = 1; i <= 6; i++) {
         const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${i}&goal=weightlose&weight=107&height=185`;
 
-        // Push the promise for each request to the array
         requests.push(
           fetch(url, {
             method: 'GET',
@@ -310,13 +287,10 @@ export default function WeightStats() {
         );
       }
 
-      // Wait for all requests to complete
       const responses = await Promise.all(requests);
 
-      // Extract the JSON data from each response
       const data = await Promise.all(responses.map((res) => res.json()));
 
-      // Process the data as needed and set the state
       const tableData: MacroNutrientsData[] = data.map((item) => ([
         {
           name: 'Balanced',
@@ -365,7 +339,7 @@ export default function WeightStats() {
       {isLoading ? (
         <Loading />
       ) : (
-        <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+        <Box>
           <Card
             p="20px"
             alignItems="center"
@@ -379,7 +353,7 @@ export default function WeightStats() {
             <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="160px" mb="0px">
               {Object.entries(perfectWeight).map(([key, value], index) => (
                 <MiniStatistics
-                  key={key} // Ensure each component has a unique key
+                  key={key}
                   startContent={
                     <IconBox
                       w="56px"
@@ -409,7 +383,7 @@ export default function WeightStats() {
             <SimpleGrid columns={{ base: 1, md: 1, lg: 3 }} gap="160" mb="0">
               {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
                 <MiniStatistics
-                  key={key} // Ensure each component has a unique key
+                  key={key} 
                   startContent={
                     <IconBox
                       w="56px"
@@ -429,7 +403,6 @@ export default function WeightStats() {
             <Box pt={{ base: '130px', md: '10px', xl: '10px' }}>
               <Flex>
                 <ButtonGroup spacing="4">
-                  {/* Render buttons based on activity levels */}
                   {[1, 2, 3, 4, 5, 6].map((level) => (
                     <Button
                       key={level}
