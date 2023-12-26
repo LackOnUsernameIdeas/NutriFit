@@ -1,5 +1,6 @@
 // Chakra imports
 import { Box, Flex, Text, Icon, useColorModeValue, Checkbox } from '@chakra-ui/react';
+
 // Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';

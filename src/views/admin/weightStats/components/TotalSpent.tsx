@@ -21,10 +21,7 @@ import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
-  lineChartData,
-  lineChartLabels,
-  lineChartOptions,
-  updateChartData
+  lineChartOptions
 } from "variables/charts";
 
 export default function TotalSpent(props: { [x: string]: any }) {

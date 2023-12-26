@@ -433,18 +433,6 @@ export const lineChartOptionsTotalSpent: any = {
 	color: [ '#7551FF', '#39B8FF' ]
 };
 
-export let lineChartData: number[] = [];
-
-export let lineChartLabels: string[] = [];
-
-export const updateChartData = (data: { rank: number; title: string }[]) => {
-	// Assuming your data structure has a 'rank' field for the chart data
-	lineChartData = data.map((item) => item.rank);
-  
-	// Assuming your data structure has a 'title' field for the chart labels
-	lineChartLabels = data.map((item) => item.title);
-};
-
 export const lineChartOptions: object = {
 	maintainAsceptRatio: false,
 	scales: {
