@@ -38,10 +38,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-// Assets
-import Usa from "assets/img/dashboards/usa.png";
-
-// Custom components
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
@@ -56,6 +52,12 @@ import {
 
 // Custom Types/Interfaces
 import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
+
+import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
+import CalorieRequirements from "./components/CalorieRequirements";
+import Loading from "./components/Loading";
+
+// --from Kaloyan hands --
 
 export default function WeightStats() {
   // Chakra Color Mode
@@ -139,6 +141,15 @@ export default function WeightStats() {
   
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
+  }, []);
+
   const headers = {
     "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
     "X-RapidAPI-Key": "9f28f7d48amsh2d3e88bff5dc3e3p128d8ajsn8d2c53ac54e5",
@@ -154,6 +165,7 @@ export default function WeightStats() {
           headers: headers,
         }
       )
+
       .then((res) => res.json())
       .then((data) => {
         const bodyMassInfo: HealthInfo = {
@@ -350,107 +362,113 @@ export default function WeightStats() {
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <Card
-        p="20px"
-        alignItems="center"
-        flexDirection="column"
-        w="100%"
-        mb="20px"
-      >
-        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-          Какво е вашето перфектно тегло според формулите:
-        </Text>
-        <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="160px" mb="0px">
-          {Object.entries(perfectWeight).map(([key, value], index) => (
-            <MiniStatistics
-              key={key} // Ensure each component has a unique key
-              startContent={
-                <IconBox
-                  w="56px"
-                  h="56px"
-                  bg={boxBg}
-                  icon={
-                    <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+              Какво е вашето перфектно тегло според формулите:
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="160px" mb="0px">
+              {Object.entries(perfectWeight).map(([key, value], index) => (
+                <MiniStatistics
+                  key={key} // Ensure each component has a unique key
+                  startContent={
+                    <IconBox
+                      w="56px"
+                      h="56px"
+                      bg={boxBg}
+                      icon={
+                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                      }
+                    />
                   }
+                  name={perfectWeightWidgetsData[index]}
+                  value={value}
                 />
-              }
-              name={perfectWeightWidgetsData[index]}
-              value={value}
-            />
-          ))}
-        </SimpleGrid>
-      </Card>
-      <Card
-        p="20px"
-        alignItems="center"
-        flexDirection="column"
-        w="100%"
-        mb="20px"
-      >
-        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-          Колко от вашето тегло е :
-        </Text>
-        <SimpleGrid columns={{ base: 1, md: 1, lg: 3 }} gap="160" mb="0">
-          {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
-            <MiniStatistics
-              key={key} // Ensure each component has a unique key
-              startContent={
-                <IconBox
-                  w="56px"
-                  h="56px"
-                  bg={boxBg}
-                  icon={
-                    <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                  }
-                />
-              }
-              name={bodyFatAndLeanMassWidgetsData[index]}
-              value={value}
-            />
-          ))}
-        </SimpleGrid>
-      </Card>
-        <Box pt={{ base: '130px', md: '10px', xl: '10px' }}>
-          <Flex>
-            <ButtonGroup spacing="4">
-              {/* Render buttons based on activity levels */}
-              {[1, 2, 3, 4, 5, 6].map((level) => (
-                <Button
-                  key={level}
-                  colorScheme={activityLevel === level ? 'blue' : 'gray'}
-                  onClick={() => setActivityLevel(level)}
-                >
-                  Level {level}
-                </Button>
               ))}
-            </ButtonGroup>
-          </Flex>
-        </Box>        
+            </SimpleGrid>
+          </Card>
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+              Колко от вашето тегло е :
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 1, lg: 3 }} gap="160" mb="0">
+              {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
+                <MiniStatistics
+                  key={key} // Ensure each component has a unique key
+                  startContent={
+                    <IconBox
+                      w="56px"
+                      h="56px"
+                      bg={boxBg}
+                      icon={
+                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                      }
+                    />
+                  }
+                  name={bodyFatAndLeanMassWidgetsData[index]}
+                  value={value}
+                />
+              ))}
+            </SimpleGrid>
+          </Card>
+            <Box pt={{ base: '130px', md: '10px', xl: '10px' }}>
+              <Flex>
+                <ButtonGroup spacing="4">
+                  {/* Render buttons based on activity levels */}
+                  {[1, 2, 3, 4, 5, 6].map((level) => (
+                    <Button
+                      key={level}
+                      colorScheme={activityLevel === level ? 'blue' : 'gray'}
+                      onClick={() => setActivityLevel(level)}
+                    >
+                      Level {level}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Flex>
+            </Box>        
 
-      <Card
-        p="20px"
-        alignItems="center"
-        flexDirection="column"
-        w="100%"
-        mb="20px"
-      >
-        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-          Колко калории трябва да приемате на ден според целите:
-        </Text>
-        {activityLevel && (
-          <CalorieRequirements
-            calorieRequirements={dailyCaloryRequirements}
-            selectedActivityLevel={activityLevel}
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+              Колко калории трябва да приемате на ден според целите:
+            </Text>
+            {activityLevel && (
+              <CalorieRequirements
+                calorieRequirements={dailyCaloryRequirements}
+                selectedActivityLevel={activityLevel}
+              />
+            )}
+          </Card>
+          <ColumnsTable tableName='Macro Nutrients' tableData={tableData[activityLevel - 1]} columnsData={[
+              { name: 'name', label: 'Тип диета' },
+              { name: 'protein', label: 'Протеин (гр.)' },
+              { name: 'fat', label: 'Мазнини (гр.)' },
+              { name: 'carbs', label: 'Въглехидрати (гр.)' }	
+            ]} 
           />
-        )}
-      </Card>
-      <ColumnsTable tableName='Macro Nutrients' tableData={tableData[activityLevel - 1]} columnsData={[
-          { name: 'name', label: 'Тип диета' },
-          { name: 'protein', label: 'Протеин (гр.)' },
-          { name: 'fat', label: 'Мазнини (гр.)' },
-          { name: 'carbs', label: 'Въглехидрати (гр.)' }	
-        ]} 
-      />
-    </Box>
+        </Box>
+      )}    
+    </Box> 
   );
 }
