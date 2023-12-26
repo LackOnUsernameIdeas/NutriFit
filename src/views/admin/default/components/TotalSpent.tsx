@@ -1,9 +1,10 @@
-// Chakra imports
+// React and Firebase imports
 import React, { useEffect, useState } from "react";
 import { DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
 import { booksCollection } from "../../../../database/getCollection";
 import { NewBookType } from "../../../../types/book";
 
+// Chakra UI imports
 import {
   Box,
   Button,
@@ -12,18 +13,19 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 // Custom components
 import Card from "components/card/Card";
 import LineChart from "components/charts/LineChart";
+
+// Icons imports
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
-// Assets
 import { RiArrowUpSFill } from "react-icons/ri";
+
+// Assets for charts
 import {
-  lineChartData,
-  lineChartLabels,
-  lineChartOptions,
-  updateChartData,
+  lineChartOptions
 } from "variables/charts";
 
 export default function TotalSpent(props: { [x: string]: any }) {
@@ -32,24 +34,22 @@ export default function TotalSpent(props: { [x: string]: any }) {
   const [books, setBooks] = useState<NewBookType[]>([]);
 
   useEffect(
-    () =>
+    () => (
       onSnapshot(booksCollection, (snapshot: QuerySnapshot<DocumentData>) => {
         setBooks(
           snapshot.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
           })
         );
-      }),
+      })
+    ),
     []
   );
 
   const titles = books.map((book) => book.title);
   const ranks = books.map((book) => book.rank);
 
-  console.log(ranks, titles);
-
   // Chakra Color Mode
-
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
