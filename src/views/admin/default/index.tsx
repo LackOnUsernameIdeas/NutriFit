@@ -150,12 +150,12 @@ export default function UserReports() {
         <DailyTraffic />
         <ComplexTable tableData={tableDataComplex} />
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap="20px" mb="20px">
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
           <PieCard />
-          <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]}/>
+          <Tasks />
         </SimpleGrid>
-        <Tasks />
+        <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]}/>
       </SimpleGrid>
     </Box>
   );
