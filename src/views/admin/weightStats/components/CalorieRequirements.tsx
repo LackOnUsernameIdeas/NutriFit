@@ -37,7 +37,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Базов метаболизъм"
-                    value={selectedLevelData.BMR.toFixed(2)}
+                    value={selectedLevelData.BMR.toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -51,7 +51,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Запазване на тегло"
-                    value={selectedLevelData.goals["maintain weight"].toFixed(2)}
+                    value={selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -65,7 +65,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Леко сваляне на тегл"
-                    value={selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)}
+                    value={selectedLevelData.goals["Mild weight loss"].calory.toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -79,7 +79,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Сваляне на тегло"
-                    value={selectedLevelData.goals["Weight loss"].calory.toFixed(2)}
+                    value={selectedLevelData.goals["Weight loss"].calory.toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -93,7 +93,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Екстремно сваляне на тегло"
-                    value={selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)}
+                    value={selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -107,7 +107,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Леко качване на тегло"
-                    value={selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)}
+                    value={selectedLevelData.goals["Mild weight gain"].calory.toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -121,7 +121,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Качване на тегло"
-                    value={selectedLevelData.goals["Weight gain"].calory.toFixed(2)}
+                    value={selectedLevelData.goals["Weight gain"].calory.toFixed(2) + " kcal"}
                 />
                 <MiniStatistics
                     startContent={
@@ -135,7 +135,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     />
                     }
                     name="Екстремно качване на тегло"
-                    value={selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)}
+                    value={selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2) + " kcal"}
                 />
             </SimpleGrid>
         </Card>

@@ -365,7 +365,7 @@ export default function WeightStats() {
                     />
                   }
                   name={perfectWeightWidgetsData[index]}
-                  value={value}
+                  value={value + ' kg'}
                 />
               ))}
             </SimpleGrid>
