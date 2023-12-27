@@ -62,7 +62,7 @@ export default function WeeklyRevenue(props: { [x: string]: any }) {
           </Button>
         </Flex>
       </Flex>
-      <Card alignItems="center" flexDirection="column" w="100%" h="100%">
+      <Card alignItems="center" flexDirection="column" w="100%" h="100%" minH={{ sm: '100px', md: '300px', lg: 'auto' }} minW={{ sm: '150px', md: '200px', lg: 'auto' }}>
         <BarChart
           chartData={barChartDataConsumption}
           chartOptions={barChartOptionsConsumption}

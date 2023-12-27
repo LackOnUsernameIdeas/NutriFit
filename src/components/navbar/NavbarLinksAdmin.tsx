@@ -128,7 +128,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               borderRadius="8px"
               px="14px"
             >
-              <Text fontSize="sm">Log out</Text>
+              <Text fontSize="sm">Излез</Text>
             </MenuItem>
           </Flex>
         </MenuList>

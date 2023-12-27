@@ -97,25 +97,25 @@ export default function WeightStats() {
 
   const [tableData, setTableData] = useState<MacroNutrientsData[]>(Array.from({ length: 6 }, (_) => ([
     {
-      name: 'Balanced',
+      name: 'Балансирана',
       protein: 0,
       fat: 0,
       carbs: 0
     },
     {
-      name:'Lowfat',
+      name:'Ниско съдържание на мазнини',
       protein: 0,
       fat: 0,
       carbs: 0
     },
     {
-      name: 'Lowcarbs',
+      name: 'Ниско съдържание на въглехидрати',
       protein: 0,
       fat: 0,
       carbs: 0
     },
     {
-      name: 'High Protein',
+      name: 'Високо съдържание на Протеин',
       protein: 0,
       fat: 0,
       carbs: 0
@@ -287,25 +287,25 @@ export default function WeightStats() {
 
       const tableData: MacroNutrientsData[] = data.map((item) => ([
         {
-          name: 'Balanced',
+          name: 'Балансирана',
           protein: item.data.balanced.protein.toFixed(2),
           fat: item.data.balanced.fat.toFixed(2),
           carbs: item.data.balanced.carbs.toFixed(2)
         },
         {
-          name: 'Lowfat',
+          name: 'Ниско съдържание на мазнини',
           protein: item.data.lowfat.protein.toFixed(2),
           fat: item.data.lowfat.fat.toFixed(2),
           carbs: item.data.lowfat.carbs.toFixed(2)
         },
         {
-          name: 'Lowcarbs',
+          name: 'Ниско съдържание на въглехидрати',
           protein: item.data.lowcarbs.protein.toFixed(2),
           fat: item.data.lowcarbs.fat.toFixed(2),
           carbs: item.data.lowcarbs.carbs.toFixed(2)
         },
         {
-          name: 'High Protein',
+          name: 'Високо съдържание на Протеин',
           protein: item.data.highprotein.protein.toFixed(2),
           fat: item.data.highprotein.fat.toFixed(2),
           carbs: item.data.highprotein.carbs.toFixed(2)
@@ -419,13 +419,13 @@ export default function WeightStats() {
                       colorScheme={activityLevel === level ? 'blue' : 'gray'}
                       onClick={() => setActivityLevel(level)}
                     >
-                      Level {level}
+                      Ниво {level}
                     </Button>
                   ))}
                 </ButtonGroup>
               </Flex>
             </Box>
-            <ColumnsTable tableName='Macro Nutrients' tableData={tableData[activityLevel - 1]} columnsData={[
+            <ColumnsTable tableName='Макронутриенти' tableData={tableData[activityLevel - 1]} columnsData={[
                 { name: 'name', label: 'Тип диета' },
                 { name: 'protein', label: 'Протеин (гр.)' },
                 { name: 'fat', label: 'Мазнини (гр.)' },
