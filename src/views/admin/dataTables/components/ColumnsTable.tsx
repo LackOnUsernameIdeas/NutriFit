@@ -69,7 +69,7 @@ export default function ColumnTable(props: { tableName: string, tableData: any, 
 				<Text color={textColor} fontSize='22px' mb="4px" fontWeight='700' lineHeight='100%'>
 					{tableName}
 				</Text>
-				<Menu />
+				{/*<Menu />    <-- BUTTON TOP RIGHT OF TABLE DISPLAYING PANELS */}
 			</Flex>
 			<Box>
 				<Table variant='simple' color='gray.500' mb='24px' mt="12px">

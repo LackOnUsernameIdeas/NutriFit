@@ -39,12 +39,7 @@ import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
 import CalorieRequirements from "./components/CalorieRequirements";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdHealing,
-  MdFileCopy,
-} from "react-icons/md";
+import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
 import Loading from "./components/Loading";
 
@@ -53,7 +48,6 @@ export default function WeightStats() {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorBrand = useColorModeValue("brand.500", "white");
 
   const [perfectWeight, setPerfectWeight] = useState<HealthInfo>({
     Hamwi: 0,
@@ -360,7 +354,7 @@ export default function WeightStats() {
                       h="56px"
                       bg={boxBg}
                       icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={GiWeightLiftingUp} color={brandColor} />
                       }
                     />
                   }
@@ -390,7 +384,7 @@ export default function WeightStats() {
                       h="56px"
                       bg={boxBg}
                       icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={GiWeightScale} color={brandColor} />
                       }
                     />
                   }
@@ -400,22 +394,6 @@ export default function WeightStats() {
               ))}
             </SimpleGrid>
           </Card>
-            <Box pt={{ base: '130px', md: '10px', xl: '10px' }}>
-              <Flex>
-                <ButtonGroup spacing="4">
-                  {[1, 2, 3, 4, 5, 6].map((level) => (
-                    <Button
-                      key={level}
-                      colorScheme={activityLevel === level ? 'blue' : 'gray'}
-                      onClick={() => setActivityLevel(level)}
-                    >
-                      Level {level}
-                    </Button>
-                  ))}
-                </ButtonGroup>
-              </Flex>
-            </Box>        
-
           <Card
             p="20px"
             alignItems="center"
@@ -432,14 +410,29 @@ export default function WeightStats() {
                 selectedActivityLevel={activityLevel}
               />
             )}
+            <Box pt={{ base: '130px', md: '10px', xl: '10px' }}>
+              <Flex>
+                <ButtonGroup spacing="4">
+                  {[1, 2, 3, 4, 5, 6].map((level) => (
+                    <Button
+                      key={level}
+                      colorScheme={activityLevel === level ? 'blue' : 'gray'}
+                      onClick={() => setActivityLevel(level)}
+                    >
+                      Level {level}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </Flex>
+            </Box>
+            <ColumnsTable tableName='Macro Nutrients' tableData={tableData[activityLevel - 1]} columnsData={[
+                { name: 'name', label: 'Тип диета' },
+                { name: 'protein', label: 'Протеин (гр.)' },
+                { name: 'fat', label: 'Мазнини (гр.)' },
+                { name: 'carbs', label: 'Въглехидрати (гр.)' }	
+              ]} 
+            />
           </Card>
-          <ColumnsTable tableName='Macro Nutrients' tableData={tableData[activityLevel - 1]} columnsData={[
-              { name: 'name', label: 'Тип диета' },
-              { name: 'protein', label: 'Протеин (гр.)' },
-              { name: 'fat', label: 'Мазнини (гр.)' },
-              { name: 'carbs', label: 'Въглехидрати (гр.)' }	
-            ]} 
-          />
         </Box>
       )}    
     </Box> 

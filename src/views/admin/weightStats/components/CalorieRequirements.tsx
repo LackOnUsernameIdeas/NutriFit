@@ -6,7 +6,9 @@ import {
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
-import { MdHealing } from "react-icons/md";
+import { MdLocalFireDepartment } from "react-icons/md";
+import { TbActivityHeartbeat } from "react-icons/tb";
+import { FaAngleDown, FaAngleDoubleDown, FaGripLines, FaAngleDoubleUp, FaAngleUp, } from "react-icons/fa";
 import { DailyCaloryRequirements } from '../../../../types/weightStats';
 import { useState, useEffect } from "react";
 
@@ -32,7 +34,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={MdLocalFireDepartment} color={brandColor} />
                         }
                     />
                     }
@@ -46,21 +48,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
-                        }
-                    />
-                    }
-                    name="Запазване на тегло"
-                    value={selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"}
-                />
-                <MiniStatistics
-                    startContent={
-                    <IconBox
-                        w="56px"
-                        h="56px"
-                        bg={boxBg}
-                        icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={TbActivityHeartbeat} color={brandColor} />
                         }
                     />
                     }
@@ -74,7 +62,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={FaAngleDown} color={brandColor} />
                         }
                     />
                     }
@@ -88,7 +76,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={FaAngleDoubleDown} color={brandColor} />
                         }
                     />
                     }
@@ -102,7 +90,21 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={FaGripLines} color={brandColor} />
+                        }
+                    />
+                    }
+                    name="Запазване на тегло"
+                    value={selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"}
+                />
+                <MiniStatistics
+                    startContent={
+                    <IconBox
+                        w="56px"
+                        h="56px"
+                        bg={boxBg}
+                        icon={
+                        <Icon w="32px" h="32px" as={TbActivityHeartbeat} color={brandColor} />
                         }
                     />
                     }
@@ -116,7 +118,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={FaAngleUp} color={brandColor} />
                         }
                     />
                     }
@@ -130,7 +132,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                         h="56px"
                         bg={boxBg}
                         icon={
-                        <Icon w="32px" h="32px" as={MdHealing} color={brandColor} />
+                        <Icon w="32px" h="32px" as={FaAngleDoubleUp} color={brandColor} />
                         }
                     />
                     }
