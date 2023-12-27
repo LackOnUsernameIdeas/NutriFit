@@ -18,7 +18,7 @@ import SignInCentered from "views/auth/signIn";
 
 const routes = [
   {
-    name: "Main Dashboard",
+    name: "Главна Страница",
     layout: "/admin",
     path: "/default",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
@@ -47,14 +47,14 @@ const routes = [
     component: DataTables,
   },
   {
-    name: "Weight Stats",
+    name: "Статистики за Тегло",
     layout: "/admin",
     path: "/weight",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: WeightStats
   },
   {
-    name: "Sign In",
+    name: "Вход",
     layout: "/auth",
     path: "/sign-in",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,

@@ -103,10 +103,13 @@ export default function TotalSpent(props: { [x: string]: any }) {
           </Text>
         </Flex>
       </Flex>
-      <Card alignItems="center" flexDirection="column" h="100%" w="100%">
-        <LineChart lineChartLabels={titles} lineChartData={ranks} lineChartOptions={lineChartOptions} />
+      <Card alignItems="center" flexDirection="column" h="100%" w="100%" minH={{ sm: '100px', md: '300px', lg: 'auto' }} minW={{ sm: '150px', md: '200px', lg: 'auto' }}>
+        <LineChart 
+          lineChartLabels={titles} 
+          lineChartData={ranks} 
+          lineChartOptions={lineChartOptions} 
+        />
       </Card>
-
     </Card>
   );
 }
