@@ -34,39 +34,40 @@ export default function WeeklyRevenue(props: { [x: string]: any }) {
   );
   return (
     <Card alignItems="center" flexDirection="column" w="100%" {...rest}>
-      <Flex align="center" w="100%" px="15px" py="10px">
-        <Text
-          me="auto"
-          color={textColor}
-          fontSize="xl"
-          fontWeight="700"
-          lineHeight="100%"
-        >
-          Weekly Revenue
-        </Text>
-        <Button
-          alignItems="center"
-          justifyContent="center"
-          bg={bgButton}
-          _hover={bgHover}
-          _focus={bgFocus}
-          _active={bgFocus}
-          w="37px"
-          h="37px"
-          lineHeight="100%"
-          borderRadius="10px"
-          {...rest}
-        >
-          <Icon as={MdBarChart} color={iconColor} w="24px" h="24px" />
-        </Button>
+      <Flex justify="space-between" align="start" px="10px" pt="5px" w="100%">
+        <Flex flexDirection="column" align="start" me="20px">
+          <Text
+            me="auto"
+            color={textColor}
+            fontSize="xl"
+            fontWeight="700"
+            lineHeight="100%"
+          >
+            Weekly Revenue
+          </Text>
+        </Flex>
+        <Flex align="center">
+          <Button
+            bg={bgButton}
+            _hover={bgHover}
+            _focus={bgFocus}
+            _active={bgFocus}
+            w="37px"
+            h="37px"
+            lineHeight="100%"
+            borderRadius="10px"
+            {...rest}
+          >
+            <Icon as={MdBarChart} color={iconColor} w="24px" h="24px" />
+          </Button>
+        </Flex>
       </Flex>
-
-      <Box w="100%" minH="400px" maxH="600px" maxW="85vw">
+      <Card alignItems="center" flexDirection="column" w="100%" h="100%">
         <BarChart
           chartData={barChartDataConsumption}
           chartOptions={barChartOptionsConsumption}
         />
-      </Box>
+      </Card>  
     </Card>
   );
 }

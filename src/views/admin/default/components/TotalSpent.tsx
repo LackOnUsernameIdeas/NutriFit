@@ -64,94 +64,49 @@ export default function TotalSpent(props: { [x: string]: any }) {
     { bg: "whiteAlpha.100" }
   );
   return (
-    <Card
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
-      w="100%"
-      mb="0px"
-      {...rest}
-    >
-      <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
-        <Button
-          bg={boxBg}
-          fontSize="sm"
-          fontWeight="500"
-          color={textColorSecondary}
-          borderRadius="7px"
-        >
-          <Icon
-            as={MdOutlineCalendarToday}
-            color={textColorSecondary}
-            me="4px"
-          />
-          This month
-        </Button>
-        <Button
-          ms="auto"
-          alignItems="center"
-          justifyContent="center"
-          bg={bgButton}
-          _hover={bgHover}
-          _focus={bgFocus}
-          _active={bgFocus}
-          w="37px"
-          h="37px"
-          lineHeight="100%"
-          borderRadius="10px"
-          {...rest}
-        >
-          <Icon as={MdBarChart} color={iconColor} w="24px" h="24px" />
-        </Button>
-      </Flex>
-      <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
-        <Flex flexDirection="column" me="20px" mt="28px">
-          <Text
-            color={textColor}
-            fontSize="34px"
-            textAlign="start"
-            fontWeight="700"
-            lineHeight="100%"
-          >
-            $37.5K
-          </Text>
-          <Flex align="center" mb="20px">
+    <Card alignItems="center" flexDirection="column" w="100%" {...rest}>
+      <Flex justify="space-between" align="start" px="10px" pt="5px" w="100%">
+        <Flex flexDirection="column" align="start" me="20px">
+          <Flex w="100%">
             <Text
+              me="auto"
               color="secondaryGray.600"
               fontSize="sm"
               fontWeight="500"
-              mt="4px"
-              me="12px"
             >
               Total Spent
             </Text>
-            <Flex align="center">
-              <Icon as={RiArrowUpSFill} color="green.500" me="2px" mt="2px" />
-              <Text color="green.500" fontSize="sm" fontWeight="700">
-                +2.45%
-              </Text>
-            </Flex>
           </Flex>
-
-          <Flex align="center">
-            <Icon as={IoCheckmarkCircle} color="green.500" me="4px" />
-            <Text color="green.500" fontSize="md" fontWeight="700">
-              On track
+          <Flex align="end">
+            <Text
+              color={textColor}
+              fontSize="34px"
+              fontWeight="700"
+              lineHeight="100%"
+            >
+              2.579
+            </Text>
+            <Text
+              ms="6px"
+              color="secondaryGray.600"
+              fontSize="sm"
+              fontWeight="500"
+            >
+              Visitors
             </Text>
           </Flex>
         </Flex>
-        <Box //minH='260px' minW='75%' mt='auto' h="240px"
-          h="100%"
-          mt="auto"
-          w="100%"
-        >
-          <LineChart
-            lineChartLabels={titles}
-            lineChartData={ranks}
-            lineChartOptions={lineChartOptions}
-          />
-        </Box>
+        <Flex align="center">
+          <Icon as={RiArrowUpSFill} color="green.500" />
+          <Text color="green.500" fontSize="sm" fontWeight="700">
+            +2.45%
+          </Text>
+        </Flex>
       </Flex>
+      <Card alignItems="center" flexDirection="column" h="100%" w="100%">
+        <LineChart lineChartLabels={titles} lineChartData={ranks} lineChartOptions={lineChartOptions} />
+      </Card>
+
     </Card>
   );
 }
