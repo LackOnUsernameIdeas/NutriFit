@@ -327,6 +327,7 @@ export default function WeightStats() {
 
   const perfectWeightWidgetsData: string[] = ['Хамви', 'Дивайн', 'Милър', 'Робинсън'];
   const bodyFatAndLeanMassWidgetsData: string[] = ['% телесни мазнини', 'Мастна телесна маса', 'Чиста телесна маса'];
+  const bodyFatAndLeanMassWidgetsUnits: string[] = ['%','kg','kg'];
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -389,7 +390,7 @@ export default function WeightStats() {
                     />
                   }
                   name={bodyFatAndLeanMassWidgetsData[index]}
-                  value={value}
+                  value={value + ' ' + bodyFatAndLeanMassWidgetsUnits[index]}
                 />
               ))}
             </SimpleGrid>
