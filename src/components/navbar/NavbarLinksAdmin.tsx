@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 // Custom Components
 import { ItemContent } from "components/menu/ItemContent";
-import { SearchBar } from "components/navbar/searchBar/SearchBar";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React from "react";
@@ -54,16 +53,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <SearchBar
-        mb={() => {
-          if (secondary) {
-            return { base: "10px", md: "unset" };
-          }
-          return "unset";
-        }}
-        me="10px"
-        borderRadius="30px"
-      />
       <SidebarResponsive routes={routes} />
       <Button
         variant="no-hover"
