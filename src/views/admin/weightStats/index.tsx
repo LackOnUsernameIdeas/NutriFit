@@ -345,7 +345,7 @@ export default function WeightStats() {
             <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
               Какво е вашето перфектно тегло според формулите:
             </Text>
-            <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="160px" mb="0px">
+            <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="20px" mb="10px">
               {Object.entries(perfectWeight).map(([key, value], index) => (
                 <MiniStatistics
                   key={key}
@@ -375,7 +375,7 @@ export default function WeightStats() {
             <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
               Колко от вашето тегло е :
             </Text>
-            <SimpleGrid columns={{ base: 1, md: 1, lg: 3 }} gap="160" mb="0">
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="20px" mb="10px">
               {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
                 <MiniStatistics
                   key={key} 
@@ -411,19 +411,21 @@ export default function WeightStats() {
                 selectedActivityLevel={activityLevel}
               />
             )}
-            <Box pt={{ base: '130px', md: '10px', xl: '10px' }}>
+            <Box gap="10px" mb="20px">
               <Flex>
-                <ButtonGroup spacing="4">
-                  {[1, 2, 3, 4, 5, 6].map((level) => (
-                    <Button
-                      key={level}
-                      colorScheme={activityLevel === level ? 'blue' : 'gray'}
-                      onClick={() => setActivityLevel(level)}
-                    >
-                      Ниво {level}
-                    </Button>
-                  ))}
-                </ButtonGroup>
+                <SimpleGrid columns={{ base: 3, md: 2, lg: 6 }} spacing="10px" alignItems="center" mb="10px">
+                    {[1, 2, 3, 4, 5, 6].map((level) => (
+                      <Button
+                        key={level}
+                        fontSize={{ base: "sm", md: "md" }}
+                        margin="0"
+                        colorScheme={activityLevel === level ? 'blue' : 'gray'}
+                        onClick={() => setActivityLevel(level)}
+                      >
+                        Ниво {level}
+                      </Button>
+                    ))}
+                </SimpleGrid>
               </Flex>
             </Box>
             <ColumnsTable tableName='Макронутриенти' tableData={tableData[activityLevel - 1]} columnsData={[

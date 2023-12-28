@@ -26,7 +26,7 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
 
     return (
         <Card>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mb="20px">
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px">
                 <MiniStatistics
                     startContent={
                     <IconBox
