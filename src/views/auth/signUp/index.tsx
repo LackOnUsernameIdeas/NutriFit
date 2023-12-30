@@ -1,29 +1,6 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 // Chakra imports
 import {
   Box,
@@ -49,27 +26,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
-// function SignIn() {
-//   // Chakra color mode
-//   const textColor = useColorModeValue("navy.700", "white");
-//   const textColorSecondary = "gray.400";
-//   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
-//   const textColorBrand = useColorModeValue("brand.500", "white");
-//   const brandStars = useColorModeValue("brand.500", "brand.400");
-//   const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
-//   const googleText = useColorModeValue("navy.700", "white");
-//   const googleHover = useColorModeValue(
-//     { bg: "gray.200" },
-//     { bg: "whiteAlpha.300" }
-//   );
-//   const googleActive = useColorModeValue(
-//     { bg: "secondaryGray.300" },
-//     { bg: "whiteAlpha.200" }
-//   );
-// const [show, setShow] = React.useState(false);
-// const handleClick = () => setShow(!show);
-
-function SignIn() {
+function SignUp() {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -87,21 +44,21 @@ function SignIn() {
   );
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory();
-  
-  const handleSignIn = async () => {
+
+  const handleSignUp = async () => {
     try {
       const auth = getAuth();
-      await signInWithEmailAndPassword(auth, email, password);
-      // User successfully signed in
-      history.push('/');
+      await createUserWithEmailAndPassword(auth, email, password);
+      // User successfully signed up
+      history.push('/'); // Redirect to the dashboard after signing up
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Error signing in:', error.message);
+        console.error('Error signing up:', error.message);
       } else {
-        console.error('Error signing in:', error);
+        console.error('Error signing up:', error);
       }
     }
   };
@@ -122,7 +79,7 @@ function SignIn() {
         flexDirection='column'>
         <Box me='auto'>
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Sign In
+            Sign Up
           </Heading>
           <Text
             mb='36px'
@@ -130,7 +87,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign in!
+            Enter your email and password to sign up!
           </Text>
         </Box>
         <Flex
@@ -157,7 +114,7 @@ function SignIn() {
             _active={googleActive}
             _focus={googleActive}>
             <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
-            Sign in with Google
+            Sign Up with Google
           </Button>
           <Flex align='center' mb='25px'>
             <HSeparator />
@@ -243,14 +200,14 @@ function SignIn() {
               </NavLink>
             </Flex>
             <Button
-              onClick={handleSignIn}
+              onClick={handleSignUp}
               fontSize='sm'
               variant='brand'
               fontWeight='500'
               w='100%'
               h='50'
               mb='24px'>
-              Sign In
+              Sign Up
             </Button>
           </FormControl>
           <Flex
@@ -260,14 +217,14 @@ function SignIn() {
             maxW='100%'
             mt='0px'>
             <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-              Not registered yet?
-              <NavLink to='/auth/sign-up'>
+              Already have an account?
+              <NavLink to='/auth/sign-in'>
                 <Text
                   color={textColorBrand}
                   as='span'
                   ms='5px'
                   fontWeight='500'>
-                  Create an Account
+                  Sign In
                 </Text>
               </NavLink>
             </Text>
@@ -278,4 +235,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;

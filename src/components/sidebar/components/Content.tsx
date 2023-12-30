@@ -6,8 +6,9 @@ import Links from "components/sidebar/components/Links";
 
 // FUNCTIONS
 
-function SidebarContent(props: { routes: RoutesType[] }) {
-  const { routes } = props;
+function SidebarContent({ routes }: { routes: RoutesType[] }) {
+	// Filter out routes that should not appear in the sidebar
+	const visibleRoutes = routes.filter((route) => !route.hideInSidebar);
   // SIDEBAR
   return (
     <Flex direction="column" height="100%" pt="25px" borderRadius="30px">
