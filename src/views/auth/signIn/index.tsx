@@ -21,9 +21,9 @@
 
 */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
 // Chakra imports
 import {
   Box,
@@ -48,26 +48,7 @@ import illustration from "assets/img/auth/auth.png";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
-
-// function SignIn() {
-//   // Chakra color mode
-//   const textColor = useColorModeValue("navy.700", "white");
-//   const textColorSecondary = "gray.400";
-//   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
-//   const textColorBrand = useColorModeValue("brand.500", "white");
-//   const brandStars = useColorModeValue("brand.500", "brand.400");
-//   const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
-//   const googleText = useColorModeValue("navy.700", "white");
-//   const googleHover = useColorModeValue(
-//     { bg: "gray.200" },
-//     { bg: "whiteAlpha.300" }
-//   );
-//   const googleActive = useColorModeValue(
-//     { bg: "secondaryGray.300" },
-//     { bg: "whiteAlpha.200" }
-//   );
-// const [show, setShow] = React.useState(false);
-// const handleClick = () => setShow(!show);
+import Cookies from 'js-cookie';
 
 function SignIn() {
   const textColor = useColorModeValue("navy.700", "white");
@@ -90,22 +71,42 @@ function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
+  const [error, setError] = useState('');
   
   const handleSignIn = async () => {
     try {
       const auth = getAuth();
+      await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
       // User successfully signed in
-      history.push('/');
+      history.push('/admin');
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Error signing in:', error.message);
+        setError(error.message);
       } else {
-        console.error('Error signing in:', error);
+        setError('An error occurred while signing up.');
       }
     }
   };
 
+  // Use useEffect to monitor authentication state changes and manage cookies
+  useEffect(() => {
+    const auth = getAuth();
+
+    // Set up an authentication state change listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, set a cookie with user UID
+        Cookies.set('uid', user.uid, { expires: 7 }); // Set cookie to expire in 7 days
+      } else {
+        // User is signed out, clear the cookie
+        Cookies.remove('uid');
+      }
+    });
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, []); // Empty dependency array means this effect runs once after the initial render
+  
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -252,6 +253,11 @@ function SignIn() {
               mb='24px'>
               Sign In
             </Button>
+            {error && (
+                <Text color='red' fontSize='sm' mb='8px'>
+                {error}
+                </Text>
+            )}
           </FormControl>
           <Flex
             flexDirection='column'

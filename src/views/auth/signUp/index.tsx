@@ -47,18 +47,19 @@ function SignUp() {
   const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSignUp = async () => {
     try {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
       // User successfully signed up
-      history.push('/'); // Redirect to the dashboard after signing up
+      history.push('/admin'); // Redirect to the dashboard after signing up
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Error signing up:', error.message);
+        setError(error.message);
       } else {
-        console.error('Error signing up:', error);
+        setError('An error occurred while signing up.');
       }
     }
   };
@@ -183,6 +184,12 @@ function SignUp() {
               mb='24px'>
               Sign Up
             </Button>
+            {/* Display error message */}
+            {error && (
+                <Text color='red' fontSize='sm' mb='8px'>
+                {error}
+                </Text>
+            )}
           </FormControl>
           <Flex
             flexDirection='column'
