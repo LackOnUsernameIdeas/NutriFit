@@ -8,3 +8,4 @@ export const db = getFirestore(app);
 
 // collection ref
 export const booksCollection = collection(db, 'books');
+export const recipesCollection = collection(db, 'recipes');

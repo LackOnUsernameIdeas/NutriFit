@@ -1,75 +1,13 @@
-// Chakra imports
-import {
-  Box,
-  VStack, 
-  Input,
-  Button
-} from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
-interface Recipe {
-  id: string;
-  title: string;
-  isForBreakfast: boolean;
-  ingredients: Array<{
-    id: number,
-    image: string;
-    ingredient: string;
-    quantity: number;
-  }>;
-  instructions: Array<{
-    number: number;
-    step: string;
-  }>;
-  nutrientsForEveryIngredient: {
-    main: {
-        ingredient: string;
-        amount: number;
-        unit: string;
-        nutrients: object[]; // Replace 'any' with the actual type of the 'nutrients' array
-    }[];
-    otherNutrients: {
-        ingredient: string;
-        amount: number;
-        unit: string;
-        nutrients: object[]; // Replace 'any' with the actual type of the 'nutrients' array
-    }[];
-  };
-  nutrientsForTheRecipe: {
-    weightPerServing: {
-      amount: number;
-      unit: string;
-    }; 
-    main: {
-      [nutrientName: string]: {
-        amount: number; 
-        unit: string;
-        percentOfDailyNeeds: number; 
-      };
-    };
-    otherNutrients: {
-      [nutrientName: string]: {
-        amount: number; 
-        unit: string;
-        percentOfDailyNeeds: number;
-      };
-    };
-  };
-  caloricBreakdown: {
-    percentFat: number,
-    percentCarbs: number,
-    percentProtein: number
-  }
-};
+// Chakra imports
+import { Box } from "@chakra-ui/react";
 
-
-interface UserPreferences {
-  calories: number;
-  protein: number;
-  fat: number;
-  carbs: number;
-}
+import { Recipe, UserPreferences, MealPlan, Nutrient, Nutrients, SuggestedMaxServings, CustomServings } from "./variables/mealPlaner";
+import { generateMealPlan } from "./utils/generateMealPlan";
+import { calculateNutrientForMealPlan } from "./utils/calculateNutrientForMealPlan";
+import UserPreferencesInput from "./components/UserPreferencesInput";
+import MealPlanDetails from "./components/MealPlanDetails";
 
 export default function MealPlanner() {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({
@@ -78,87 +16,146 @@ export default function MealPlanner() {
     fat: 70,
     carbs: 200,
   });
-
-  const [mealPlan, setMealPlan] = useState<{ breakfast: Recipe | null; lunch: Recipe | null; dinner: Recipe | null }>({
+  
+  const [mealPlan, setMealPlan] = useState<MealPlan>({
     breakfast: null,
     lunch: null,
-    dinner: null,
+    dinner: null
+  });
+
+  const [nutrients, setNutrients] = useState<Nutrients>({
+    summed: 0,
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
+  });
+
+  const [calories, setCalories] = useState<Nutrients>({
+    summed: 0,
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
   });
   
+  const [protein, setProtein] = useState<Nutrients>({
+    summed: 0,
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
+  });
+  
+  const [carbs, setCarbs] = useState<Nutrients>({
+    summed: 0,
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
+  });
+  
+  const [fat, setFat] = useState<Nutrients>({
+    summed: 0,
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0,
+  });
+
+  const [suggestedMaxServings, setSuggestedMaxServings] = useState<SuggestedMaxServings>({
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0
+  });
+
+  const [customServings, setCustomServings] = useState<CustomServings>({
+    breakfast: 0,
+    lunch: 0,
+    dinner: 0
+  });
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserPreferences((prevPreferences) => ({
       ...prevPreferences,
-      [name]: parseFloat(value),
+      [name]: parseFloat(value)
     }));
   };  
 
-  const generateMealPlan = async () => {
-    const db = getFirestore();
-    const recipesCollection = collection(db, 'recipesEnglish');
+  const handleIncrement = (mealType: keyof typeof customServings) => {
+    setCustomServings((prevServing) => ({
+        ...prevServing,
+        [mealType]: prevServing[mealType] + 1,
+    }));
+  };
+    
+  const handleDecrement = (mealType: keyof typeof customServings) => {
+    setCustomServings((prevServing) => ({
+        ...prevServing,
+        [mealType]: Math.max(1, prevServing[mealType] - 1),
+    }));
+  };
 
+  const nutrientTypes: Nutrient[] = [
+    { type: 'calories', label: 'Calories', setter: setCalories },
+    { type: 'protein', label: 'Protein', setter: setProtein },
+    { type: 'carbs', label: 'Carbohydrates', setter: setCarbs },
+    { type: 'fat', label: 'Fat', setter: setFat },
+  ];
+  
+  useEffect(() => {
+    calculateNutrientForMealPlan(setCalories, suggestedMaxServings, customServings, mealPlan, 'Calories');
+  }, [customServings, suggestedMaxServings, mealPlan]);
+  
+  useEffect(() => {
+    calculateNutrientForMealPlan(setProtein, suggestedMaxServings, customServings, mealPlan, 'Protein');
+  }, [customServings, suggestedMaxServings, mealPlan]);
+  
+  useEffect(() => {
+    calculateNutrientForMealPlan(setCarbs, suggestedMaxServings, customServings, mealPlan, 'Carbohydrates');
+  }, [customServings, suggestedMaxServings, mealPlan]);
+  
+  useEffect(() => {
+    calculateNutrientForMealPlan(setFat, suggestedMaxServings, customServings, mealPlan, 'Fat');
+  }, [customServings, suggestedMaxServings, mealPlan]);
+
+  const generatePlan = async () => {
     try {
-      const recipesSnapshot = await getDocs(recipesCollection);
-
-      const filteredRecipes = recipesSnapshot.docs
-        .map((doc) => ({ id: doc.id, ...doc.data() } as Recipe))
-        .filter(
-          (recipe) =>
-            recipe.nutrientsForTheRecipe.main.calories.amount <= userPreferences.calories &&
-            recipe.nutrientsForTheRecipe.main.protein.amount <= userPreferences.protein &&
-            recipe.nutrientsForTheRecipe.main.fat.amount <= userPreferences.fat &&
-            recipe.nutrientsForTheRecipe.main.carbohydrates.amount <= userPreferences.carbs
-        )
-
-      const breakfastRecipes = filteredRecipes.filter(recipe => recipe.isForBreakfast);
-      const nonBreakfastRecipes = filteredRecipes.filter(recipe => !recipe.isForBreakfast);  
-
-      // Randomly select ONE breakfast recipe
-      const selectedBreakfastRecipe = breakfastRecipes.length > 0 ? breakfastRecipes[Math.floor(Math.random() * breakfastRecipes.length)] : null;
-
-      // Randomly select TWO nonbreakfast recipes
-      nonBreakfastRecipes.sort(() => Math.random() - 0.5);
-      const selectedNonBreakfastRecipes = nonBreakfastRecipes.slice(0, 2);
-
-      const selectedRecipes = {
-        breakfast: selectedBreakfastRecipe,
-        lunch: selectedNonBreakfastRecipes[0] || null,
-        dinner: selectedNonBreakfastRecipes[1] || null,
-      };
-
-      setMealPlan(selectedRecipes);
+      await generateMealPlan(
+        userPreferences,
+        nutrientTypes,
+        setSuggestedMaxServings,
+        setCustomServings,
+        setMealPlan,
+        setProtein,
+        customServings
+      );
+  
+      // Access the calculated values after state updates
+      console.log('Calories:', calories);
+      console.log('Protein:', protein);
+      console.log('Carbs:', carbs);
+      console.log('Fat:', fat);
+  
     } catch (error) {
-      console.error('Error getting recipes:', error);
+      console.error('Error generating meal plan:', error);
     }
   };
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <h1>babati</h1>
-      <VStack spacing={4} align="stretch">
-        <label>
-          Calories:
-          <Input type="number" name="calories" value={userPreferences.calories} onChange={handleInputChange} />
-        </label>
-        <label>
-          Protein:
-          <Input type="number" name="protein" value={userPreferences.protein} onChange={handleInputChange} />
-        </label>
-        <label>
-          Fat:
-          <Input type="number" name="fat" value={userPreferences.fat} onChange={handleInputChange} />
-        </label>
-        <label>
-          Carbs:
-          <Input type="number" name="carbs" value={userPreferences.carbs} onChange={handleInputChange} />
-        </label>
-        <Button onClick={() => generateMealPlan()}>Generate Meal Plan</Button>
-        <ul>
-          <li>Breakfast: {mealPlan.breakfast?.title || 'No recipe available'}</li>
-          <li>Lunch: {mealPlan.lunch?.title || 'No recipe available'}</li>
-          <li>Dinner: {mealPlan.dinner?.title || 'No recipe available'}</li>
-        </ul>
-      </VStack>
+      <UserPreferencesInput
+        userPreferences={userPreferences}
+        handleInputChange={handleInputChange}
+        generatePlan={generatePlan}
+      />
+      <MealPlanDetails
+        customServings={customServings}
+        suggestedMaxServings={suggestedMaxServings}
+        mealPlan={mealPlan}
+        calories={calories}
+        protein={protein}
+        carbs={carbs}
+        fat={fat}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+      />
     </Box>
   );
 }
