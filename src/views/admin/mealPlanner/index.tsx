@@ -23,13 +23,6 @@ export default function MealPlanner() {
     dinner: null
   });
 
-  const [nutrients, setNutrients] = useState<Nutrients>({
-    summed: 0,
-    breakfast: 0,
-    lunch: 0,
-    dinner: 0,
-  });
-
   const [calories, setCalories] = useState<Nutrients>({
     summed: 0,
     breakfast: 0,

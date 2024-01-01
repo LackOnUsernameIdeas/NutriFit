@@ -84,20 +84,6 @@ export interface Nutrient {
 
 export type Nutrients = Partial<{ summed: number; breakfast: number; lunch: number; dinner: number; }>;
 
-type NutrientBreakdown = {
-  calories: number;
-  protein: number;
-  fat: number;
-  carbs: number;
-};
-
-// export type Nutrients = {
-//   summed: number;
-//   breakfast: NutrientBreakdown;
-//   lunch: NutrientBreakdown;
-//   dinner: NutrientBreakdown;
-// };
-
 export type SuggestedMaxServings = { breakfast: number; lunch: number; dinner: number; };
 
 export type CustomServings = { breakfast: number; lunch: number; dinner: number; };
