@@ -23,7 +23,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, onAuthStateChanged, User } from 'firebase/auth';
 // Chakra imports
 import {
   Box,
@@ -49,6 +49,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import Cookies from 'js-cookie';
+import jwt from 'jsonwebtoken'
 
 function SignIn() {
   const textColor = useColorModeValue("navy.700", "white");
@@ -77,27 +78,51 @@ function SignIn() {
     try {
       const auth = getAuth();
       await setPersistence(auth, browserSessionPersistence);
+      // const userCredential = 
       await signInWithEmailAndPassword(auth, email, password);
+
+      // // Generate JWT token on the server and get it in response
+      // const jwtToken = await generateToken(userCredential.user);
+
+      // // Store the token in local storage
+      // localStorage.setItem('jwtToken', jwtToken);
+
       // User successfully signed in
       history.push('/admin');
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        switch(error.message){
+          case 'auth/invalid-email':
+            setError('An invalid email has been provided.');
+            break;
+          case 'auth/invalid-password':
+            setError('Password should be at least 6 characters long.');
+            break;
+          case 'auth/invalid-credential':
+            setError('Could not sign in, please try again.');
+            break;
+          case 'auth/user-not-found':
+            setError('Could not sign in, please try again.');
+            break;
+          default:
+            setError('An error has occurred while signing in: ' + error.message)
+        }
       } else {
-        setError('An error occurred while signing up.');
+        setError('An error has occurred while signing in.');
       }
     }
   };
-
-  // Use useEffect to monitor authentication state changes and manage cookies
+  
+  
+  //Use useEffect to monitor authentication state changes and manage cookies
   useEffect(() => {
     const auth = getAuth();
 
     // Set up an authentication state change listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, set a cookie with user UID
-        Cookies.set('uid', user.uid, { expires: 7 }); // Set cookie to expire in 7 days
+        //Set a cookie with user UID
+        Cookies.set('uid', user.uid, { expires: 1 }); // Set cookie to expire in certain amount of days (1)
       } else {
         // User is signed out, clear the cookie
         Cookies.remove('uid');
@@ -107,6 +132,24 @@ function SignIn() {
     return () => unsubscribe();
   }, []); // Empty dependency array means this effect runs once after the initial render
   
+  //TODO: make the dumb fucking jwt tokens work
+
+  // const getUserUID = (user: User) => user.uid;
+
+  // const generateToken = (user: User) => {
+  //   const uid = getUserUID(user);
+    
+  //   const payload = {
+  //     uid
+  //   };
+  //   const secretKey = process.env.REACT_APP_ACCESS_TOKEN_SECRET as string;
+  //   const options = { 
+  //     expiresIn: '1d',
+  //   };
+
+  //   return jwt.sign(payload, secretKey, options);
+  // };
+
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex

@@ -54,12 +54,24 @@ function SignUp() {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
       // User successfully signed up
-      history.push('/admin'); // Redirect to the dashboard after signing up
+      history.push('/auth/sign-in'); // Redirect to sign in after signing up
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        switch(error.message){
+          case 'auth/invalid-email':
+            setError('An invalid email has been provided.');
+            break;
+          case 'auth/email-already-exists':
+            setError('This email has already been signed up. Try logging in.');
+            break;
+          case 'auth/invalid-password':
+            setError('Password should be at least 6 characters long.');
+            break;
+          default:
+            setError('An error has occurred while signing up: ' + error.message)
+        }
       } else {
-        setError('An error occurred while signing up.');
+        setError('An error has occurred while signing up.');
       }
     }
   };
