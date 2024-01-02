@@ -65,7 +65,7 @@ export default function ColumnTable(props: { tableName: string, tableData: any, 
 
 	return (
 		<Card flexDirection='column' w='100%' px='0px' overflowX={{ sm: 'scroll', lg: 'hidden' }}>
-			<Flex px='25px' mb="8px" justifyContent='space-between' align='center'>
+			<Flex justify="space-between" align="start" px={{ base: "0px", "2xl": "10px" }} pt="5px" w="100%">
 				<Text color={textColor} fontSize='22px' mb="4px" fontWeight='700' lineHeight='100%'>
 					{tableName}
 				</Text>

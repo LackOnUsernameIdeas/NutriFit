@@ -16,6 +16,8 @@ import MealPlanner from "views/admin/mealPlanner";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
+import SignUpCentered from "views/auth/signUp";
+import ForgotPass from "views/auth/forgotPass";
 
 const routes = [
   {
@@ -60,6 +62,23 @@ const routes = [
     path: "/sign-in",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: SignInCentered,
+    hideInSidebar: true
+  },
+  {
+    name: "Вход",
+    layout: "/auth",
+    path: "/sign-up",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: SignUpCentered,
+    hideInSidebar: true
+  },
+  {
+    name: "Вход",
+    layout: "/auth",
+    path: "/forgot-password",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: ForgotPass,
+    hideInSidebar: true 
   },
   {
     name: "Съставяне на план за хранене",

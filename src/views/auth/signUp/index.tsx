@@ -1,29 +1,6 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, onAuthStateChanged, User } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 // Chakra imports
 import {
   Box,
@@ -48,10 +25,8 @@ import illustration from "assets/img/auth/auth.png";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
-import Cookies from 'js-cookie';
-import jwt from 'jsonwebtoken'
 
-function SignIn() {
+function SignUp() {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -69,84 +44,38 @@ function SignIn() {
   );
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory();
   const [error, setError] = useState('');
-  const [rememberMe, setRememberMe] = useState(false)
-  const handleRememberMeChange = async () => {
-    setRememberMe(!rememberMe); // Toggle the rememberMe state
-  };
-  const handleSignIn = async () => {
+
+  const handleSignUp = async () => {
     try {
       const auth = getAuth();
-      await setPersistence(auth, browserSessionPersistence);
-      await signInWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
+      // User successfully signed up
       setError('');
-      history.push('/admin');
-      if (rememberMe) {
-        // Set cookie with user UID only when "Remember Me" is checked
-        Cookies.set('remember', 'remember', { expires: 5 }); // Set cookie to expire in 5 days
-      } else {
-        // If "Remember Me" is not checked, remove any existing "uid" cookie
-        Cookies.remove('remember');
-      }
+      history.push('/auth/sign-in'); // Redirect to sign in after signing up
     } catch (error) {
       if (error instanceof Error) {
         switch(error.message){
           case 'Firebase: Error (auth/invalid-email).':
             setError('An invalid email has been provided.');
             break;
+          case 'Firebase: Error (auth/email-already-exists).':
+            setError('This email has already been signed up. Try logging in.');
+            break;
           case 'Firebase: Error (auth/invalid-password).':
             setError('Password should be at least 6 characters long.');
             break;
-          case 'Firebase: Error (auth/invalid-credential).':
-            setError('Could not sign in, please try again.');
-            break;
-          case 'Firebase: Error (auth/user-not-found).':
-            setError('Could not sign in, please try again.');
-            break;
           default:
-            setError('An error has occurred while signing in: ' + error.message)
+            setError('An error has occurred while signing up: ' + error.message)
         }
       } else {
-        setError('An error has occurred while signing in.');
+        setError('An error has occurred while signing up.');
       }
     }
   };
-  //TODO: make the dumb fucking jwt tokens work
-  useEffect(() => {
-    const auth = getAuth();
-
-    // Set up an authentication state change listener
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, set a cookie with user UID
-        Cookies.set('uid', user.uid, { expires: 1 }); // Set cookie to expire in 7 days
-      } else {
-        // User is signed out, clear the cookie
-        Cookies.remove('uid');
-      }
-    });
-
-    // Clean up the listener when the component unmounts
-    return () => unsubscribe();
-  }, []);
-  // const getUserUID = (user: User) => user.uid;
-
-  // const generateToken = (user: User) => {
-  //   const uid = getUserUID(user);
-    
-  //   const payload = {
-  //     uid
-  //   };
-  //   const secretKey = process.env.REACT_APP_ACCESS_TOKEN_SECRET as string;
-  //   const options = { 
-  //     expiresIn: '1d',
-  //   };
-
-  //   return jwt.sign(payload, secretKey, options);
-  // };
 
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
@@ -164,7 +93,7 @@ function SignIn() {
         flexDirection='column'>
         <Box me='auto'>
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Sign In
+            Sign Up
           </Heading>
           <Text
             mb='36px'
@@ -172,7 +101,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign in!
+            Enter your email and password to sign up!
           </Text>
         </Box>
         <Flex
@@ -199,7 +128,7 @@ function SignIn() {
             _active={googleActive}
             _focus={googleActive}>
             <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
-            Sign in with Google
+            Sign Up with Google
           </Button>
           <Flex align='center' mb='25px'>
             <HSeparator />
@@ -258,43 +187,17 @@ function SignIn() {
                 />
               </InputRightElement>
             </InputGroup>
-            <Flex justifyContent='space-between' align='center' mb='24px'>
-              <FormControl display='flex' alignItems='center'>
-                <Checkbox
-                  id='remember-login'
-                  colorScheme='brandScheme'
-                  me='10px'
-                  onChange={handleRememberMeChange}
-                />
-                <FormLabel
-                  htmlFor='remember-login'
-                  mb='0'
-                  fontWeight='normal'
-                  color={textColor}
-                  fontSize='sm'>
-                  Keep me logged in
-                </FormLabel>
-              </FormControl>
-              <NavLink to='/auth/forgot-password'>
-                <Text
-                  color={textColorBrand}
-                  fontSize='sm'
-                  w='124px'
-                  fontWeight='500'>
-                  Forgot password?
-                </Text>
-              </NavLink>
-            </Flex>
             <Button
-              onClick={handleSignIn}
+              onClick={handleSignUp}
               fontSize='sm'
               variant='brand'
               fontWeight='500'
               w='100%'
               h='50'
               mb='24px'>
-              Sign In
+              Sign Up
             </Button>
+            {/* Display error message */}
             {error && (
                 <Text color='red' fontSize='sm' mb='8px'>
                 {error}
@@ -308,14 +211,14 @@ function SignIn() {
             maxW='100%'
             mt='0px'>
             <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-              Not registered yet?
-              <NavLink to='/auth/sign-up'>
+              Already have an account?
+              <NavLink to='/auth/sign-in'>
                 <Text
                   color={textColorBrand}
                   as='span'
                   ms='5px'
                   fontWeight='500'>
-                  Create an Account
+                  Sign In
                 </Text>
               </NavLink>
             </Text>
@@ -326,4 +229,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;

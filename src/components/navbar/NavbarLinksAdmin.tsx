@@ -25,6 +25,7 @@ import { MdNotificationsNone, MdInfoOutline } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FaEthereum } from "react-icons/fa";
 import routes from "routes";
+import { NavLink } from "react-router-dom";
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
@@ -117,7 +118,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
               borderRadius="8px"
               px="14px"
             >
-              <Text fontSize="sm">Излез</Text>
+              <Link href="http://localhost:3000/horizon-ui-chakra-ts#/auth/sign-in">
+                <Text fontSize="sm">Излез</Text>
+              </Link>
             </MenuItem>
           </Flex>
         </MenuList>
