@@ -130,7 +130,7 @@ export default function WeightStats() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 700);
+    }, 1000);
   }, []);
 
   const headers = {
