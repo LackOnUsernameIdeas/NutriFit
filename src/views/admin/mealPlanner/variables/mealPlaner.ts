@@ -32,10 +32,10 @@ export interface Recipe {
 };
 
 export interface UserPreferences {
-    calories: number;
-    protein: number;
-    fat: number;
-    carbs: number;
+    Calories: number;
+    Protein: number;
+    Fat: number;
+    Carbohydrates: number;
 }
 
 export interface CustomServingInputProps {
@@ -76,13 +76,13 @@ export type Fat = {
   dinner: number;
 };
 
-export interface Nutrient {
-  type: 'calories' | 'protein' | 'carbs' | 'fat';
-  label: string;
-  setter?: React.Dispatch<React.SetStateAction<Nutrients>>;
-};
+export type NutrientState = Partial<{ summed: number; breakfast: number; lunch: number; dinner: number; }>;
 
-export type Nutrients = Partial<{ summed: number; breakfast: number; lunch: number; dinner: number; }>;
+export interface Nutrient {
+  type: 'Calories' | 'Protein' | 'Carbohydrates' | 'Fat';
+  label: string;
+  setter?: React.Dispatch<React.SetStateAction<NutrientState>>;
+};
 
 export type SuggestedMaxServings = { breakfast: number; lunch: number; dinner: number; };
 

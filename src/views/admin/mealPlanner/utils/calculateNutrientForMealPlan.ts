@@ -1,7 +1,7 @@
-import { Recipe, MealPlan, CustomServings, SuggestedMaxServings, Nutrients } from "../variables/mealPlaner";
+import { Recipe, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../variables/mealPlaner";
 
 export const calculateNutrientForMealPlan = (
-  setNutrient: React.Dispatch<React.SetStateAction<Nutrients>>,
+  setNutrient: React.Dispatch<React.SetStateAction<NutrientState>>,
   suggestedMaxServings: SuggestedMaxServings,
   customServings: CustomServings,
   mealPlan: MealPlan,

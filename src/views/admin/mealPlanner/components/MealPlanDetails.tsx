@@ -1,16 +1,16 @@
 import React from 'react';
 import { CustomServingInput } from "./CustomServingInput";
-import { MealPlan, Nutrients, SuggestedMaxServings, CustomServings } from "../variables/mealPlaner";
+import { MealPlan, NutrientState, SuggestedMaxServings, CustomServings } from "../variables/mealPlaner";
 
 
 interface MealPlanDetailsProps {
   customServings: CustomServings;
   suggestedMaxServings: SuggestedMaxServings;
   mealPlan: MealPlan;
-  calories: Nutrients;
-  protein: Nutrients;
-  carbs: Nutrients;
-  fat: Nutrients;
+  calories: NutrientState;
+  protein: NutrientState;
+  carbs: NutrientState;
+  fat: NutrientState;
   handleIncrement: (mealType: keyof CustomServings) => void;
   handleDecrement: (mealType: keyof CustomServings) => void;
 }

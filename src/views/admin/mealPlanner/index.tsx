@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 // Chakra imports
 import { Box } from "@chakra-ui/react";
 
-import { Recipe, UserPreferences, MealPlan, Nutrient, Nutrients, SuggestedMaxServings, CustomServings } from "./variables/mealPlaner";
+import { UserPreferences, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "./variables/mealPlaner";
 import { generateMealPlan } from "./utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "./utils/calculateNutrientForMealPlan";
 import UserPreferencesInput from "./components/UserPreferencesInput";
@@ -11,10 +11,10 @@ import MealPlanDetails from "./components/MealPlanDetails";
 
 export default function MealPlanner() {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({
-    calories: 2000,
-    protein: 150,
-    fat: 70,
-    carbs: 200,
+    Calories: 2000,
+    Protein: 150,
+    Fat: 70,
+    Carbohydrates: 200,
   });
   
   const [mealPlan, setMealPlan] = useState<MealPlan>({
@@ -23,28 +23,28 @@ export default function MealPlanner() {
     dinner: null
   });
 
-  const [calories, setCalories] = useState<Nutrients>({
+  const [calories, setCalories] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
     dinner: 0,
   });
   
-  const [protein, setProtein] = useState<Nutrients>({
+  const [protein, setProtein] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
     dinner: 0,
   });
   
-  const [carbs, setCarbs] = useState<Nutrients>({
+  const [carbs, setCarbs] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
     dinner: 0,
   });
   
-  const [fat, setFat] = useState<Nutrients>({
+  const [fat, setFat] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
@@ -86,10 +86,10 @@ export default function MealPlanner() {
   };
 
   const nutrientTypes: Nutrient[] = [
-    { type: 'calories', label: 'Calories', setter: setCalories },
-    { type: 'protein', label: 'Protein', setter: setProtein },
-    { type: 'carbs', label: 'Carbohydrates', setter: setCarbs },
-    { type: 'fat', label: 'Fat', setter: setFat },
+    { type: 'Calories', label: 'Calories', setter: setCalories },
+    { type: 'Protein', label: 'Protein', setter: setProtein },
+    { type: 'Carbohydrates', label: 'Carbohydrates', setter: setCarbs },
+    { type: 'Fat', label: 'Fat', setter: setFat },
   ];
   
   useEffect(() => {
@@ -119,13 +119,6 @@ export default function MealPlanner() {
         setProtein,
         customServings
       );
-  
-      // Access the calculated values after state updates
-      console.log('Calories:', calories);
-      console.log('Protein:', protein);
-      console.log('Carbs:', carbs);
-      console.log('Fat:', fat);
-  
     } catch (error) {
       console.error('Error generating meal plan:', error);
     }
