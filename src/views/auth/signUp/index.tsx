@@ -152,7 +152,7 @@ function SignUp() {
               fontSize='sm'
               ms={{ base: "0px", md: "0px" }}
               type='email'
-              placeholder='mail@simmmple.com'
+              placeholder='example@noit.eu'
               mb='24px'
               fontWeight='500'
               size='lg'
@@ -170,7 +170,7 @@ function SignUp() {
               <Input
                 isRequired={true}
                 fontSize='sm'
-                placeholder='Min. 8 characters'
+                placeholder='Min. 6 characters'
                 mb='24px'
                 size='lg'
                 type={show ? "text" : "password"}

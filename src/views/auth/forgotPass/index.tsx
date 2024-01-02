@@ -1,29 +1,6 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState, useEffect } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, onAuthStateChanged, User } from 'firebase/auth';
+import { getAuth, fetchSignInMethodsForEmail, signInWithEmailAndPassword, verifyPasswordResetCode, confirmPasswordReset, setPersistence, browserSessionPersistence, sendPasswordResetEmail, onAuthStateChanged, User } from 'firebase/auth';
 // Chakra imports
 import {
   Box,
@@ -51,7 +28,7 @@ import { RiEyeCloseLine } from "react-icons/ri";
 import Cookies from 'js-cookie';
 import jwt from 'jsonwebtoken'
 
-function SignIn() {
+function ForgotPass() {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -73,47 +50,46 @@ function SignIn() {
   const [password, setPassword] = useState('');
   const history = useHistory();
   const [error, setError] = useState('');
-  
-  const handleSignIn = async () => {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleForgotPass = async () => {
     try {
-      const auth = getAuth();
-      await setPersistence(auth, browserSessionPersistence);
-      // const userCredential = 
-      await signInWithEmailAndPassword(auth, email, password);
-
-      // // Generate JWT token on the server and get it in response
-      // const jwtToken = await generateToken(userCredential.user);
-
-      // // Store the token in local storage
-      // localStorage.setItem('jwtToken', jwtToken);
-
-      // User successfully signed in
-      history.push('/admin');
-    } catch (error) {
-      if (error instanceof Error) {
-        switch(error.message){
-          case 'auth/invalid-email':
-            setError('An invalid email has been provided.');
-            break;
-          case 'auth/invalid-password':
-            setError('Password should be at least 6 characters long.');
-            break;
-          case 'auth/invalid-credential':
-            setError('Could not sign in, please try again.');
-            break;
-          case 'auth/user-not-found':
-            setError('Could not sign in, please try again.');
-            break;
-          default:
-            setError('An error has occurred while signing in: ' + error.message)
+        const auth = getAuth();
+        const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+        if (signInMethods.length === 0) {
+            // Email is not registered
+            setError('Email is not registered. Create an account using the button below.');
+            return;
         }
-      } else {
-        setError('An error has occurred while signing in.');
+        await sendPasswordResetEmail(auth, email);
+        // Password reset email sent successfully
+        setSuccessMessage('Password reset email sent successfully! Check your inbox.');
+        setTimeout(()=> {
+            history.push('auth/sign-in')
+        }, 5000)
+    } catch (error) {
+        if (error instanceof Error) {
+          switch(error.message){
+            case 'auth/invalid-email':
+              setError('An invalid email has been provided.');
+              break;
+            case 'auth/invalid-password':
+              setError('Password should be at least 6 characters long.');
+              break;
+            case 'auth/invalid-credential':
+              setError('Could not sign in, please try again.');
+              break;
+            case 'auth/user-not-found':
+              setError('Could not sign in, please try again.');
+              break;
+            default:
+              setError('An error has occurred while signing in: ' + error.message)
+          }
+        } else {
+          setError('An error has occurred while signing in.');
+        }
       }
-    }
-  };
-  
-  
+  };  
   //Use useEffect to monitor authentication state changes and manage cookies
   useEffect(() => {
     const auth = getAuth();
@@ -158,7 +134,7 @@ function SignIn() {
         mx={{ base: "auto", lg: "0px" }}
         me='auto'
         h='100%'
-        alignItems='start'
+        alignItems='center'
         justifyContent='center'
         mb={{ base: "30px", md: "60px" }}
         px={{ base: "25px", md: "0px" }}
@@ -166,7 +142,7 @@ function SignIn() {
         flexDirection='column'>
         <Box me='auto'>
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Sign In
+            Forgot Password?
           </Heading>
           <Text
             mb='36px'
@@ -174,7 +150,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign in!
+            Please provide your email and we'll send a password reset.
           </Text>
         </Box>
         <Flex
@@ -187,30 +163,10 @@ function SignIn() {
           mx={{ base: "auto", lg: "unset" }}
           me='auto'
           mb={{ base: "20px", md: "auto" }}>
-          <Button
-            fontSize='sm'
-            me='0px'
-            mb='26px'
-            py='15px'
-            h='50px'
-            borderRadius='16px'
-            bg={googleBg}
-            color={googleText}
-            fontWeight='500'
-            _hover={googleHover}
-            _active={googleActive}
-            _focus={googleActive}>
-            <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
-            Sign in with Google
-          </Button>
-          <Flex align='center' mb='25px'>
-            <HSeparator />
-            <Text color='gray.400' mx='14px'>
-              or
-            </Text>
-            <HSeparator />
-          </Flex>
           <FormControl>
+            <Flex align='center' mb='25px'>
+                <HSeparator />
+            </Flex>
             <FormLabel
               display='flex'
               ms='4px'
@@ -232,70 +188,21 @@ function SignIn() {
               size='lg'
               onChange={(email) => setEmail(email.target.value)}
             />
-            <FormLabel
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              display='flex'>
-              Password<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size='md'>
-              <Input
-                isRequired={true}
-                fontSize='sm'
-                placeholder='Min. 6 characters'
-                mb='24px'
-                size='lg'
-                type={show ? "text" : "password"}
-                variant='auth'
-                onChange={(password) => setPassword(password.target.value)}
-              />
-              <InputRightElement display='flex' alignItems='center' mt='4px'>
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick}
-                />
-              </InputRightElement>
-            </InputGroup>
-            <Flex justifyContent='space-between' align='center' mb='24px'>
-              <FormControl display='flex' alignItems='center'>
-                <Checkbox
-                  id='remember-login'
-                  colorScheme='brandScheme'
-                  me='10px'
-                />
-                <FormLabel
-                  htmlFor='remember-login'
-                  mb='0'
-                  fontWeight='normal'
-                  color={textColor}
-                  fontSize='sm'>
-                  Keep me logged in
-                </FormLabel>
-              </FormControl>
-              <NavLink to='/auth/forgot-password'>
-                <Text
-                  color={textColorBrand}
-                  fontSize='sm'
-                  w='124px'
-                  fontWeight='500'>
-                  Forgot password?
-                </Text>
-              </NavLink>
-            </Flex>
             <Button
-              onClick={handleSignIn}
+              onClick={handleForgotPass}
               fontSize='sm'
               variant='brand'
               fontWeight='500'
               w='100%'
               h='50'
               mb='24px'>
-              Sign In
+              Send email
             </Button>
+            {successMessage && (
+                <Text color='green' fontSize='sm' mb='8px'>
+                {successMessage}
+                </Text>
+            )}
             {error && (
                 <Text color='red' fontSize='sm' mb='8px'>
                 {error}
@@ -326,5 +233,4 @@ function SignIn() {
     </DefaultAuth>
   );
 }
-
-export default SignIn;
+export default ForgotPass;

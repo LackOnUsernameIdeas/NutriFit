@@ -14,7 +14,6 @@ yarn.lock
 # production
 /build
 build
-src/database
 
 # misc
 .DS_Store
