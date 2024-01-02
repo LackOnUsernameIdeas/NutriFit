@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 // Chakra imports
-import { Box } from "@chakra-ui/react";
+import { Box, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 
+import { HSeparator } from "components/separator/Separator";
 import { UserPreferences, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "./variables/mealPlaner";
 import { generateMealPlan } from "./utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "./utils/calculateNutrientForMealPlan";
 import UserPreferencesInput from "./components/UserPreferencesInput";
 import MealPlanDetails from "./components/MealPlanDetails";
+import Card from "components/card/Card";
 
 export default function MealPlanner() {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({
@@ -149,22 +151,43 @@ export default function MealPlanner() {
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <UserPreferencesInput
-        userPreferences={userPreferences}
-        handleInputChange={handleInputChange}
-        generatePlan={generatePlan}
-      />
-      <MealPlanDetails
-        customServings={customServings}
-        suggestedMaxServings={suggestedMaxServings}
-        mealPlan={mealPlan}
-        calories={calories}
-        protein={protein}
-        carbs={carbs}
-        fat={fat}
-        handleIncrement={handleIncrement}
-        handleDecrement={handleDecrement}
-      />
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        <Card minH="200px">
+          <Flex justify="center" pt="5px" w="100%">
+            <Text fontSize="5xl" fontStyle="italic">
+              Generate a meal plan with NutriFit!
+            </Text>
+          </Flex>
+          <HSeparator />
+          <Flex justify="center" mt="1%" pt="10px">
+            <Text fontSize="3xl">
+                Please input the fields on the left with your desired limits. The meal plan will be generated on the right.
+            </Text>
+          </Flex>
+        </Card>
+      </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <Card minH="1000px">
+          <UserPreferencesInput
+            userPreferences={userPreferences}
+            handleInputChange={handleInputChange}
+            generatePlan={generatePlan}
+          />
+        </Card>
+        <Card>
+          <MealPlanDetails
+            customServings={customServings}
+            suggestedMaxServings={suggestedMaxServings}
+            mealPlan={mealPlan}
+            calories={calories}
+            protein={protein}
+            carbs={carbs}
+            fat={fat}
+            handleIncrement={handleIncrement}
+            handleDecrement={handleDecrement}
+          />
+        </Card>
+      </SimpleGrid>
     </Box>
   );
 }

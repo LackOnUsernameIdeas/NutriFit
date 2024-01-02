@@ -13,14 +13,20 @@ export const CustomServingInput: React.FC<CustomServingInputProps> = ({
 }) => {
     return (
       <>
-        <Button onClick={onDecrement}>-</Button>
+        <Button size='lg' onClick={onDecrement}>-</Button>
         <Input
           type="number"
           placeholder="Custom Serving"
           value={value}
           readOnly
+          variant='auth'
+          fontSize='sm'
+          ms={{ base: "0px", md: "0px" }}
+          fontWeight='500'
+          mb="2px"
+          size='lg'
         />
-        <Button onClick={onIncrement}>+</Button>
+        <Button size='lg' onClick={onIncrement}>+</Button>
       </>
     );
 };
