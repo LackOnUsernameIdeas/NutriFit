@@ -73,35 +73,37 @@ function SignIn() {
   const [password, setPassword] = useState('');
   const history = useHistory();
   const [error, setError] = useState('');
-  
+  const [rememberMe, setRememberMe] = useState(false)
+  const handleRememberMeChange = async () => {
+    setRememberMe(!rememberMe); // Toggle the rememberMe state
+  };
   const handleSignIn = async () => {
     try {
       const auth = getAuth();
       await setPersistence(auth, browserSessionPersistence);
-      // const userCredential = 
       await signInWithEmailAndPassword(auth, email, password);
-
-      // // Generate JWT token on the server and get it in response
-      // const jwtToken = await generateToken(userCredential.user);
-
-      // // Store the token in local storage
-      // localStorage.setItem('jwtToken', jwtToken);
-
-      // User successfully signed in
+      setError('');
       history.push('/admin');
+      if (rememberMe) {
+        // Set cookie with user UID only when "Remember Me" is checked
+        Cookies.set('remember', 'remember', { expires: 5 }); // Set cookie to expire in 5 days
+      } else {
+        // If "Remember Me" is not checked, remove any existing "uid" cookie
+        Cookies.remove('remember');
+      }
     } catch (error) {
       if (error instanceof Error) {
         switch(error.message){
-          case 'auth/invalid-email':
+          case 'Firebase: Error (auth/invalid-email).':
             setError('An invalid email has been provided.');
             break;
-          case 'auth/invalid-password':
+          case 'Firebase: Error (auth/invalid-password).':
             setError('Password should be at least 6 characters long.');
             break;
-          case 'auth/invalid-credential':
+          case 'Firebase: Error (auth/invalid-credential).':
             setError('Could not sign in, please try again.');
             break;
-          case 'auth/user-not-found':
+          case 'Firebase: Error (auth/user-not-found).':
             setError('Could not sign in, please try again.');
             break;
           default:
@@ -112,28 +114,24 @@ function SignIn() {
       }
     }
   };
-  
-  
-  //Use useEffect to monitor authentication state changes and manage cookies
+  //TODO: make the dumb fucking jwt tokens work
   useEffect(() => {
     const auth = getAuth();
 
     // Set up an authentication state change listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        //Set a cookie with user UID
-        Cookies.set('uid', user.uid, { expires: 1 }); // Set cookie to expire in certain amount of days (1)
+        // User is signed in, set a cookie with user UID
+        Cookies.set('uid', user.uid, { expires: 1 }); // Set cookie to expire in 7 days
       } else {
         // User is signed out, clear the cookie
         Cookies.remove('uid');
       }
     });
+
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
-  }, []); // Empty dependency array means this effect runs once after the initial render
-  
-  //TODO: make the dumb fucking jwt tokens work
-
+  }, []);
   // const getUserUID = (user: User) => user.uid;
 
   // const generateToken = (user: User) => {
@@ -266,6 +264,7 @@ function SignIn() {
                   id='remember-login'
                   colorScheme='brandScheme'
                   me='10px'
+                  onChange={handleRememberMeChange}
                 />
                 <FormLabel
                   htmlFor='remember-login'

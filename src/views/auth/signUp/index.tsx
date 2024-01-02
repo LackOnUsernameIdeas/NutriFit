@@ -54,17 +54,18 @@ function SignUp() {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
       // User successfully signed up
+      setError('');
       history.push('/auth/sign-in'); // Redirect to sign in after signing up
     } catch (error) {
       if (error instanceof Error) {
         switch(error.message){
-          case 'auth/invalid-email':
+          case 'Firebase: Error (auth/invalid-email).':
             setError('An invalid email has been provided.');
             break;
-          case 'auth/email-already-exists':
+          case 'Firebase: Error (auth/email-already-exists).':
             setError('This email has already been signed up. Try logging in.');
             break;
-          case 'auth/invalid-password':
+          case 'Firebase: Error (auth/invalid-password).':
             setError('Password should be at least 6 characters long.');
             break;
           default:
