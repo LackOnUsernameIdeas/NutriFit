@@ -28,10 +28,11 @@ import {
   Icon,
   Text,
   Button,
-  ButtonGroup,
-  Link,
-  Select,
+  Input,
   SimpleGrid,
+  Stack,
+  Radio,
+  RadioGroup,
   useColorModeValue,
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
@@ -40,7 +41,7 @@ import IconBox from "components/icons/IconBox";
 import ColumnsTable from 'views/admin/dataTables/components/ColumnsTable';
 import CalorieRequirements from "./components/CalorieRequirements";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
-import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
+import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData, Goal } from '../../../types/weightStats';
 import Loading from "./components/Loading";
 
 export default function WeightStats() {
@@ -126,23 +127,16 @@ export default function WeightStats() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
   const headers = {
     "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
     "X-RapidAPI-Key": "9f28f7d48amsh2d3e88bff5dc3e3p128d8ajsn8d2c53ac54e5",
     "Content-Type": "application/json",
   }
 
-  const fetchPerfectWeightData = async () => {
+  const fetchPerfectWeightData = async (gender: string, height: number) => {
     try {
       fetch(
-        "https://fitness-calculator.p.rapidapi.com/idealweight?gender=male&height=185",
+        `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${gender}&height=${height}`,
         {
           method: "GET",
           headers: headers,
@@ -171,10 +165,10 @@ export default function WeightStats() {
     }
   };
 
-  const fetchBodyFatAndLeanMassData = async () => {
+  const fetchBodyFatAndLeanMassData = async (age: number, gender: string, height: number, weight: number, neck: number, waist: number, hip: number) => {
     try {
       fetch(
-        "https://fitness-calculator.p.rapidapi.com/bodyfat?age=16&gender=male&weight=107&height=185&neck=50&waist=96&hip=92",
+        `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${gender}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
         {
           method: "GET",
           headers: headers,
@@ -202,12 +196,12 @@ export default function WeightStats() {
     }
   };
 
-  const fetchCaloriesForActivityLevels = async () => {
+  const fetchCaloriesForActivityLevels = async (age: number, gender: string, height: number, weight: number) => {
     try {
       const requests = [];
 
       for (let i = 1; i <= 6; i++) {
-        const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=16&gender=male&weight=110&height=185&activitylevel=level_${i}`;
+        const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${gender}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
 
         requests.push(
           fetch(url, {
@@ -266,12 +260,12 @@ export default function WeightStats() {
   };
     
 
-  const fetchMacroNutrients = async () => {
+  const fetchMacroNutrients = async (age: number, gender: string, height: number, weight: number, goal: Goal) => {
     try {
       const requests = [];
 
       for (let i = 1; i <= 6; i++) {
-        const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=16&gender=male&activitylevel=${i}&goal=weightlose&weight=107&height=185`;
+        const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
         requests.push(
           fetch(url, {
@@ -317,127 +311,483 @@ export default function WeightStats() {
       console.error(err.message);
     }
   };
+
+  const [userData, setUserData] = useState<{
+    gender: 'male' | 'female',
+    height: number,
+    age: number,
+    weight: number,
+    neck: number,
+    waist: number,
+    hip: number,
+    goal: Goal
+  }>({
+    gender: 'male',
+    height: 185,
+    age: 16,
+    weight: 105,
+    neck: 39,
+    waist: 108,
+    hip: 117,
+    goal: 'weightlose'
+  });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
-  useEffect(() => {
-    fetchPerfectWeightData();
-    fetchBodyFatAndLeanMassData();
-    fetchCaloriesForActivityLevels();
-    fetchMacroNutrients();
-  }, []);
+  function generateStats(){
+    fetchPerfectWeightData(userData["gender"], userData["height"]);
+    fetchBodyFatAndLeanMassData(userData["age"], userData["gender"], userData["height"], userData["weight"], userData["neck"], userData["waist"], userData["hip"]);
+    fetchCaloriesForActivityLevels(userData["age"], userData["gender"], userData["height"], userData["weight"]);
+    fetchMacroNutrients(userData["age"], userData["gender"], userData["height"], userData["weight"], userData["goal"]);
+
+    setIsSubmitted(true);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }
 
   const perfectWeightWidgetsData: string[] = ['Хамви', 'Дивайн', 'Милър', 'Робинсън'];
   const bodyFatAndLeanMassWidgetsData: string[] = ['% телесни мазнини', 'Мастна телесна маса', 'Чиста телесна маса'];
   const bodyFatAndLeanMassWidgetsUnits: string[] = ['%','kg','kg'];
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: parseFloat(value)
+    }));
+  };  
+
+  const handleRadioChange = (key: string, radioValue: string) => {
+    setUserData((prevData) => ({
+      ...prevData,
+      [key]: radioValue,
+    }));
+  };
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Box>
-          <Card
-            p="20px"
-            alignItems="center"
-            flexDirection="column"
-            w="100%"
-            mb="20px"
-          >
-            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-              Какво е вашето перфектно тегло според формулите:
-            </Text>
-            <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="20px" mb="10px">
-              {Object.entries(perfectWeight).map(([key, value], index) => (
-                <MiniStatistics
-                  key={key}
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg={boxBg}
-                      icon={
-                        <Icon w="32px" h="32px" as={GiWeightLiftingUp} color={brandColor} />
-                      }
-                    />
-                  }
-                  name={perfectWeightWidgetsData[index]}
-                  value={value + ' kg'}
-                />
-              ))}
-            </SimpleGrid>
-          </Card>
-          <Card
-            p="20px"
-            alignItems="center"
-            flexDirection="column"
-            w="100%"
-            mb="20px"
-          >
-            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-              Колко от вашето тегло е :
-            </Text>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="20px" mb="10px">
-              {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
-                <MiniStatistics
-                  key={key} 
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg={boxBg}
-                      icon={
-                        <Icon w="32px" h="32px" as={GiWeightScale} color={brandColor} />
-                      }
-                    />
-                  }
-                  name={bodyFatAndLeanMassWidgetsData[index]}
-                  value={value + ' ' + bodyFatAndLeanMassWidgetsUnits[index]}
-                />
-              ))}
-            </SimpleGrid>
-          </Card>
-          <Card
-            p="20px"
-            alignItems="center"
-            flexDirection="column"
-            w="100%"
-            mb="20px"
-          >
-            <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-              Колко калории трябва да приемате на ден според целите:
-            </Text>
-            {activityLevel && (
-              <CalorieRequirements
-                calorieRequirements={dailyCaloryRequirements}
-                selectedActivityLevel={activityLevel}
-              />
-            )}
-            <Box gap="10px" mb="20px">
-              <Flex>
-                <SimpleGrid columns={{ base: 3, md: 2, lg: 6 }} spacing="10px" alignItems="center" mb="10px">
-                    {[1, 2, 3, 4, 5, 6].map((level) => (
-                      <Button
-                        key={level}
-                        fontSize={{ base: "sm", md: "md" }}
-                        margin="0"
-                        colorScheme={activityLevel === level ? 'blue' : 'gray'}
-                        onClick={() => setActivityLevel(level)}
-                      >
-                        Ниво {level}
-                      </Button>
+      <Box>
+        {isSubmitted ? (
+          <Box>
+            {isLoading ? (
+              <Box>
+                <Card
+                  p="20px"
+                  alignItems="center"
+                  flexDirection="column"
+                  w="100%"
+                  mb="20px"
+                >
+                  <Box gap="10px" mb="20px">
+                    {Object.entries(userData).map(([key, value]) => (
+                      <label key={key}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:
+                        {typeof value === "number" ? (
+                          <Input
+                            type="number"
+                            name={key}
+                            value={value}
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        ) : key === "gender" ? (
+                          <Stack direction="row">
+                            <Radio
+                              value="male"
+                              onChange={() => handleRadioChange(key, "male")}
+                              isChecked={value === "male"}
+                            >
+                              Male
+                            </Radio>
+                            <Radio
+                              value="female"
+                              onChange={() => handleRadioChange(key, "female")}
+                              isChecked={value === "female"}
+                            >
+                              Female
+                            </Radio>
+                          </Stack>
+                        ) : key === "goal" ? (
+                          <Stack direction="row">
+                            <Radio
+                              value="maintain"
+                              onChange={() => handleRadioChange(key, "maintain")}
+                              isChecked={value === "maintain"}
+                            >
+                              Maintain Weight
+                            </Radio>
+                            <Radio
+                              value="mildlose"
+                              onChange={() => handleRadioChange(key, "mildlose")}
+                              isChecked={value === "mildlose"}
+                            >
+                              Mild Weight Loss
+                            </Radio>
+                            <Radio
+                              value="weightlose"
+                              onChange={() => handleRadioChange(key, "weightlose")}
+                              isChecked={value === "weightlose"}
+                            >
+                              Weight Loss
+                            </Radio>
+                            <Radio
+                              value="extremelose"
+                              onChange={() => handleRadioChange(key, "extremelose")}
+                              isChecked={value === "extremelose"}
+                            >
+                              Extreme Weight Loss
+                            </Radio>
+                            <Radio
+                              value="mildgain"
+                              onChange={() => handleRadioChange(key, "mildgain")}
+                              isChecked={value === "mildgain"}
+                            >
+                              Mild Weight Gain
+                            </Radio>
+                            <Radio
+                              value="weightgain"
+                              onChange={() => handleRadioChange(key, "weightgain")}
+                              isChecked={value === "weightgain"}
+                            >
+                              Weight Gain
+                            </Radio>
+                            <Radio
+                              value="extremegain"
+                              onChange={() => handleRadioChange(key, "extremegain")}
+                              isChecked={value === "extremegain"}
+                            >
+                            Extreme Weight Gain
+                          </Radio>
+                        </Stack>
+                        ) : (
+                          <Input
+                            type="radio"
+                            id={value}
+                            name="goal"
+                            value={value}
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        )}
+                      </label>
                     ))}
-                </SimpleGrid>
-              </Flex>
+                    <Button onClick={generateStats}>Submit</Button>
+                  </Box>
+                </Card>
+                <Loading />
+              </Box>
+            ) : (
+              <Box>
+                <Card
+                  p="20px"
+                  alignItems="center"
+                  flexDirection="column"
+                  w="100%"
+                  mb="20px"
+                >
+                  <Box gap="10px" mb="20px">
+                    {Object.entries(userData).map(([key, value]) => (
+                      <label key={key}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:
+                        {typeof value === "number" ? (
+                          <Input
+                            type="number"
+                            name={key}
+                            value={value}
+                            defaultValue={1}
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        ) : key === "gender" ? (
+                          <Stack direction="row">
+                            <Radio
+                              value="male"
+                              onChange={() => handleRadioChange(key, "male")}
+                              isChecked={value === "male"}
+                            >
+                              Male
+                            </Radio>
+                            <Radio
+                              value="female"
+                              onChange={() => handleRadioChange(key, "female")}
+                              isChecked={value === "female"}
+                            >
+                              Female
+                            </Radio>
+                          </Stack>
+                        ) : key === "goal" ? (
+                          <Stack direction="row">
+                            <Radio
+                              value="maintain"
+                              onChange={() => handleRadioChange(key, "maintain")}
+                              isChecked={value === "maintain"}
+                            >
+                              Maintain Weight
+                            </Radio>
+                            <Radio
+                              value="mildlose"
+                              onChange={() => handleRadioChange(key, "mildlose")}
+                              isChecked={value === "mildlose"}
+                            >
+                              Mild Weight Loss
+                            </Radio>
+                            <Radio
+                              value="weightlose"
+                              onChange={() => handleRadioChange(key, "weightlose")}
+                              isChecked={value === "weightlose"}
+                            >
+                              Weight Loss
+                            </Radio>
+                            <Radio
+                              value="extremelose"
+                              onChange={() => handleRadioChange(key, "extremelose")}
+                              isChecked={value === "extremelose"}
+                            >
+                              Extreme Weight Loss
+                            </Radio>
+                            <Radio
+                              value="mildgain"
+                              onChange={() => handleRadioChange(key, "mildgain")}
+                              isChecked={value === "mildgain"}
+                            >
+                              Mild Weight Gain
+                            </Radio>
+                            <Radio
+                              value="weightgain"
+                              onChange={() => handleRadioChange(key, "weightgain")}
+                              isChecked={value === "weightgain"}
+                            >
+                              Weight Gain
+                            </Radio>
+                            <Radio
+                              value="extremegain"
+                              onChange={() => handleRadioChange(key, "extremegain")}
+                              isChecked={value === "extremegain"}
+                            >
+                            Extreme Weight Gain
+                          </Radio>
+                        </Stack>
+                        ) : (
+                          <Input
+                            type="radio"
+                            id={value}
+                            name="goal"
+                            value={value}
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        )}
+                      </label>
+                    ))}
+                    <Button onClick={generateStats}>Submit</Button>
+                  </Box>
+                </Card>
+                <Card
+                  p="20px"
+                  alignItems="center"
+                  flexDirection="column"
+                  w="100%"
+                  mb="20px"
+                >
+                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                    Какво е вашето перфектно тегло според формулите:
+                  </Text>
+                  <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="20px" mb="10px">
+                    {Object.entries(perfectWeight).map(([key, value], index) => (
+                      <MiniStatistics
+                        key={key}
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                              <Icon w="32px" h="32px" as={GiWeightLiftingUp} color={brandColor} />
+                            }
+                          />
+                        }
+                        name={perfectWeightWidgetsData[index]}
+                        value={value + ' kg'}
+                      />
+                    ))}
+                  </SimpleGrid>
+                </Card>
+                <Card
+                  p="20px"
+                  alignItems="center"
+                  flexDirection="column"
+                  w="100%"
+                  mb="20px"
+                >
+                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                    Колко от вашето тегло е :
+                  </Text>
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="20px" mb="10px">
+                    {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
+                      <MiniStatistics
+                        key={key} 
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                              <Icon w="32px" h="32px" as={GiWeightScale} color={brandColor} />
+                            }
+                          />
+                        }
+                        name={bodyFatAndLeanMassWidgetsData[index]}
+                        value={value + ' ' + bodyFatAndLeanMassWidgetsUnits[index]}
+                      />
+                    ))}
+                  </SimpleGrid>
+                </Card>
+                <Card
+                  p="20px"
+                  alignItems="center"
+                  flexDirection="column"
+                  w="100%"
+                  mb="20px"
+                >
+                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                    Колко калории трябва да приемате на ден според целите:
+                  </Text>
+                  {activityLevel && (
+                    <CalorieRequirements
+                      calorieRequirements={dailyCaloryRequirements}
+                      selectedActivityLevel={activityLevel}
+                    />
+                  )}
+                  <Box gap="10px" mb="20px">
+                    <Flex>
+                      <SimpleGrid columns={{ base: 3, md: 2, lg: 6 }} spacing="10px" alignItems="center" mb="10px">
+                          {[1, 2, 3, 4, 5, 6].map((level) => (
+                            <Button
+                              key={level}
+                              fontSize={{ base: "sm", md: "md" }}
+                              margin="0"
+                              colorScheme={activityLevel === level ? 'blue' : 'gray'}
+                              onClick={() => setActivityLevel(level)}
+                            >
+                              Ниво {level}
+                            </Button>
+                          ))}
+                      </SimpleGrid>
+                    </Flex>
+                  </Box>
+                  <ColumnsTable tableName='Макронутриенти' tableData={tableData[activityLevel - 1]} columnsData={[
+                      { name: 'name', label: 'Тип диета' },
+                      { name: 'protein', label: 'Протеин (гр.)' },
+                      { name: 'fat', label: 'Мазнини (гр.)' },
+                      { name: 'carbs', label: 'Въглехидрати (гр.)' }	
+                    ]} 
+                  />
+                </Card>
+              </Box>
+            )}
+          </Box>
+        ) : (
+          <Card
+            p="20px"
+            alignItems="center"
+            flexDirection="column"
+            w="100%"
+            mb="20px"
+          >
+            <Box gap="10px" mb="20px">
+              {Object.entries(userData).map(([key, value]) => (
+              <label key={key}>
+                {key.charAt(0).toUpperCase() + key.slice(1)}:
+                {typeof value === "number" ? (
+                  <Input
+                    type="number"
+                    name={key}
+                    value={value}
+                    onChange={(e) => handleInputChange(e)}
+                  />
+                ) : key === "gender" ? (
+                  <Stack direction="row">
+                    <Radio
+                      value="male"
+                      onChange={() => handleRadioChange(key, "male")}
+                      isChecked={value === "male"}
+                    >
+                      Male
+                    </Radio>
+                    <Radio
+                      value="female"
+                      onChange={() => handleRadioChange(key, "female")}
+                      isChecked={value === "female"}
+                    >
+                      Female
+                    </Radio>
+                  </Stack>
+                ) : key === "goal" ? (
+                  <Stack direction="row">
+                    <Radio
+                      value="maintain"
+                      onChange={() => handleRadioChange(key, "maintain")}
+                      isChecked={value === "maintain"}
+                    >
+                      Maintain Weight
+                    </Radio>
+                    <Radio
+                      value="mildlose"
+                      onChange={() => handleRadioChange(key, "mildlose")}
+                      isChecked={value === "mildlose"}
+                    >
+                      Mild Weight Loss
+                    </Radio>
+                    <Radio
+                      value="weightlose"
+                      onChange={() => handleRadioChange(key, "weightlose")}
+                      isChecked={value === "weightlose"}
+                    >
+                      Weight Loss
+                    </Radio>
+                    <Radio
+                      value="extremelose"
+                      onChange={() => handleRadioChange(key, "extremelose")}
+                      isChecked={value === "extremelose"}
+                    >
+                      Extreme Weight Loss
+                    </Radio>
+                    <Radio
+                      value="mildgain"
+                      onChange={() => handleRadioChange(key, "mildgain")}
+                      isChecked={value === "mildgain"}
+                    >
+                      Mild Weight Gain
+                    </Radio>
+                    <Radio
+                      value="weightgain"
+                      onChange={() => handleRadioChange(key, "weightgain")}
+                      isChecked={value === "weightgain"}
+                    >
+                      Weight Gain
+                    </Radio>
+                    <Radio
+                      value="extremegain"
+                      onChange={() => handleRadioChange(key, "extremegain")}
+                      isChecked={value === "extremegain"}
+                    >
+                    Extreme Weight Gain
+                  </Radio>
+                </Stack>
+                ) : (
+                  <Input
+                    type="radio"
+                    id={value}
+                    name="goal"
+                    value={value}
+                    onChange={(e) => handleInputChange(e)}
+                  />
+                )}
+              </label>
+              ))}
+              <Button onClick={generateStats}>Submit</Button>
             </Box>
-            <ColumnsTable tableName='Макронутриенти' tableData={tableData[activityLevel - 1]} columnsData={[
-                { name: 'name', label: 'Тип диета' },
-                { name: 'protein', label: 'Протеин (гр.)' },
-                { name: 'fat', label: 'Мазнини (гр.)' },
-                { name: 'carbs', label: 'Въглехидрати (гр.)' }	
-              ]} 
-            />
           </Card>
-        </Box>
-      )}    
+        )}
+      </Box>   
     </Box> 
   );
 }

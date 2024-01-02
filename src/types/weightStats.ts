@@ -69,3 +69,5 @@ export type MacroNutrientsData = [
         carbs: number
     }
 ];
+
+export type Goal = "maintain" | "mildlose" | "weightlose" | "extremelose" | "mildgain" | "weightgain" | "extremegain";
