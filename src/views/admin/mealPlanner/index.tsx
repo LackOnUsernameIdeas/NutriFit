@@ -72,10 +72,33 @@ export default function MealPlanner() {
   };  
 
   const handleIncrement = (mealType: keyof typeof customServings) => {
-    setCustomServings((prevServing) => ({
-        ...prevServing,
-        [mealType]: prevServing[mealType] + 1,
-    }));
+    setCustomServings((prevServing) => {
+      const newValue = prevServing[mealType] + 1;
+  
+      // Calculate the total nutrient values based on the new serving count
+      const newTotalCalories =
+        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Calories.value;
+      const newTotalProtein =
+        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Protein.value;
+      const newTotalCarbs =
+        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Carbohydrates.value;
+      const newTotalFat = newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Fat.value;
+  
+      // Check if the new total nutrient values comply with user preferences
+      if (
+        newTotalCalories <= userPreferences.Calories &&
+        newTotalProtein <= userPreferences.Protein &&
+        newTotalCarbs <= userPreferences.Carbohydrates &&
+        newTotalFat <= userPreferences.Fat
+      ) {
+        return {
+          ...prevServing,
+          [mealType]: newValue,
+        };
+      }
+  
+      return prevServing;
+    });
   };
     
   const handleDecrement = (mealType: keyof typeof customServings) => {
