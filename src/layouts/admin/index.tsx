@@ -64,7 +64,7 @@ export default function Dashboard(props: { [x: string]: any }) {
 					toggleSidebar,
 					setToggleSidebar
 				}}>
-				<Sidebar routes={routes} display='none' {...rest} />
+				<Sidebar routes={routes} {...rest} />
 				<Box
 					float='right'
 					minHeight='100vh'

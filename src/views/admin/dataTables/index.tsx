@@ -38,7 +38,7 @@ export default function Settings() {
 			<SimpleGrid mb='20px' columns={{ sm: 1, md: 2 }} spacing={{ base: '20px', xl: '20px' }}>
 				<DevelopmentTable   tableData={tableDataDevelopment} />
 				<CheckTable tableData={tableDataCheck} />
-				<ColumnsTable  tableData={tableDataColumns} />
+				<ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'date' }, { name: 'date', label: 'Carbohydrates' } ]}/>
 				<ComplexTable tableData={tableDataComplex} />
 			</SimpleGrid>
 		</Box>

@@ -32,7 +32,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import Usa from "assets/img/dashboards/usa.png";
+import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
@@ -96,7 +96,7 @@ export default function UserReports() {
           endContent={
             <Flex me="-16px" mt="10px">
               <FormLabel htmlFor="balance">
-                <Avatar src={Usa} />
+                <Avatar src={Bulgaria} />
               </FormLabel>
               <Select
                 id="balance"
@@ -150,12 +150,12 @@ export default function UserReports() {
         <DailyTraffic />
         <ComplexTable tableData={tableDataComplex} />
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap="20px" mb="20px">
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
           <PieCard />
-          <ColumnsTable tableData={tableDataColumns} />
+          <Tasks />
         </SimpleGrid>
-        <Tasks />
+        <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]}/>
       </SimpleGrid>
     </Box>
   );

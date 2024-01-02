@@ -1,4 +1,4 @@
-export {};
+export { };
 
 declare global {
 	/**
@@ -12,5 +12,6 @@ declare global {
 		icon: JSX.Element | string;
 		path: string;
 		secondary?: boolean;
+		hideInSidebar?: boolean;
 	}
 }

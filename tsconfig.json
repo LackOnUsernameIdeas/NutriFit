@@ -25,9 +25,17 @@
   //   "jsx": "react-jsx",
   // }, 
   "compilerOptions": {
-    "typeRoots": ["node_modules/@types", "src/types"],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ],
     "target": "es2016",
-    "lib": ["dom", "dom.iterable", "esnext", "es2015.iterable"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es2015.iterable"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -47,10 +55,12 @@
     "downlevelIteration": true,
     "baseUrl": "src",
     "paths": {
-      "@assets/*": ["./src/assetsassets/*"]
+      "@assets/*": [
+        "./src/assetsassets/*"
+      ],
     },
   },
   "include": [
     "./src"
-  ], 
+  ],
 }

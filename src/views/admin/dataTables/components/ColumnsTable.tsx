@@ -13,33 +13,28 @@ import {
 // Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
-
-type RowObj = {
-	name: string;
-	progress: string;
-	quantity: number;
-	date: string; 
-};
  
-const columnHelper = createColumnHelper<RowObj>();
+const columnHelper = createColumnHelper();
 
 // const columns = columnsDataCheck;
-export default function ColumnTable(props: { tableData: any }) {
-	const { tableData } = props;
+export default function ColumnTable(props: { tableName: string, tableData: any, columnsData: { name: string, label: string }[] }) {
+	
+	const { tableName, tableData, columnsData } = props;
 	const [ sorting, setSorting ] = React.useState<SortingState>([]);
+	const [ data, setData ] = React.useState(() => tableData);
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-	let defaultData= tableData;
-	const columns = [
-		columnHelper.accessor('name', {
-			id: 'name',
+
+	const columns = columnsData.map(column => {
+		return columnHelper.accessor(column.name as any, {
+			id: column.name,
 			header: () => (
 				<Text
 					justifyContent='space-between'
 					align='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					NAME
+					{column.label}
 				</Text>
 			),
 			cell: (info: any) => (
@@ -49,60 +44,9 @@ export default function ColumnTable(props: { tableData: any }) {
 					</Text>
 				</Flex>
 			)
-		}),
-		columnHelper.accessor('progress', {
-			id: 'progress',
-			header: () => (
-				<Text
-					justifyContent='space-between'
-					align='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					PROGRESS
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700'>
-					{info.getValue()}
-				</Text>
-			)
-		}),
-		columnHelper.accessor('quantity', {
-			id: 'quantity',
-			header: () => (
-				<Text
-					justifyContent='space-between'
-					align='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					QUANTITY
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700'>
-					{info.getValue()}
-				</Text>
-			)
-		}),
-		columnHelper.accessor('date', {
-			id: 'date',
-			header: () => (
-				<Text
-					justifyContent='space-between'
-					align='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					DATE
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700'>
-					{info.getValue()}
-				</Text>
-			)
 		})
-	];
-	const [ data, setData ] = React.useState(() => [ ...defaultData ]);
+	});
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -114,13 +58,18 @@ export default function ColumnTable(props: { tableData: any }) {
 		getSortedRowModel: getSortedRowModel(),
 		debugTable: true
 	});
+
+	React.useEffect(() => {
+		setData(tableData);
+	}, [tableData]);
+
 	return (
 		<Card flexDirection='column' w='100%' px='0px' overflowX={{ sm: 'scroll', lg: 'hidden' }}>
-			<Flex px='25px' mb="8px" justifyContent='space-between' align='center'>
+			<Flex justify="space-between" align="start" px={{ base: "0px", "2xl": "10px" }} pt="5px" w="100%">
 				<Text color={textColor} fontSize='22px' mb="4px" fontWeight='700' lineHeight='100%'>
-					Check Table
+					{tableName}
 				</Text>
-				<Menu />
+				{/*<Menu />    <-- BUTTON TOP RIGHT OF TABLE DISPLAYING PANELS */}
 			</Flex>
 			<Box>
 				<Table variant='simple' color='gray.500' mb='24px' mt="12px">
