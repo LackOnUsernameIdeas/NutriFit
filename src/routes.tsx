@@ -28,6 +28,13 @@ const routes = [
     component: MainDashboard,
   },
   {
+    name: "Статистики за Тегло",
+    layout: "/admin",
+    path: "/weight",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: WeightStats
+  },
+  {
     name: "NFT Marketplace",
     layout: "/admin",
     path: "/nft-marketplace",
@@ -40,7 +47,8 @@ const routes = [
       />
     ),
     component: NFTMarketplace,
-    secondary: true
+    secondary: true,
+    hideInSidebar: true
   },
   {
     name: "Data Tables",
@@ -48,13 +56,7 @@ const routes = [
     icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     path: "/data-tables",
     component: DataTables,
-  },
-  {
-    name: "Статистики за Тегло",
-    layout: "/admin",
-    path: "/weight",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: WeightStats
+    hideInSidebar: true
   },
   {
     name: "Вход",
