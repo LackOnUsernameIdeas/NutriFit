@@ -22,7 +22,7 @@ import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
   lineChartOptions
-} from "variables/charts";
+} from "variables/chartjs";
 
 export default function TotalSpent(props: { [x: string]: any }) {
   const { ...rest } = props;

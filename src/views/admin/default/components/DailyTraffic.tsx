@@ -7,7 +7,7 @@ import Card from "components/card/Card";
 import {
   barChartDataDailyTraffic,
   barChartOptionsDailyTraffic,
-} from "variables/charts";
+} from "variables/chartjs";
 
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";

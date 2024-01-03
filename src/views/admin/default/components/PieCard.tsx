@@ -4,7 +4,7 @@ import { Box, Flex, Text, Select, useColorModeValue } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card";
 import PieChart from "components/charts/PieChart";
-import { pieChartData, pieChartOptions } from "variables/charts";
+import { pieChartData, pieChartOptions } from "variables/chartjs";
 
 import { VSeparator } from "components/separator/Separator";
 
