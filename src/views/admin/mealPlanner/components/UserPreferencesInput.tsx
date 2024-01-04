@@ -3,7 +3,7 @@ import React from 'react';
 import { Input, VStack, Button, Text, Flex, Box} from "@chakra-ui/react";
 import { UserPreferences } from "../variables/mealPlaner";
 import { HSeparator } from "components/separator/Separator";
-
+import Card from "components/card/Card";
 
 interface UserPreferencesInputProps {
   userPreferences: UserPreferences;
@@ -14,7 +14,7 @@ const placeholders: string[] = ["2000","150","70","200"];
 
 const UserPreferencesInput: React.FC<UserPreferencesInputProps> = ({ userPreferences, handleInputChange, generatePlan }) => {
   return (
-    <VStack spacing={4} align="stretch">
+    <Card>
       <Flex justify="center" w="100%">
         <Text fontSize="4xl">
           Input Desired Values
@@ -46,7 +46,7 @@ const UserPreferencesInput: React.FC<UserPreferencesInputProps> = ({ userPrefere
         </Box>
       ))}
       <Button onClick={generatePlan} minH="100px">Generate Meal Plan</Button>
-    </VStack>
+    </Card>
   );
 };
 

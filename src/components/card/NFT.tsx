@@ -6,15 +6,13 @@ import Card from 'components/card/Card';
 import { useState } from 'react';
 import { IoHeart, IoHeartOutline } from 'react-icons/io5';
 
-export default function NFT(props: {
+export default function RecipeWidget(props: {
 	image: string;
-	name: string;
-	author: string;
-	bidders: string[];
-	download: string;
-	currentbid: string | number;
+	name: any;
+	author: any;
+	currentbid: any;
 }) {
-	const { image, name, author, bidders, download, currentbid } = props;
+	const { image, name, author, currentbid } = props;
 	const [ like, setLike ] = useState(false);
 	const textColor = useColorModeValue('navy.700', 'white');
 	const textColorBid = useColorModeValue('brand.500', 'white');
@@ -28,6 +26,9 @@ export default function NFT(props: {
 						h={{ base: '100%', '3xl': '100%' }}
 						borderRadius='20px'
 					/>
+					{/* 
+					----LIKE BUTTON----
+					
 					<Button
 						position='absolute'
 						bg='white'
@@ -50,7 +51,7 @@ export default function NFT(props: {
 							as={like ? IoHeart : IoHeartOutline}
 							color='brand.500'
 						/>
-					</Button>
+					</Button> */}
 				</Box>
 				<Flex flexDirection='column' justify='space-between' h='100%'>
 					<Flex
@@ -63,88 +64,58 @@ export default function NFT(props: {
 							'2xl': 'row'
 						}}
 						mb='auto'>
-						<Flex direction='column'>
-							<Text
-								color={textColor}
-								fontSize={{
-									base: 'xl',
-									md: 'lg',
-									lg: 'lg',
-									xl: 'lg',
-									'2xl': 'md',
-									'3xl': 'lg'
-								}}
-								mb='5px'
-								fontWeight='bold'
-								me='14px'>
-								{name}
-							</Text>
-							<Text
-								color='secondaryGray.600'
-								fontSize={{
-									base: 'sm'
-								}}
-								fontWeight='400'
-								me='14px'>
-								{author}
-							</Text>
-						</Flex>
-						<AvatarGroup
-							max={3}
-							color={textColorBid}
-							size='sm'
-							mt={{
-								base: '0px',
-								md: '10px',
-								lg: '0px',
-								xl: '10px',
-								'2xl': '0px'
+						<Text
+							color={textColor}
+							fontSize={{
+								base: 'xl',
+								md: 'lg',
+								lg: 'lg',
+								xl: 'lg',
+								'2xl': 'md',
+								'3xl': 'lg'
 							}}
-							fontSize='12px'>
-							{bidders.map((avt, key) => <Avatar key={key} src={avt} />)}
-						</AvatarGroup>
-					</Flex>
-					<Flex
-						align={{
-							base: 'center',
-							md: 'start',
-							lg: 'center',
-							xl: 'start',
-							'2xl': 'center'
-						}}
-						justify='space-between'
-						direction={{
-							base: 'row',
-							md: 'column',
-							lg: 'row',
-							xl: 'column',
-							'2xl': 'row'
-						}}
-						mt='25px'>
-						<Text fontWeight='700' fontSize='sm' color={textColorBid}>
-							Current Bid: {currentbid}
+							mb='5px'
+							fontWeight='bold'
+							me='14px'>
+							{name}
 						</Text>
-						<Link
-							href={download}
-							mt={{
-								base: '0px',
-								md: '10px',
-								lg: '0px',
-								xl: '10px',
-								'2xl': '0px'
-							}}>
-							<Button
-								variant='darkBrand'
-								color='white'
-								fontSize='sm'
-								fontWeight='500'
-								borderRadius='70px'
-								px='24px'
-								py='5px'>
-								Place Bid
-							</Button>
-						</Link>
+						<Text
+							color='secondaryGray.600'
+							fontSize={{
+								base: 'sm'
+							}}
+							fontWeight='400'
+							me='14px'>
+							{author}
+						</Text>
 					</Flex>
+					<Box>
+						{currentbid}
+					</Box>
+					{/* 
+					
+					----BUTTON, COULD BE USED FOR RECIPES?----
+					
+					<Link
+						href={download}
+						mt={{
+							base: '0px',
+							md: '10px',
+							lg: '0px',
+							xl: '10px',
+							'2xl': '0px'
+						}}>
+						<Button
+							variant='darkBrand'
+							color='white'
+							fontSize='sm'
+							fontWeight='500'
+							borderRadius='70px'
+							px='24px'
+							py='5px'>
+							Place Bid
+						</Button>
+					</Link> */}
 				</Flex>
 			</Flex>
 		</Card>

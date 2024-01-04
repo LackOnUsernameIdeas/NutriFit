@@ -29,7 +29,7 @@ import { Box, Button, Flex, Grid, Link, Text, useColorModeValue, SimpleGrid } fr
 import Banner from 'views/admin/marketplace/components/Banner';
 import TableTopCreators from 'views/admin/marketplace/components/TableTopCreators';
 import HistoryItem from 'views/admin/marketplace/components/HistoryItem';
-import NFT from 'components/card/NFT';
+import RecipeWidget from 'components/card/NFT';
 import Card from 'components/card/Card';
 
 // Assets
@@ -100,8 +100,8 @@ export default function Marketplace() {
 								</Link>
 							</Flex>
 						</Flex>
-						<SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
-							<NFT
+						{/* <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
+							<RecipeWidget
 								name='Abstract Colors'
 								author='By Esthera Jackson'
 								bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
@@ -109,7 +109,7 @@ export default function Marketplace() {
 								currentbid='0.91 ETH'
 								download='#'
 							/>
-							<NFT
+							<RecipeWidget
 								name='ETH AI Brain'
 								author='By Nick Wilson'
 								bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
@@ -117,7 +117,7 @@ export default function Marketplace() {
 								currentbid='0.91 ETH'
 								download='#'
 							/>
-							<NFT
+							<RecipeWidget
 								name='Mesh Gradients '
 								author='By Will Smith'
 								bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
@@ -125,12 +125,12 @@ export default function Marketplace() {
 								currentbid='0.91 ETH'
 								download='#'
 							/>
-						</SimpleGrid>
+						</SimpleGrid> */}
 						<Text mt='45px' mb='36px' color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
 							Recently Added
 						</Text>
-						<SimpleGrid columns={{ base: 1, md: 3 }} gap='20px' mb={{ base: '20px', xl: '0px' }}>
-							<NFT
+						{/* <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px' mb={{ base: '20px', xl: '0px' }}>
+							<RecipeWidget
 								name='Swipe Circles'
 								author='By Peter Will'
 								bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
@@ -138,7 +138,7 @@ export default function Marketplace() {
 								currentbid='0.91 ETH'
 								download='#'
 							/>
-							<NFT
+							<RecipeWidget
 								name='Colorful Heaven'
 								author='By Mark Benjamin'
 								bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
@@ -146,7 +146,7 @@ export default function Marketplace() {
 								currentbid='0.91 ETH'
 								download='#'
 							/>
-							<NFT
+							<RecipeWidget
 								name='3D Cubes Art'
 								author='By Manny Gates'
 								bidders={[ Avatar1, Avatar2, Avatar3, Avatar4, Avatar1, Avatar1, Avatar1, Avatar1 ]}
@@ -154,7 +154,7 @@ export default function Marketplace() {
 								currentbid='0.91 ETH'
 								download='#'
 							/>
-						</SimpleGrid>
+						</SimpleGrid> */}
 					</Flex>
 				</Flex>
 				<Flex flexDirection='column' gridArea={{ xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3' }}>

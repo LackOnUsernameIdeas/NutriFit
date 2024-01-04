@@ -10,6 +10,14 @@ import { calculateNutrientForMealPlan } from "./utils/calculateNutrientForMealPl
 import UserPreferencesInput from "./components/UserPreferencesInput";
 import MealPlanDetails from "./components/MealPlanDetails";
 import Card from "components/card/Card";
+import RecipeWidget from 'components/card/NFT';
+import Pancakes from 'assets/img/nfts/pancakes.jpg';
+import Shkembe from 'assets/img/nfts/shkembe-chorba.jpg';
+import Sarma from 'assets/img/nfts/sarma.jpg';
+import Avatar1 from 'assets/img/avatars/avatar1.png';
+import Avatar2 from 'assets/img/avatars/avatar2.png';
+import Avatar3 from 'assets/img/avatars/avatar3.png';
+import Avatar4 from 'assets/img/avatars/avatar4.png';
 
 export default function MealPlanner() {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({
@@ -166,28 +174,26 @@ export default function MealPlanner() {
           </Flex>
         </Card>
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <Card minH="1000px">
-          <UserPreferencesInput
-            userPreferences={userPreferences}
-            handleInputChange={handleInputChange}
-            generatePlan={generatePlan}
-          />
-        </Card>
-        <Card>
-          <MealPlanDetails
-            customServings={customServings}
-            suggestedMaxServings={suggestedMaxServings}
-            mealPlan={mealPlan}
-            calories={calories}
-            protein={protein}
-            carbs={carbs}
-            fat={fat}
-            handleIncrement={handleIncrement}
-            handleDecrement={handleDecrement}
-          />
-        </Card>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
+        <UserPreferencesInput
+          userPreferences={userPreferences}
+          handleInputChange={handleInputChange}
+          generatePlan={generatePlan}
+        />
       </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
+        <MealPlanDetails
+          customServings={customServings}
+          suggestedMaxServings={suggestedMaxServings}
+          mealPlan={mealPlan}
+          calories={calories}
+          protein={protein}
+          carbs={carbs}
+          fat={fat}
+          handleIncrement={handleIncrement}
+          handleDecrement={handleDecrement}
+        />
+			</SimpleGrid>
     </Box>
   );
 }
