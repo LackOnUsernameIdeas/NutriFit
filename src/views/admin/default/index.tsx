@@ -171,7 +171,7 @@ export default function UserReports() {
           <HSeparator />
           <Flex justify="center" mt="1%" pt="10px">
             <Text fontSize="3xl">
-              Нашата цел е да помогнем на нашите потребители да постигнат бла бла бла
+              Нашата цел е да помогнем на нашите потребители да поддържат перфектното тегло с помощта на статистики и диаграми.
             </Text>
           </Flex>
         </Card>

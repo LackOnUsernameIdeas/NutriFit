@@ -78,7 +78,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 										/>
 									</Flex>
 								}
-								image={Pancakes}
+								image={(mealPlan as any)[mealType]?.photo}
 								currentbid={
 									<Box>
 										<Flex justify="center" pt="5px" w="100%" mb="2%" mt="2%">
@@ -86,7 +86,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 											<Text mr="4%" fontStyle='italic'>Calories: {(calories as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
 											<Text mr="4%" fontStyle='italic'>Protein: {(protein as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
 											<Text mr="4%" fontStyle='italic'>Carbs: {(carbs as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-											<Text fontStyle='italic'>Fat: {(fat as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
+											<Text mr="4%" fontStyle='italic'>Fat: {(fat as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
+											<Text fontStyle='italic'>Грамаж: {`${(mealPlan as any)[mealType]?.weightPerServing.amount.toFixed(2)}${(mealPlan as any)[mealType]?.weightPerServing.unit}`  || 'N/A'}</Text>
 										</Flex>
 									</Box>		
 								}

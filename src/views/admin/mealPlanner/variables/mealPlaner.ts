@@ -2,6 +2,7 @@ export interface Recipe {
     id: string;
     title: string;
     isForBreakfast: boolean;
+    photo: string;
     ingredients: Array<{
       ingredient: string;
       quantity: number;
