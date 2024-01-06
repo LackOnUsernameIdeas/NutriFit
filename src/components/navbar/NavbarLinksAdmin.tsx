@@ -43,6 +43,11 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
   );
   const borderButton = useColorModeValue("secondaryGray.500", "whiteAlpha.200");
+  const handleLogOut = async () => {
+    const key = sessionStorage.key(0);
+    sessionStorage.removeItem(key)
+  }
+
   return (
     <Flex
       w={{ sm: "100%", md: "auto" }}
@@ -111,17 +116,18 @@ export default function HeaderLinks(props: { secondary: boolean }) {
             </Text>
           </Flex> */}
           <Flex flexDirection="column" p="10px">
-            <MenuItem
-              _hover={{ bg: "none" }}
-              _focus={{ bg: "none" }}
-              color="red.400"
-              borderRadius="8px"
-              px="14px"
-            >
-              <Link href="http://localhost:3000/horizon-ui-chakra-ts#/auth/sign-in">
-                <Text fontSize="sm">Излез</Text>
-              </Link>
-            </MenuItem>
+            <Link href="/#/auth/sign-in">
+              <MenuItem
+                _hover={{ bg: "none" }}
+                _focus={{ bg: "none" }}
+                color="red.400"
+                borderRadius="8px"
+                px="14px"
+                onClick={handleLogOut}
+              >
+                  <Text fontSize="sm">Излез</Text>
+              </MenuItem>
+            </Link>
           </Flex>
         </MenuList>
       </Menu>

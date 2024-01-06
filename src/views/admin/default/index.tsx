@@ -171,7 +171,7 @@ export default function UserReports() {
           <HSeparator />
           <Flex justify="center" mt="1%" pt="10px">
             <Text fontSize="3xl">
-              Нашата цел е да помогнем на нашите потребители да постигнат бла бла бла
+              Нашата цел е да помогнем на нашите потребители да поддържат перфектното тегло с помощта на статистики и диаграми.
             </Text>
           </Flex>
         </Card>
@@ -181,7 +181,7 @@ export default function UserReports() {
         <ComplexTable tableData={tableDataComplex} />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" >
           <PieCard />
           <Tasks />
         </SimpleGrid>

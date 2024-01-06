@@ -1,49 +1,50 @@
 export interface Recipe {
-    id: string;
-    title: string;
-    isForBreakfast: boolean;
-    ingredients: Array<{
-      ingredient: string;
-      quantity: number;
-    }>;
-    instructions: Array<{
-      number: number;
-      step: string;
-    }>;
-    nutrientsForTheRecipe: { 
-      main: {
-        [nutrientName: string]: {
-          value: number; 
-          unit: string;
-        };
-      };
-      otherNutrients: {
-        [nutrientName: string]: {
-          value: number; 
-          unit: string;
-        };
+  id: string;
+  title: string;
+  isForBreakfast: boolean;
+  photo: string;
+  ingredients: Array<{
+    ingredient: string;
+    quantity: number;
+  }>;
+  instructions: Array<{
+    number: number;
+    step: string;
+  }>;
+  nutrientsForTheRecipe: {
+    main: {
+      [nutrientName: string]: {
+        value: number;
+        unit: string;
       };
     };
-    weightPerServing: {
-      amount: number;
-      unit: string;
+    otherNutrients: {
+      [nutrientName: string]: {
+        value: number;
+        unit: string;
+      };
     };
-    suggestedMaxServing: number;
+  };
+  weightPerServing: {
+    amount: number;
+    unit: string;
+  };
+  suggestedMaxServing: number;
 };
 
 export interface UserPreferences {
-    Calories: number;
-    Protein: number;
-    Fat: number;
-    Carbohydrates: number;
+  Calories: number;
+  Protein: number;
+  Fat: number;
+  Carbohydrates: number;
 }
 
 export interface CustomServingInputProps {
-    mealType: string;
-    value: number;
-    onIncrement: () => void;
-    onDecrement: () => void;
-    minValue?: 1;
+  mealType: string;
+  value: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  minValue?: 1;
 }
 
 export type MealPlan = { breakfast: Recipe | null; lunch: Recipe | null; dinner: Recipe | null };
