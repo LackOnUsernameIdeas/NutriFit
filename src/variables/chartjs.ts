@@ -444,7 +444,7 @@ export const lineChartOptionsTotalSpent: any = {
 };
 
 export const lineChartOptions: object = {
-	maintainAsceptRatio: false,
+	maintainAspectRatio: false,
 	aspectRatio: 5, // You can adjust the aspectRatio as needed
 	scales: {
 		x: {
