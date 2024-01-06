@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 // Chakra imports
 import {
   Box,
@@ -43,19 +43,40 @@ function SignUp() {
     { bg: "whiteAlpha.200" }
   );
   const [show, setShow] = React.useState(false);
+  const [show2, setShow2] = React.useState(false);
   const handleClick = () => setShow(!show);
+  const handleClick2 = () => setShow2(!show2);
   const history = useHistory();
   const [email, setEmail] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSignUp = async () => {
     try {
+      if (!passwordsMatch) {
+        setError('Passwords do not match');
+        return;
+      }
+
       const auth = getAuth();
-      await createUserWithEmailAndPassword(auth, email, password);
-      // User successfully signed up
-      setError('');
-      history.push('/auth/sign-in'); // Redirect to sign in after signing up
+      await createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {signInWithEmailAndPassword(auth, email, password)})
+    
+      let key = sessionStorage.key(0);
+
+      const userData = sessionStorage.getItem(key);
+      let jsonUserData = JSON.parse(userData)
+
+      let token = jsonUserData.stsTokenManager.accessToken
+
+      if (token) {
+        history.push('/admin/default'); // Redirect to sign in after signing up
+        setError('');
+      } else {
+        setError('idk man');
+      }
     } catch (error) {
       if (error instanceof Error) {
         switch(error.message){
@@ -76,6 +97,21 @@ function SignUp() {
       }
     }
   };
+
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+  useEffect(() => {
+    // Check if passwords match on every change
+    if (password1 === password2) {
+      // Set the new 'password' state
+      setPassword(password1);
+      setPasswordsMatch(true);
+      setError('');
+    } else {
+      setError('razlichni paroli manyak')
+      setPasswordsMatch(false);
+    }
+  }, [password1, password2]);
 
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
@@ -176,7 +212,7 @@ function SignUp() {
                 size='lg'
                 type={show ? "text" : "password"}
                 variant='auth'
-                onChange={(password) => setPassword(password.target.value)}
+                onChange={(password1) => setPassword1(password1.target.value)}
               />
               <InputRightElement display='flex' alignItems='center' mt='4px'>
                 <Icon
@@ -184,6 +220,34 @@ function SignUp() {
                   _hover={{ cursor: "pointer" }}
                   as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
                   onClick={handleClick}
+                />
+              </InputRightElement>
+            </InputGroup>
+              <FormLabel
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                display='flex'>
+                Confirm Password<Text color={brandStars}>*</Text>
+              </FormLabel>
+            <InputGroup size='md'>
+              <Input
+                isRequired={true}
+                fontSize='sm'
+                placeholder='Min. 6 characters'
+                mb='24px'
+                size='lg'
+                type={show2 ? "text" : "password"}
+                variant='auth'
+                onChange={(password2) => setPassword2(password2.target.value)}
+              />
+              <InputRightElement display='flex' alignItems='center' mt='4px'>
+                <Icon
+                  color={textColorSecondary}
+                  _hover={{ cursor: "pointer" }}
+                  as={show2 ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                  onClick={handleClick2}
                 />
               </InputRightElement>
             </InputGroup>

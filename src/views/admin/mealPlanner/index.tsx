@@ -169,7 +169,7 @@ export default function MealPlanner() {
           <HSeparator />
           <Flex justify="center" mt="1%" pt="10px">
             <Text fontSize="3xl">
-                Please input the fields on the left with your desired limits. The meal plan will be generated on the right.
+                Please input the fields below with your desired limits, after which your meal plan will be generated.
             </Text>
           </Flex>
         </Card>

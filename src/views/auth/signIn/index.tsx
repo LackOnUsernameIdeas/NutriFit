@@ -83,7 +83,7 @@ function SignIn() {
       await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
       setError('');
-      history.push('/admin');
+      history.push('/admin/default');
       if (rememberMe) {
         // Set cookie with user UID only when "Remember Me" is checked
         Cookies.set('remember', 'remember', { expires: 5 }); // Set cookie to expire in 5 days
@@ -114,40 +114,7 @@ function SignIn() {
       }
     }
   };
-  //TODO: make the dumb fucking jwt tokens work
-  useEffect(() => {
-    const auth = getAuth();
-
-    // Set up an authentication state change listener
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in, set a cookie with user UID
-        Cookies.set('uid', user.uid, { expires: 1 }); // Set cookie to expire in 7 days
-      } else {
-        // User is signed out, clear the cookie
-        Cookies.remove('uid');
-      }
-    });
-
-    // Clean up the listener when the component unmounts
-    return () => unsubscribe();
-  }, []);
-  // const getUserUID = (user: User) => user.uid;
-
-  // const generateToken = (user: User) => {
-  //   const uid = getUserUID(user);
-    
-  //   const payload = {
-  //     uid
-  //   };
-  //   const secretKey = process.env.REACT_APP_ACCESS_TOKEN_SECRET as string;
-  //   const options = { 
-  //     expiresIn: '1d',
-  //   };
-
-  //   return jwt.sign(payload, secretKey, options);
-  // };
-
+  
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
