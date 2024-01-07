@@ -185,7 +185,7 @@ export default function UserReports() {
           <PieCard />
           <Tasks />
         </SimpleGrid>
-        <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]}/>
+        <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]} />
       </SimpleGrid>
     </Box>
   );

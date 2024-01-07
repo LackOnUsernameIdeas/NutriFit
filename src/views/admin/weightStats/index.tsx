@@ -697,7 +697,6 @@ export default function WeightStats() {
                     ]} 
                     setState={setClickedValueNutrients}
                     clickedValueProtein={clickedValueNutrients.protein}
-                    backgroundColor={'rgba(0, 0, 0, 0.3)'}
                   />
                 </Card>
                 <Card

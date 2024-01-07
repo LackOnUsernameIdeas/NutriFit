@@ -119,7 +119,7 @@ export default function ColumnTable(props: {
 					</Thead>
 					<Tbody>
 						{table.getRowModel().rows.slice(0, 11).map((row) => {
-							const proteinValue = (table.getRowModel().rows[parseFloat(row.id)].original as any).protein; // Adjust this based on your data structure
+							const proteinValue = (table.getRowModel().rows[parseFloat(row.id)].original as any).protein ? (table.getRowModel().rows[parseFloat(row.id)].original as any).protein : -1; // Adjust this based on your data structure
 							const rowBackgroundColor = proteinValue === clickedValueProtein
 							? 'rgba(0, 0, 0, 0.3)'
 							: undefined;
