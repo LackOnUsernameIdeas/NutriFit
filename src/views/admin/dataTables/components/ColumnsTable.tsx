@@ -17,13 +17,28 @@ import Menu from 'components/menu/MainMenu';
 const columnHelper = createColumnHelper();
 
 // const columns = columnsDataCheck;
-export default function ColumnTable(props: { tableName: string, tableData: any, columnsData: { name: string, label: string }[] }) {
+export default function ColumnTable(props: { 
+	tableName: string, 
+	tableData: any, 
+	columnsData: { name: string, label: string }[], 
+	backgroundColor?: string;
+	setState?: React.Dispatch<React.SetStateAction<{
+		name: string,
+		protein: number,
+		fat: number,
+		carbs: number
+	}>>
+}) {
 	
-	const { tableName, tableData, columnsData } = props;
-	const [ sorting, setSorting ] = React.useState<SortingState>([]);
-	const [ data, setData ] = React.useState(() => tableData);
+	const { tableName, tableData, columnsData, setState, backgroundColor } = props;
+
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
+
+	const [ sorting, setSorting ] = React.useState<SortingState>([]);
+	const [ data, setData ] = React.useState(() => tableData);
+
+	const [selectedRow, setSelectedRow] = React.useState(null);
 
 	const columns = columnsData.map(column => {
 		return columnHelper.accessor(column.name as any, {
@@ -75,7 +90,7 @@ export default function ColumnTable(props: { tableName: string, tableData: any, 
 				<Table variant='simple' color='gray.500' mb='24px' mt="12px">
 					<Thead>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<Tr  key={headerGroup.id}>
+							<Tr key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
 										<Th
@@ -104,7 +119,14 @@ export default function ColumnTable(props: { tableName: string, tableData: any, 
 					<Tbody>
 						{table.getRowModel().rows.slice(0, 11).map((row) => {
 							return (
-								<Tr key={row.id}>
+								<Tr 
+									key={row.id} 
+									onClick={() => {
+										setState((table.getRowModel().rows[parseFloat(row.id)].original as any)); 
+										setSelectedRow(row.id);
+									}} 
+									backgroundColor={row.id === selectedRow ? backgroundColor : undefined}
+								>
 									{row.getVisibleCells().map((cell) => {
 										return (
 											<Td

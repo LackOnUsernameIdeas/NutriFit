@@ -122,7 +122,18 @@ export default function WeightStats() {
       carbs: 0
     }, 
   ])));
+
+  const [clickedValueNutrients, setClickedValueNutrients] = useState({
+    name: "",
+    protein: 0,
+    fat: 0,
+    carbs: 0
+  });
+
+  const [clickedValueCalories, setClickedValueCalories] = useState<number | null>(null);
   
+  console.log(clickedValueCalories, clickedValueNutrients)
+
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -671,14 +682,21 @@ export default function WeightStats() {
                     <CalorieRequirements
                       calorieRequirements={dailyCaloryRequirements}
                       selectedActivityLevel={activityLevel}
+                      clickedValueCalories={clickedValueCalories}
+                      setClickedValueCalories={setClickedValueCalories}
                     />
                   )}
-                  <ColumnsTable tableName='Макронутриенти' tableData={tableData[activityLevel - 1]} columnsData={[
+                  <ColumnsTable 
+                    tableName='Макронутриенти' 
+                    tableData={tableData[activityLevel - 1]} 
+                    columnsData={[
                       { name: 'name', label: 'Тип диета' },
                       { name: 'protein', label: 'Протеин (гр.)' },
                       { name: 'fat', label: 'Мазнини (гр.)' },
                       { name: 'carbs', label: 'Въглехидрати (гр.)' }	
                     ]} 
+                    setState={setClickedValueNutrients}
+                    backgroundColor={'rgba(0, 0, 0, 0.3)'}
                   />
                 </Card>
               </Box>

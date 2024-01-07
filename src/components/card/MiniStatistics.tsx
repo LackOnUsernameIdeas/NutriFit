@@ -10,13 +10,14 @@ export default function Default(props: {
 	growth?: string | number;
 	value: string | number;
 	onClick?: () => void; 
+	backgroundColor?: string;
 }) {
-	const { startContent, endContent, name, growth, value, onClick } = props;
+	const { startContent, endContent, name, growth, value, onClick, backgroundColor } = props;
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = 'secondaryGray.600';
 
 	return (
-		<Card py='15px' onClick={onClick}>
+		<Card py='15px' onClick={onClick} backgroundColor={backgroundColor}>
 			<Flex my='auto' h='100%' align={{ base: 'center', xl: 'start' }} justify={{ base: 'center', xl: 'center' }}>
 				{startContent}
 

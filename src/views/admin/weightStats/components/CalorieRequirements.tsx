@@ -12,23 +12,19 @@ import { FaAngleDown, FaAngleDoubleDown, FaGripLines, FaAngleDoubleUp, FaAngleUp
 import { DailyCaloryRequirements } from '../../../../types/weightStats';
 import { useState, useEffect } from "react";
 
-export default function CalorieRequirements( props: { calorieRequirements: DailyCaloryRequirements[], selectedActivityLevel: number } ) {
+export default function CalorieRequirements( props: { calorieRequirements: DailyCaloryRequirements[], selectedActivityLevel: number, clickedValueCalories?: number | null, setClickedValueCalories?: React.Dispatch<React.SetStateAction<number | null>>}) {
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
     
-    const [dailyCaloryRequirements, setDailyCaloryRequirement] = useState<DailyCaloryRequirements[]>(props.calorieRequirements);
-    const [clickedValue, setClickedValue] = useState<number | null>(null);
+    const { clickedValueCalories, setClickedValueCalories } = props;
 
-    console.log(clickedValue)
+    const [dailyCaloryRequirements, setDailyCaloryRequirement] = useState<DailyCaloryRequirements[]>(props.calorieRequirements);
+
     useEffect(() => {
 		setDailyCaloryRequirement(props.calorieRequirements);
 	}, [props.calorieRequirements, props.selectedActivityLevel]);
 
     const selectedLevelData = dailyCaloryRequirements[props.selectedActivityLevel - 1];
-
-    const handleMiniStatisticsClick = (value: number) => {
-        setClickedValue(value);
-    };
 
     return (
         <Card>
@@ -60,7 +56,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Леко сваляне на тегл"
                     value={selectedLevelData.goals["Mild weight loss"].calory.toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["Mild weight loss"].calory)}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["Mild weight loss"].calory)}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["Mild weight loss"].calory ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
                 <MiniStatistics
                     startContent={
@@ -75,7 +72,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Сваляне на тегло"
                     value={selectedLevelData.goals["Weight loss"].calory.toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["Weight loss"].calory)}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["Weight loss"].calory)}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["Weight loss"].calory ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
                 <MiniStatistics
                     startContent={
@@ -90,7 +88,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Екстремно сваляне на тегло"
                     value={selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["Extreme weight loss"].calory)}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["Extreme weight loss"].calory)}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["Extreme weight loss"].calory ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
                 <MiniStatistics
                     startContent={
@@ -105,7 +104,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Запазване на тегло"
                     value={selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["maintain weight"])}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["maintain weight"])}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["maintain weight"] ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
                 <MiniStatistics
                     startContent={
@@ -120,7 +120,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Леко качване на тегло"
                     value={selectedLevelData.goals["Mild weight gain"].calory.toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["Mild weight gain"].calory)}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["Mild weight gain"].calory)}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["Mild weight gain"].calory ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
                 <MiniStatistics
                     startContent={
@@ -135,7 +136,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Качване на тегло"
                     value={selectedLevelData.goals["Weight gain"].calory.toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["Weight gain"].calory)}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["Weight gain"].calory)}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["Weight gain"].calory ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
                 <MiniStatistics
                     startContent={
@@ -150,7 +152,8 @@ export default function CalorieRequirements( props: { calorieRequirements: Daily
                     }
                     name="Екстремно качване на тегло"
                     value={selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2) + " kcal"}
-                    onClick={() => handleMiniStatisticsClick(selectedLevelData.goals["Extreme weight gain"].calory)}
+                    onClick={() => setClickedValueCalories(selectedLevelData.goals["Extreme weight gain"].calory)}
+                    backgroundColor={clickedValueCalories === selectedLevelData.goals["Extreme weight gain"].calory ? 'rgba(0, 0, 0, 0.3)' : 'defaultColor'}
                 />
             </SimpleGrid>
         </Card>
