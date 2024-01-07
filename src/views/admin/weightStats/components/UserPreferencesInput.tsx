@@ -23,9 +23,9 @@ const UserPreferencesInput: React.FC<UserPreferencesInputProps> = ({ userPrefere
       <HSeparator />
       <SimpleGrid columns={{ base: 1, md: 2 }} gap='20px'>
         {Object.entries(userPreferences).map(([key], index) => (
-          <Box>
+          <Box key={key}>
             <Flex justify="center" pt="5px" w="100%" mt="5px">
-              <Text fontSize="2xl" key={key}>
+              <Text fontSize="2xl">
                 {key.charAt(0).toUpperCase() + key.slice(1)}:
               </Text>
             </Flex>

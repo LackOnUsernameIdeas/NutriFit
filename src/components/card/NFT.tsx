@@ -25,6 +25,8 @@ export default function RecipeWidget(props: {
 						w={{ base: '100%', '3xl': '100%' }}
 						h={{ base: '100%', '3xl': '100%' }}
 						borderRadius='20px'
+						maxH="150px"
+						objectFit='cover'
 					/>
 					{/* 
 					----LIKE BUTTON----
