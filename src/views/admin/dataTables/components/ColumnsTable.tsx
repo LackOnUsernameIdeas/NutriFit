@@ -73,7 +73,7 @@ export default function ColumnTable(props: {
 		getSortedRowModel: getSortedRowModel(),
 		debugTable: true
 	});
-
+	
 	React.useEffect(() => {
 		setData(tableData);
 	}, [tableData]);

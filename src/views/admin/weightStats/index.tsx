@@ -44,6 +44,8 @@ import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData, Goal } from '../../../types/weightStats';
 import Loading from "./components/Loading";
 
+import MealPlanner from './components/MealPlanner';
+
 export default function WeightStats() {
   
   const brandColor = useColorModeValue("brand.500", "white");
@@ -125,14 +127,14 @@ export default function WeightStats() {
 
   const [clickedValueNutrients, setClickedValueNutrients] = useState({
     name: "",
-    protein: 0,
-    fat: 0,
-    carbs: 0
+    protein: null,
+    fat: null,
+    carbs: null
   });
 
   const [clickedValueCalories, setClickedValueCalories] = useState<number | null>(null);
   
-  console.log(clickedValueCalories, clickedValueNutrients)
+  // console.log(clickedValueCalories, clickedValueNutrients)
 
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
@@ -698,6 +700,15 @@ export default function WeightStats() {
                     setState={setClickedValueNutrients}
                     backgroundColor={'rgba(0, 0, 0, 0.3)'}
                   />
+                </Card>
+                <Card
+                  p="20px"
+                  alignItems="center"
+                  flexDirection="column"
+                  w="100%"
+                  mb="20px"
+                >
+                  <MealPlanner chosenCalories={clickedValueCalories} chosenNutrients={clickedValueNutrients} />
                 </Card>
               </Box>
             )}
