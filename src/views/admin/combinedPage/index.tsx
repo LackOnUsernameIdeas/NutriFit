@@ -647,6 +647,15 @@ export default function WeightStats() {
                   w="100%"
                   mb="20px"
                 >
+                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                    Колко калории трябва да приемате на ден според целите:
+                  </Text>
+                  {activityLevel && (
+                    <CalorieRequirements
+                      calorieRequirements={dailyCaloryRequirements}
+                      selectedActivityLevel={activityLevel}
+                    />
+                  )}
                   <Box gap="10px" mb="20px">
                     <Flex>
                       <SimpleGrid columns={{ base: 3, md: 2, lg: 6 }} spacing="10px" alignItems="center" mb="10px">
@@ -664,15 +673,6 @@ export default function WeightStats() {
                       </SimpleGrid>
                     </Flex>
                   </Box>
-                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                    Колко калории трябва да приемате на ден според целите:
-                  </Text>
-                  {activityLevel && (
-                    <CalorieRequirements
-                      calorieRequirements={dailyCaloryRequirements}
-                      selectedActivityLevel={activityLevel}
-                    />
-                  )}
                   <ColumnsTable tableName='Макронутриенти' tableData={tableData[activityLevel - 1]} columnsData={[
                       { name: 'name', label: 'Тип диета' },
                       { name: 'protein', label: 'Протеин (гр.)' },

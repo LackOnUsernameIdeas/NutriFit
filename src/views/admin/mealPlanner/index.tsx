@@ -10,14 +10,6 @@ import { calculateNutrientForMealPlan } from "./utils/calculateNutrientForMealPl
 import UserPreferencesInput from "./components/UserPreferencesInput";
 import MealPlanDetails from "./components/MealPlanDetails";
 import Card from "components/card/Card";
-import RecipeWidget from 'components/card/NFT';
-import Pancakes from 'assets/img/nfts/pancakes.jpg';
-import Shkembe from 'assets/img/nfts/shkembe-chorba.jpg';
-import Sarma from 'assets/img/nfts/sarma.jpg';
-import Avatar1 from 'assets/img/avatars/avatar1.png';
-import Avatar2 from 'assets/img/avatars/avatar2.png';
-import Avatar3 from 'assets/img/avatars/avatar3.png';
-import Avatar4 from 'assets/img/avatars/avatar4.png';
 
 export default function MealPlanner() {
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({

@@ -9,13 +9,14 @@ export default function Default(props: {
 	name: string;
 	growth?: string | number;
 	value: string | number;
+	onClick?: () => void; 
 }) {
-	const { startContent, endContent, name, growth, value } = props;
+	const { startContent, endContent, name, growth, value, onClick } = props;
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = 'secondaryGray.600';
 
 	return (
-		<Card py='15px'>
+		<Card py='15px' onClick={onClick}>
 			<Flex my='auto' h='100%' align={{ base: 'center', xl: 'start' }} justify={{ base: 'center', xl: 'center' }}>
 				{startContent}
 
