@@ -134,8 +134,6 @@ export default function WeightStats() {
 
   const [clickedValueCalories, setClickedValueCalories] = useState<number | null>(null);
   
-  // console.log(clickedValueCalories, clickedValueNutrients)
-
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -698,6 +696,7 @@ export default function WeightStats() {
                       { name: 'carbs', label: 'Въглехидрати (гр.)' }	
                     ]} 
                     setState={setClickedValueNutrients}
+                    clickedValueProtein={clickedValueNutrients.protein}
                     backgroundColor={'rgba(0, 0, 0, 0.3)'}
                   />
                 </Card>

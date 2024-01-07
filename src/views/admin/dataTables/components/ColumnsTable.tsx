@@ -28,9 +28,10 @@ export default function ColumnTable(props: {
 		fat: number,
 		carbs: number
 	}>>
+	clickedValueProtein?: number
 }) {
 	
-	const { tableName, tableData, columnsData, setState, backgroundColor } = props;
+	const { tableName, tableData, columnsData, setState, clickedValueProtein, backgroundColor } = props;
 
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
@@ -118,6 +119,10 @@ export default function ColumnTable(props: {
 					</Thead>
 					<Tbody>
 						{table.getRowModel().rows.slice(0, 11).map((row) => {
+							const proteinValue = (table.getRowModel().rows[parseFloat(row.id)].original as any).protein; // Adjust this based on your data structure
+							const rowBackgroundColor = proteinValue === clickedValueProtein
+							? 'rgba(0, 0, 0, 0.3)'
+							: undefined;
 							return (
 								<Tr 
 									key={row.id} 
@@ -125,7 +130,7 @@ export default function ColumnTable(props: {
 										setState((table.getRowModel().rows[parseFloat(row.id)].original as any)); 
 										setSelectedRow(row.id);
 									}} 
-									backgroundColor={row.id === selectedRow ? backgroundColor : undefined}
+									backgroundColor={rowBackgroundColor}
 								>
 									{row.getVisibleCells().map((cell) => {
 										return (

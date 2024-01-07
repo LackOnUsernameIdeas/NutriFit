@@ -29,8 +29,6 @@ export default function MealPlanner(props: {
     Fat: 70,
     Carbohydrates: 200
   });
-
-  console.log(userPreferences)
   
   const [mealPlan, setMealPlan] = useState<MealPlan>({
     breakfast: null,
