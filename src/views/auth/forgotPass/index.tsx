@@ -87,9 +87,9 @@ function ForgotPass() {
         px={{ base: "25px", md: "0px" }}
         mt={{ base: "40px", md: "14vh" }}
         flexDirection='column'>
-        <Box me='auto'>
+        <Box me='auto' maxW="100%">
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Forgot Password?
+            Забравена парола?
           </Heading>
           <Text
             mb='36px'
@@ -97,7 +97,7 @@ function ForgotPass() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Please provide your email and we'll send a password reset.
+            Моля напишете вашият email и си проверете пощата.
           </Text>
         </Box>
         <Flex
@@ -143,7 +143,7 @@ function ForgotPass() {
               w='100%'
               h='50'
               mb='24px'>
-              Send email
+              Прати email за Възстановяване на Парола
             </Button>
             {successMessage && (
                 <Text color='green' fontSize='sm' mb='8px'>
@@ -163,14 +163,14 @@ function ForgotPass() {
             maxW='100%'
             mt='0px'>
             <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-              Not registered yet?
+              Не сте се регистрирали?
               <NavLink to='/auth/sign-up'>
                 <Text
                   color={textColorBrand}
                   as='span'
                   ms='5px'
                   fontWeight='500'>
-                  Create an Account
+                  Създадете профил.
                 </Text>
               </NavLink>
             </Text>
