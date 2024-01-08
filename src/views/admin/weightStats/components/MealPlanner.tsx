@@ -171,18 +171,18 @@ export default function MealPlanner(props: {
   };
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        <Card minH="200px">
-          <Flex justify="center" pt="5px" w="100%">
+    <Box>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+        <Card minH="100px">
+          <Flex justify="center" w="100%" mb="5px">
             <Text fontSize="5xl" fontStyle="italic">
-              Generate a meal plan with NutriFit!
+              Създайте хранителен план с NutriFit!
             </Text>
           </Flex>
           <HSeparator />
           <Flex justify="center" mt="1%" pt="10px">
             <Text fontSize="3xl">
-                Please input the fields below with your desired limits, after which your meal plan will be generated.
+                Моля попълнете редовете с предпочитаните от вас лимити, след което вашият план ще бъде създаден.
             </Text>
           </Flex>
         </Card>

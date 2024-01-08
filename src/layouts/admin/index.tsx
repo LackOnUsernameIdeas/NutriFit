@@ -100,9 +100,6 @@ export default function Dashboard(props: { [x: string]: any }) {
 							</Switch>
 						</Box>
 					) : null}
-					<Box>
-						<Footer />
-					</Box>
 				</Box>
 			</SidebarContext.Provider>
 		</Box>

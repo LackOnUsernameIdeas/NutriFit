@@ -33,8 +33,19 @@ import {
   Stack,
   Radio,
   RadioGroup,
+  MenuButton,
+	MenuItem,
+	MenuList,
+	useDisclosure,
   useColorModeValue,
+  Menu,
 } from "@chakra-ui/react";
+// Assets
+import {
+	MdOutlineInfo,
+	MdOutlinePerson,
+} from 'react-icons/md';
+
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
@@ -45,12 +56,25 @@ import { HealthInfo, BodyMass, DailyCaloryRequirements, MacroNutrientsData, Goal
 import Loading from "./components/Loading";
 
 import MealPlanner from './components/MealPlanner';
+import { HSeparator } from "components/separator/Separator";
 
 export default function WeightStats() {
   
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const textColor = useColorModeValue("secondaryGray.900", "white");
+  const textColor = useColorModeValue('secondaryGray.500', 'white');
+	const textHover = useColorModeValue(
+		{ color: 'secondaryGray.900', bg: 'unset' },
+		{ color: 'secondaryGray.500', bg: 'unset' }
+	);
+	const iconColor = useColorModeValue('brand.500', 'white');
+	const bgList = useColorModeValue('white', 'whiteAlpha.100');
+	const bgShadow = useColorModeValue('14px 17px 40px 4px rgba(112, 144, 176, 0.08)', 'unset');
+	const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
+	const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' });
+	const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' });
+
+  const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
 
   const [perfectWeight, setPerfectWeight] = useState<HealthInfo>({
     Hamwi: 0,
@@ -659,8 +683,8 @@ export default function WeightStats() {
                   mb="20px"
                 >
                   <Box gap="10px" mb="20px">
-                    <Flex>
-                      <SimpleGrid columns={{ base: 3, md: 2, lg: 6 }} spacing="10px" alignItems="center" mb="10px">
+                    <Flex justifyContent='space-between' align='center'>
+                      <SimpleGrid columns={{ base: 3, md: 2, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
                           {[1, 2, 3, 4, 5, 6].map((level) => (
                             <Button
                               key={level}
@@ -672,6 +696,77 @@ export default function WeightStats() {
                               Ниво {level}
                             </Button>
                           ))}
+                          <Menu isOpen={isOpen1} onClose={onClose1}>
+                            <MenuButton
+                              alignItems='center'
+                              justifyContent='center'
+                              bg={bgButton}
+                              _hover={bgHover}
+                              _focus={bgFocus}
+                              _active={bgFocus}
+                              w='30px'
+                              h='30px'
+                              lineHeight='50%'
+                              onClick={onOpen1}
+                              borderRadius='10px'
+                              ml="10%"
+                              >
+                              <Icon as={MdOutlineInfo} color={iconColor} w='24px' h='24px' />
+                            </MenuButton>
+                            <MenuList
+                              w='100%'
+                              minW='unset'
+                              maxW='100%'
+                              border='transparent'
+                              backdropFilter='blur(100px)'
+                              bg={bgList}
+                              borderRadius='20px'
+                              p='15px'>
+                              <Box
+                                transition='0.2s linear'
+                                color={textColor}
+                                p='0px'
+                                borderRadius='8px'
+                                >
+                                <Flex align='center'>
+                                  <Text fontSize='1xl' fontWeight='400'>
+                                    Бутони за определяне на ниво на натовареност. 
+                                  </Text>
+                                </Flex>
+                                <HSeparator />
+                                <Flex align='center'>
+                                  <Text fontSize='sm' fontWeight='400' mt="10px" mb="5px">
+                                    Ниво 1 - Малко или въобще не спортувате.
+                                  </Text>
+                                </Flex>
+                                <Flex align='center'>
+                                  <Text fontSize='sm' fontWeight='400' mt="10px" mb="5px">
+                                    Ниво 2 - Спортувате умерено 1-3 пъти в седмицата.
+                                  </Text>
+                                </Flex>
+                                <Flex align='center'>
+                                  <Text fontSize='sm' fontWeight='400' mt="10px" mb="5px">
+                                    Ниво 3 - Спортувате умерено 4-5 пъти в седмицата.
+                                  </Text>
+                                </Flex>
+                                <Flex align='center'>
+                                  <Text fontSize='sm' fontWeight='400' mt="10px" mb="5px">
+                                    Ниво 4 - Спортувате умерено дневно или интензивно 3-4 пъти в седмицата.
+                                  </Text>
+                                </Flex>
+                                <Flex align='center'>
+                                  <Text fontSize='sm' fontWeight='400' mt="10px" mb="5px">
+                                    Ниво 5 - Спортувате интензивно 6-7 пъти в седмицата.
+                                  </Text>
+                                </Flex>
+                                <Flex align='center'>
+                                  <Text fontSize='sm' fontWeight='400' mt="10px">
+                                    Ниво 6 - Спортувате много интензивно цялата седмица.
+                                  </Text>
+                                </Flex>
+                              </Box>
+                            </MenuList>
+                          </Menu>  
                       </SimpleGrid>
                     </Flex>
                   </Box>
@@ -737,14 +832,14 @@ export default function WeightStats() {
                       onChange={() => handleRadioChange(key, "male")}
                       isChecked={value === "male"}
                     >
-                      Male
+                      Мъж
                     </Radio>
                     <Radio
                       value="female"
                       onChange={() => handleRadioChange(key, "female")}
                       isChecked={value === "female"}
                     >
-                      Female
+                      Жена
                     </Radio>
                   </Stack>
                 ) : key === "goal" ? (
@@ -754,49 +849,49 @@ export default function WeightStats() {
                       onChange={() => handleRadioChange(key, "maintain")}
                       isChecked={value === "maintain"}
                     >
-                      Maintain Weight
+                      Запази тегло
                     </Radio>
                     <Radio
                       value="mildlose"
                       onChange={() => handleRadioChange(key, "mildlose")}
                       isChecked={value === "mildlose"}
                     >
-                      Mild Weight Loss
+                      Леко сваляне на тегло
                     </Radio>
                     <Radio
                       value="weightlose"
                       onChange={() => handleRadioChange(key, "weightlose")}
                       isChecked={value === "weightlose"}
                     >
-                      Weight Loss
+                      Сваляне на тегло
                     </Radio>
                     <Radio
                       value="extremelose"
                       onChange={() => handleRadioChange(key, "extremelose")}
                       isChecked={value === "extremelose"}
                     >
-                      Extreme Weight Loss
+                      Екстремно сваляне на тегло
                     </Radio>
                     <Radio
                       value="mildgain"
                       onChange={() => handleRadioChange(key, "mildgain")}
                       isChecked={value === "mildgain"}
                     >
-                      Mild Weight Gain
+                      Леко качване на тегло
                     </Radio>
                     <Radio
                       value="weightgain"
                       onChange={() => handleRadioChange(key, "weightgain")}
                       isChecked={value === "weightgain"}
                     >
-                      Weight Gain
+                      Качване на тегло
                     </Radio>
                     <Radio
                       value="extremegain"
                       onChange={() => handleRadioChange(key, "extremegain")}
                       isChecked={value === "extremegain"}
                     >
-                    Extreme Weight Gain
+                      Екстремно качване на тегло
                   </Radio>
                 </Stack>
                 ) : (
@@ -810,7 +905,7 @@ export default function WeightStats() {
                 )}
               </label>
               ))}
-              <Button onClick={generateStats}>Submit</Button>
+              <Button onClick={generateStats}>Готово</Button>
             </Box>
           </Card>
         )}
