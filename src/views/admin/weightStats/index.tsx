@@ -409,116 +409,121 @@ export default function WeightStats() {
             {isLoading ? (
               <Box>
                 <Card
+                  overflowX={{ base: 'scroll', md: 'hidden' }}
                   p="20px"
                   alignItems="center"
                   flexDirection="column"
-                  w="100%"
                   mb="20px"
+                  maxW="100%"
                 >
-                  <Box gap="10px" mb="20px">
-                    {Object.entries(userData).map(([key, value]) => (
-                      <label key={key}>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}:
-                        {typeof value === "number" ? (
-                          <Input
-                            type="number"
-                            name={key}
-                            value={value}
-                            onChange={(e) => handleInputChange(e)}
-                          />
-                        ) : key === "gender" ? (
-                          <Stack direction="row">
-                            <Radio
-                              value="male"
-                              onChange={() => handleRadioChange(key, "male")}
-                              isChecked={value === "male"}
-                            >
-                              Male
-                            </Radio>
-                            <Radio
-                              value="female"
-                              onChange={() => handleRadioChange(key, "female")}
-                              isChecked={value === "female"}
-                            >
-                              Female
-                            </Radio>
+                  <Flex justify="space-between" align="start" px={{ base: "0px", "2xl": "10px" }} pt="5px" maxW="50%">
+                      {Object.entries(userData).map(([key, value]) => (
+                        <label key={key} style={{ width: '100%' }}>
+                          {key.charAt(0).toUpperCase() + key.slice(1)}:
+                          {typeof value === "number" ? (
+                            <Input
+                              type="number"
+                              name={key}
+                              value={value}
+                              onChange={(e) => handleInputChange(e)}
+                            />
+                          ) : key === "gender" ? (
+                            <Stack direction="row">
+                              <Radio
+                                value="male"
+                                onChange={() => handleRadioChange(key, "male")}
+                                isChecked={value === "male"}
+                              >
+                                Male
+                              </Radio>
+                              <Radio
+                                value="female"
+                                onChange={() => handleRadioChange(key, "female")}
+                                isChecked={value === "female"}
+                              >
+                                Female
+                              </Radio>
+                            </Stack>
+                          ) : key === "goal" ? (
+                            <Stack direction="row">
+                              <SimpleGrid >
+                                <Radio
+                                  value="maintain"
+                                  onChange={() => handleRadioChange(key, "maintain")}
+                                  isChecked={value === "maintain"}
+                                >
+                                  Maintain Weight
+                                </Radio>
+                                <Radio
+                                  value="mildlose"
+                                  onChange={() => handleRadioChange(key, "mildlose")}
+                                  isChecked={value === "mildlose"}
+                                >
+                                  Mild Weight Loss
+                                </Radio>
+                                <Radio
+                                  value="weightlose"
+                                  onChange={() => handleRadioChange(key, "weightlose")}
+                                  isChecked={value === "weightlose"}
+                                >
+                                  Weight Loss
+                                </Radio>
+                                <Radio
+                                  value="extremelose"
+                                  onChange={() => handleRadioChange(key, "extremelose")}
+                                  isChecked={value === "extremelose"}
+                                >
+                                  Extreme Weight Loss
+                                </Radio>
+                                <Radio
+                                  value="mildgain"
+                                  onChange={() => handleRadioChange(key, "mildgain")}
+                                  isChecked={value === "mildgain"}
+                                >
+                                  Mild Weight Gain
+                                </Radio>
+                                <Radio
+                                  value="weightgain"
+                                  onChange={() => handleRadioChange(key, "weightgain")}
+                                  isChecked={value === "weightgain"}
+                                >
+                                  Weight Gain
+                                </Radio>
+                                <Radio
+                                  value="extremegain"
+                                  onChange={() => handleRadioChange(key, "extremegain")}
+                                  isChecked={value === "extremegain"}
+                                >
+                                Extreme Weight Gain
+                              </Radio>
+                            </SimpleGrid>  
                           </Stack>
-                        ) : key === "goal" ? (
-                          <Stack direction="row">
-                            <Radio
-                              value="maintain"
-                              onChange={() => handleRadioChange(key, "maintain")}
-                              isChecked={value === "maintain"}
-                            >
-                              Maintain Weight
-                            </Radio>
-                            <Radio
-                              value="mildlose"
-                              onChange={() => handleRadioChange(key, "mildlose")}
-                              isChecked={value === "mildlose"}
-                            >
-                              Mild Weight Loss
-                            </Radio>
-                            <Radio
-                              value="weightlose"
-                              onChange={() => handleRadioChange(key, "weightlose")}
-                              isChecked={value === "weightlose"}
-                            >
-                              Weight Loss
-                            </Radio>
-                            <Radio
-                              value="extremelose"
-                              onChange={() => handleRadioChange(key, "extremelose")}
-                              isChecked={value === "extremelose"}
-                            >
-                              Extreme Weight Loss
-                            </Radio>
-                            <Radio
-                              value="mildgain"
-                              onChange={() => handleRadioChange(key, "mildgain")}
-                              isChecked={value === "mildgain"}
-                            >
-                              Mild Weight Gain
-                            </Radio>
-                            <Radio
-                              value="weightgain"
-                              onChange={() => handleRadioChange(key, "weightgain")}
-                              isChecked={value === "weightgain"}
-                            >
-                              Weight Gain
-                            </Radio>
-                            <Radio
-                              value="extremegain"
-                              onChange={() => handleRadioChange(key, "extremegain")}
-                              isChecked={value === "extremegain"}
-                            >
-                            Extreme Weight Gain
-                          </Radio>
-                        </Stack>
-                        ) : (
-                          <Input
-                            type="radio"
-                            id={value}
-                            name="goal"
-                            value={value}
-                            onChange={(e) => handleInputChange(e)}
-                          />
-                        )}
-                      </label>
-                    ))}
-                    <Button onClick={generateStats}>Submit</Button>
-                  </Box>
+                          ) : (
+                            <Input
+                              type="radio"
+                              id={value}
+                              name="goal"
+                              value={value}
+                              onChange={(e) => handleInputChange(e)}
+                            />
+                          )}
+                        </label>
+                      ))}
+                      <Button onClick={generateStats}>Submit</Button>
+                  </Flex>
                 </Card>
                 <Loading />
               </Box>
             ) : (
               <Box>
                 <Card
+                  overflowX={{ base: 'scroll', md: 'hidden' }}
                   p="20px"
                   alignItems="center"
                   flexDirection="column"
                   w="100%"
                   mb="20px"
+                  maxW="100%"
                 >
                   <Box gap="10px" mb="20px">
                     {Object.entries(userData).map(([key, value]) => (
@@ -550,7 +555,8 @@ export default function WeightStats() {
                             </Radio>
                           </Stack>
                         ) : key === "goal" ? (
-                          <Stack direction="row">
+                          <Stack direction="row" justify="center">
+                            <SimpleGrid columns={{ base: 4, md: 2, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
                             <Radio
                               value="maintain"
                               onChange={() => handleRadioChange(key, "maintain")}
@@ -600,6 +606,7 @@ export default function WeightStats() {
                             >
                             Extreme Weight Gain
                           </Radio>
+                        </SimpleGrid>
                         </Stack>
                         ) : (
                           <Input
@@ -808,11 +815,13 @@ export default function WeightStats() {
           </Box>
         ) : (
           <Card
+            overflowX={{ base: 'scroll', md: 'hidden' }}
             p="20px"
             alignItems="center"
             flexDirection="column"
             w="100%"
             mb="20px"
+            maxW="100%"
           >
             <Box gap="10px" mb="20px">
               {Object.entries(userData).map(([key, value]) => (
@@ -843,56 +852,58 @@ export default function WeightStats() {
                     </Radio>
                   </Stack>
                 ) : key === "goal" ? (
-                  <Stack direction="row">
-                    <Radio
-                      value="maintain"
-                      onChange={() => handleRadioChange(key, "maintain")}
-                      isChecked={value === "maintain"}
-                    >
-                      Запази тегло
+                  <Stack direction="row" alignContent="center" justify="center">
+                    <SimpleGrid columns={{ base: 3, md: 2, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
+                      <Radio
+                        value="maintain"
+                        onChange={() => handleRadioChange(key, "maintain")}
+                        isChecked={value === "maintain"}
+                      >
+                        Запази тегло
+                      </Radio>
+                      <Radio
+                        value="mildlose"
+                        onChange={() => handleRadioChange(key, "mildlose")}
+                        isChecked={value === "mildlose"}
+                      >
+                        Леко сваляне на тегло
+                      </Radio>
+                      <Radio
+                        value="weightlose"
+                        onChange={() => handleRadioChange(key, "weightlose")}
+                        isChecked={value === "weightlose"}
+                      >
+                        Сваляне на тегло
+                      </Radio>
+                      <Radio
+                        value="extremelose"
+                        onChange={() => handleRadioChange(key, "extremelose")}
+                        isChecked={value === "extremelose"}
+                      >
+                        Екстремно сваляне на тегло
+                      </Radio>
+                      <Radio
+                        value="mildgain"
+                        onChange={() => handleRadioChange(key, "mildgain")}
+                        isChecked={value === "mildgain"}
+                      >
+                        Леко качване на тегло
+                      </Radio>
+                      <Radio
+                        value="weightgain"
+                        onChange={() => handleRadioChange(key, "weightgain")}
+                        isChecked={value === "weightgain"}
+                      >
+                        Качване на тегло
+                      </Radio>
+                      <Radio
+                        value="extremegain"
+                        onChange={() => handleRadioChange(key, "extremegain")}
+                        isChecked={value === "extremegain"}
+                      >
+                        Екстремно качване на тегло
                     </Radio>
-                    <Radio
-                      value="mildlose"
-                      onChange={() => handleRadioChange(key, "mildlose")}
-                      isChecked={value === "mildlose"}
-                    >
-                      Леко сваляне на тегло
-                    </Radio>
-                    <Radio
-                      value="weightlose"
-                      onChange={() => handleRadioChange(key, "weightlose")}
-                      isChecked={value === "weightlose"}
-                    >
-                      Сваляне на тегло
-                    </Radio>
-                    <Radio
-                      value="extremelose"
-                      onChange={() => handleRadioChange(key, "extremelose")}
-                      isChecked={value === "extremelose"}
-                    >
-                      Екстремно сваляне на тегло
-                    </Radio>
-                    <Radio
-                      value="mildgain"
-                      onChange={() => handleRadioChange(key, "mildgain")}
-                      isChecked={value === "mildgain"}
-                    >
-                      Леко качване на тегло
-                    </Radio>
-                    <Radio
-                      value="weightgain"
-                      onChange={() => handleRadioChange(key, "weightgain")}
-                      isChecked={value === "weightgain"}
-                    >
-                      Качване на тегло
-                    </Radio>
-                    <Radio
-                      value="extremegain"
-                      onChange={() => handleRadioChange(key, "extremegain")}
-                      isChecked={value === "extremegain"}
-                    >
-                      Екстремно качване на тегло
-                  </Radio>
+                  </SimpleGrid>
                 </Stack>
                 ) : (
                   <Input
