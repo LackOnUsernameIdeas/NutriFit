@@ -2,7 +2,8 @@ import React from "react";
 // Chakra imports
 import { 
     Input,
-    Button
+    Button,
+    Flex
   } from "@chakra-ui/react";
 import { CustomServingInputProps } from "../variables/mealPlaner"
 
@@ -12,13 +13,14 @@ export const CustomServingInput: React.FC<CustomServingInputProps> = ({
     onDecrement
 }) => {
     return (
-      <>
+      <Flex>
         <Button size='lg' onClick={onDecrement}>-</Button>
         <Input
           type="number"
           placeholder="Custom Serving"
           value={value}
-          readOnly
+          readOnly={true}
+          cursor="default"
           variant='auth'
           fontSize='sm'
           ms={{ base: "0px", md: "0px" }}
@@ -27,6 +29,6 @@ export const CustomServingInput: React.FC<CustomServingInputProps> = ({
           size='lg'
         />
         <Button size='lg' onClick={onIncrement}>+</Button>
-      </>
+      </Flex>
     );
 };

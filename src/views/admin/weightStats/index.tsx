@@ -348,32 +348,32 @@ export default function WeightStats() {
   };
 
   const [userData, setUserData] = useState<{
-    gender: 'male' | 'female',
-    height: number,
-    age: number,
-    weight: number,
-    neck: number,
-    waist: number,
-    hip: number,
-    goal: Goal
+    пол: 'male' | 'female',
+    ръст: number,
+    възраст: number,
+    тегло: number,
+    врат: number,
+    талия: number,
+    бедро: number,
+    цел: Goal
   }>({
-    gender: 'male',
-    height: 185,
-    age: 16,
-    weight: 105,
-    neck: 39,
-    waist: 108,
-    hip: 117,
-    goal: 'weightlose'
+    пол: 'male',
+    ръст: 185,
+    възраст: 16,
+    тегло: 105,
+    врат: 39,
+    талия: 108,
+    бедро: 117,
+    цел: 'weightlose'
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   
   function generateStats(){
-    fetchPerfectWeightData(userData["gender"], userData["height"]);
-    fetchBodyFatAndLeanMassData(userData["age"], userData["gender"], userData["height"], userData["weight"], userData["neck"], userData["waist"], userData["hip"]);
-    fetchCaloriesForActivityLevels(userData["age"], userData["gender"], userData["height"], userData["weight"]);
-    fetchMacroNutrients(userData["age"], userData["gender"], userData["height"], userData["weight"], userData["goal"]);
+    fetchPerfectWeightData(userData["пол"], userData["ръст"]);
+    fetchBodyFatAndLeanMassData(userData["възраст"], userData["пол"], userData["ръст"], userData["тегло"], userData["врат"], userData["талия"], userData["бедро"]);
+    fetchCaloriesForActivityLevels(userData["възраст"], userData["пол"], userData["ръст"], userData["тегло"]);
+    fetchMacroNutrients(userData["възраст"], userData["пол"], userData["ръст"], userData["тегло"], userData["цел"]);
 
     setIsSubmitted(true);
     setIsLoading(true);
@@ -409,108 +409,122 @@ export default function WeightStats() {
             {isLoading ? (
               <Box>
                 <Card
-                  overflowX={{ base: 'scroll', md: 'hidden' }}
                   p="20px"
                   alignItems="center"
                   flexDirection="column"
                   mb="20px"
-                  maxW="100%"
+                  w="100%"
                 >
-                  <Flex justify="space-between" align="start" px={{ base: "0px", "2xl": "10px" }} pt="5px" maxW="50%">
-                      {Object.entries(userData).map(([key, value]) => (
-                        <label key={key} style={{ width: '100%' }}>
-                          {key.charAt(0).toUpperCase() + key.slice(1)}:
-                          {typeof value === "number" ? (
-                            <Input
-                              type="number"
-                              name={key}
-                              value={value}
-                              onChange={(e) => handleInputChange(e)}
-                            />
-                          ) : key === "gender" ? (
-                            <Stack direction="row">
-                              <Radio
-                                value="male"
-                                onChange={() => handleRadioChange(key, "male")}
-                                isChecked={value === "male"}
-                              >
-                                Male
-                              </Radio>
-                              <Radio
-                                value="female"
-                                onChange={() => handleRadioChange(key, "female")}
-                                isChecked={value === "female"}
-                              >
-                                Female
-                              </Radio>
-                            </Stack>
-                          ) : key === "goal" ? (
-                            <Stack direction="row">
-                              <SimpleGrid >
-                                <Radio
-                                  value="maintain"
-                                  onChange={() => handleRadioChange(key, "maintain")}
-                                  isChecked={value === "maintain"}
-                                >
-                                  Maintain Weight
-                                </Radio>
-                                <Radio
-                                  value="mildlose"
-                                  onChange={() => handleRadioChange(key, "mildlose")}
-                                  isChecked={value === "mildlose"}
-                                >
-                                  Mild Weight Loss
-                                </Radio>
-                                <Radio
-                                  value="weightlose"
-                                  onChange={() => handleRadioChange(key, "weightlose")}
-                                  isChecked={value === "weightlose"}
-                                >
-                                  Weight Loss
-                                </Radio>
-                                <Radio
-                                  value="extremelose"
-                                  onChange={() => handleRadioChange(key, "extremelose")}
-                                  isChecked={value === "extremelose"}
-                                >
-                                  Extreme Weight Loss
-                                </Radio>
-                                <Radio
-                                  value="mildgain"
-                                  onChange={() => handleRadioChange(key, "mildgain")}
-                                  isChecked={value === "mildgain"}
-                                >
-                                  Mild Weight Gain
-                                </Radio>
-                                <Radio
-                                  value="weightgain"
-                                  onChange={() => handleRadioChange(key, "weightgain")}
-                                  isChecked={value === "weightgain"}
-                                >
-                                  Weight Gain
-                                </Radio>
-                                <Radio
-                                  value="extremegain"
-                                  onChange={() => handleRadioChange(key, "extremegain")}
-                                  isChecked={value === "extremegain"}
-                                >
-                                Extreme Weight Gain
-                              </Radio>
-                            </SimpleGrid>  
-                          </Stack>
-                          ) : (
-                            <Input
-                              type="radio"
-                              id={value}
-                              name="goal"
-                              value={value}
-                              onChange={(e) => handleInputChange(e)}
-                            />
-                          )}
-                        </label>
-                      ))}
-                      <Button onClick={generateStats}>Submit</Button>
-                  </Flex>
+                  <Box gap="10px" mb="20px">
+                    {Object.entries(userData).map(([key, value]) => (
+                      <label key={key} style={{ width: '100%' }}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:
+                        {typeof value === "number" ? (
+                          <Input
+                            variant='auth'
+                            type="number"
+                            name={key}
+                            placeholder={"Пример: " + value}
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        ) : key === "пол" ? (
+                          <Stack direction="row">
+                        <Radio
+                          value="male"
+                          onChange={() => handleRadioChange(key, "male")}
+                          isChecked={value === "male"}
+                        >
+                          Мъж
+                        </Radio>
+                        <Radio
+                          value="female"
+                          onChange={() => handleRadioChange(key, "female")}
+                          isChecked={value === "female"}
+                        >
+                          Жена
+                        </Radio>
+                      </Stack>
+                    ) : key === "цел" ? (
+                      <Stack direction="row" alignContent="center" justify="center">
+                        <SimpleGrid columns={{ base: 3, md: 1, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
+                          <Radio
+                            value="maintain"
+                            onChange={() => handleRadioChange(key, "maintain")}
+                            isChecked={value === "maintain"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            ml={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Запази тегло
+                          </Radio>
+                          <Radio
+                            value="mildlose"
+                            onChange={() => handleRadioChange(key, "mildlose")}
+                            isChecked={value === "mildlose"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            mr={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Леко сваляне на тегло
+                          </Radio>
+                          <Radio
+                            value="weightlose"
+                            onChange={() => handleRadioChange(key, "weightlose")}
+                            isChecked={value === "weightlose"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            mr={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Сваляне на тегло
+                          </Radio>
+                          <Radio
+                            value="extremelose"
+                            onChange={() => handleRadioChange(key, "extremelose")}
+                            isChecked={value === "extremelose"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            mr={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Екстремно сваляне на тегло
+                          </Radio>
+                          <Radio
+                            value="mildgain"
+                            onChange={() => handleRadioChange(key, "mildgain")}
+                            isChecked={value === "mildgain"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            mr={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Леко качване на тегло
+                          </Radio>
+                          <Radio
+                            value="weightgain"
+                            onChange={() => handleRadioChange(key, "weightgain")}
+                            isChecked={value === "weightgain"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            mr={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Качване на тегло
+                          </Radio>
+                          <Radio
+                            value="extremegain"
+                            onChange={() => handleRadioChange(key, "extremegain")}
+                            isChecked={value === "extremegain"}
+                            fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your designfontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                            mr={{ base: "3%", md: "3%", lg: "3%" }}
+                          >
+                            Екстремно качване на тегло
+                          </Radio>
+                        </SimpleGrid>
+                      </Stack>
+                        ) : (
+                          <Input
+                            type="radio"
+                            id={value}
+                            name="goal"
+                            value={value}
+                            onChange={(e) => handleInputChange(e)}
+                          />
+                        )}
+                      </label>
+                    ))}
+                    <Button onClick={generateStats}>Готово</Button>
+                  </Box>
                 </Card>
                 <Loading />
               </Box>
@@ -531,82 +545,96 @@ export default function WeightStats() {
                         {key.charAt(0).toUpperCase() + key.slice(1)}:
                         {typeof value === "number" ? (
                           <Input
-                            type="number"
-                            name={key}
-                            value={value}
-                            defaultValue={1}
-                            onChange={(e) => handleInputChange(e)}
-                          />
-                        ) : key === "gender" ? (
-                          <Stack direction="row">
-                            <Radio
-                              value="male"
-                              onChange={() => handleRadioChange(key, "male")}
-                              isChecked={value === "male"}
-                            >
-                              Male
-                            </Radio>
-                            <Radio
-                              value="female"
-                              onChange={() => handleRadioChange(key, "female")}
-                              isChecked={value === "female"}
-                            >
-                              Female
-                            </Radio>
-                          </Stack>
-                        ) : key === "goal" ? (
-                          <Stack direction="row" justify="center">
-                            <SimpleGrid columns={{ base: 4, md: 2, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
+                          variant='auth'
+                          type="number"
+                          name={key}
+                          placeholder={"Пример: " + value}
+                          onChange={(e) => handleInputChange(e)}
+                        />
+                      ) : key === "пол" ? (
+                        <Stack direction="row">
+                          <Radio
+                            value="male"
+                            onChange={() => handleRadioChange(key, "male")}
+                            isChecked={value === "male"}
+                          >
+                            Мъж
+                          </Radio>
+                          <Radio
+                            value="female"
+                            onChange={() => handleRadioChange(key, "female")}
+                            isChecked={value === "female"}
+                          >
+                            Жена
+                          </Radio>
+                        </Stack>
+                      ) : key === "цел" ? (
+                        <Stack direction="row" alignContent="center" justify="center">
+                          <SimpleGrid columns={{ base: 3, md: 1, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
                             <Radio
                               value="maintain"
                               onChange={() => handleRadioChange(key, "maintain")}
                               isChecked={value === "maintain"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              ml={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                              Maintain Weight
+                              Запази тегло
                             </Radio>
                             <Radio
                               value="mildlose"
                               onChange={() => handleRadioChange(key, "mildlose")}
                               isChecked={value === "mildlose"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              mr={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                              Mild Weight Loss
+                              Леко сваляне на тегло
                             </Radio>
                             <Radio
                               value="weightlose"
                               onChange={() => handleRadioChange(key, "weightlose")}
                               isChecked={value === "weightlose"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              mr={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                              Weight Loss
+                              Сваляне на тегло
                             </Radio>
                             <Radio
                               value="extremelose"
                               onChange={() => handleRadioChange(key, "extremelose")}
                               isChecked={value === "extremelose"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              mr={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                              Extreme Weight Loss
+                              Екстремно сваляне на тегло
                             </Radio>
                             <Radio
                               value="mildgain"
                               onChange={() => handleRadioChange(key, "mildgain")}
                               isChecked={value === "mildgain"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              mr={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                              Mild Weight Gain
+                              Леко качване на тегло
                             </Radio>
                             <Radio
                               value="weightgain"
                               onChange={() => handleRadioChange(key, "weightgain")}
                               isChecked={value === "weightgain"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              mr={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                              Weight Gain
+                              Качване на тегло
                             </Radio>
                             <Radio
                               value="extremegain"
                               onChange={() => handleRadioChange(key, "extremegain")}
                               isChecked={value === "extremegain"}
+                              fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your designfontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                              mr={{ base: "3%", md: "3%", lg: "3%" }}
                             >
-                            Extreme Weight Gain
-                          </Radio>
-                        </SimpleGrid>
+                              Екстремно качване на тегло
+                            </Radio>
+                          </SimpleGrid>
                         </Stack>
                         ) : (
                           <Input
@@ -619,7 +647,7 @@ export default function WeightStats() {
                         )}
                       </label>
                     ))}
-                    <Button onClick={generateStats}>Submit</Button>
+                    <Button onClick={generateStats}>Готово</Button>
                   </Box>
                 </Card>
                 <Card
@@ -801,15 +829,7 @@ export default function WeightStats() {
                     clickedValueProtein={clickedValueNutrients.protein}
                   />
                 </Card>
-                <Card
-                  p="20px"
-                  alignItems="center"
-                  flexDirection="column"
-                  w="100%"
-                  mb="20px"
-                >
-                  <MealPlanner chosenCalories={clickedValueCalories} chosenNutrients={clickedValueNutrients} />
-                </Card>
+                <MealPlanner chosenCalories={clickedValueCalories} chosenNutrients={clickedValueNutrients} />
               </Box>
             )}
           </Box>
@@ -829,12 +849,13 @@ export default function WeightStats() {
                 {key.charAt(0).toUpperCase() + key.slice(1)}:
                 {typeof value === "number" ? (
                   <Input
+                    variant='auth'
                     type="number"
                     name={key}
-                    value={value}
+                    placeholder={"Пример: " + value}
                     onChange={(e) => handleInputChange(e)}
                   />
-                ) : key === "gender" ? (
+                ) : key === "пол" ? (
                   <Stack direction="row">
                     <Radio
                       value="male"
@@ -851,13 +872,15 @@ export default function WeightStats() {
                       Жена
                     </Radio>
                   </Stack>
-                ) : key === "goal" ? (
+                ) : key === "цел" ? (
                   <Stack direction="row" alignContent="center" justify="center">
-                    <SimpleGrid columns={{ base: 3, md: 2, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
+                    <SimpleGrid columns={{ base: 3, md: 1, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
                       <Radio
                         value="maintain"
                         onChange={() => handleRadioChange(key, "maintain")}
                         isChecked={value === "maintain"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        ml={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Запази тегло
                       </Radio>
@@ -865,6 +888,8 @@ export default function WeightStats() {
                         value="mildlose"
                         onChange={() => handleRadioChange(key, "mildlose")}
                         isChecked={value === "mildlose"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        mr={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Леко сваляне на тегло
                       </Radio>
@@ -872,6 +897,8 @@ export default function WeightStats() {
                         value="weightlose"
                         onChange={() => handleRadioChange(key, "weightlose")}
                         isChecked={value === "weightlose"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        mr={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Сваляне на тегло
                       </Radio>
@@ -879,6 +906,8 @@ export default function WeightStats() {
                         value="extremelose"
                         onChange={() => handleRadioChange(key, "extremelose")}
                         isChecked={value === "extremelose"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        mr={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Екстремно сваляне на тегло
                       </Radio>
@@ -886,6 +915,8 @@ export default function WeightStats() {
                         value="mildgain"
                         onChange={() => handleRadioChange(key, "mildgain")}
                         isChecked={value === "mildgain"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        mr={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Леко качване на тегло
                       </Radio>
@@ -893,6 +924,8 @@ export default function WeightStats() {
                         value="weightgain"
                         onChange={() => handleRadioChange(key, "weightgain")}
                         isChecked={value === "weightgain"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        mr={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Качване на тегло
                       </Radio>
@@ -900,6 +933,8 @@ export default function WeightStats() {
                         value="extremegain"
                         onChange={() => handleRadioChange(key, "extremegain")}
                         isChecked={value === "extremegain"}
+                        fontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your designfontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                        mr={{ base: "3%", md: "3%", lg: "3%" }}
                       >
                         Екстремно качване на тегло
                     </Radio>

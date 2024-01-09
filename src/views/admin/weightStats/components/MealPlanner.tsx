@@ -172,8 +172,8 @@ export default function MealPlanner(props: {
 
   return (
     <Box>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
-        <Card minH="100px">
+      <Card>
+        <Card>
           <Flex justify="center" w="100%" mb="5px">
             <Text fontSize="5xl" fontStyle="italic">
               Създайте хранителен план с NutriFit!
@@ -186,27 +186,27 @@ export default function MealPlanner(props: {
             </Text>
           </Flex>
         </Card>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
-        <UserPreferencesInput
-          userPreferences={userPreferences}
-          handleInputChange={handleInputChange}
-          generatePlan={generatePlan}
-        />
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
-        <MealPlanDetails
-          customServings={customServings}
-          suggestedMaxServings={suggestedMaxServings}
-          mealPlan={mealPlan}
-          calories={calories}
-          protein={protein}
-          carbs={carbs}
-          fat={fat}
-          handleIncrement={handleIncrement}
-          handleDecrement={handleDecrement}
-        />
-			</SimpleGrid>
-    </Box>
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" >
+          <UserPreferencesInput
+            userPreferences={userPreferences}
+            handleInputChange={handleInputChange}
+            generatePlan={generatePlan}
+          />
+        </SimpleGrid>
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
+          <MealPlanDetails
+            customServings={customServings}
+            suggestedMaxServings={suggestedMaxServings}
+            mealPlan={mealPlan}
+            calories={calories}
+            protein={protein}
+            carbs={carbs}
+            fat={fat}
+            handleIncrement={handleIncrement}
+            handleDecrement={handleDecrement}
+          />
+        </SimpleGrid> 
+      </Card> 
+    </Box>  
   );
 }

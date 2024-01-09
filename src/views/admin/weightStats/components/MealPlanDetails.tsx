@@ -4,13 +4,6 @@ import { MealPlan, NutrientState, SuggestedMaxServings, CustomServings } from ".
 import { Box, Text, Flex, VStack, SimpleGrid } from "@chakra-ui/react";
 import { HSeparator } from "components/separator/Separator";
 import RecipeWidget from 'components/card/NFT';
-import Pancakes from 'assets/img/nfts/pancakes.jpg';
-import Shkembe from 'assets/img/nfts/shkembe-chorba.jpg';
-import Sarma from 'assets/img/nfts/sarma.jpg';
-import Avatar1 from 'assets/img/avatars/avatar1.png';
-import Avatar2 from 'assets/img/avatars/avatar2.png';
-import Avatar3 from 'assets/img/avatars/avatar3.png';
-import Avatar4 from 'assets/img/avatars/avatar4.png';
 import Card from "components/card/Card";
 
 interface MealPlanDetailsProps {
@@ -29,8 +22,8 @@ const bulgarianMealType: string[] = ["Закуска","Обяд","Вечеря"]
 const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, suggestedMaxServings, mealPlan, calories, protein, carbs, fat, handleIncrement, handleDecrement }) => {
 	return (
 		<Card>
-			<Flex justify="center" w="100%" >
-				<Text fontSize="4xl">
+			<Flex justify="center" w="100%" mb="1%">
+				<Text fontSize="5xl">
 					Създаден хранителен план
 				</Text>
 			</Flex>
@@ -63,14 +56,14 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 						<Box key={mealType}>
 							<RecipeWidget
 								name={
-									<Flex justify="center" pt="5px" w="100%" mt="5px">
-										<Text fontSize="2xl">
+									<Flex justify="center" pt="5px" w="100%" mt="5px" overflow="hidden">
+										<Text fontSize="2xl" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
 											{bulgarianMealType[index]}: {(mealPlan as any)[mealType]?.title || 'Няма рецепта'}
 										</Text>
 									</Flex>
 								}
 								author={
-									<Flex justify="center" pt="2px" w="100%" mt="5px">
+									<Flex direction="column" justify="center" align="center" pt="2px" w="100%" mt="5px">
 										<CustomServingInput
 											mealType={mealType}
 											value={(customServings as any)[mealType] !== 0 ? (customServings as any)[mealType] : (suggestedMaxServings as any)[mealType]}
@@ -82,15 +75,29 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 								image={(mealPlan as any)[mealType]?.photo}
 								currentbid={
 									<Box>
-										<Flex justify="center" pt="5px" w="100%" mb="2%" mt="2%">
-											<Text mr="4%" fontStyle='italic'>Порция: {(customServings as any)[mealType] !== 0 ? (customServings as any)[mealType] : (suggestedMaxServings as any)[mealType]}</Text>
-											<Text mr="4%" fontStyle='italic'>Калории: {(calories as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-											<Text mr="4%" fontStyle='italic'>Протеин: {(protein as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-											<Text mr="4%" fontStyle='italic'>Въглехидрати: {(carbs as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-											<Text fontStyle='italic'>Мазнини: {(fat as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-										</Flex>
-										<Flex justify="center" pt="5px" w="100%" mb="2%" mt="2%">
-											<Text fontStyle='italic' fontSize="2xl">Грамаж: {`${(mealPlan as any)[mealType]?.weightPerServing.amount.toFixed(2)}${(mealPlan as any)[mealType]?.weightPerServing.unit}`  || 'N/A'}</Text>
+										<Flex direction={{ base: 'column', md: 'row' }} justify="center" pt="5px" w="100%" mb="2%" mt="2%">
+											<Flex direction="column" mr={{ base: '10%', md: '15%' }} mb={{ base: '2%', md: 0 }}>
+												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} mb={{ base: '2%', md: 0, lg: "3%" }} fontStyle='italic'>
+													Порция: {(customServings as any)[mealType] !== 0 ? (customServings as any)[mealType] : (suggestedMaxServings as any)[mealType]}
+												</Text>
+												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} mb={{ base: '2%', md: 0, lg: "3%" }} fontStyle='italic'>
+													Калории: {(calories as any)[`${mealType}`]?.toFixed(2) || 'N/A'}
+												</Text>
+												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} fontStyle='italic'>
+													Протеин: {(protein as any)[`${mealType}`]?.toFixed(2) || 'N/A'}
+												</Text>
+											</Flex>
+											<Flex direction="column">
+												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} mb={{ base: '2%', md: 0, lg: "3%" }} fontStyle='italic'>
+													Въглехидрати: {(carbs as any)[`${mealType}`]?.toFixed(2) || 'N/A'}
+												</Text>
+												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} mb={{ base: '2%', md: 0, lg: "3%" }} fontStyle='italic'>
+													Мазнини: {(fat as any)[`${mealType}`]?.toFixed(2) || 'N/A'}
+												</Text>
+												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} fontStyle='italic'>
+													Грамаж: {`${(mealPlan as any)[mealType]?.weightPerServing.amount.toFixed(2)}${(mealPlan as any)[mealType]?.weightPerServing.unit}` || 'N/A'}
+												</Text>
+											</Flex>
 										</Flex>
 									</Box>		
 								}
@@ -99,15 +106,15 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 					))}
 				</SimpleGrid>
 			</Flex>
-			<Box>
-				<HSeparator />
-				<Flex justify="center" pt="5px" w="100%" mt="20px">
-					<Text mr="12%" fontSize="2xl">Сумирани Калории: {calories.summed?.toFixed(2) || 'N/A'}</Text>
-					<Text mr="12%" fontSize="2xl">Сумирани Протеин: {protein.summed?.toFixed(2) || 'N/A'}</Text>
-					<Text mr="12%" fontSize="2xl">Сумирани Въглехидрати: {carbs.summed?.toFixed(2) || 'N/A'}</Text>
-					<Text fontSize="2xl">Сумирани Мазнини: {fat.summed?.toFixed(2) || 'N/A'}</Text>
-				</Flex>
-			</Box>
+			<HSeparator />
+			<Flex justify="center" pt="5px" w="100%" mt="20px">
+				<SimpleGrid columns={{ base: 2, md: 1, lg: 4 }} spacing="3%" alignItems="center">
+					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Калории: {calories.summed?.toFixed(2) || 'N/A'}</Text>
+					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Протеин: {protein.summed?.toFixed(2) || 'N/A'}</Text>
+					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Въглехидрати: {carbs.summed?.toFixed(2) || 'N/A'}</Text>
+					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Мазнини: {fat.summed?.toFixed(2) || 'N/A'}</Text>
+				</SimpleGrid>
+			</Flex>
 		</Card>
 	);
 };

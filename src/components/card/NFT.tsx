@@ -25,7 +25,7 @@ export default function RecipeWidget(props: {
 						w={{ base: '100%', '3xl': '100%' }}
 						h={{ base: '100%', '3xl': '100%' }}
 						borderRadius='20px'
-						maxH="150px"
+						maxH="300px"
 						objectFit='cover'
 					/>
 					{/* 
@@ -57,7 +57,7 @@ export default function RecipeWidget(props: {
 				</Box>
 				<Flex flexDirection='column' justify='space-between' h='100%'>
 					<Flex
-						justify='space-between'
+						justify="center"
 						direction={{
 							base: 'row',
 							md: 'column',
@@ -81,6 +81,8 @@ export default function RecipeWidget(props: {
 							me='14px'>
 							{name}
 						</Text>
+					</Flex>
+					<Flex justify="center">
 						<Text
 							color='secondaryGray.600'
 							fontSize={{
@@ -91,9 +93,9 @@ export default function RecipeWidget(props: {
 							{author}
 						</Text>
 					</Flex>
-					<Box>
+					<Flex justify="center">
 						{currentbid}
-					</Box>
+					</Flex>
 					{/* 
 					
 					----BUTTON, COULD BE USED FOR RECIPES?----
