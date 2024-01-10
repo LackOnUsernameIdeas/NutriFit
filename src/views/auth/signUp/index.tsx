@@ -108,7 +108,7 @@ function SignUp() {
       setPasswordsMatch(true);
       setError('');
     } else {
-      setError('razlichni paroli manyak')
+      setError('Passwords do not match')
       setPasswordsMatch(false);
     }
   }, [password1, password2]);
@@ -129,7 +129,7 @@ function SignUp() {
         flexDirection='column'>
         <Box me='auto'>
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Sign Up
+            Създаване на Профил
           </Heading>
           <Text
             mb='36px'
@@ -137,7 +137,7 @@ function SignUp() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign up!
+            Попълнете вашият email и парола за да създадете профил!
           </Text>
         </Box>
         <Flex
@@ -164,12 +164,12 @@ function SignUp() {
             _active={googleActive}
             _focus={googleActive}>
             <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
-            Sign Up with Google
+            Създаване на Профил с Google
           </Button>
           <Flex align='center' mb='25px'>
             <HSeparator />
             <Text color='gray.400' mx='14px'>
-              or
+              или
             </Text>
             <HSeparator />
           </Flex>
@@ -201,13 +201,13 @@ function SignUp() {
               fontWeight='500'
               color={textColor}
               display='flex'>
-              Password<Text color={brandStars}>*</Text>
+              Парола<Text color={brandStars}>*</Text>
             </FormLabel>
             <InputGroup size='md'>
               <Input
                 isRequired={true}
                 fontSize='sm'
-                placeholder='Min. 6 characters'
+                placeholder='Мин. 6 символа'
                 mb='24px'
                 size='lg'
                 type={show ? "text" : "password"}
@@ -229,13 +229,13 @@ function SignUp() {
                 fontWeight='500'
                 color={textColor}
                 display='flex'>
-                Confirm Password<Text color={brandStars}>*</Text>
+                Потвърди Парола<Text color={brandStars}>*</Text>
               </FormLabel>
             <InputGroup size='md'>
               <Input
                 isRequired={true}
                 fontSize='sm'
-                placeholder='Min. 6 characters'
+                placeholder='Мин. 6 символа'
                 mb='24px'
                 size='lg'
                 type={show2 ? "text" : "password"}
@@ -259,7 +259,7 @@ function SignUp() {
               w='100%'
               h='50'
               mb='24px'>
-              Sign Up
+              Създай Профил
             </Button>
             {/* Display error message */}
             {error && (
@@ -275,14 +275,14 @@ function SignUp() {
             maxW='100%'
             mt='0px'>
             <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-              Already have an account?
+              Вече имате профил?
               <NavLink to='/auth/sign-in'>
                 <Text
                   color={textColorBrand}
                   as='span'
                   ms='5px'
                   fontWeight='500'>
-                  Sign In
+                  Влезте.
                 </Text>
               </NavLink>
             </Text>

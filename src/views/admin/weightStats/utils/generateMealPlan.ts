@@ -1,15 +1,15 @@
 import React from "react";
 import { recipesCollection } from '../../../../database/getCollection';
 import { getDocs } from 'firebase/firestore';
-import { Recipe, UserPreferences, Nutrient, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../variables/mealPlaner";
+import { Recipe, UserPreferencesForMealPlan, Nutrient, MealPlan, WeightPerServing, CustomServings, SuggestedMaxServings, NutrientState } from "../../../../types/weightStats";
 
 export const generateMealPlan = async (
-  userPreferences: UserPreferences,
+  userPreferences: UserPreferencesForMealPlan,
   nutrientTypes: Nutrient[],
   setSuggestedMaxServings: React.Dispatch<React.SetStateAction<SuggestedMaxServings>>,
   setCustomServings: React.Dispatch<React.SetStateAction<CustomServings>>,
   setMealPlan: React.Dispatch<React.SetStateAction<MealPlan>>,
-  setNutrient: React.Dispatch<React.SetStateAction<NutrientState>>,
+  setWeightPerServing: React.Dispatch<React.SetStateAction<WeightPerServing>>,
   customServings: CustomServings
 ) => {
   try {
@@ -26,6 +26,7 @@ export const generateMealPlan = async (
     }, {} as { [key: string]: number });
 
     console.log(selectedBreakfastRecipe);
+    console.log(remainingNutrients);
 
     // Randomly select lunch recipe
     const selectedLunchRecipe = getRandomRecipe(
@@ -35,13 +36,14 @@ export const generateMealPlan = async (
       )
     );
 
-    console.log(selectedLunchRecipe, remainingNutrients);
-
     // Calculate remaining daily caloric limit for dinner
     const remainingNutrientsForDinner: { [key: string]: number } = nutrientTypes.reduce((remaining, { type }) => {
       remaining[type] = remainingNutrients[type] - calculateNutrient(selectedLunchRecipe, type);
       return remaining;
     }, {} as { [key: string]: number });
+
+    console.log(selectedLunchRecipe);
+    console.log(remainingNutrientsForDinner);
 
     // Randomly select dinner recipe
     const selectedDinnerRecipe = getRandomRecipe(
@@ -52,7 +54,7 @@ export const generateMealPlan = async (
       )
     );
 
-    console.log(selectedDinnerRecipe, remainingNutrientsForDinner);
+    console.log(selectedDinnerRecipe);
 
     const suggestedMaxServings = {
       breakfast: selectedBreakfastRecipe.suggestedMaxServing || 0,
@@ -70,6 +72,21 @@ export const generateMealPlan = async (
     };
 
     setMealPlan(selectedRecipes);
+    
+    setWeightPerServing({
+      breakfast: {
+        amount: selectedRecipes.breakfast.weightPerServing.amount,
+        unit: selectedRecipes.breakfast.weightPerServing.unit
+      },
+      lunch: {
+        amount: selectedRecipes.lunch.weightPerServing.amount,
+        unit: selectedRecipes.lunch.weightPerServing.unit
+      },
+      dinner: {
+        amount: selectedRecipes.dinner.weightPerServing.amount,
+        unit: selectedRecipes.dinner.weightPerServing.unit
+      }
+    })
 
     const calculatedNutrients: Partial<NutrientState> = nutrientTypes.reduce((calculated, { type }) => {
       const customServingValue = (customServings as { [key: string]: number })[type] || 0;
@@ -80,12 +97,6 @@ export const generateMealPlan = async (
     }, {});
 
     const totalNutrients = nutrientTypes.reduce((total, { type }) => total + (calculatedNutrients as any)[type], 0);
-
-    setNutrient((prevNutrient) => ({
-      ...prevNutrient,
-      summed: totalNutrients,
-      ...calculatedNutrients
-    }));
 
   } catch (error) {
     console.error('Error getting recipes:', error);

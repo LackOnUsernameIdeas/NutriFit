@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 // Chakra imports
 import { Box, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 
+import Loading from "../components/Loading";
+
 import { HSeparator } from "components/separator/Separator";
-import { UserPreferences, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "../variables/mealPlaner";
+import { UserPreferencesForMealPlan, WeightPerServing, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "../../../../types/weightStats";
 import { generateMealPlan } from "../utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "../utils/calculateNutrientForMealPlan";
-import UserPreferencesInput from "./UserPreferencesInput";
+import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
 import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
 
@@ -23,11 +25,14 @@ export default function MealPlanner(props: {
 
   const { chosenCalories, chosenNutrients } = props;
 
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
-    Calories: 2000,
-    Protein: 150,
-    Fat: 70,
-    Carbohydrates: 200
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [userPreferences, setUserPreferences] = useState<UserPreferencesForMealPlan>({
+    Calories: 0,
+    Protein: 0,
+    Fat: 0,
+    Carbohydrates: 0
   });
   
   const [mealPlan, setMealPlan] = useState<MealPlan>({
@@ -36,32 +41,47 @@ export default function MealPlanner(props: {
     dinner: null
   });
 
+  const [weightPerServing, setWeightPerServing] = useState<WeightPerServing>({
+    breakfast: {
+      amount: 0,
+      unit: 'g'
+    },
+    lunch: {
+      amount: 0,
+      unit: 'g'
+    },
+    dinner: {
+      amount: 0,
+      unit: 'g'
+    }
+  });
+
   const [calories, setCalories] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
   
   const [protein, setProtein] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
   
   const [carbs, setCarbs] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
   
   const [fat, setFat] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
 
   const [suggestedMaxServings, setSuggestedMaxServings] = useState<SuggestedMaxServings>({
@@ -87,22 +107,10 @@ export default function MealPlanner(props: {
   const handleIncrement = (mealType: keyof typeof customServings) => {
     setCustomServings((prevServing) => {
       const newValue = prevServing[mealType] + 1;
-  
-      // Calculate the total nutrient values based on the new serving count
-      const newTotalCalories =
-        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Calories.value;
-      const newTotalProtein =
-        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Protein.value;
-      const newTotalCarbs =
-        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Carbohydrates.value;
-      const newTotalFat = newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Fat.value;
-  
+
       // Check if the new total nutrient values comply with user preferences
       if (
-        newTotalCalories <= userPreferences.Calories &&
-        newTotalProtein <= userPreferences.Protein &&
-        newTotalCarbs <= userPreferences.Carbohydrates &&
-        newTotalFat <= userPreferences.Fat
+        newValue <= 20
       ) {
         return {
           ...prevServing,
@@ -139,30 +147,36 @@ export default function MealPlanner(props: {
 
 
   useEffect(() => {
-    calculateNutrientForMealPlan(setCalories, suggestedMaxServings, customServings, mealPlan, 'Calories');
+    calculateNutrientForMealPlan(setCalories, suggestedMaxServings, customServings, mealPlan, 'Calories', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
   
   useEffect(() => {
-    calculateNutrientForMealPlan(setProtein, suggestedMaxServings, customServings, mealPlan, 'Protein');
+    calculateNutrientForMealPlan(setProtein, suggestedMaxServings, customServings, mealPlan, 'Protein', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
   
   useEffect(() => {
-    calculateNutrientForMealPlan(setCarbs, suggestedMaxServings, customServings, mealPlan, 'Carbohydrates');
+    calculateNutrientForMealPlan(setCarbs, suggestedMaxServings, customServings, mealPlan, 'Carbohydrates', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
   
   useEffect(() => {
-    calculateNutrientForMealPlan(setFat, suggestedMaxServings, customServings, mealPlan, 'Fat');
+    calculateNutrientForMealPlan(setFat, suggestedMaxServings, customServings, mealPlan, 'Fat', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
 
   const generatePlan = async () => {
     try {
+      setIsSubmitted(true);
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+      
       await generateMealPlan(
         userPreferences,
         nutrientTypes,
         setSuggestedMaxServings,
         setCustomServings,
         setMealPlan,
-        setProtein,
+        setWeightPerServing,
         customServings
       );
     } catch (error) {
@@ -171,42 +185,80 @@ export default function MealPlanner(props: {
   };
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        <Card minH="200px">
-          <Flex justify="center" pt="5px" w="100%">
+    <Box>
+      <Card>
+        <Card>
+          <Flex justify="center" w="100%" mb="5px">
             <Text fontSize="5xl" fontStyle="italic">
-              Generate a meal plan with NutriFit!
+              Създайте хранителен план с NutriFit!
             </Text>
           </Flex>
           <HSeparator />
           <Flex justify="center" mt="1%" pt="10px">
             <Text fontSize="3xl">
-                Please input the fields below with your desired limits, after which your meal plan will be generated.
+                Моля попълнете редовете с предпочитаните от вас лимити, след което вашият план ще бъде създаден.
             </Text>
           </Flex>
         </Card>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
-        <UserPreferencesInput
-          userPreferences={userPreferences}
-          handleInputChange={handleInputChange}
-          generatePlan={generatePlan}
-        />
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
-        <MealPlanDetails
-          customServings={customServings}
-          suggestedMaxServings={suggestedMaxServings}
-          mealPlan={mealPlan}
-          calories={calories}
-          protein={protein}
-          carbs={carbs}
-          fat={fat}
-          handleIncrement={handleIncrement}
-          handleDecrement={handleDecrement}
-        />
-			</SimpleGrid>
-    </Box>
+        <Card>
+          {isSubmitted ? (
+            <Box>
+              {isLoading ? (
+                <>
+                  <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" >
+                    <UserPreferencesForMealPlanForm
+                      userPreferences={userPreferences}
+                      handleInputChange={handleInputChange}
+                      generatePlan={generatePlan}
+                    />
+                  </SimpleGrid>
+                  <Loading />
+                </>
+              ) : (
+                <>
+                  <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" >
+                    <UserPreferencesForMealPlanForm
+                      userPreferences={userPreferences}
+                      handleInputChange={handleInputChange}
+                      generatePlan={generatePlan}
+                    />
+                  </SimpleGrid>
+                  {mealPlan.lunch !== null && mealPlan.dinner !== null ? (
+                    <Flex justify="center" w="100%" mb="5px">  
+                      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+                        <MealPlanDetails
+                          customServings={customServings}
+                          suggestedMaxServings={suggestedMaxServings}
+                          mealPlan={mealPlan}
+                          calories={calories}
+                          protein={protein}
+                          carbs={carbs}
+                          fat={fat}
+                          weight={weightPerServing}
+                          handleIncrement={handleIncrement}
+                          handleDecrement={handleDecrement}
+                        />
+                      </SimpleGrid> 
+                    </Flex>
+                  ) : (
+                    <Text fontSize="5xl" fontStyle="italic">
+                      Няма намерен план :(
+                    </Text>
+                  )}
+                </>
+              )}
+            </Box>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" >
+              <UserPreferencesForMealPlanForm
+                userPreferences={userPreferences}
+                handleInputChange={handleInputChange}
+                generatePlan={generatePlan}
+              />
+            </SimpleGrid>
+          )}
+        </Card>
+      </Card> 
+    </Box>  
   );
 }

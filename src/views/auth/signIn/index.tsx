@@ -131,7 +131,7 @@ function SignIn() {
         flexDirection='column'>
         <Box me='auto'>
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Sign In
+            Влезте в Профила Ви
           </Heading>
           <Text
             mb='36px'
@@ -139,7 +139,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign in!
+            Попълнете вашият email и парола за да влезете в профила ви!
           </Text>
         </Box>
         <Flex
@@ -166,12 +166,12 @@ function SignIn() {
             _active={googleActive}
             _focus={googleActive}>
             <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
-            Sign in with Google
+            Влезте с Google
           </Button>
           <Flex align='center' mb='25px'>
             <HSeparator />
             <Text color='gray.400' mx='14px'>
-              or
+              или
             </Text>
             <HSeparator />
           </Flex>
@@ -203,13 +203,13 @@ function SignIn() {
               fontWeight='500'
               color={textColor}
               display='flex'>
-              Password<Text color={brandStars}>*</Text>
+              Парола<Text color={brandStars}>*</Text>
             </FormLabel>
             <InputGroup size='md'>
               <Input
                 isRequired={true}
                 fontSize='sm'
-                placeholder='Min. 6 characters'
+                placeholder='Мин. 6 символа'
                 mb='24px'
                 size='lg'
                 type={show ? "text" : "password"}
@@ -239,7 +239,7 @@ function SignIn() {
                   fontWeight='normal'
                   color={textColor}
                   fontSize='sm'>
-                  Keep me logged in
+                  Запомни ме
                 </FormLabel>
               </FormControl>
               <NavLink to='/auth/forgot-password'>
@@ -248,7 +248,7 @@ function SignIn() {
                   fontSize='sm'
                   w='124px'
                   fontWeight='500'>
-                  Forgot password?
+                  Забравена парола?
                 </Text>
               </NavLink>
             </Flex>
@@ -260,7 +260,7 @@ function SignIn() {
               w='100%'
               h='50'
               mb='24px'>
-              Sign In
+              Влез
             </Button>
             {error && (
                 <Text color='red' fontSize='sm' mb='8px'>
@@ -275,14 +275,14 @@ function SignIn() {
             maxW='100%'
             mt='0px'>
             <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-              Not registered yet?
+              Не сте се регистрирали?
               <NavLink to='/auth/sign-up'>
                 <Text
                   color={textColorBrand}
                   as='span'
                   ms='5px'
                   fontWeight='500'>
-                  Create an Account
+                  Създадете профил.
                 </Text>
               </NavLink>
             </Text>

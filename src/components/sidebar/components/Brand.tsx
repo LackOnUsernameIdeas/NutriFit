@@ -11,10 +11,10 @@ export function SidebarBrand() {
 
 	return (
 		<Flex alignItems='center' flexDirection='column'>
-			{/* <Text fontSize="40px" fontWeight="bold">
+			<Text fontSize="6xl" fontWeight="bold" mb="7%" mr="2%">
 				NutriFit
-			</Text> */}
-			<HorizonLogo h='26px' w='175px' my='32px' color={logoColor} />
+			</Text>
+			{/* <HorizonLogo h='26px' w='175px' my='32px' color={logoColor} /> */}
 			<HSeparator mb='20px' />
 		</Flex>
 	);
