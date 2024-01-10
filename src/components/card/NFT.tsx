@@ -25,7 +25,7 @@ export default function RecipeWidget(props: {
 						w={{ base: '100%', '3xl': '100%' }}
 						h={{ base: '100%', '3xl': '100%' }}
 						borderRadius='20px'
-						maxH="300px"
+						maxH={{base: "200px", md: "150px", lg:"150px"}}
 						objectFit='cover'
 					/>
 					{/* 

@@ -186,26 +186,30 @@ export default function MealPlanner(props: {
             </Text>
           </Flex>
         </Card>
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" >
-          <UserPreferencesInput
-            userPreferences={userPreferences}
-            handleInputChange={handleInputChange}
-            generatePlan={generatePlan}
-          />
-        </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="20px" mb="20px">
-          <MealPlanDetails
-            customServings={customServings}
-            suggestedMaxServings={suggestedMaxServings}
-            mealPlan={mealPlan}
-            calories={calories}
-            protein={protein}
-            carbs={carbs}
-            fat={fat}
-            handleIncrement={handleIncrement}
-            handleDecrement={handleDecrement}
-          />
-        </SimpleGrid> 
+        <Card>
+            <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" >
+              <UserPreferencesInput
+                userPreferences={userPreferences}
+                handleInputChange={handleInputChange}
+                generatePlan={generatePlan}
+              />
+            </SimpleGrid>
+          <Flex justify="center" w="100%" mb="5px">  
+            <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+              <MealPlanDetails
+                customServings={customServings}
+                suggestedMaxServings={suggestedMaxServings}
+                mealPlan={mealPlan}
+                calories={calories}
+                protein={protein}
+                carbs={carbs}
+                fat={fat}
+                handleIncrement={handleIncrement}
+                handleDecrement={handleDecrement}
+              />
+            </SimpleGrid> 
+          </Flex>
+        </Card>
       </Card> 
     </Box>  
   );

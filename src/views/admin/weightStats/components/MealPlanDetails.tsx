@@ -57,7 +57,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 							<RecipeWidget
 								name={
 									<Flex justify="center" pt="5px" w="100%" mt="5px" overflow="hidden">
-										<Text fontSize="2xl" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+										<Text fontSize="2xl" maxW="210px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
 											{bulgarianMealType[index]}: {(mealPlan as any)[mealType]?.title || 'Няма рецепта'}
 										</Text>
 									</Flex>
@@ -108,7 +108,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 			</Flex>
 			<HSeparator />
 			<Flex justify="center" pt="5px" w="100%" mt="20px">
-				<SimpleGrid columns={{ base: 2, md: 1, lg: 4 }} spacing="3%" alignItems="center">
+				<SimpleGrid columns={{ base: 2, lg: 4 }} spacing="3%" alignItems="center">
 					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Калории: {calories.summed?.toFixed(2) || 'N/A'}</Text>
 					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Протеин: {protein.summed?.toFixed(2) || 'N/A'}</Text>
 					<Text mr="20%" fontSize={{ base: 'xl', md: '2xl', lg: '3xl' }}>Сумирани Въглехидрати: {carbs.summed?.toFixed(2) || 'N/A'}</Text>

@@ -751,7 +751,9 @@ export default function WeightStats() {
                             <MenuList
                               w='100%'
                               minW='unset'
-                              maxW='100%'
+                              ml={{ base: "2%", lg: 0 }}
+                              mr={{ base: "2%", lg: 0 }}
+                              maxW={{ base: "80%", lg: "100%" }}
                               border='transparent'
                               backdropFilter='blur(100px)'
                               bg={bgList}
@@ -801,7 +803,7 @@ export default function WeightStats() {
                                 </Flex>
                               </Box>
                             </MenuList>
-                          </Menu>  
+                          </Menu>
                       </SimpleGrid>
                     </Flex>
                   </Box>
