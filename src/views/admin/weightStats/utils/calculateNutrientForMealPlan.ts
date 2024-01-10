@@ -1,11 +1,12 @@
-import { Recipe, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../../../../types/weightStats";
+import { Recipe, MealPlan, WeightPerServing, CustomServings, SuggestedMaxServings, NutrientState } from "../../../../types/weightStats";
 
 export const calculateNutrientForMealPlan = (
   setNutrient: React.Dispatch<React.SetStateAction<NutrientState>>,
   suggestedMaxServings: SuggestedMaxServings,
   customServings: CustomServings,
   mealPlan: MealPlan,
-  nutrientType: string // e.g., 'Calories', 'Protein', 'Carbohydrates', 'Fat'
+  nutrientType: string, // e.g., 'Calories', 'Protein', 'Carbohydrates', 'Fat'
+  setWeightPerServing: React.Dispatch<React.SetStateAction<WeightPerServing>>
 ) => {
   const { breakfast, lunch, dinner } = mealPlan;
 
@@ -29,6 +30,24 @@ export const calculateNutrientForMealPlan = (
     lunch: calculatedLunchNutrient,
     dinner: calculatedDinnerNutrient,
   });
+  
+  // Update the weight per serving based on custom servings
+  const updatedWeightPerServing = {
+    breakfast: {
+      amount: breakfast ? (breakfast.weightPerServing.amount * customServings.breakfast) || 0 : 0,
+      unit: breakfast ? breakfast.weightPerServing.unit : ''
+    },
+    lunch: {
+      amount: lunch ? (lunch.weightPerServing.amount * customServings.lunch) || 0 : 0,
+      unit: lunch ? lunch.weightPerServing.unit : ''
+    },
+    dinner: {
+      amount: dinner ? (dinner.weightPerServing.amount * customServings.dinner) || 0 : 0,
+      unit: dinner ? dinner.weightPerServing.unit : ''
+    }
+  };
+
+  setWeightPerServing(updatedWeightPerServing);    
 };
 
 export const calculateNutrientWithCustomServing = (recipe: Recipe | null, suggestedMaxServing: number, nutrientType: string) => {

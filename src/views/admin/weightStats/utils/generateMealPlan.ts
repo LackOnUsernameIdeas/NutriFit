@@ -1,7 +1,7 @@
 import React from "react";
 import { recipesCollection } from '../../../../database/getCollection';
 import { getDocs } from 'firebase/firestore';
-import { Recipe, UserPreferencesForMealPlan, Nutrient, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../../../../types/weightStats";
+import { Recipe, UserPreferencesForMealPlan, Nutrient, MealPlan, WeightPerServing, CustomServings, SuggestedMaxServings, NutrientState } from "../../../../types/weightStats";
 
 export const generateMealPlan = async (
   userPreferences: UserPreferencesForMealPlan,
@@ -9,7 +9,7 @@ export const generateMealPlan = async (
   setSuggestedMaxServings: React.Dispatch<React.SetStateAction<SuggestedMaxServings>>,
   setCustomServings: React.Dispatch<React.SetStateAction<CustomServings>>,
   setMealPlan: React.Dispatch<React.SetStateAction<MealPlan>>,
-  setNutrient: React.Dispatch<React.SetStateAction<NutrientState>>,
+  setWeightPerServing: React.Dispatch<React.SetStateAction<WeightPerServing>>,
   customServings: CustomServings
 ) => {
   try {
@@ -72,6 +72,21 @@ export const generateMealPlan = async (
     };
 
     setMealPlan(selectedRecipes);
+    
+    setWeightPerServing({
+      breakfast: {
+        amount: selectedRecipes.breakfast.weightPerServing.amount,
+        unit: selectedRecipes.breakfast.weightPerServing.unit
+      },
+      lunch: {
+        amount: selectedRecipes.lunch.weightPerServing.amount,
+        unit: selectedRecipes.lunch.weightPerServing.unit
+      },
+      dinner: {
+        amount: selectedRecipes.dinner.weightPerServing.amount,
+        unit: selectedRecipes.dinner.weightPerServing.unit
+      }
+    })
 
     const calculatedNutrients: Partial<NutrientState> = nutrientTypes.reduce((calculated, { type }) => {
       const customServingValue = (customServings as { [key: string]: number })[type] || 0;
@@ -82,12 +97,6 @@ export const generateMealPlan = async (
     }, {});
 
     const totalNutrients = nutrientTypes.reduce((total, { type }) => total + (calculatedNutrients as any)[type], 0);
-
-    setNutrient((prevNutrient) => ({
-      ...prevNutrient,
-      summed: totalNutrients,
-      ...calculatedNutrients
-    }));
 
   } catch (error) {
     console.error('Error getting recipes:', error);

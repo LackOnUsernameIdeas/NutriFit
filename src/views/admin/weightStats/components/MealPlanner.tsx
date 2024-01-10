@@ -6,7 +6,7 @@ import { Box, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 import Loading from "../components/Loading";
 
 import { HSeparator } from "components/separator/Separator";
-import { UserPreferencesForMealPlan, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "../../../../types/weightStats";
+import { UserPreferencesForMealPlan, WeightPerServing, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "../../../../types/weightStats";
 import { generateMealPlan } from "../utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "../utils/calculateNutrientForMealPlan";
 import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
@@ -41,32 +41,47 @@ export default function MealPlanner(props: {
     dinner: null
   });
 
+  const [weightPerServing, setWeightPerServing] = useState<WeightPerServing>({
+    breakfast: {
+      amount: 0,
+      unit: 'g'
+    },
+    lunch: {
+      amount: 0,
+      unit: 'g'
+    },
+    dinner: {
+      amount: 0,
+      unit: 'g'
+    }
+  });
+
   const [calories, setCalories] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
   
   const [protein, setProtein] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
   
   const [carbs, setCarbs] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
   
   const [fat, setFat] = useState<NutrientState>({
     summed: 0,
     breakfast: 0,
     lunch: 0,
-    dinner: 0,
+    dinner: 0
   });
 
   const [suggestedMaxServings, setSuggestedMaxServings] = useState<SuggestedMaxServings>({
@@ -92,22 +107,10 @@ export default function MealPlanner(props: {
   const handleIncrement = (mealType: keyof typeof customServings) => {
     setCustomServings((prevServing) => {
       const newValue = prevServing[mealType] + 1;
-  
-      // Calculate the total nutrient values based on the new serving count
-      const newTotalCalories =
-        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Calories.value;
-      const newTotalProtein =
-        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Protein.value;
-      const newTotalCarbs =
-        newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Carbohydrates.value;
-      const newTotalFat = newValue * mealPlan[mealType].nutrientsForTheRecipe.main.Fat.value;
-  
+
       // Check if the new total nutrient values comply with user preferences
       if (
-        newTotalCalories <= userPreferences.Calories &&
-        newTotalProtein <= userPreferences.Protein &&
-        newTotalCarbs <= userPreferences.Carbohydrates &&
-        newTotalFat <= userPreferences.Fat
+        newValue <= 20
       ) {
         return {
           ...prevServing,
@@ -144,19 +147,19 @@ export default function MealPlanner(props: {
 
 
   useEffect(() => {
-    calculateNutrientForMealPlan(setCalories, suggestedMaxServings, customServings, mealPlan, 'Calories');
+    calculateNutrientForMealPlan(setCalories, suggestedMaxServings, customServings, mealPlan, 'Calories', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
   
   useEffect(() => {
-    calculateNutrientForMealPlan(setProtein, suggestedMaxServings, customServings, mealPlan, 'Protein');
+    calculateNutrientForMealPlan(setProtein, suggestedMaxServings, customServings, mealPlan, 'Protein', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
   
   useEffect(() => {
-    calculateNutrientForMealPlan(setCarbs, suggestedMaxServings, customServings, mealPlan, 'Carbohydrates');
+    calculateNutrientForMealPlan(setCarbs, suggestedMaxServings, customServings, mealPlan, 'Carbohydrates', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
   
   useEffect(() => {
-    calculateNutrientForMealPlan(setFat, suggestedMaxServings, customServings, mealPlan, 'Fat');
+    calculateNutrientForMealPlan(setFat, suggestedMaxServings, customServings, mealPlan, 'Fat', setWeightPerServing);
   }, [customServings, suggestedMaxServings, mealPlan]);
 
   const generatePlan = async () => {
@@ -173,7 +176,7 @@ export default function MealPlanner(props: {
         setSuggestedMaxServings,
         setCustomServings,
         setMealPlan,
-        setProtein,
+        setWeightPerServing,
         customServings
       );
     } catch (error) {
@@ -231,6 +234,7 @@ export default function MealPlanner(props: {
                           protein={protein}
                           carbs={carbs}
                           fat={fat}
+                          weight={weightPerServing}
                           handleIncrement={handleIncrement}
                           handleDecrement={handleDecrement}
                         />

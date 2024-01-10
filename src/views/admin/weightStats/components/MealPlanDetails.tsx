@@ -1,6 +1,6 @@
 import React from 'react';
 import { CustomServingInput } from "./CustomServingInput";
-import { MealPlan, NutrientState, SuggestedMaxServings, CustomServings } from "../../../../types/weightStats";
+import { MealPlan, NutrientState, SuggestedMaxServings, CustomServings, WeightPerServing } from "../../../../types/weightStats";
 import { Box, Text, Flex, VStack, SimpleGrid } from "@chakra-ui/react";
 import { HSeparator } from "components/separator/Separator";
 import RecipeWidget from 'components/card/NFT';
@@ -14,12 +14,13 @@ interface MealPlanDetailsProps {
 	protein: NutrientState;
 	carbs: NutrientState;
 	fat: NutrientState;
+	weight: WeightPerServing;
 	handleIncrement: (mealType: keyof CustomServings) => void;
 	handleDecrement: (mealType: keyof CustomServings) => void;
 }
 const bulgarianMealType: string[] = ["Закуска","Обяд","Вечеря"];
 
-const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, suggestedMaxServings, mealPlan, calories, protein, carbs, fat, handleIncrement, handleDecrement }) => {
+const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, suggestedMaxServings, mealPlan, calories, protein, carbs, fat, weight, handleIncrement, handleDecrement }) => {
 	return (
 		<Card>
 			<Flex justify="center" w="100%" mb="1%">
@@ -73,7 +74,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 													Мазнини: {(fat as any)[`${mealType}`]?.toFixed(2) || 'N/A'}
 												</Text>
 												<Text textStyle="italic" fontSize={{ base: 'sm', md: 'md', lg: 'lg' }} fontStyle='italic'>
-													Грамаж: {`${(mealPlan as any)[mealType]?.weightPerServing.amount.toFixed(2)}${(mealPlan as any)[mealType]?.weightPerServing.unit}` || 'N/A'}
+													Грамаж: {`${(weight as any)[mealType]?.amount.toFixed(2)}${(weight as any)[mealType]?.unit}` || 'N/A'}
 												</Text>
 											</Flex>
 										</Flex>

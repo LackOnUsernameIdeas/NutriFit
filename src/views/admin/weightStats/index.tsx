@@ -81,7 +81,7 @@ export default function WeightStats() {
     { name: 'Балансирана', protein: 0, fat: 0, carbs: 0 },
     { name: 'Ниско съдържание на мазнини', protein: 0, fat: 0, carbs: 0 },
     { name: 'Ниско съдържание на въглехидрати', protein: 0, fat: 0, carbs: 0 },
-    { name: 'Високо съдържание на Протеин', protein: 0, fat: 0, carbs: 0 },
+    { name: 'Високо съдържание на протеин', protein: 0, fat: 0, carbs: 0 },
   ])));
 
   const [clickedValueNutrients, setClickedValueNutrients] = useState({

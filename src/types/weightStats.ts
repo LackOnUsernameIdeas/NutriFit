@@ -26,8 +26,8 @@ export interface Recipe {
     };
   };
   weightPerServing: {
-    amount: number;
-    unit: string;
+    amount: number,
+    unit: string
   };
   suggestedMaxServing: number;
 };
@@ -139,6 +139,21 @@ export interface CustomServingInputProps {
 }
 
 export type MealPlan = { breakfast: Recipe | null; lunch: Recipe | null; dinner: Recipe | null };
+
+export type WeightPerServing = {
+  breakfast: {
+    amount: number,
+    unit: string
+  },
+  lunch: {
+    amount: number,
+    unit: string
+  },
+  dinner: {
+    amount: number,
+    unit: string
+  }
+};
 
 export type Calories = {
   summed: number;
