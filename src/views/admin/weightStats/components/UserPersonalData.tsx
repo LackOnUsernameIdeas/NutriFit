@@ -69,13 +69,26 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                 <label key={key}>
                 {userDataPropertiesTranslated[index].charAt(0).toUpperCase() + userDataPropertiesTranslated[index].slice(1)}:
                 {typeof value === "number" ? (
-                    <Input
-                    variant='auth'
-                    type="number"
-                    name={key}
-                    placeholder={"Въведете " + userDataPropertiesTranslated[index]}
-                    onChange={(e) => handleInputChange(e)}
-                />
+                    value !== 0 ?
+                        (<Input
+                            variant='auth'
+                            type="number"
+                            name={key}
+                            value={value || ''}
+                            placeholder={"Въведете " + userDataPropertiesTranslated[index]}
+                            autoComplete="on"
+                            onChange={(e) => handleInputChange(e)}
+                        />)     
+                    :
+                        (<Input
+                            variant='auth'
+                            type="number"
+                            name={key}
+                            value={''}
+                            placeholder={"Въведете " + userDataPropertiesTranslated[index]}
+                            autoComplete="on"
+                            onChange={(e) => handleInputChange(e)}
+                        />)
                 ) : key === "gender" ? (
                 <Stack direction="row">
                     <Radio
@@ -172,7 +185,7 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                 )}
                 </label>
             ))}
-            <Button onClick={handleSubmit}>Изпрати</Button>
+            <Button type="submit" onClick={handleSubmit}>Изпрати</Button>
             </Box>
         </Card>
     );

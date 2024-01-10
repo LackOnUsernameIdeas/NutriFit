@@ -1,4 +1,4 @@
-import { Recipe, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../variables/mealPlaner";
+import { Recipe, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../../../../types/weightStats";
 
 export const calculateNutrientForMealPlan = (
   setNutrient: React.Dispatch<React.SetStateAction<NutrientState>>,

@@ -16,11 +16,11 @@ const headers = {
 
 function translateBMIHealthToBulgarian(englishHealth: string) {
     const bulgarianTranslations = {
-        'Severe Thinness': 'Сериозна Художественост',
-        'Mild Thinness': 'Лека Художественост',
+        'Severe Thinness': 'Сериозна слабост',
+        'Mild Thinness': 'Лека слабост',
         'Normal': 'Нормално',
-        'Healthy weight': 'Здравословно weight',
-        'Overweight': 'Наднормено weight',
+        'Healthy weight': 'Здравословно тегло',
+        'Overweight': 'Наднормено тегло',
         'Obese Class I': 'Затлъстяване I Клас',
         'Obese Class II': 'Затлъстяване II Клас',
         'Obese Class III': 'Затлъстяване III Клас'

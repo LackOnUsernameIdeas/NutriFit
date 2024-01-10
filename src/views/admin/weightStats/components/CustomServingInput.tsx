@@ -5,7 +5,7 @@ import {
     Button,
     Flex
   } from "@chakra-ui/react";
-import { CustomServingInputProps } from "../variables/mealPlaner"
+import { CustomServingInputProps } from "../../../../types/weightStats"
 
 export const CustomServingInput: React.FC<CustomServingInputProps> = ({
     value,

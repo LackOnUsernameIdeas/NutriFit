@@ -1,6 +1,6 @@
 import React from 'react';
 import { CustomServingInput } from "./CustomServingInput";
-import { MealPlan, NutrientState, SuggestedMaxServings, CustomServings } from "../variables/mealPlaner";
+import { MealPlan, NutrientState, SuggestedMaxServings, CustomServings } from "../../../../types/weightStats";
 import { Box, Text, Flex, VStack, SimpleGrid } from "@chakra-ui/react";
 import { HSeparator } from "components/separator/Separator";
 import RecipeWidget from 'components/card/NFT';
@@ -31,28 +31,6 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 			<Flex direction='column'>
 				<SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
 					{Object.keys(customServings).map((mealType, index) => (
-				// <Box key={mealType}>
-				  // <Flex justify="center" pt="5px" w="100%" mt="5px">
-				  //   <Text fontSize="2xl">
-				  //     {mealType.charAt(0).toUpperCase() + mealType.slice(1)}: {(mealPlan as any)[mealType]?.title || 'No recipe available'}
-				  //   </Text>
-				  // </Flex>
-				//   <Flex justify="center" pt="2px" w="100%" mt="5px">
-				//     <CustomServingInput
-				//       mealType={mealType}
-				//       value={(customServings as any)[mealType] !== 0 ? (customServings as any)[mealType] : (suggestedMaxServings as any)[mealType]}
-				//       onIncrement={() => handleIncrement((mealType as keyof typeof customServings))}
-				//       onDecrement={() => handleDecrement((mealType as keyof typeof customServings))}
-				//     />
-				//   </Flex>  
-				//   <Flex justify="center" pt="5px" w="100%" mb="13%">
-				//     <Text mr="5%" fontStyle='italic'>Serving: {(customServings as any)[mealType] !== 0 ? (customServings as any)[mealType] : (suggestedMaxServings as any)[mealType]}</Text>
-				//     <Text mr="5%" fontStyle='italic'>Calories: {(calories as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-				//     <Text mr="5%" fontStyle='italic'>Protein: {(protein as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-				//     <Text mr="5%" fontStyle='italic'>Carbs: {(carbs as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-				//     <Text mr="5%" fontStyle='italic'>Fat: {(fat as any)[`${mealType}`]?.toFixed(2) || 'N/A'}</Text>
-				//   </Flex>
-				// </Box>
 						<Box key={mealType}>
 							<RecipeWidget
 								name={
@@ -72,7 +50,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ customServings, sugge
 										/>
 									</Flex>
 								}
-								image={(mealPlan as any)[mealType]?.photo}
+								image={(mealPlan as any)[mealType].photo}
 								currentbid={
 									<Box>
 										<Flex direction={{ base: 'column', md: 'row' }} justify="center" pt="5px" w="100%" mb="2%" mt="2%">

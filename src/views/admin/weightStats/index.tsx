@@ -28,7 +28,7 @@ import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
 import MealPlanner from './components/MealPlanner';
 import { HSeparator } from "components/separator/Separator";
-import { BMIInfo, HealthInfo, BodyMass, UserData, DailyCaloryRequirements, MacroNutrientsData, Goal } from '../../../types/weightStats';
+import { BMIInfo, HealthInfo, BodyMass, UserData, DailyCaloryRequirements, MacroNutrientsData } from '../../../types/weightStats';
 
 import { fetchBMIData, fetchPerfectWeightData, fetchBodyFatAndLeanMassData, fetchCaloriesForActivityLevels, fetchMacroNutrients } from "./utils/fetchFunctions";
 
@@ -97,7 +97,7 @@ export default function WeightStats() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [userData, setUserData] = useState<UserData>(  {
+  const [userData, setUserData] = useState<UserData>({
     gender: 'male',
     height: 0,
     age: 0,
@@ -164,9 +164,6 @@ export default function WeightStats() {
                   w="100%"
                   mb="20px"
                 >
-                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                    Какво е вашето weight:
-                  </Text>
                   <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="20px" mb="10px">
                     {Object.entries(BMIIndex).map(([key, value], index) => (
                       <MiniStatistics
@@ -195,7 +192,7 @@ export default function WeightStats() {
                   mb="20px"
                 >
                   <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                    Какво е вашето перфектно weight според формулите:
+                    Какво е вашето перфектно тегло според формулите:
                   </Text>
                   <SimpleGrid columns={{ base: 1, md: 1, lg: 4 }} gap="20px" mb="10px">
                     {Object.entries(perfectWeight).map(([key, value], index) => (
@@ -225,7 +222,7 @@ export default function WeightStats() {
                   mb="20px"
                 >
                   <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                    Колко от вашето weight е :
+                    Колко от вашето тегло е :
                   </Text>
                   <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="20px" mb="10px">
                     {Object.entries(bodyFatMassAndLeanMass).map(([key, value], index) => (
@@ -254,7 +251,10 @@ export default function WeightStats() {
                   w="100%"
                   mb="20px"
                 >
-                  <Box gap="10px" mb="20px">
+                  <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                    Изберете ниво на натовареност:
+                  </Text>
+                  <Box gap="10px" mb="20px" mt="20px">
                     <Flex justifyContent='space-between' align='center'>
                       <SimpleGrid columns={{ base: 3, md: 2, lg: 7 }} spacing="10px" alignItems="center" mb="10px">
                           {[1, 2, 3, 4, 5, 6].map((level) => (
@@ -345,7 +345,7 @@ export default function WeightStats() {
                     </Flex>
                   </Box>
                   <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                    Колко калории трябва да приемате на ден според целите:
+                    Изберете колко калории искате да приемате на ден според целите:
                   </Text>
                   {activityLevel && (
                     <CalorieRequirements
@@ -356,7 +356,7 @@ export default function WeightStats() {
                     />
                   )}
                   <ColumnsTable 
-                    tableName='Макронутриенти' 
+                    tableName='Изберете тип диета:' 
                     tableData={tableData[activityLevel - 1]} 
                     columnsData={[
                       { name: 'name', label: 'Тип диета' },
