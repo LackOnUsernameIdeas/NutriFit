@@ -1,10 +1,10 @@
 import React from "react";
 import { recipesCollection } from '../../../../database/getCollection';
 import { getDocs } from 'firebase/firestore';
-import { Recipe, UserPreferences, Nutrient, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../variables/mealPlaner";
+import { Recipe, UserPreferencesForMealPlan, Nutrient, MealPlan, CustomServings, SuggestedMaxServings, NutrientState } from "../variables/mealPlaner";
 
 export const generateMealPlan = async (
-  userPreferences: UserPreferences,
+  userPreferences: UserPreferencesForMealPlan,
   nutrientTypes: Nutrient[],
   setSuggestedMaxServings: React.Dispatch<React.SetStateAction<SuggestedMaxServings>>,
   setCustomServings: React.Dispatch<React.SetStateAction<CustomServings>>,

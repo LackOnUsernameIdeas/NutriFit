@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Box, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 
 import { HSeparator } from "components/separator/Separator";
-import { UserPreferences, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "../variables/mealPlaner";
+import { UserPreferencesForMealPlan, MealPlan, Nutrient, NutrientState, SuggestedMaxServings, CustomServings } from "../variables/mealPlaner";
 import { generateMealPlan } from "../utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "../utils/calculateNutrientForMealPlan";
-import UserPreferencesInput from "./UserPreferencesInput";
+import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
 import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
 
@@ -23,7 +23,7 @@ export default function MealPlanner(props: {
 
   const { chosenCalories, chosenNutrients } = props;
 
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
+  const [userPreferences, setUserPreferences] = useState<UserPreferencesForMealPlan>({
     Calories: 2000,
     Protein: 150,
     Fat: 70,
@@ -188,7 +188,7 @@ export default function MealPlanner(props: {
         </Card>
         <Card>
             <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" >
-              <UserPreferencesInput
+              <UserPreferencesForMealPlanForm
                 userPreferences={userPreferences}
                 handleInputChange={handleInputChange}
                 generatePlan={generatePlan}

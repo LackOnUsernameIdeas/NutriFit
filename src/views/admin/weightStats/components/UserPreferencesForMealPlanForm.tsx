@@ -1,19 +1,19 @@
 // UserPreferencesInput.tsx
 import React from 'react';
 import { Input, VStack, Button, Text, Flex, Box, SimpleGrid} from "@chakra-ui/react";
-import { UserPreferences } from "../variables/mealPlaner";
+import { UserPreferencesForMealPlan } from "../variables/mealPlaner";
 import { HSeparator } from "components/separator/Separator";
 import Card from "components/card/Card";
 
 interface UserPreferencesInputProps {
-  userPreferences: UserPreferences;
+  userPreferences: UserPreferencesForMealPlan;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   generatePlan: () => void;
 }
 const placeholdersInt: string[] = ["2000","150","70","200"];
 const fieldName: string[] = ["Калории","Протеин","Мазнини","Въглехидрати"];
 
-const UserPreferencesInput: React.FC<UserPreferencesInputProps> = ({ userPreferences, handleInputChange, generatePlan }) => {
+const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({ userPreferences, handleInputChange, generatePlan }) => {
   return (
     <Card>
       <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: '10px', md: '20px' }}>
@@ -49,4 +49,4 @@ const UserPreferencesInput: React.FC<UserPreferencesInputProps> = ({ userPrefere
   );
 };
 
-export default UserPreferencesInput;
+export default UserPreferencesForMealPlanForm;

@@ -32,7 +32,7 @@ export interface Recipe {
   suggestedMaxServing: number;
 };
 
-export interface UserPreferences {
+export interface UserPreferencesForMealPlan {
   Calories: number;
   Protein: number;
   Fat: number;
