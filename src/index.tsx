@@ -6,6 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/theme";
 import AuthLayout from "./layouts/auth";
 import AdminLayout from "./layouts/admin";
+import TestLayout from "./layouts/test";
 
 interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
@@ -50,6 +51,7 @@ ReactDOM.render(
           {/* Use PrivateRoute for the /admin route */}
           <PrivateRoute path="/admin" component={AdminLayout} />
           <Route path="/auth" component={AuthLayout} />
+          <Route path="/test" component={TestLayout} />
           <Redirect from="/" to="/admin" />
         </Switch>
       </HashRouter>
