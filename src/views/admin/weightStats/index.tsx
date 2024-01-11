@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+// Chakra UI components
 import {
   Box,
   Flex,
@@ -12,8 +14,12 @@ import {
   useColorModeValue,
   Menu
 } from "@chakra-ui/react";
+
+// React Icons
 import { MdOutlineInfo } from "react-icons/md";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
+
+// Custom components
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
@@ -23,6 +29,8 @@ import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
 import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
+
+// Types
 import {
   BMIInfo,
   HealthInfo,
@@ -32,6 +40,7 @@ import {
   MacroNutrientsData
 } from "../../../types/weightStats";
 
+// Помощни функции за извличане на данни
 import {
   fetchBMIData,
   fetchPerfectWeightData,
@@ -40,7 +49,9 @@ import {
   fetchMacroNutrients
 } from "./utils/fetchFunctions";
 
+// Главен компонент
 export default function WeightStats() {
+  // Color values
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("secondaryGray.500", "white");
@@ -56,12 +67,14 @@ export default function WeightStats() {
     { bg: "whiteAlpha.100" }
   );
 
+  // State за разкриване на информация за менюто с информация
   const {
     isOpen: isOpen1,
     onOpen: onOpen1,
     onClose: onClose1
   } = useDisclosure();
 
+  // States за запазване на извличените данни
   const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
     bmi: null,
     health: "",
@@ -114,6 +127,7 @@ export default function WeightStats() {
     ])
   );
 
+  // State за избрани стойности
   const [clickedValueNutrients, setClickedValueNutrients] = useState({
     name: "",
     protein: null,
@@ -125,10 +139,13 @@ export default function WeightStats() {
     number | null
   >(null);
 
+  // State за избрано ниво на натовареност
   const [activityLevel, setActivityLevel] = useState<number>(1);
 
+  // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
 
+  // State за въведени потребителски данни
   const [userData, setUserData] = useState<UserData>({
     gender: "male",
     height: 0,
@@ -140,8 +157,10 @@ export default function WeightStats() {
     goal: "maintain"
   });
 
+  // Submission state
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Функция за генериране на статистики
   function generateStats() {
     fetchBMIData(
       userData["age"],
@@ -187,6 +206,7 @@ export default function WeightStats() {
     }, 1000);
   }
 
+  // Масиви с преведени имена
   const bmiData: string[] = [
     "ИТМ(Индексът на телесната маса)",
     "Статус",
@@ -205,6 +225,7 @@ export default function WeightStats() {
   ];
   const bodyFatAndLeanMassWidgetsUnits: string[] = ["%", "kg", "kg"];
 
+  // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserData((prevData) => ({
