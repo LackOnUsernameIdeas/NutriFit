@@ -23,11 +23,11 @@ const ColumnChart: React.FC<ChartProps> = ({ chartData, chartOptions }) => {
                 data: [1, 20, 0],
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
-                borderWidth: 1,
-              },
-            ],
+                borderWidth: 1
+              }
+            ]
           },
-          options: chartOptions,
+          options: chartOptions
         });
       }
     }

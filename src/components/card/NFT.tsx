@@ -1,34 +1,45 @@
 // Chakra imports
-import { AvatarGroup, Avatar, Box, Button, Flex, Icon, Image, Link, Text, useColorModeValue } from '@chakra-ui/react';
+import {
+  AvatarGroup,
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Image,
+  Link,
+  Text,
+  useColorModeValue
+} from "@chakra-ui/react";
 // Custom components
-import Card from 'components/card/Card';
+import Card from "components/card/Card";
 // Assets
-import { useState } from 'react';
-import { IoHeart, IoHeartOutline } from 'react-icons/io5';
+import { useState } from "react";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
 
 export default function RecipeWidget(props: {
-	image: string;
-	name: any;
-	author: any;
-	currentbid: any;
+  image: string;
+  name: any;
+  author: any;
+  currentbid: any;
 }) {
-	const { image, name, author, currentbid } = props;
-	const [ like, setLike ] = useState(false);
-	const textColor = useColorModeValue('navy.700', 'white');
-	const textColorBid = useColorModeValue('brand.500', 'white');
-	return (
-		<Card p='20px'>
-			<Flex direction={{ base: 'column' }} justify='center'>
-				<Box mb={{ base: '20px', '2xl': '20px' }} position='relative'>
-					<Image
-						src={image}
-						w={{ base: '100%', '3xl': '100%' }}
-						h={{ base: '100%', '3xl': '100%' }}
-						borderRadius='20px'
-						maxH={{base: "200px", md: "150px", lg:"150px"}}
-						objectFit='cover'
-					/>
-					{/* 
+  const { image, name, author, currentbid } = props;
+  const [like, setLike] = useState(false);
+  const textColor = useColorModeValue("navy.700", "white");
+  const textColorBid = useColorModeValue("brand.500", "white");
+  return (
+    <Card p="20px">
+      <Flex direction={{ base: "column" }} justify="center">
+        <Box mb={{ base: "20px", "2xl": "20px" }} position="relative">
+          <Image
+            src={image}
+            w={{ base: "100%", "3xl": "100%" }}
+            h={{ base: "100%", "3xl": "100%" }}
+            borderRadius="20px"
+            maxH={{ base: "200px", md: "150px", lg: "150px" }}
+            objectFit="cover"
+          />
+          {/* 
 					----LIKE BUTTON----
 					
 					<Button
@@ -54,49 +65,50 @@ export default function RecipeWidget(props: {
 							color='brand.500'
 						/>
 					</Button> */}
-				</Box>
-				<Flex flexDirection='column' justify='space-between' h='100%'>
-					<Flex
-						justify="center"
-						direction={{
-							base: 'row',
-							md: 'column',
-							lg: 'row',
-							xl: 'column',
-							'2xl': 'row'
-						}}
-						mb='auto'>
-						<Text
-							color={textColor}
-							fontSize={{
-								base: 'xl',
-								md: 'lg',
-								lg: 'lg',
-								xl: 'lg',
-								'2xl': 'md',
-								'3xl': 'lg'
-							}}
-							mb='5px'
-							fontWeight='bold'
-							me='14px'>
-							{name}
-						</Text>
-					</Flex>
-					<Flex justify="center">
-						<Text
-							color='secondaryGray.600'
-							fontSize={{
-								base: 'sm'
-							}}
-							fontWeight='400'
-							me='14px'>
-							{author}
-						</Text>
-					</Flex>
-					<Flex justify="center">
-						{currentbid}
-					</Flex>
-					{/* 
+        </Box>
+        <Flex flexDirection="column" justify="space-between" h="100%">
+          <Flex
+            justify="center"
+            direction={{
+              base: "row",
+              md: "column",
+              lg: "row",
+              xl: "column",
+              "2xl": "row"
+            }}
+            mb="auto"
+          >
+            <Text
+              color={textColor}
+              fontSize={{
+                base: "xl",
+                md: "lg",
+                lg: "lg",
+                xl: "lg",
+                "2xl": "md",
+                "3xl": "lg"
+              }}
+              mb="5px"
+              fontWeight="bold"
+              me="14px"
+            >
+              {name}
+            </Text>
+          </Flex>
+          <Flex justify="center">
+            <Text
+              color="secondaryGray.600"
+              fontSize={{
+                base: "sm"
+              }}
+              fontWeight="400"
+              me="14px"
+            >
+              {author}
+            </Text>
+          </Flex>
+          <Flex justify="center">{currentbid}</Flex>
+          {/* 
 					
 					----BUTTON, COULD BE USED FOR RECIPES?----
 					
@@ -120,8 +132,8 @@ export default function RecipeWidget(props: {
 							Place Bid
 						</Button>
 					</Link> */}
-				</Flex>
-			</Flex>
-		</Card>
-	);
+        </Flex>
+      </Flex>
+    </Card>
+  );
 }
