@@ -16,7 +16,11 @@ import WeightStats from "views/admin/weightStats";
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
 import SignUpCentered from "views/auth/signUp";
-import ForgotPass from "views/auth/forgotPass";
+import ForgotPass from "views/test/default";
+
+import Landing from "views/test/default";
+
+import LandingLayout from "./layouts/landing";
 
 const routes = [
   {
@@ -79,6 +83,14 @@ const routes = [
     path: "/forgot-password",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: ForgotPass,
+    hideInSidebar: true
+  },
+  {
+    name: "NutriFit",
+    layout: "/",
+    path: "/",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: Landing,
     hideInSidebar: true
   }
 ];

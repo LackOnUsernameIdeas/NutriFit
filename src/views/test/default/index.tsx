@@ -31,6 +31,8 @@ import {
   SimpleGrid,
   useColorModeValue,
   Text,
+  Link,
+  Button
 } from "@chakra-ui/react";
 // Assets
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
@@ -43,7 +45,7 @@ import {
   MdAddTask,
   MdAttachMoney,
   MdBarChart,
-  MdFileCopy,
+  MdFileCopy
 } from "react-icons/md";
 import ComplexTable from "views/admin/default/components/ComplexTable";
 import DailyTraffic from "views/admin/default/components/DailyTraffic";
@@ -60,7 +62,52 @@ export default function UserReports() {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box pt={{ base: "150px", md: "80px", xl: "80px" }}>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        {/* <Card minH="400px">
+          <Flex justify="center" pt="5px" w="100%">
+            <Text fontSize="4xl" fontStyle="italic">
+              Добре дошли в NutriFit!
+            </Text>
+          </Flex>
+          <HSeparator />
+          <Flex>
+            <Text fontSize="2xl">
+                Какво е целта на NutriFit?
+            </Text>
+          </Flex>
+          <Text>
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
+          </Text>
+        </Card> */}
+        <Card minH="200px">
+          <Flex justify="left" pt="5px" w="100%">
+            <Text fontSize="6xl" fontStyle="italic">
+              Добре дошли в NutriFit!
+            </Text>
+          </Flex>
+          <HSeparator />
+          <Flex justify="left" mt="1%" pt="10px">
+            <Text fontSize="3xl">
+              Нашата цел е да помогнем на нашите потребители да поддържат
+              перфектното тегло с помощта на статистики и диаграми.
+            </Text>
+          </Flex>
+          <Flex justify="left" mt="1%" pt="10px">
+            <Link href="/#/auth/sign-in">
+              <Button
+                _hover={{ bg: "transparent" }}
+                _focus={{ bg: "none" }}
+                color="red.400"
+                borderRadius="8px"
+                px="14px"
+              >
+                <Text fontSize="sm">Влезте!</Text>
+              </Button>
+            </Link>
+          </Flex>
+        </Card>
+      </SimpleGrid>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
         gap="20px"
@@ -143,49 +190,6 @@ export default function UserReports() {
           name="Total Projects"
           value="2935"
         />
-      </SimpleGrid>
-
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        {/* <Card minH="400px">
-          <Flex justify="center" pt="5px" w="100%">
-            <Text fontSize="4xl" fontStyle="italic">
-              Добре дошли в NutriFit!
-            </Text>
-          </Flex>
-          <HSeparator />
-          <Flex>
-            <Text fontSize="2xl">
-                Какво е целта на NutriFit?
-            </Text>
-          </Flex>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
-          </Text>
-        </Card> */}
-        <Card minH="200px">
-          <Flex justify="center" pt="5px" w="100%">
-            <Text fontSize="5xl" fontStyle="italic">
-              Добре дошли в NutriFit!
-            </Text>
-          </Flex>
-          <HSeparator />
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text fontSize="3xl">
-              Нашата цел е да помогнем на нашите потребители да поддържат перфектното тегло с помощта на статистики и диаграми.
-            </Text>
-          </Flex>
-        </Card>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <DailyTraffic />
-        <ComplexTable tableData={tableDataComplex} />
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" >
-          <PieCard />
-          <Tasks />
-        </SimpleGrid>
-        <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]} />
       </SimpleGrid>
     </Box>
   );

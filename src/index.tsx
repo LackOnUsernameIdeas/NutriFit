@@ -12,6 +12,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/theme";
 import AuthLayout from "./layouts/auth";
 import AdminLayout from "./layouts/admin";
+import LandingLayout from "./layouts/landing";
 import Landing from "views/test/default";
 
 interface PrivateRouteProps extends RouteProps {
@@ -58,7 +59,7 @@ ReactDOM.render(
           {/* Use PrivateRoute for the /admin route */}
           <PrivateRoute path="/admin" component={AdminLayout} />
           <Route path="/auth" component={AuthLayout} />
-          <LandingRoute path="/" component={Landing} />
+          <LandingRoute path="/" component={LandingLayout} />
         </Switch>
       </HashRouter>
     </React.StrictMode>
