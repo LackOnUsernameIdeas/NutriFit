@@ -4,7 +4,7 @@ import {
   MdPerson,
   MdHome,
   MdLock,
-  MdOutlineShoppingCart,
+  MdOutlineShoppingCart
 } from "react-icons/md";
 
 // Admin Imports
@@ -17,7 +17,6 @@ import WeightStats from "views/admin/weightStats";
 import SignInCentered from "views/auth/signIn";
 import SignUpCentered from "views/auth/signUp";
 import ForgotPass from "views/auth/forgotPass";
-import Landing from "views/test/default";
 
 const routes = [
   {
@@ -25,7 +24,7 @@ const routes = [
     layout: "/admin",
     path: "/default",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
+    component: MainDashboard
   },
   {
     name: "Статистики за Тегло",
@@ -80,15 +79,7 @@ const routes = [
     path: "/forgot-password",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: ForgotPass,
-    hideInSidebar: true 
-  },
-  {
-    name: "work",
-    layout: "/test",
-    path: "/default",
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    component: Landing, 
-    hideInSidebar: true 
+    hideInSidebar: true
   }
 ];
 
