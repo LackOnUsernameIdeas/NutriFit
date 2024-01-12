@@ -74,14 +74,16 @@ export default function CalorieRequirements(props: {
               }
             />
           }
-          name="Леко сваляне на тегл"
+          name="Леко сваляне на тегло"
           value={
             selectedLevelData.goals["Mild weight loss"].calory.toFixed(2) +
             " kcal"
           }
           onClick={() =>
             setClickedValueCalories(
-              selectedLevelData.goals["Mild weight loss"].calory
+              parseFloat(
+                selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
+              )
             )
           }
           backgroundColor={
@@ -108,7 +110,9 @@ export default function CalorieRequirements(props: {
           }
           onClick={() =>
             setClickedValueCalories(
-              selectedLevelData.goals["Weight loss"].calory
+              parseFloat(
+                selectedLevelData.goals["Weight loss"].calory.toFixed(2)
+              )
             )
           }
           backgroundColor={
@@ -141,7 +145,9 @@ export default function CalorieRequirements(props: {
           }
           onClick={() =>
             setClickedValueCalories(
-              selectedLevelData.goals["Extreme weight loss"].calory
+              parseFloat(
+                selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
+              )
             )
           }
           backgroundColor={
@@ -167,7 +173,9 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"
           }
           onClick={() =>
-            setClickedValueCalories(selectedLevelData.goals["maintain weight"])
+            setClickedValueCalories(
+              parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
+            )
           }
           backgroundColor={
             clickedValueCalories === selectedLevelData.goals["maintain weight"]
@@ -198,7 +206,9 @@ export default function CalorieRequirements(props: {
           }
           onClick={() =>
             setClickedValueCalories(
-              selectedLevelData.goals["Mild weight gain"].calory
+              parseFloat(
+                selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
+              )
             )
           }
           backgroundColor={
@@ -225,7 +235,9 @@ export default function CalorieRequirements(props: {
           }
           onClick={() =>
             setClickedValueCalories(
-              selectedLevelData.goals["Weight gain"].calory
+              parseFloat(
+                selectedLevelData.goals["Weight gain"].calory.toFixed(2)
+              )
             )
           }
           backgroundColor={
@@ -258,7 +270,9 @@ export default function CalorieRequirements(props: {
           }
           onClick={() =>
             setClickedValueCalories(
-              selectedLevelData.goals["Extreme weight gain"].calory
+              parseFloat(
+                selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
+              )
             )
           }
           backgroundColor={
