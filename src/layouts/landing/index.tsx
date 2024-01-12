@@ -2,8 +2,7 @@
 import { Portal, Box, useDisclosure } from "@chakra-ui/react";
 import Footer from "components/footer/FooterAdmin";
 // Layout components
-import Navbar from "components/navbar/NavbarAdmin";
-import Sidebar from "components/sidebar/Sidebar";
+import Navbar from "components/navbar/LandingNav";
 import { SidebarContext } from "contexts/SidebarContext";
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -15,10 +14,10 @@ export default function Dashboard(props: { [x: string]: any }) {
   // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
   const getRoute = () => {
-    return window.location.pathname !== "/admin/full-screen-maps";
+    return window.location.pathname !== "/full-screen-maps";
   };
+  // functions for changing the states from components
   const getActiveRoute = (routes: RoutesType[]): string => {
     let activeRoute = "Default Brand Text";
     for (let i = 0; i < routes.length; i++) {
@@ -54,7 +53,7 @@ export default function Dashboard(props: { [x: string]: any }) {
   };
   const getRoutes = (routes: RoutesType[]): any => {
     return routes.map((route: RoutesType, key: any) => {
-      if (route.layout === "/admin") {
+      if (route.layout === "/") {
         return (
           <Route
             path={route.layout + route.path}
@@ -71,57 +70,25 @@ export default function Dashboard(props: { [x: string]: any }) {
   const { onOpen } = useDisclosure();
   return (
     <Box>
-      <SidebarContext.Provider
-        value={{
-          toggleSidebar,
-          setToggleSidebar
-        }}
-      >
-        <Sidebar routes={routes} {...rest} />
-        <Box
-          float="right"
-          minHeight="100vh"
-          height="100%"
-          overflow="auto"
-          position="relative"
-          maxHeight="100%"
-          w={{ base: "100%", xl: "calc( 100% - 290px )" }}
-          maxWidth={{ base: "100%", xl: "calc( 100% - 290px )" }}
-          transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
-          transitionDuration=".2s, .2s, .35s"
-          transitionProperty="top, bottom, width"
-          transitionTimingFunction="linear, linear, ease"
-        >
-          <Portal>
-            <Box>
-              <Navbar
-                onOpen={onOpen}
-                logoText={"Horizon UI Dashboard PRO"}
-                brandText={getActiveRoute(routes)}
-                secondary={getActiveNavbar(routes)}
-                message={getActiveNavbarText(routes)}
-                fixed={fixed}
-                {...rest}
-              />
-            </Box>
-          </Portal>
-
-          {getRoute() ? (
-            <Box
-              mx="auto"
-              p={{ base: "20px", md: "30px" }}
-              pe="20px"
-              minH="100vh"
-              pt="50px"
-            >
-              <Switch>{getRoutes(routes)}</Switch>
-            </Box>
-          ) : null}
-          <Box>
-            <Footer />
-          </Box>
+      <Portal>
+        <Box>
+          <Navbar
+            onOpen={onOpen}
+            logoText={"Horizon UI Dashboard PRO"}
+            brandText={getActiveRoute(routes)}
+            secondary={getActiveNavbar(routes)}
+            message={getActiveNavbarText(routes)}
+            fixed={fixed}
+            {...rest}
+          />
         </Box>
-      </SidebarContext.Provider>
+      </Portal>
+      {getRoute() ? (
+        <Box p={{ base: "20px", md: "30px" }} pe="20px" minH="100vh">
+          <Switch>{getRoutes(routes)}</Switch>
+        </Box>
+      ) : null}
+      <Footer />
     </Box>
   );
 }
