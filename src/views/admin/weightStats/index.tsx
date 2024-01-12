@@ -228,11 +228,16 @@ export default function WeightStats() {
   // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    const parsedValue = value.trim() === "" ? 0 : parseFloat(value);
+
     setUserData((prevData) => ({
       ...prevData,
-      [name]: parseFloat(value)
+      [name]: parsedValue
     }));
   };
+
+  console.log(userData);
 
   const handleRadioChange = (key: string, radioValue: string) => {
     setUserData((prevData) => ({

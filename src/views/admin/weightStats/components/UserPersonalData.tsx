@@ -37,27 +37,77 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   handleRadioChange,
   generateStats
 }) => {
+  const [validationErrors, setValidationErrors] = React.useState<{
+    [key: string]: string;
+  }>({});
+
+  React.useEffect(() => {
+    // Load stored values from local storage when component mounts
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+    Object.keys(storedValues).forEach((key) => {
+      handleInputChange({
+        target: { name: key, value: storedValues[key] }
+      } as React.ChangeEvent<HTMLInputElement>);
+    });
+  }, []);
+
   const isUserDataValid = () => {
-    // Validation logic goes here
-    // Example: Numerical values should be greater than zero
-    return (
-      userData.height > 0 &&
-      userData.age > 0 &&
-      userData.weight > 0 &&
-      userData.neck > 0 &&
-      userData.waist > 0 &&
-      userData.hip > 0
+    const errors: { [key: string]: string } = {};
+
+    if (userData.height < 130 || userData.height > 230) {
+      errors.height = "Height should be between 130 and 230 cm.";
+    }
+
+    if (userData.age < 1 || userData.age > 80) {
+      errors.age = "Age should be between 1 and 80 years.";
+    }
+
+    if (userData.weight < 40 || userData.weight > 160) {
+      errors.weight = "Weight should be between 40 and 160 kg.";
+    }
+
+    if (userData.neck < 20 || userData.neck > 60) {
+      errors.neck = "Neck circumference should be between 20 and 60 cm.";
+    }
+
+    if (userData.waist < 40 || userData.waist > 130) {
+      errors.waist = "Waist circumference should be between 40 and 130 cm.";
+    }
+
+    if (userData.hip < 40 || userData.hip > 130) {
+      errors.hip = "Hip circumference should be between 40 and 130 cm.";
+    }
+
+    setValidationErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleInputChangeWithMemory = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    handleInputChange(e);
+
+    setValidationErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
+    // Save the input value to local storage
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+    localStorage.setItem(
+      "lastTypedValues",
+      JSON.stringify({ ...storedValues, [name]: value })
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
     if (isUserDataValid()) {
       generateStats();
-    } else {
-      // Handle invalid data, you can show an error message or take any other appropriate action
-      alert("Please provide valid values for all fields before submitting.");
-      // Or you can use a state to manage and display an error message in your UI
-      // setError('Please provide valid values for all fields before submitting.');
     }
   };
 
@@ -87,8 +137,8 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                   placeholder={
                     "Въведете " + userDataPropertiesTranslated[index]
                   }
-                  autoComplete="on"
-                  onChange={(e) => handleInputChange(e)}
+                  onChange={(e) => handleInputChangeWithMemory(e)}
+                  required
                 />
               ) : (
                 <Input
@@ -99,8 +149,8 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                   placeholder={
                     "Въведете " + userDataPropertiesTranslated[index]
                   }
-                  autoComplete="on"
-                  onChange={(e) => handleInputChange(e)}
+                  onChange={(e) => handleInputChangeWithMemory(e)}
+                  required
                 />
               )
             ) : key === "gender" ? (
@@ -201,6 +251,11 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                 value={value}
                 onChange={(e) => handleInputChange(e)}
               />
+            )}
+            {validationErrors[key] && (
+              <Text color="red" fontSize="sm">
+                {validationErrors[key]}
+              </Text>
             )}
           </label>
         ))}
