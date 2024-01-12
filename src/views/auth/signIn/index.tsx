@@ -130,7 +130,7 @@ function SignIn() {
       >
         <Box me="auto">
           <Heading color={textColor} fontSize="36px" mb="10px">
-            Влезте в Профила Ви
+            Влезте в Профила Си
           </Heading>
           <Text
             mb="36px"
