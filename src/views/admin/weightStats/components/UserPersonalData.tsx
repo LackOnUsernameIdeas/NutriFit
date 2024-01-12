@@ -26,7 +26,7 @@ const userDataPropertiesTranslated = [
   "тегло",
   "обиколка на врат",
   "обиколка на талия",
-  "oбиколка на бедро",
+  "oбиколка на таз",
   "цел"
 ];
 
@@ -57,27 +57,27 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
     const errors: { [key: string]: string } = {};
 
     if (userData.height < 130 || userData.height > 230) {
-      errors.height = "Height should be between 130 and 230 cm.";
+      errors.height = "Височината трябва да бъде между 130 и 230 см.";
     }
 
     if (userData.age < 1 || userData.age > 80) {
-      errors.age = "Age should be between 1 and 80 years.";
+      errors.age = "Възрастта трябва да е между 1 и 80 години.";
     }
 
     if (userData.weight < 40 || userData.weight > 160) {
-      errors.weight = "Weight should be between 40 and 160 kg.";
+      errors.weight = "Теглото трябва да бъде между 40 и 160 кг.";
     }
 
     if (userData.neck < 20 || userData.neck > 60) {
-      errors.neck = "Neck circumference should be between 20 and 60 cm.";
+      errors.neck = "Обиколката на врата трябва да бъде между 20 и 60 cm.";
     }
 
     if (userData.waist < 40 || userData.waist > 130) {
-      errors.waist = "Waist circumference should be between 40 and 130 cm.";
+      errors.waist = "Обиколката на талията трябва да бъде между 40 и 130 cm.";
     }
 
     if (userData.hip < 40 || userData.hip > 130) {
-      errors.hip = "Hip circumference should be between 40 and 130 cm.";
+      errors.hip = "Обиколката на таза трябва да бъде между 40 и 130 cm.";
     }
 
     setValidationErrors(errors);

@@ -16,25 +16,39 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   handleInputChange,
   generatePlan
 }) => {
-  const isUserDataValid = () => {
-    // Validation logic goes here
-    // Example: Numerical values should be greater than zero
-    return (
-      userPreferences.Calories > 0 &&
-      userPreferences.Fat > 0 &&
-      userPreferences.Protein > 0 &&
-      userPreferences.Carbohydrates > 0
-    );
+  const [validationErrors, setValidationErrors] = React.useState<{
+    [key: string]: string;
+  }>({});
+
+  const isNutrientDataValid = () => {
+    const errors: { [key: string]: string } = {};
+
+    if (userPreferences.Calories <= 0) {
+      errors.Calories = "Моля въведете валидна стойност за калории.";
+    }
+
+    if (userPreferences.Carbohydrates <= 0) {
+      errors.Carbohydrates = "Моля въведете валидна стойност за въглехидрати.";
+    }
+
+    if (userPreferences.Fat <= 0) {
+      errors.Fat = "Моля въведете валидна стойност за мазнини.";
+    }
+
+    if (userPreferences.Protein <= 0) {
+      errors.Protein = "Моля въведете валидна стойност за протеин.";
+    }
+
+    setValidationErrors(errors);
+
+    return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (isUserDataValid()) {
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (isNutrientDataValid()) {
       generatePlan();
-    } else {
-      // Handle invalid data, you can show an error message or take any other appropriate action
-      alert("Please provide valid values for all fields before submitting.");
-      // Or you can use a state to manage and display an error message in your UI
-      // setError('Please provide valid values for all fields before submitting.');
     }
   };
 
@@ -86,6 +100,11 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 />
               )}
             </Flex>
+            {validationErrors[key] && (
+              <Text color="red" fontSize="sm">
+                {validationErrors[key]}
+              </Text>
+            )}
           </Box>
         ))}
       </SimpleGrid>
