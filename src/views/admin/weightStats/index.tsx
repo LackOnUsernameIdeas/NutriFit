@@ -69,9 +69,15 @@ export default function WeightStats() {
 
   // State за разкриване на информация за менюто с информация
   const {
-    isOpen: isOpen1,
-    onOpen: onOpen1,
-    onClose: onClose1
+    isOpen: isOpenLevels,
+    onOpen: onOpenLevels,
+    onClose: onCloseLevels
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenDailyCalories,
+    onOpen: onOpenDailyCalories,
+    onClose: onCloseDailyCalories
   } = useDisclosure();
 
   // States за запазване на извличените данни
@@ -247,7 +253,10 @@ export default function WeightStats() {
   };
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box
+      pt={{ base: "130px", md: "80px", xl: "80px" }}
+      style={{ overflow: "hidden" }}
+    >
       <Box>
         {isSubmitted ? (
           <Box>
@@ -435,7 +444,7 @@ export default function WeightStats() {
                             Ниво {level}
                           </Button>
                         ))}
-                        <Menu isOpen={isOpen1} onClose={onClose1}>
+                        <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
                           <MenuButton
                             alignItems="center"
                             justifyContent="center"
@@ -446,7 +455,7 @@ export default function WeightStats() {
                             w="30px"
                             h="30px"
                             lineHeight="50%"
-                            onClick={onOpen1}
+                            onClick={onOpenLevels}
                             borderRadius="10px"
                             ml="10%"
                           >
@@ -473,6 +482,7 @@ export default function WeightStats() {
                               transition="0.2s linear"
                               color={textColor}
                               p="0px"
+                              maxW={{ base: "80%", lg: "100%" }}
                               borderRadius="8px"
                             >
                               <Flex align="center">
