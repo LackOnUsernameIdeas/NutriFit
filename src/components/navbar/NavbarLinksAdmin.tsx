@@ -12,7 +12,7 @@ import {
   MenuList,
   Text,
   useColorModeValue,
-  useColorMode,
+  useColorMode
 } from "@chakra-ui/react";
 // Custom Components
 import { ItemContent } from "components/menu/ItemContent";
@@ -45,8 +45,8 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   const borderButton = useColorModeValue("secondaryGray.500", "whiteAlpha.200");
   const handleLogOut = async () => {
     const key = sessionStorage.key(0);
-    sessionStorage.removeItem(key)
-  }
+    sessionStorage.removeItem(key);
+  };
 
   return (
     <Flex
@@ -125,7 +125,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
                 px="14px"
                 onClick={handleLogOut}
               >
-                  <Text fontSize="sm">Излез</Text>
+                <Text fontSize="sm">Излез</Text>
               </MenuItem>
             </Link>
           </Flex>
@@ -139,5 +139,5 @@ HeaderLinks.propTypes = {
   variant: PropTypes.string,
   fixed: PropTypes.bool,
   secondary: PropTypes.bool,
-  onOpen: PropTypes.func,
+  onOpen: PropTypes.func
 };
