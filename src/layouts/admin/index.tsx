@@ -115,11 +115,9 @@ export default function Dashboard(props: { [x: string]: any }) {
               pt="50px"
             >
               <Switch>{getRoutes(routes)}</Switch>
+              <Footer />
             </Box>
           ) : null}
-          <Box>
-            <Footer />
-          </Box>
         </Box>
       </SidebarContext.Provider>
     </Box>

@@ -4,6 +4,7 @@ import routes from "routes";
 
 // Chakra imports
 import { Box, useColorModeValue } from "@chakra-ui/react";
+import Footer from "components/footer/FooterAdmin";
 
 // Layout components
 import { SidebarContext } from "contexts/SidebarContext";

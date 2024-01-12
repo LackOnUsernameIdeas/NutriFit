@@ -7,7 +7,8 @@ import {
   Radio,
   Input,
   Button,
-  Stack
+  Stack,
+  useColorModeValue
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
 import { UserData, HealthInfo, BodyMass } from "../../../../types/weightStats";
@@ -37,6 +38,9 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   handleRadioChange,
   generateStats
 }) => {
+  const textColor = useColorModeValue("#1a202c", "white");
+  const buttonColor = useColorModeValue("#422afb", "#1a202c");
+
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
@@ -60,24 +64,48 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
       errors.height = "Височината трябва да бъде между 130 и 230 см.";
     }
 
+    if (userData.height == 0) {
+      errors.height = "Моля въведете височина.";
+    }
+
     if (userData.age < 1 || userData.age > 80) {
       errors.age = "Възрастта трябва да е между 1 и 80 години.";
+    }
+
+    if (userData.age == 0) {
+      errors.age = "Моля въведете възраст.";
     }
 
     if (userData.weight < 40 || userData.weight > 160) {
       errors.weight = "Теглото трябва да бъде между 40 и 160 кг.";
     }
 
+    if (userData.weight == 0) {
+      errors.weight = "Моля въведете тегло.";
+    }
+
     if (userData.neck < 20 || userData.neck > 60) {
       errors.neck = "Обиколката на врата трябва да бъде между 20 и 60 cm.";
+    }
+
+    if (userData.neck == 0) {
+      errors.neck = "Моля въведете обиколка на врат.";
     }
 
     if (userData.waist < 40 || userData.waist > 130) {
       errors.waist = "Обиколката на талията трябва да бъде между 40 и 130 cm.";
     }
 
+    if (userData.waist == 0) {
+      errors.waist = "Моля въведете обиколка на талия.";
+    }
+
     if (userData.hip < 40 || userData.hip > 130) {
       errors.hip = "Обиколката на таза трябва да бъде между 40 и 130 cm.";
+    }
+
+    if (userData.hip == 0) {
+      errors.hip = "Моля въведете обиколка на таз.";
     }
 
     setValidationErrors(errors);
@@ -130,27 +158,29 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
             {typeof value === "number" ? (
               value !== 0 ? (
                 <Input
-                  variant="auth"
+                  color={textColor}
+                  focusBorderColor="#7551ff"
                   type="number"
                   name={key}
                   value={value || ""}
                   placeholder={
                     "Въведете " + userDataPropertiesTranslated[index]
                   }
+                  _placeholder={{ opacity: 1, color: "gray.500" }}
                   onChange={(e) => handleInputChangeWithMemory(e)}
-                  required
                 />
               ) : (
                 <Input
-                  variant="auth"
+                  color={textColor}
+                  focusBorderColor="#7551ff"
                   type="number"
                   name={key}
                   value={""}
                   placeholder={
                     "Въведете " + userDataPropertiesTranslated[index]
                   }
+                  _placeholder={{ opacity: 1, color: "gray.500" }}
                   onChange={(e) => handleInputChangeWithMemory(e)}
-                  required
                 />
               )
             ) : key === "gender" ? (
@@ -259,7 +289,12 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
             )}
           </label>
         ))}
-        <Button type="submit" onClick={handleSubmit}>
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          backgroundColor={buttonColor}
+          color="white"
+        >
           Изпрати
         </Button>
       </Box>

@@ -42,6 +42,8 @@ import { motion, isValidMotionProp } from "framer-motion";
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
+import Footer from "components/footer/FooterAdmin";
+
 import Card from "components/card/Card";
 import { HSeparator } from "components/separator/Separator";
 import IconBox from "components/icons/IconBox";
@@ -198,12 +200,12 @@ export default function UserReports() {
                 <Button
                   _hover={{ bg: "transparent" }}
                   _focus={{ bg: "none" }}
-                  color="red.400"
+                  color="#7551ff"
                   borderRadius="8px"
                   px="14px"
-                  ml="1%"
+                  ml="30%"
                 >
-                  <Text fontSize="sm">Влезте!</Text>
+                  <Text fontSize="sm">Влезте в профила си!</Text>
                 </Button>
               </Link>
             </ChakraBox>

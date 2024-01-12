@@ -1,6 +1,14 @@
 // UserPreferencesInput.tsx
 import React from "react";
-import { Input, Button, Text, Flex, Box, SimpleGrid } from "@chakra-ui/react";
+import {
+  Input,
+  Button,
+  Text,
+  Flex,
+  Box,
+  SimpleGrid,
+  useColorModeValue
+} from "@chakra-ui/react";
 import { UserPreferencesForMealPlan } from "../../../../types/weightStats";
 import Card from "components/card/Card";
 
@@ -16,6 +24,9 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   handleInputChange,
   generatePlan
 }) => {
+  const textColor = useColorModeValue("#1a202c", "white");
+  const buttonColor = useColorModeValue("#422afb", "#1a202c");
+
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
@@ -70,11 +81,12 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             <Flex>
               {value !== 0 ? (
                 <Input
-                  isRequired={true}
-                  variant="auth"
+                  color={textColor}
+                  focusBorderColor="#7551ff"
                   fontSize={{ base: "sm", md: "md" }}
                   ms={{ base: "0px", md: "0px" }}
                   placeholder={"Въведете " + fieldName[index]}
+                  _placeholder={{ opacity: 1, color: "gray.500" }}
                   value={value || ""}
                   mt={{ base: "1%", md: "2%" }}
                   fontWeight="500"
@@ -85,11 +97,12 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 />
               ) : (
                 <Input
-                  isRequired={true}
-                  variant="auth"
+                  color={textColor}
+                  focusBorderColor="#7551ff"
                   fontSize={{ base: "sm", md: "md" }}
                   ms={{ base: "0px", md: "0px" }}
                   placeholder={"Въведете " + fieldName[index]}
+                  _placeholder={{ opacity: 1, color: "gray.500" }}
                   value={""}
                   mt={{ base: "1%", md: "2%" }}
                   fontWeight="500"
@@ -113,6 +126,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         mt={{ base: "10%", lg: "2%" }}
         mb={{ base: "15%", lg: "0%" }}
         minH="15%"
+        backgroundColor={buttonColor}
+        color="white"
       >
         Създайте хранителен план
       </Button>

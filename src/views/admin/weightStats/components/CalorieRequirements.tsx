@@ -36,6 +36,7 @@ export default function CalorieRequirements(props: {
   const selectedLevelData =
     dailyCaloryRequirements[props.selectedActivityLevel - 1];
 
+  console.log(clickedValueCalories);
   return (
     <Card>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px">
@@ -88,7 +89,9 @@ export default function CalorieRequirements(props: {
           }
           backgroundColor={
             clickedValueCalories ===
-            selectedLevelData.goals["Mild weight loss"].calory
+            parseFloat(
+              selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
+            )
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
@@ -117,7 +120,7 @@ export default function CalorieRequirements(props: {
           }
           backgroundColor={
             clickedValueCalories ===
-            selectedLevelData.goals["Weight loss"].calory
+            parseFloat(selectedLevelData.goals["Weight loss"].calory.toFixed(2))
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
@@ -152,7 +155,9 @@ export default function CalorieRequirements(props: {
           }
           backgroundColor={
             clickedValueCalories ===
-            selectedLevelData.goals["Extreme weight loss"].calory
+            parseFloat(
+              selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
+            )
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
@@ -178,7 +183,8 @@ export default function CalorieRequirements(props: {
             )
           }
           backgroundColor={
-            clickedValueCalories === selectedLevelData.goals["maintain weight"]
+            clickedValueCalories ===
+            parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
@@ -213,7 +219,9 @@ export default function CalorieRequirements(props: {
           }
           backgroundColor={
             clickedValueCalories ===
-            selectedLevelData.goals["Mild weight gain"].calory
+            parseFloat(
+              selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
+            )
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
@@ -242,7 +250,7 @@ export default function CalorieRequirements(props: {
           }
           backgroundColor={
             clickedValueCalories ===
-            selectedLevelData.goals["Weight gain"].calory
+            parseFloat(selectedLevelData.goals["Weight gain"].calory.toFixed(2))
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
@@ -277,7 +285,9 @@ export default function CalorieRequirements(props: {
           }
           backgroundColor={
             clickedValueCalories ===
-            selectedLevelData.goals["Extreme weight gain"].calory
+            parseFloat(
+              selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
+            )
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
