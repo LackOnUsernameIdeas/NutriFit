@@ -36,16 +36,6 @@ function SignUp() {
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
   const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
-  const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
-  const googleText = useColorModeValue("navy.700", "white");
-  const googleHover = useColorModeValue(
-    { bg: "gray.200" },
-    { bg: "whiteAlpha.300" }
-  );
-  const googleActive = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.200" }
-  );
   const [show, setShow] = React.useState(false);
   const [show2, setShow2] = React.useState(false);
   const handleClick = () => setShow(!show);
@@ -160,28 +150,7 @@ function SignUp() {
           me="auto"
           mb={{ base: "20px", md: "auto" }}
         >
-          <Button
-            fontSize="sm"
-            me="0px"
-            mb="26px"
-            py="15px"
-            h="50px"
-            borderRadius="16px"
-            bg={googleBg}
-            color={googleText}
-            fontWeight="500"
-            _hover={googleHover}
-            _active={googleActive}
-            _focus={googleActive}
-          >
-            <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
-            Създаване на Профил с Google
-          </Button>
           <Flex align="center" mb="25px">
-            <HSeparator />
-            <Text color="gray.400" mx="14px">
-              или
-            </Text>
             <HSeparator />
           </Flex>
           <FormControl>
