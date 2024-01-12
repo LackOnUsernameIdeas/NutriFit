@@ -117,9 +117,11 @@ export default function Dashboard(props: { [x: string]: any }) {
               <Switch>{getRoutes(routes)}</Switch>
             </Box>
           ) : null}
+          <Box>
+            <Footer />
+          </Box>
         </Box>
       </SidebarContext.Provider>
-      <Footer />
     </Box>
   );
 }
