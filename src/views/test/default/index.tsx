@@ -32,8 +32,12 @@ import {
   useColorModeValue,
   Text,
   Link,
-  Button
+  Button,
+  chakra,
+  shouldForwardProp
 } from "@chakra-ui/react";
+// Animations
+import { motion, isValidMotionProp } from "framer-motion";
 // Assets
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
@@ -56,6 +60,11 @@ import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
 import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
 import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex";
+
+const ChakraBox = chakra(motion.div, {
+  shouldForwardProp: (prop) =>
+    isValidMotionProp(prop) || shouldForwardProp(prop)
+});
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -166,17 +175,38 @@ export default function UserReports() {
             </Text>
           </Flex>
           <Flex justify="left" mt="1%" pt="10px">
-            <Link href="/#/auth/sign-in">
-              <Button
-                _hover={{ bg: "transparent" }}
-                _focus={{ bg: "none" }}
-                color="red.400"
-                borderRadius="8px"
-                px="14px"
-              >
-                <Text fontSize="sm">Влезте!</Text>
-              </Button>
-            </Link>
+            <ChakraBox
+              animate={{
+                scale: [1.2, 1.4, 1.2],
+                rotate: [0, 0, 0],
+                borderRadius: ["20%", "20%", "20%"]
+              }}
+              transition={{
+                duration: 1.5,
+                ease: "easeInOut",
+                // @ts-ignore
+                repeat: Infinity,
+                repeatType: "loop"
+              }}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              width="100px"
+              height="100px"
+            >
+              <Link href="/#/auth/sign-in">
+                <Button
+                  _hover={{ bg: "transparent" }}
+                  _focus={{ bg: "none" }}
+                  color="red.400"
+                  borderRadius="8px"
+                  px="14px"
+                  ml="1%"
+                >
+                  <Text fontSize="sm">Влезте!</Text>
+                </Button>
+              </Link>
+            </ChakraBox>
           </Flex>
         </Card>
       </SimpleGrid>
