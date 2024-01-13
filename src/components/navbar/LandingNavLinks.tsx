@@ -3,12 +3,17 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  useColorMode
+  useColorMode,
+  Menu,
+  MenuList,
+  MenuButton,
+  Avatar
 } from "@chakra-ui/react";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
 import PropTypes from "prop-types";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import routes from "routes";
+import letterLogo from "assets/img/layout/letterLogo.png";
 export default function LandingLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
@@ -49,6 +54,20 @@ export default function LandingLinks(props: { secondary: boolean }) {
           as={colorMode === "light" ? IoMdMoon : IoMdSunny}
         />
       </Button>
+      <Menu>
+        <MenuButton p="0px">
+          <Avatar
+            _hover={{ cursor: "pointer" }}
+            color="white"
+            src={letterLogo}
+            name="test test"
+            bg="#11047A"
+            size="sm"
+            w="40px"
+            h="40px"
+          />
+        </MenuButton>
+      </Menu>
     </Flex>
   );
 }
