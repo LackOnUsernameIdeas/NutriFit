@@ -56,6 +56,7 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel="Базов метаболизъм е общото количество енергия, което е нужно на тялото за да поддържа жизнените си функции."
           name="Базов метаболизъм"
           value={selectedLevelData.BMR.toFixed(2) + " kcal"}
         />
@@ -75,6 +76,11 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да отслабнете с ${
+            selectedLevelData.goals["Mild weight loss"]["loss weight"]
+          } на седмица, трябва да приемате приблизително ${selectedLevelData.goals[
+            "Mild weight loss"
+          ].calory.toFixed(2)} калории на ден`}
           name="Леко сваляне на тегло"
           value={
             selectedLevelData.goals["Mild weight loss"].calory.toFixed(2) +
@@ -107,6 +113,11 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да отслабнете с ${
+            selectedLevelData.goals["Weight loss"]["loss weight"]
+          } на седмица, трябва да приемате приблизително ${selectedLevelData.goals[
+            "Weight loss"
+          ].calory.toFixed(2)} калории на ден`}
           name="Сваляне на тегло"
           value={
             selectedLevelData.goals["Weight loss"].calory.toFixed(2) + " kcal"
@@ -141,6 +152,11 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да отслабнете с ${
+            selectedLevelData.goals["Extreme weight loss"]["loss weight"]
+          } на седмица, трябва да приемате приблизително ${selectedLevelData.goals[
+            "Extreme weight loss"
+          ].calory.toFixed(2)} калории на ден`}
           name="Екстремно сваляне на тегло"
           value={
             selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2) +
@@ -173,6 +189,9 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да поддържате теглото си, трябва да приемате приблизително ${selectedLevelData.goals[
+            "maintain weight"
+          ].toFixed(2)} калории на ден`}
           name="Запазване на тегло"
           value={
             selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"
@@ -205,6 +224,11 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да качите ${
+            selectedLevelData.goals["Mild weight gain"]["gain weight"]
+          } на седмица, трябва да приемате приблизително ${selectedLevelData.goals[
+            "Mild weight gain"
+          ].calory.toFixed(2)} калории на ден`}
           name="Леко качване на тегло"
           value={
             selectedLevelData.goals["Mild weight gain"].calory.toFixed(2) +
@@ -237,6 +261,11 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да качите ${
+            selectedLevelData.goals["Weight gain"]["gain weight"]
+          } на седмица, трябва да приемате приблизително ${selectedLevelData.goals[
+            "Weight gain"
+          ].calory.toFixed(2)} калории на ден`}
           name="Качване на тегло"
           value={
             selectedLevelData.goals["Weight gain"].calory.toFixed(2) + " kcal"
@@ -271,6 +300,11 @@ export default function CalorieRequirements(props: {
               }
             />
           }
+          tooltipLabel={`За да качите ${
+            selectedLevelData.goals["Extreme weight gain"]["gain weight"]
+          } на седмица, трябва да приемате приблизително ${selectedLevelData.goals[
+            "Extreme weight gain"
+          ].calory.toFixed(2)} калории на ден`}
           name="Екстремно качване на тегло"
           value={
             selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2) +
