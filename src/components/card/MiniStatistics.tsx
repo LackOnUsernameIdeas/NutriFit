@@ -20,6 +20,8 @@ export default function Default(props: {
   tooltipLabel?: string;
   onClick?: () => void;
   backgroundColor?: string;
+  hasBorder?: boolean;
+  borderColor?: string;
   hover?: {
     background?: string;
     color?: string;
@@ -34,7 +36,9 @@ export default function Default(props: {
     tooltipLabel,
     onClick,
     backgroundColor,
-    hover
+    hover,
+    hasBorder,
+    borderColor
   } = props;
   const textColor = useColorModeValue("secondaryGray.900", "white");
 
@@ -49,7 +53,6 @@ export default function Default(props: {
           _hover={hover}
         >
           {startContent}
-
           <Stat my="auto" ms={startContent ? "18px" : "0px"}>
             <StatLabel
               lineHeight="100%"
