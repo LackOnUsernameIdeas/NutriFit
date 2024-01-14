@@ -261,7 +261,7 @@ export default function WeightStats() {
         {isSubmitted ? (
           <Box>
             {isLoading ? (
-              <Box>
+              <Box mb="2.5%">
                 <UserPersonalData
                   userData={userData}
                   handleInputChange={handleInputChange}

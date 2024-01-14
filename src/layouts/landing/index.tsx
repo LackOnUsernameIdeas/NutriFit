@@ -1,6 +1,6 @@
 // Chakra imports
 import { Portal, Box, useDisclosure } from "@chakra-ui/react";
-import LandFooter from "components/footer/FooterLanding";
+import Footer from "components/footer/Footer";
 // Layout components
 import Navbar from "components/navbar/LandingNav";
 import { SidebarContext } from "contexts/SidebarContext";
@@ -88,7 +88,7 @@ export default function Dashboard(props: { [x: string]: any }) {
           <Switch>{getRoutes(routes)}</Switch>
         </Box>
       ) : null}
-      <LandFooter />
+      <Footer />
     </Box>
   );
 }
