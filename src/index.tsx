@@ -14,6 +14,7 @@ import AuthLayout from "./layouts/auth";
 import AdminLayout from "./layouts/admin";
 import LandingLayout from "./layouts/landing";
 import Landing from "views/test/default";
+import Cookies from "js-cookie";
 
 interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
@@ -25,11 +26,17 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 }) => {
   const key = sessionStorage.key(0);
   const userData = sessionStorage.getItem(key);
+  const RememberedUser = Cookies.get("remember");
+
   return (
     <Route
       {...rest}
       render={(props) =>
-        userData ? <Component {...props} /> : <Redirect to="/auth/sign-in" />
+        userData || RememberedUser ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/auth/sign-in" />
+        )
       }
     />
   );
