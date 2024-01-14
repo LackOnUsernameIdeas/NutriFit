@@ -108,7 +108,7 @@ export default function CalorieRequirements(props: {
               selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
             )
               ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.900"
+              : "secondaryGray.100"
           }
           hasHoverAndFocus={true}
         />

@@ -20,83 +20,92 @@ const Footer = () => {
       borderColor={footerColor}
       py="2.5rem"
       fontSize="0.875rem"
-      borderRadius="22px"
+      minHeight="36.5vh"
     >
-      <Box
-        maxW="64rem"
-        marginX="auto"
-        pb="2rem"
-        mb="1.5rem"
-        px={10}
-        borderBottom="1px solid"
-        borderColor="gray.300"
-      >
+      <Box maxW="64rem" pb="2rem" mx="auto">
         <Flex flexWrap="wrap" alignItems="start" justifyContent="space-between">
           <Box
             w={{ base: "100%", sm: "50%", md: "max-content" }}
             mb={{ base: "1.5rem", lg: "0" }}
           >
-            <Heading
-              as="h5"
+            <Text
               color="gray.700"
               mb="0.5rem"
-              fontSize="0.875rem"
+              fontSize="1.5rem"
               fontWeight="600"
+              fontFamily="DM Sans"
+              display="inline"
+              mr="1px"
             >
-              Company Name
-            </Heading>
+              Nutri
+            </Text>
+            <Text
+              color="gray.700"
+              mb="0.5rem"
+              fontSize="1.5rem"
+              fontWeight="600"
+              fontFamily="Leckerli One"
+              display="inline"
+            >
+              Fit
+            </Text>
             <List lineHeight="2" justifyContent="center">
-              <LinkItem text="Careers" />
-              <LinkItem text="News" />
-              <LinkItem text="Policies" />
-              <LinkItem text="Help" />
-              <LinkItem text="Diversity & Belonging" />
+              <LinkItem
+                text="НОИТ 2024"
+                href="https://edusoft.fmi.uni-sofia.bg/"
+              />
+              <LinkItem text="Проект 249" href="https://nutri.noit.eu" />
+              <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
+                Калоян Костадинов
+              </Text>
+              <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
+                Ивайло Здравков
+              </Text>
+              <LinkItem
+                text="ПГИ Перник"
+                href="https://pgi-pernik.bg-schools.com/"
+              />
             </List>
           </Box>
           <Box
             w={{ base: "100%", sm: "50%", md: "max-content" }}
             mb={{ base: "1.5rem", lg: "0" }}
           >
-            <Heading
-              as="h5"
+            <Text
               color="gray.700"
               mb="0.5rem"
-              fontSize="0.875rem"
+              fontSize="1.5rem"
               fontWeight="600"
+              display="inline"
             >
-              Discover
-            </Heading>
+              Бързи Връзки
+            </Text>
             <List lineHeight="2">
-              <LinkItem text="Trust &amp; Safety" />
-              <LinkItem text="Travel Credit" />
-              <LinkItem text="Gift Cards" />
-              <LinkItem text="Airbnb Citizen" />
-              <LinkItem text="Business Travel" />
-              <LinkItem text="Things To Do" isTag={true} tagText="New" />
-              <LinkItem text="Airbnbmag" />
+              <LinkItem text="Вход" href="/#/auth/sign-in" />
+              <LinkItem text="Главна Страница" href="/#/admin/default" />
+              <LinkItem
+                text="Статистики за Тегло"
+                href="/#/admin/weightstats"
+                isTag={true}
+                tagText="New"
+              />
             </List>
           </Box>
           <Box
             w={{ base: "100%", sm: "50%", md: "max-content" }}
             mb={{ base: "1.5rem", lg: "0" }}
           >
-            <Heading
-              as="h5"
+            <Text
               color="gray.700"
               mb="0.5rem"
-              fontSize="0.875rem"
+              fontSize="1.5rem"
               fontWeight="600"
+              display="inline"
             >
-              Hosting
-            </Heading>
+              Източници
+            </Text>
             <List lineHeight="2">
-              <LinkItem text="Why Host" />
-              <LinkItem text="Hospitality" />
-              <LinkItem text="Responsible Hosting" />
-              <LinkItem text="Community Center" />
-              <LinkItem text="Host an Experience" isTag={true} tagText="New" />
-              <LinkItem text="Open Homes" />
-              <LinkItem text="Donations" isTag={true} tagText="New" />
+              <LinkItem text="Nutritionix" />
             </List>
           </Box>
           <Box
@@ -158,21 +167,6 @@ const Footer = () => {
           </Box>
         </Flex>
       </Box>
-      <Flex maxW="64rem" mx="auto" alignItems="center" px={10}>
-        <svg
-          fill="#008F94"
-          style={{ width: "1.25rem", height: "1.25rem" }}
-          viewBox="0 0 1000 1000"
-          role="presentation"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="m499.3 736.7c-51-64-81-120.1-91-168.1-10-39-6-70 11-93 18-27 45-40 80-40s62 13 80 40c17 23 21 54 11 93-11 49-41 105-91 168.1zm362.2 43c-7 47-39 86-83 105-85 37-169.1-22-241.1-102 119.1-149.1 141.1-265.1 90-340.2-30-43-73-64-128.1-64-111 0-172.1 94-148.1 203.1 14 59 51 126.1 110 201.1-37 41-72 70-103 88-24 13-47 21-69 23-101 15-180.1-83-144.1-184.1 5-13 15-37 32-74l1-2c55-120.1 122.1-256.1 199.1-407.2l2-5 22-42c17-31 24-45 51-62 13-8 29-12 47-12 36 0 64 21 76 38 6 9 13 21 22 36l21 41 3 6c77 151.1 144.1 287.1 199.1 407.2l1 1 20 46 12 29c9.2 23.1 11.2 46.1 8.2 70.1zm46-90.1c-7-22-19-48-34-79v-1c-71-151.1-137.1-287.1-200.1-409.2l-4-6c-45-92-77-147.1-170.1-147.1-92 0-131.1 64-171.1 147.1l-3 6c-63 122.1-129.1 258.1-200.1 409.2v2l-21 46c-8 19-12 29-13 32-51 140.1 54 263.1 181.1 263.1 1 0 5 0 10-1h14c66-8 134.1-50 203.1-125.1 69 75 137.1 117.1 203.1 125.1h14c5 1 9 1 10 1 127.1.1 232.1-123 181.1-263.1z"></path>
-        </svg>
-        <Text color="gray.600" fontSize="0.875rem" pl="0.5rem">
-          &copy; 2019 company, Inc. All rights reserved.
-        </Text>
-      </Flex>
     </Box>
   );
 };
@@ -181,14 +175,15 @@ type LinkItemProps = {
   text?: string;
   isTag?: boolean;
   tagText?: string;
+  href?: string;
 };
 
-const LinkItem = ({ text, isTag = false, tagText }: LinkItemProps) => {
+const LinkItem = ({ text, isTag = false, tagText, href }: LinkItemProps) => {
   return (
     <ListItem display="flex">
       <Link
         fontWeight="600"
-        href="#"
+        href={href}
         color="rgba(113, 128, 150, 1)"
         _hover={{ color: "green.600" }}
       >
