@@ -16,7 +16,7 @@ import WeightStats from "views/admin/weightStats";
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
 import SignUpCentered from "views/auth/signUp";
-import ForgotPass from "views/test/default";
+import ForgotPass from "views/auth/forgotPass";
 
 import Landing from "views/test/default";
 
