@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card";
+import { useState } from "react";
 
 export default function Default(props: {
   startContent?: JSX.Element;
@@ -22,10 +23,7 @@ export default function Default(props: {
   backgroundColor?: string;
   hasBorder?: boolean;
   borderColor?: string;
-  hover?: {
-    background?: string;
-    color?: string;
-  };
+  hasHoverAndFocus?: boolean;
 }) {
   const {
     startContent,
@@ -36,21 +34,45 @@ export default function Default(props: {
     tooltipLabel,
     onClick,
     backgroundColor,
-    hover,
-    hasBorder,
+    hasHoverAndFocus = false,
+    hasBorder = false,
     borderColor
   } = props;
   const textColor = useColorModeValue("secondaryGray.900", "white");
-
+  const textColorSecondary = "secondaryGray.600";
+  const boxShadowColor = "purple.500"; // Define the color for the boxShadow
+  const bgHover = useColorModeValue("secondaryGray.400", "whiteAlpha.50");
+  const bgFocus = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const [isSelected, setIsSelected] = useState(false);
+  const handleSelect = () => {
+    setIsSelected(!isSelected);
+  };
   return (
     <Tooltip label={tooltipLabel} placement="top" hasArrow openDelay={200}>
-      <Card py="15px" onClick={onClick} backgroundColor={backgroundColor}>
+      <Card
+        py="15px"
+        onClick={onClick}
+        backgroundColor={backgroundColor}
+        _hover={
+          hasHoverAndFocus && {
+            backgroundColor: isSelected ? "hoverColorSelected" : bgHover
+          }
+        }
+        _focus={
+          hasHoverAndFocus && {
+            boxShadow: `0 0 0 2px ${
+              isSelected ? "focusColorSelected" : bgFocus
+            }`
+          }
+        }
+        borderWidth={hasBorder ? "1px" : "0"}
+        borderColor={borderColor}
+      >
         <Flex
           my="auto"
           h="100%"
           align={{ base: "center", xl: "start" }}
           justify={{ base: "center", xl: "center" }}
-          _hover={hover}
         >
           {startContent}
           <Stat my="auto" ms={startContent ? "18px" : "0px"}>

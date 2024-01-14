@@ -110,6 +110,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -151,6 +152,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -202,6 +204,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -239,6 +242,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -290,6 +294,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -331,6 +336,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -382,6 +388,7 @@ export default function CalorieRequirements(props: {
               ? "rgba(75, 15, 229, 0.8)"
               : "secondaryGray.900"
           }
+          hasHoverAndFocus={true}
         />
       </SimpleGrid>
     </Card>
