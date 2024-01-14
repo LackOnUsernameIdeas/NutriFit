@@ -42,7 +42,6 @@ import { motion, isValidMotionProp } from "framer-motion";
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
-import Footer from "components/footer/FooterAdmin";
 
 import Card from "components/card/Card";
 import { HSeparator } from "components/separator/Separator";
@@ -53,15 +52,6 @@ import {
   MdBarChart,
   MdFileCopy
 } from "react-icons/md";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
-import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex";
 
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) =>
@@ -198,6 +188,7 @@ export default function UserReports() {
             >
               <Link href="/#/auth/sign-in">
                 <Button
+                  className="glowing-button"
                   _hover={{ bg: "transparent" }}
                   _focus={{ bg: "none" }}
                   color="#7551ff"
