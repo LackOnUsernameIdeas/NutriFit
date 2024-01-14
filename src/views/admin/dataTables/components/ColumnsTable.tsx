@@ -295,7 +295,7 @@ export default function ColumnTable(props: {
                   proteinValue === clickedValueProtein
                     ? "rgba(0, 0, 0, 0.3)"
                     : undefined;
-                const litUp =
+                const isLitUp =
                   proteinValue === clickedValueProtein ? true : false;
                 return (
                   <Tr
@@ -311,8 +311,7 @@ export default function ColumnTable(props: {
                     h="80px"
                     _hover={bgHover}
                     _focus={bgFocus}
-                    borderWidth="1px"
-                    borderColor={litUp ? "rgba(75, 15, 229, 0.8)" : borderColor}
+                    borderWidth="2px"
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
@@ -320,7 +319,15 @@ export default function ColumnTable(props: {
                           key={cell.id}
                           fontSize={{ sm: "14px" }}
                           minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          borderColor="transparent"
+                          style={{
+                            borderTop: isLitUp
+                              ? "2px solid rgba(75, 15, 229, 0.8)"
+                              : "1px solid",
+                            borderBottom: isLitUp
+                              ? "2px solid rgba(75, 15, 229, 0.8)"
+                              : "1px solid",
+                            borderColor: borderColor
+                          }}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,

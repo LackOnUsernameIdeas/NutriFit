@@ -8,15 +8,12 @@ import {
   Flex,
   Link,
   Text,
-  Menu,
-  MenuList,
-  MenuButton,
-  Avatar,
   useColorModeValue
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LandingNavbarLinks from "components/navbar/LandingNavLinks";
 import { NutriFitLogo } from "components/icons/Icons";
+
 export default function LandingNavbar(props: {
   secondary: boolean;
   message: string | boolean;
@@ -107,8 +104,7 @@ export default function LandingNavbar(props: {
         justifyContent={{ sm: "center", md: "space-between" }}
         mb={gap}
       >
-        <NutriFitLogo boxSize={8} />
-        <Box mb={{ sm: "8px", md: "0px" }} ml="10px" lineHeight="1">
+        <Box mb={{ sm: "8px", md: "0px" }} lineHeight="1">
           <Text
             color={mainText}
             bg="inherit"

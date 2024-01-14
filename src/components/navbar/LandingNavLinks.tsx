@@ -54,6 +54,20 @@ export default function LandingLinks(props: { secondary: boolean }) {
           as={colorMode === "light" ? IoMdMoon : IoMdSunny}
         />
       </Button>
+      <Menu>
+        <MenuButton p="0px">
+          <Avatar
+            _hover={{ cursor: "pointer" }}
+            color="white"
+            src={letterLogo}
+            name="test test"
+            bg="#11047A"
+            size="sm"
+            w="40px"
+            h="40px"
+          />
+        </MenuButton>
+      </Menu>
     </Flex>
   );
 }
