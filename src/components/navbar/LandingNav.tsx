@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LandingNavbarLinks from "components/navbar/LandingNavLinks";
-import letterLogo from "assets/img/layout/letterLogo.png";
+import { NutriFitLogo } from "components/icons/Icons";
 export default function LandingNavbar(props: {
   secondary: boolean;
   message: string | boolean;
@@ -107,20 +107,7 @@ export default function LandingNavbar(props: {
         justifyContent={{ sm: "center", md: "space-between" }}
         mb={gap}
       >
-        <Menu>
-          <MenuButton p="0px">
-            <Avatar
-              _hover={{ cursor: "pointer" }}
-              color="white"
-              src={letterLogo}
-              name="Nutri Fit"
-              bg="#11047A"
-              size="sm"
-              w="40px"
-              h="40px"
-            />
-          </MenuButton>
-        </Menu>
+        <NutriFitLogo boxSize={8} />
         <Box mb={{ sm: "8px", md: "0px" }} ml="10px" lineHeight="1">
           <Text
             color={mainText}

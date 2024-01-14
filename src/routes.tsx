@@ -20,8 +20,6 @@ import ForgotPass from "views/auth/forgotPass";
 
 import Landing from "views/test/default";
 
-import LandingLayout from "./layouts/landing";
-
 const routes = [
   {
     name: "Главна Страница",
