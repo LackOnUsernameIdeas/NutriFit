@@ -98,7 +98,7 @@ function ForgotPass() {
       >
         <Box me="auto" maxW="100%">
           <Heading color={textColor} fontSize="36px" mb="10px">
-            Забравена парола?
+            Забравена Парола?
           </Heading>
           <Text
             mb="36px"
@@ -107,7 +107,7 @@ function ForgotPass() {
             fontWeight="400"
             fontSize="md"
           >
-            Моля напишете вашият email и си проверете пощата.
+            Моля напишете вашия email адрес и проверете пощата си.
           </Text>
         </Box>
         <Flex
@@ -156,7 +156,7 @@ function ForgotPass() {
               h="50"
               mb="24px"
             >
-              Прати email за Възстановяване на Парола
+              Прати Email за Възстановяване на Парола
             </Button>
             {successMessage && (
               <Text color="green" fontSize="sm" mb="8px">
@@ -185,7 +185,7 @@ function ForgotPass() {
                   ms="5px"
                   fontWeight="500"
                 >
-                  Създадете профил.
+                  Създаване на профил.
                 </Text>
               </NavLink>
             </Text>

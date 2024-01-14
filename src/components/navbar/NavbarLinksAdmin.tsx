@@ -44,6 +44,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
   );
   const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
+  const buttonColor = useColorModeValue("secondaryGray.900", "white");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.600" },
     { bg: "whiteAlpha.200" }
@@ -89,12 +90,12 @@ export default function HeaderLinks(props: { secondary: boolean }) {
             _hover={bgHover}
             _focus={{ bg: "none" }}
             backgroundColor={bgButton}
-            color="brand.500"
+            color={buttonColor}
             borderRadius="20px"
             px="14px"
             onClick={handleLogOut}
           >
-            <Text fontSize="sm">Излез</Text>
+            <Text fontSize="sm">Излизане</Text>
           </MenuItem>
         </Link>
       </Menu>

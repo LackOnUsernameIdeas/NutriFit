@@ -243,7 +243,7 @@ function SignUp() {
               h="50"
               mb="24px"
             >
-              Създай Профил
+              Създаване на Профил
             </Button>
             {/* Display error message */}
             {error && (
@@ -268,7 +268,7 @@ function SignUp() {
                   ms="5px"
                   fontWeight="500"
                 >
-                  Влезте.
+                  Влизане.
                 </Text>
               </NavLink>
             </Text>

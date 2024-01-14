@@ -246,7 +246,7 @@ function SignIn() {
               h="50"
               mb="24px"
             >
-              Влез
+              Влизане
             </Button>
             {error && (
               <Text color="red" fontSize="sm" mb="8px">
