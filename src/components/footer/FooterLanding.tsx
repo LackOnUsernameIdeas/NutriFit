@@ -9,7 +9,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 
-const Footer = () => {
+const LandFooter = () => {
   const footerColor = useColorModeValue("white", "#111c44");
 
   return (
@@ -20,6 +20,7 @@ const Footer = () => {
       borderColor={footerColor}
       py="2.5rem"
       fontSize="0.875rem"
+      h="36.5vh"
     >
       <Box maxW="64rem" pb="2rem" mx="auto">
         <Flex flexWrap="wrap" alignItems="start" justifyContent="space-between">
@@ -209,4 +210,4 @@ const LinkItem = ({ text, isTag = false, tagText, href }: LinkItemProps) => {
   );
 };
 
-export default Footer;
+export default LandFooter;
