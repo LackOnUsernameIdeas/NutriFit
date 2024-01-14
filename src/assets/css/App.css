@@ -6,3 +6,19 @@ body {
 option {
   color: black;
 }
+
+@keyframes glowing {
+  0% {
+    box-shadow: 0 0 10px #7551ff;
+  }
+  50% {
+    box-shadow: 0 0 20px #7551ff, 0 0 25px #7551ff;
+  }
+  100% {
+    box-shadow: 0 0 10px #7551ff;
+  }
+}
+
+.glowing-button {
+  animation: glowing 1.5s infinite;
+}

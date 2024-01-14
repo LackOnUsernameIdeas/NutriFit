@@ -42,7 +42,6 @@ import { motion, isValidMotionProp } from "framer-motion";
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
-import Footer from "components/footer/FooterAdmin";
 
 import Card from "components/card/Card";
 import { HSeparator } from "components/separator/Separator";
@@ -53,15 +52,6 @@ import {
   MdBarChart,
   MdFileCopy
 } from "react-icons/md";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
-import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex";
 
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) =>
@@ -70,7 +60,7 @@ const ChakraBox = chakra(motion.div, {
 
 export default function UserReports() {
   // Chakra Color Mode
-  const brandColor = useColorModeValue("brand.500", "white");
+  const brandColor = useColorModeValue("secondaryGray.900", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   return (
     <Box pt={{ base: "150px", md: "80px", xl: "80px" }}>
@@ -179,7 +169,7 @@ export default function UserReports() {
           <Flex justify="left" mt="1%" pt="10px">
             <ChakraBox
               animate={{
-                scale: [1.2, 1.4, 1.2],
+                scale: [1.15, 1.35, 1.15],
                 rotate: [0, 0, 0],
                 borderRadius: ["20%", "20%", "20%"]
               }}
@@ -198,9 +188,11 @@ export default function UserReports() {
             >
               <Link href="/#/auth/sign-in">
                 <Button
+                  className="glowing-button"
                   _hover={{ bg: "transparent" }}
                   _focus={{ bg: "none" }}
-                  color="#7551ff"
+                  color={brandColor}
+                  backgroundColor="#7551ff"
                   borderRadius="8px"
                   px="14px"
                   ml="30%"
