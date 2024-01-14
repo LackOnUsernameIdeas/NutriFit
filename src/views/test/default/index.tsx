@@ -169,7 +169,7 @@ export default function UserReports() {
           <Flex justify="left" mt="1%" pt="10px">
             <ChakraBox
               animate={{
-                scale: [1.2, 1.4, 1.2],
+                scale: [1.15, 1.35, 1.15],
                 rotate: [0, 0, 0],
                 borderRadius: ["20%", "20%", "20%"]
               }}
