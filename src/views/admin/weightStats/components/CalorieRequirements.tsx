@@ -107,8 +107,8 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
             )
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />
@@ -149,8 +149,8 @@ export default function CalorieRequirements(props: {
           borderColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight loss"].calory.toFixed(2))
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />
@@ -201,8 +201,8 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
             )
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />
@@ -239,8 +239,8 @@ export default function CalorieRequirements(props: {
           borderColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />
@@ -291,8 +291,8 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
             )
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />
@@ -333,8 +333,8 @@ export default function CalorieRequirements(props: {
           borderColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight gain"].calory.toFixed(2))
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />
@@ -385,8 +385,8 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
             )
-              ? "rgba(75, 15, 229, 0.8)"
-              : "secondaryGray.700"
+              ? true
+              : false
           }
           hasHoverAndFocus={true}
         />

@@ -43,7 +43,11 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
   );
-  const borderButton = useColorModeValue("secondaryGray.500", "whiteAlpha.200");
+  const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
+  const bgHover = useColorModeValue(
+    { bg: "secondaryGray.600" },
+    { bg: "whiteAlpha.200" }
+  );
   const handleLogOut = async () => {
     const key = sessionStorage.key(0);
     sessionStorage.removeItem(key);
@@ -80,58 +84,19 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         />
       </Button>
       <Menu>
-        <MenuButton p="0px">
-          <Avatar
-            _hover={{ cursor: "pointer" }}
-            color="white"
-            src={letterLogo}
-            name="test test"
-            bg="#11047A"
-            size="sm"
-            w="40px"
-            h="40px"
-          />
-        </MenuButton>
-        <MenuList
-          boxShadow={shadow}
-          p="0px"
-          mt="10px"
-          borderRadius="20px"
-          bg={menuBg}
-          border="none"
-        >
-          {/* The code below displays text in the profile menu, 
-			but with a line separating it from the other action buttons.
-          <Flex w="100%" mb="0px">
-            <Text
-              ps="20px"
-              pt="16px"
-              pb="10px"
-              w="100%"
-              borderBottom="1px solid"
-              borderColor={borderColor}
-              fontSize="sm"
-              fontWeight="700"
-              color={textColor}
-            >
-              NutriFit (or other text)
-            </Text>
-          </Flex> */}
-          <Flex flexDirection="column" p="10px">
-            <Link href="/#/auth/sign-in">
-              <MenuItem
-                _hover={{ bg: "none" }}
-                _focus={{ bg: "none" }}
-                color="red.400"
-                borderRadius="8px"
-                px="14px"
-                onClick={handleLogOut}
-              >
-                <Text fontSize="sm">Излез</Text>
-              </MenuItem>
-            </Link>
-          </Flex>
-        </MenuList>
+        <Link href="/#/auth/sign-in">
+          <MenuItem
+            _hover={bgHover}
+            _focus={{ bg: "none" }}
+            backgroundColor={bgButton}
+            color="brand.500"
+            borderRadius="20px"
+            px="14px"
+            onClick={handleLogOut}
+          >
+            <Text fontSize="sm">Излез</Text>
+          </MenuItem>
+        </Link>
       </Menu>
     </Flex>
   );

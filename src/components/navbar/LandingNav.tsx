@@ -8,11 +8,15 @@ import {
   Flex,
   Link,
   Text,
+  Menu,
+  MenuList,
+  MenuButton,
+  Avatar,
   useColorModeValue
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import LandingNavbarLinks from "components/navbar/LandingNavLinks";
-
+import letterLogo from "assets/img/layout/letterLogo.png";
 export default function LandingNavbar(props: {
   secondary: boolean;
   message: string | boolean;
@@ -103,7 +107,21 @@ export default function LandingNavbar(props: {
         justifyContent={{ sm: "center", md: "space-between" }}
         mb={gap}
       >
-        <Box mb={{ sm: "8px", md: "0px" }} lineHeight="1">
+        <Menu>
+          <MenuButton p="0px">
+            <Avatar
+              _hover={{ cursor: "pointer" }}
+              color="white"
+              src={letterLogo}
+              name="Nutri Fit"
+              bg="#11047A"
+              size="sm"
+              w="40px"
+              h="40px"
+            />
+          </MenuButton>
+        </Menu>
+        <Box mb={{ sm: "8px", md: "0px" }} ml="10px" lineHeight="1">
           <Text
             color={mainText}
             bg="inherit"

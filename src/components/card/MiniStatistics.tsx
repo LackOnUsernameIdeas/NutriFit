@@ -22,7 +22,7 @@ export default function Default(props: {
   onClick?: () => void;
   backgroundColor?: string;
   hasBorder?: boolean;
-  borderColor?: string;
+  borderColor?: boolean;
   hasHoverAndFocus?: boolean;
 }) {
   const {
@@ -36,11 +36,12 @@ export default function Default(props: {
     backgroundColor,
     hasHoverAndFocus = false,
     hasBorder = false,
-    borderColor
+    borderColor = false
   } = props;
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const bgHover = useColorModeValue("secondaryGray.400", "whiteAlpha.50");
   const bgFocus = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const defaultBorderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const [isSelected, setIsSelected] = useState(false);
   const handleSelect = () => {
     setIsSelected(!isSelected);
@@ -49,7 +50,10 @@ export default function Default(props: {
     <Tooltip label={tooltipLabel} placement="top" hasArrow openDelay={200}>
       <Card
         py="15px"
-        onClick={onClick}
+        onClick={() => {
+          onClick && onClick();
+          handleSelect();
+        }}
         backgroundColor={backgroundColor}
         _hover={
           hasHoverAndFocus && {
@@ -64,7 +68,9 @@ export default function Default(props: {
           }
         }
         borderWidth={hasBorder ? "1px" : "0"}
-        borderColor={borderColor}
+        borderColor={
+          borderColor ? "rgba(75, 15, 229, 0.8)" : defaultBorderColor
+        }
       >
         <Flex
           my="auto"

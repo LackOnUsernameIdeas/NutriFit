@@ -15,10 +15,10 @@ import {
   useDisclosure,
   useColorModeValue,
   Icon,
-  Menu
+  Menu,
+  CSSObject
 } from "@chakra-ui/react";
 import * as React from "react";
-
 import {
   createColumnHelper,
   flexRender,
@@ -34,7 +34,6 @@ import Card from "components/card/Card";
 import { HSeparator } from "components/separator/Separator";
 
 const columnHelper = createColumnHelper();
-
 // const columns = columnsDataCheck;
 export default function ColumnTable(props: {
   tableName: string;
@@ -296,6 +295,8 @@ export default function ColumnTable(props: {
                   proteinValue === clickedValueProtein
                     ? "rgba(0, 0, 0, 0.3)"
                     : undefined;
+                const litUp =
+                  proteinValue === clickedValueProtein ? true : false;
                 return (
                   <Tr
                     key={row.id}
@@ -308,6 +309,10 @@ export default function ColumnTable(props: {
                     }}
                     backgroundColor={rowBackgroundColor}
                     h="80px"
+                    _hover={bgHover}
+                    _focus={bgFocus}
+                    borderWidth="1px"
+                    borderColor={litUp ? "rgba(75, 15, 229, 0.8)" : borderColor}
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
