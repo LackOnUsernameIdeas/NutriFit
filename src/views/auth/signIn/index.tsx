@@ -270,7 +270,7 @@ function SignIn() {
                   ms="5px"
                   fontWeight="500"
                 >
-                  Създадете профил.
+                  Създаване на профил.
                 </Text>
               </NavLink>
             </Text>
