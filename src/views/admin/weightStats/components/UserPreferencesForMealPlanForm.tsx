@@ -25,8 +25,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   generatePlan
 }) => {
   const textColor = useColorModeValue("#1a202c", "white");
-  const buttonColor = useColorModeValue("#422afb", "#1a202c");
-
+  const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.100");
+  const brandColor = useColorModeValue("brand.500", "white");
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
@@ -126,8 +126,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         mt={{ base: "10%", lg: "2%" }}
         mb={{ base: "15%", lg: "0%" }}
         minH="15%"
-        backgroundColor={buttonColor}
-        color="white"
+        backgroundColor={bgButton}
+        color={brandColor}
       >
         Създайте хранителен план
       </Button>

@@ -178,7 +178,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
           ))}
         </SimpleGrid>
       </Flex>
-      <HSeparator />
+      <HSeparator size="1px" />
       <Flex justify="center" pt="5px" w="100%" mt="20px">
         <SimpleGrid
           columns={{ base: 2, lg: 4 }}

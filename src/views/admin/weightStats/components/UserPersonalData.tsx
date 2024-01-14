@@ -39,8 +39,8 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   generateStats
 }) => {
   const textColor = useColorModeValue("#1a202c", "white");
-  const buttonColor = useColorModeValue("#422afb", "#1a202c");
-
+  const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.100");
+  const brandColor = useColorModeValue("brand.500", "white");
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
@@ -292,8 +292,8 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
         <Button
           type="submit"
           onClick={handleSubmit}
-          backgroundColor={buttonColor}
-          color="white"
+          backgroundColor={bgButton}
+          color={brandColor}
         >
           Изпрати
         </Button>

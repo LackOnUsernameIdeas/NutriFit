@@ -18,6 +18,7 @@ const Footer = () => {
       bg={footerColor}
       borderTop="1px solid"
       borderColor={footerColor}
+      borderRadius="20px"
       py="2.5rem"
       fontSize="0.875rem"
     >

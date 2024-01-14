@@ -23,7 +23,7 @@ import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
+import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
@@ -54,7 +54,7 @@ export default function WeightStats() {
   // Color values
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const textColor = useColorModeValue("secondaryGray.500", "white");
+  const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
   const bgList = useColorModeValue("white", "whiteAlpha.100");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -574,7 +574,7 @@ export default function WeightStats() {
                       setClickedValueCalories={setClickedValueCalories}
                     />
                   )}
-                  <ColumnsTable
+                  <DietTable
                     tableName="Изберете тип диета:"
                     tableData={tableData[activityLevel - 1]}
                     columnsData={[

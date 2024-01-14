@@ -219,7 +219,7 @@ export default function MealPlanner(props: {
   };
 
   return (
-    <Box>
+    <Box mb="20px">
       <Card>
         <Card>
           <Flex justify="center" w="100%" mb="5px">
