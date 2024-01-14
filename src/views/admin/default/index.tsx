@@ -165,7 +165,7 @@ export default function UserReports() {
         <DailyTraffic />
         <ComplexTable tableData={tableDataComplex} />
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
           <PieCard />
           <Tasks />

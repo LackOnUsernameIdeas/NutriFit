@@ -101,6 +101,16 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(
+              selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
+            )
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.100"
+          }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -135,6 +145,14 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(selectedLevelData.goals["Weight loss"].calory.toFixed(2))
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.900"
+          }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -177,6 +195,16 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(
+              selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
+            )
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.900"
+          }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -207,6 +235,14 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.900"
+          }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -249,6 +285,16 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(
+              selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
+            )
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.900"
+          }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -283,6 +329,14 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(selectedLevelData.goals["Weight gain"].calory.toFixed(2))
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.900"
+          }
+          hasHoverAndFocus={true}
         />
         <MiniStatistics
           startContent={
@@ -325,6 +379,16 @@ export default function CalorieRequirements(props: {
               ? "rgba(0, 0, 0, 0.3)"
               : undefined
           }
+          hasBorder={true}
+          borderColor={
+            clickedValueCalories ===
+            parseFloat(
+              selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
+            )
+              ? "rgba(75, 15, 229, 0.8)"
+              : "secondaryGray.900"
+          }
+          hasHoverAndFocus={true}
         />
       </SimpleGrid>
     </Card>

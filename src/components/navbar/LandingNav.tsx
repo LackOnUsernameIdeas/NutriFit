@@ -96,46 +96,36 @@ export default function LandingNavbar(props: {
       <Flex
         w="100%"
         flexDirection={{
-          sm: "column",
+          sm: "row",
           md: "row"
         }}
         alignItems={{ xl: "center" }}
+        justifyContent={{ sm: "center", md: "space-between" }}
         mb={gap}
       >
-        <Box mb={{ sm: "8px", md: "0px" }}>
-          <Breadcrumb>
-            <BreadcrumbItem color={secondaryText} fontSize="sm" mb="5px">
-              <BreadcrumbLink href="#" color={secondaryText}>
-                Страници
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem color={secondaryText} fontSize="sm">
-              <BreadcrumbLink href="#" color={secondaryText}>
-                {brandText}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          {/* Here we create navbar brand, based on route name */}
-          <Link
+        <Box mb={{ sm: "8px", md: "0px" }} lineHeight="1">
+          <Text
             color={mainText}
-            href="#"
             bg="inherit"
             borderRadius="inherit"
+            fontFamily="DM Sans"
             fontWeight="bold"
             fontSize="34px"
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: "inherit",
-              transform: "none",
-              borderColor: "transparent"
-            }}
-            _focus={{
-              boxShadow: "none"
-            }}
+            display="inline"
           >
-            {brandText}
-          </Link>
+            Nutri
+          </Text>{" "}
+          <Text
+            color={mainText}
+            bg="inherit"
+            borderRadius="inherit"
+            fontFamily="Leckerli One"
+            fontWeight="bold"
+            fontSize="34px"
+            display="inline"
+          >
+            Fit
+          </Text>
         </Box>
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
           <LandingNavbarLinks
