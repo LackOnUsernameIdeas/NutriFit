@@ -39,8 +39,6 @@ export default function Default(props: {
     borderColor
   } = props;
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorSecondary = "secondaryGray.600";
-  const boxShadowColor = "purple.500"; // Define the color for the boxShadow
   const bgHover = useColorModeValue("secondaryGray.400", "whiteAlpha.50");
   const bgFocus = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const [isSelected, setIsSelected] = useState(false);

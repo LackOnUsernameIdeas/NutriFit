@@ -60,7 +60,7 @@ const ChakraBox = chakra(motion.div, {
 
 export default function UserReports() {
   // Chakra Color Mode
-  const brandColor = useColorModeValue("brand.500", "white");
+  const brandColor = useColorModeValue("secondaryGray.900", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   return (
     <Box pt={{ base: "150px", md: "80px", xl: "80px" }}>
@@ -191,7 +191,8 @@ export default function UserReports() {
                   className="glowing-button"
                   _hover={{ bg: "transparent" }}
                   _focus={{ bg: "none" }}
-                  color="#7551ff"
+                  color={brandColor}
+                  backgroundColor="#7551ff"
                   borderRadius="8px"
                   px="14px"
                   ml="30%"
