@@ -14,6 +14,7 @@ import {
 const Footer = () => {
   const footerColor = useColorModeValue("white", "#111c44");
   const brandColor = useColorModeValue("brand.500", "white");
+  const textColor = useColorModeValue("black", "white");
 
   return (
     <Box
@@ -32,7 +33,7 @@ const Footer = () => {
             mb={{ base: "1.5rem", lg: "0" }}
           >
             <Text
-              color="gray.700"
+              color={textColor}
               mb="0.5rem"
               fontSize="1.5rem"
               fontWeight="600"
@@ -43,7 +44,7 @@ const Footer = () => {
               Nutri
             </Text>
             <Text
-              color="gray.700"
+              color={textColor}
               mb="0.5rem"
               fontSize="1.5rem"
               fontWeight="600"
@@ -77,7 +78,7 @@ const Footer = () => {
             mb={{ base: "1.5rem", lg: "0" }}
           >
             <Text
-              color="gray.700"
+              color={textColor}
               mb="0.5rem"
               fontSize="1.5rem"
               fontWeight="600"
@@ -94,7 +95,7 @@ const Footer = () => {
             mb={{ base: "1.5rem", lg: "0" }}
           >
             <Text
-              color="gray.700"
+              color={textColor}
               mb="0.5rem"
               fontSize="1.5rem"
               fontWeight="600"

@@ -48,11 +48,16 @@ const LandingRoute: React.FC<PrivateRouteProps> = ({
 }) => {
   const key = sessionStorage.key(0);
   const userData = sessionStorage.getItem(key);
+  const RememberedUser = Cookies.get("remember");
   return (
     <Route
       {...rest}
       render={(props) =>
-        userData ? <Redirect to="/admin/default" /> : <Component {...props} />
+        userData || RememberedUser ? (
+          <Redirect to="/admin/default" />
+        ) : (
+          <Component {...props} />
+        )
       }
     />
   );
@@ -63,7 +68,6 @@ ReactDOM.render(
     <React.StrictMode>
       <HashRouter>
         <Switch>
-          {/* Use PrivateRoute for the /admin route */}
           <PrivateRoute path="/admin" component={AdminLayout} />
           <Route path="/auth" component={AuthLayout} />
           <LandingRoute path="/" component={LandingLayout} />

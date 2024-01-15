@@ -76,21 +76,31 @@ function SignUp() {
       if (error instanceof Error) {
         switch (error.message) {
           case "Firebase: Error (auth/invalid-email).":
-            setError("An invalid email has been provided.");
+            setError(
+              "Email-ът ви е невалиден. Проверете за грешки в изписването."
+            );
             break;
           case "Firebase: Error (auth/email-already-exists).":
-            setError("This email has already been signed up. Try logging in.");
+            setError(
+              "Този еmail е регистриран. Да не би да искахте да влезете в профила ви?"
+            );
             break;
           case "Firebase: Error (auth/invalid-password).":
-            setError("Password should be at least 6 characters long.");
+            setError("Паролата ви не е правилна.");
+            break;
+          case "Firebase: Error (auth/missing-password).":
+            setError("Моля напишете вашата парола.");
+            break;
+          case "Firebase: Error (auth/email-already-in-use).":
+            setError(
+              "Този еmail е регистриран. Да не би да искахте да влезете в профила ви?"
+            );
             break;
           default:
-            setError(
-              "An error has occurred while signing up: " + error.message
-            );
+            setError("Грешка се случи: " + error.message);
         }
       } else {
-        setError("An error has occurred while signing up.");
+        setError("Грешка се случи.");
       }
     }
   };

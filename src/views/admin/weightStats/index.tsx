@@ -74,9 +74,9 @@ export default function WeightStats() {
   } = useDisclosure();
 
   const {
-    isOpen: isOpenDailyCalories,
-    onOpen: onOpenDailyCalories,
-    onClose: onCloseDailyCalories
+    isOpen: isOpenPerfectWeight,
+    onOpen: onOpenPerfectWeight,
+    onClose: onClosePerfectWeight
   } = useDisclosure();
 
   // States за запазване на извличените данни
