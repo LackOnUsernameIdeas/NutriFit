@@ -44,10 +44,7 @@ export type UserData = {
 };
 
 export type HealthInfo = {
-  Hamwi: number;
   Devine: number;
-  Miller: number;
-  Robinson: number;
 };
 
 export type BMIInfo = {

@@ -52,7 +52,7 @@ function ForgotPass() {
       await sendPasswordResetEmail(auth, email);
       // Password reset email sent successfully
       setSuccessMessage(
-        "Password reset email sent successfully! Check your inbox."
+        "Еmail за възстановяване на паролата бе пратен успешно. Моля проверете пощата."
       );
       setError("");
       setTimeout(() => {
@@ -62,21 +62,24 @@ function ForgotPass() {
       if (error instanceof Error) {
         switch (error.message) {
           case "Firebase: Error (auth/invalid-email).":
-            setError("An invalid email has been provided.");
+            setError(
+              "Email-ът ви е невалиден. Проверете за грешки в изписването."
+            );
             break;
           case "Firebase: Error (auth/invalid-credential).":
-            setError("Could not send email, please try again.");
+            setError("Не успяхме да ви пратим email. Моля опитайте пак.");
             break;
           case "Firebase: Error (auth/user-not-found).":
-            setError("Could not sign in, please try again.");
+            setError("Потребител с този email не бе намерен.");
+            break;
+          case "Firebase: Error (auth/missing-email).":
+            setError("Моля попълнете вашият email отгоре.");
             break;
           default:
-            setError(
-              "An error has occurred while signing in: " + error.message
-            );
+            setError("Грешка се случи: " + error.message);
         }
       } else {
-        setError("An error has occurred while signing in.");
+        setError("Грешка се случи");
       }
     }
   };

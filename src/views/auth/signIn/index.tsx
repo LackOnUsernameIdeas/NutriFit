@@ -91,24 +91,27 @@ function SignIn() {
       if (error instanceof Error) {
         switch (error.message) {
           case "Firebase: Error (auth/invalid-email).":
-            setError("An invalid email has been provided.");
+            setError(
+              "Email-ът ви е невалиден. Проверете за грешки в изписването."
+            );
             break;
           case "Firebase: Error (auth/invalid-password).":
-            setError("Password should be at least 6 characters long.");
+            setError("Паролата ви не е правилна.");
             break;
           case "Firebase: Error (auth/invalid-credential).":
-            setError("Could not sign in, please try again.");
+            setError("Потребителят не бе намерен.");
             break;
           case "Firebase: Error (auth/user-not-found).":
-            setError("Could not sign in, please try again.");
+            setError("Потребителят не бе намерен.");
+            break;
+          case "Firebase: Error (auth/missing-password).":
+            setError("Моля напишете вашата парола.");
             break;
           default:
-            setError(
-              "An error has occurred while signing in: " + error.message
-            );
+            setError("Грешка се случи: " + error.message);
         }
       } else {
-        setError("An error has occurred while signing in.");
+        setError("Грешка се случи.");
       }
     }
   };

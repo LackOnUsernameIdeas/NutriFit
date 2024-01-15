@@ -15,7 +15,7 @@ import { useState } from "react";
 export default function Default(props: {
   startContent?: JSX.Element;
   endContent?: JSX.Element;
-  name: string;
+  name?: string;
   growth?: string | number;
   value: string | number;
   tooltipLabel?: string;

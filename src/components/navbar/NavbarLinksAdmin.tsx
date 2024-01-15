@@ -27,6 +27,7 @@ import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FaEthereum } from "react-icons/fa";
 import routes from "routes";
 import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
@@ -52,6 +53,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   const handleLogOut = async () => {
     const key = sessionStorage.key(0);
     sessionStorage.removeItem(key);
+    Cookies.remove("remember");
   };
 
   return (

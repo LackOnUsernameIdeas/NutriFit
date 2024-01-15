@@ -82,10 +82,7 @@ export const fetchPerfectWeightData = async (
       .then((res) => res.json())
       .then((data) => {
         const bodyMassInfo: HealthInfo = {
-          Hamwi: data.data.Hamwi,
           Devine: data.data.Devine,
-          Miller: data.data.Miller,
-          Robinson: data.data.Robinson
         };
         setPerfectWeight(bodyMassInfo);
       })

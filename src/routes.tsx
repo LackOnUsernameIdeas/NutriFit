@@ -6,6 +6,7 @@ import {
   MdLock,
   MdOutlineShoppingCart
 } from "react-icons/md";
+import { BiSolidBowlHot } from "react-icons/bi";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -29,10 +30,19 @@ const routes = [
     component: MainDashboard
   },
   {
-    name: "Статистики за Тегло",
+    name: "Калкулации за Тегло",
     layout: "/admin",
     path: "/weight",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: WeightStats
+  },
+  {
+    name: "Хранителен План",
+    layout: "/admin",
+    path: "/meal-plan",
+    icon: (
+      <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
+    ),
     component: WeightStats
   },
   {
