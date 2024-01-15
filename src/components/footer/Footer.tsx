@@ -23,6 +23,7 @@ const Footer = () => {
       borderColor={footerColor}
       py="2.5rem"
       fontSize="0.875rem"
+      mt="auto"
     >
       <Box maxW="64rem" pb="2rem" mx="auto">
         <Flex flexWrap="wrap" alignItems="start" justifyContent="space-between">

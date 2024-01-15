@@ -33,7 +33,6 @@ import { HSeparator } from "components/separator/Separator";
 // Types
 import {
   BMIInfo,
-  HealthInfo,
   BodyMass,
   UserData,
   DailyCaloryRequirements,
@@ -84,15 +83,10 @@ export default function WeightStats() {
   const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
     bmi: null,
     health: "",
-    healthy_bmi_range: ""
+    healthy_bmi_range: "18.5 - 25"
   });
 
-  const [perfectWeight, setPerfectWeight] = useState<HealthInfo>({
-    Hamwi: 0,
-    Devine: 0,
-    Miller: 0,
-    Robinson: 0
-  });
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
 
   const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
     useState<BodyMass>({
@@ -214,15 +208,9 @@ export default function WeightStats() {
 
   // Масиви с преведени имена
   const bmiData: string[] = [
-    "ИТМ(Индексът на телесната маса)",
+    "ИТМ(Индекс на телесната маса)",
     "Статус",
-    "диапазон на здравословен ИТМ"
-  ];
-  const perfectWeightWidgetsData: string[] = [
-    "Хамви",
-    "Дивайн",
-    "Милър",
-    "Робинсън"
+    "Диапазон на здравословен ИТМ"
   ];
   const bodyFatAndLeanMassWidgetsData: string[] = [
     "% телесни мазнини",
@@ -321,43 +309,30 @@ export default function WeightStats() {
                   w="100%"
                   mb="20px"
                 >
-                  <Text
-                    color={textColor}
-                    fontSize="2xl"
-                    ms="24px"
-                    fontWeight="700"
-                  >
-                    Какво е вашето перфектно тегло според формулите:
-                  </Text>
                   <SimpleGrid
-                    columns={{ base: 1, md: 1, lg: 4 }}
+                    columns={{ base: 1, md: 1, lg: 1 }}
                     gap="20px"
                     mb="10px"
                   >
-                    {Object.entries(perfectWeight).map(
-                      ([key, value], index) => (
-                        <MiniStatistics
-                          key={key}
-                          startContent={
-                            <IconBox
-                              w="56px"
-                              h="56px"
-                              bg={boxBg}
-                              icon={
-                                <Icon
-                                  w="32px"
-                                  h="32px"
-                                  as={GiWeightLiftingUp}
-                                  color={brandColor}
-                                />
-                              }
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightLiftingUp}
+                              color={brandColor}
                             />
                           }
-                          name={perfectWeightWidgetsData[index]}
-                          value={value + " kg"}
                         />
-                      )
-                    )}
+                      }
+                      name="Перфектно тегло"
+                      value={perfectWeight + " kg"}
+                    />
                   </SimpleGrid>
                 </Card>
                 <Card
