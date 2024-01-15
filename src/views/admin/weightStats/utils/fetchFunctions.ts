@@ -1,6 +1,5 @@
 import {
   BMIInfo,
-  HealthInfo,
   BodyMass,
   UserData,
   DailyCaloryRequirements,
@@ -16,8 +15,8 @@ const headers = {
 
 function translateBMIHealthToBulgarian(englishHealth: string) {
   const bulgarianTranslations = {
-    "Severe Thinness": "Сериозна слабост",
-    "Mild Thinness": "Лека слабост",
+    "Severe Thinness": "Сериозно поднормено тегло",
+    "Moderate Thinness": "Поднормено тегло",
     "Normal": "Нормално",
     "Healthy weight": "Здравословно тегло",
     "Overweight": "Наднормено тегло",
@@ -37,7 +36,7 @@ export const fetchBMIData = async (
 ) => {
   try {
     fetch(
-      `https://fitness-calculator.p.rapidapi.com/bmi?age=${age}&weight=${weight}&height=${height}`,
+      `https://fitness-calculator.p.rapidapi.com/bmi?age=21&weight=${weight}&height=${height}`,
       {
         method: "GET",
         headers: headers
@@ -48,7 +47,7 @@ export const fetchBMIData = async (
         const BMIInfo: BMIInfo = {
           bmi: data.data.bmi,
           health: translateBMIHealthToBulgarian(data.data.health),
-          healthy_bmi_range: data.data.healthy_bmi_range
+          healthy_bmi_range: "18.5 - 25"
         };
         setBMIIndex(BMIInfo);
       })
@@ -69,7 +68,7 @@ export const fetchBMIData = async (
 export const fetchPerfectWeightData = async (
   gender: string,
   height: number,
-  setPerfectWeight: React.Dispatch<React.SetStateAction<HealthInfo>>
+  setPerfectWeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
   try {
     fetch(
@@ -81,12 +80,7 @@ export const fetchPerfectWeightData = async (
     )
       .then((res) => res.json())
       .then((data) => {
-        const bodyMassInfo: HealthInfo = {
-          Hamwi: data.data.Hamwi,
-          Devine: data.data.Devine,
-          Miller: data.data.Miller,
-          Robinson: data.data.Robinson
-        };
+        const bodyMassInfo: number = data.data.Devine;
         setPerfectWeight(bodyMassInfo);
       })
       .catch((err) => {

@@ -22,14 +22,14 @@ import Landing from "views/test/default";
 
 const routes = [
   {
-    name: "Главна Страница",
+    name: "Начало",
     layout: "/admin",
     path: "/default",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: MainDashboard
   },
   {
-    name: "Статистики за Тегло",
+    name: "Калкулатор за тегло",
     layout: "/admin",
     path: "/weight",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
