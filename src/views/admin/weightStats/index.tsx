@@ -12,7 +12,8 @@ import {
   MenuList,
   useDisclosure,
   useColorModeValue,
-  Menu
+  Menu,
+  Image
 } from "@chakra-ui/react";
 
 // React Icons
@@ -77,6 +78,12 @@ export default function WeightStats() {
     isOpen: isOpenPerfectWeight,
     onOpen: onOpenPerfectWeight,
     onClose: onClosePerfectWeight
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenBMI,
+    onOpen: onOpenBMI,
+    onClose: onCloseBMI
   } = useDisclosure();
 
   // States за запазване на извличените данни
@@ -209,7 +216,7 @@ export default function WeightStats() {
   // Масиви с преведени имена
   const bmiData: string[] = [
     "ИТМ(Индекс на телесната маса)",
-    "Статус",
+    "Състояние",
     "Диапазон на здравословен ИТМ"
   ];
   const bodyFatAndLeanMassWidgetsData: string[] = [
@@ -273,6 +280,230 @@ export default function WeightStats() {
                   w="100%"
                   mb="20px"
                 >
+                  <Flex justifyContent="space-between" align="center">
+                    <Text
+                      color={textColor}
+                      fontSize="2xl"
+                      ms="24px"
+                      fontWeight="700"
+                    >
+                      Колко е вашият Индекс на Телесна Маса :
+                    </Text>
+                    <Menu
+                      isOpen={isOpenPerfectWeight}
+                      onClose={onClosePerfectWeight}
+                    >
+                      <MenuButton
+                        alignItems="center"
+                        justifyContent="center"
+                        bg={bgButton}
+                        _hover={bgHover}
+                        _focus={bgFocus}
+                        _active={bgFocus}
+                        w="30px"
+                        h="30px"
+                        lineHeight="50%"
+                        onClick={onOpenPerfectWeight}
+                        borderRadius="10px"
+                        ml="20px"
+                      >
+                        <Icon
+                          as={MdOutlineInfo}
+                          color={iconColor}
+                          w="24px"
+                          h="24px"
+                        />
+                      </MenuButton>
+                      <MenuList
+                        w="100%"
+                        minW="unset"
+                        ml={{ base: "2%", lg: 0 }}
+                        mr={{ base: "2%", lg: 0 }}
+                        maxW={{ base: "80%", lg: "100%" }}
+                        border="transparent"
+                        backdropFilter="blur(100px)"
+                        bg={bgList}
+                        borderRadius="20px"
+                        p="15px"
+                      >
+                        <Box
+                          transition="0.2s linear"
+                          color={textColor}
+                          p="0px"
+                          maxW={{ base: "80%", lg: "100%" }}
+                          borderRadius="8px"
+                        >
+                          <Flex align="center">
+                            <Text fontSize="1xl" fontWeight="400">
+                              Какво е Индекс на Телесната Маса?
+                            </Text>
+                          </Flex>
+                          <HSeparator />
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Индексът на телесната маса(ИТМ) e
+                              медико-биологичен показател, който служи за
+                              определяне на нормалното, здравословно тегло при
+                              хора с различен ръст и за диагностициране на
+                              затлъстяване и недохранване.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Индексът на телесната маса се измерва в килограми
+                              на квадратен метър и се определя по следната
+                              формула:
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Image
+                              src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
+                              alt="Dan Abramov"
+                            />
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                              ml="5px"
+                            >
+                              където:
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              <b>BMI</b> - индекс на телесната маса, <b>W</b> -
+                              тегло в килограми, <b>h</b> - височина в метри
+                            </Text>
+                          </Flex>
+                          <HSeparator />
+                          <br></br>
+                          <Flex align="center">
+                            <Text fontSize="1xl" fontWeight="400">
+                              Видовете състояние според ИТМ могат да бъдат:
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Сериозно недохранване - Този статус показва
+                              тежък недостиг на хранителни вещества, което може
+                              да доведе до сериозни проблеми със здравето и
+                              отслабване на организма.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Средно недохранване - Този статус показва
+                              недостиган на хранителни вещества на умерено ниво,
+                              което може да води до отслабване и различни
+                              проблеми със здравето.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Леко недохранване - В тази категория теглото е
+                              леко под нормата, което може да създаде проблеми
+                              със здравето и да наложи корекции в хранителния
+                              режим.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Нормално - Тази категория отразява здравословно
+                              тегло в съответствие с височината. Хора в тази
+                              категория имат по-нисък риск от различни
+                              здравословни проблеми, свързани с теглото.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Наднормено тегло - В тази категория теглото е
+                              над нормалната граница, което може да повиши риска
+                              от заболявания, свързани със здравето, като диабет
+                              и сърдечно-съдови заболявания.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Затлъстяване I Клас - Теглото е значително
+                              повишено, като този статус може да увеличи риска
+                              от сериозни здравословни проблеми.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Затлъстяване II Клас - Тук има по-висок риск от
+                              здравословни проблеми в сравнение с предишната
+                              категория. Затлъстяването става по-значително.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              • Затлъстяване III Клас - Този клас показва
+                              екстремно затлъстяване, което може да предизвика
+                              сериозни здравословни проблеми и изисква внимание
+                              от специалист в здравеопазването.
+                            </Text>
+                          </Flex>
+                        </Box>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 3 }}
                     gap="20px"
@@ -310,16 +541,6 @@ export default function WeightStats() {
                   mb="20px"
                 >
                   <Flex align="center" justify="center">
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      fontWeight="700"
-                      display="inline"
-                    >
-                      Вашето перфектно тегло е:
-                    </Text>
-                  </Flex>
-                  <Flex align="center" justify="center">
                     <MiniStatistics
                       startContent={
                         <IconBox
@@ -339,10 +560,7 @@ export default function WeightStats() {
                       name="Перфектно тегло"
                       value={perfectWeight + " kg"}
                     />
-                    <Menu
-                      isOpen={isOpenPerfectWeight}
-                      onClose={onClosePerfectWeight}
-                    >
+                    <Menu isOpen={isOpenBMI} onClose={onCloseBMI}>
                       <MenuButton
                         alignItems="center"
                         justifyContent="center"
@@ -350,11 +568,12 @@ export default function WeightStats() {
                         _hover={bgHover}
                         _focus={bgFocus}
                         _active={bgFocus}
-                        w="35px"
-                        h="33px"
+                        w="37px"
+                        h="30px"
                         lineHeight="50%"
-                        onClick={onOpenPerfectWeight}
+                        onClick={onOpenBMI}
                         borderRadius="10px"
+                        ml="20px"
                       >
                         <Icon
                           as={MdOutlineInfo}
@@ -384,7 +603,8 @@ export default function WeightStats() {
                         >
                           <Flex align="center">
                             <Text fontSize="1xl" fontWeight="400">
-                              Перфектно тегло.
+                              Перфектното тегло е калкулация, която се определя
+                              по формулата "Дивайн" както следва:
                             </Text>
                           </Flex>
                           <HSeparator />
@@ -395,9 +615,8 @@ export default function WeightStats() {
                               mt="10px"
                               mb="5px"
                             >
-                              Перфектното тегло е калкулация, която определя
-                              колко килограма е вашето идеално се определя чрез
-                              формулата "Дивайн"
+                              Мъже: 50.0 кг + 2.3 кг за всеки инч (2.54 см) над
+                              5 фута (30.48см)
                             </Text>
                           </Flex>
                           <Flex align="center">
@@ -407,45 +626,8 @@ export default function WeightStats() {
                               mt="10px"
                               mb="5px"
                             >
-                              Ниво 2 - Спортувате умерено 1-3 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 3 - Спортувате умерено 4-5 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 4 - Спортувате умерено дневно или интензивно
-                              3-4 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 5 - Спортувате интензивно 6-7 пъти в
-                              седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text fontSize="sm" fontWeight="400" mt="10px">
-                              Ниво 6 - Спортувате много интензивно цялата
-                              седмица.
+                              Жени: 45.5 кг + 2.3 кг за всеки инч (2.54 см) над
+                              5 фута (30.48см)
                             </Text>
                           </Flex>
                         </Box>

@@ -34,21 +34,26 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   const isNutrientDataValid = () => {
     const errors: { [key: string]: string } = {};
 
-    if (userPreferences.Calories <= 0) {
-      errors.Calories = "Моля въведете валидна стойност за калории.";
-    }
+    const validateNutrient = (
+      value: number,
+      fieldName: string,
+      fieldNameBG: string
+    ) => {
+      if (value <= 0) {
+        errors[
+          fieldName
+        ] = `Моля, въведете валидна стойност за ${fieldNameBG}.`;
+      }
+    };
 
-    if (userPreferences.Carbohydrates <= 0) {
-      errors.Carbohydrates = "Моля въведете валидна стойност за въглехидрати.";
-    }
-
-    if (userPreferences.Fat <= 0) {
-      errors.Fat = "Моля въведете валидна стойност за мазнини.";
-    }
-
-    if (userPreferences.Protein <= 0) {
-      errors.Protein = "Моля въведете валидна стойност за протеин.";
-    }
+    validateNutrient(userPreferences.Calories, "Calories", fieldName[0]);
+    validateNutrient(
+      userPreferences.Carbohydrates,
+      "Carbohydrates",
+      fieldName[3]
+    );
+    validateNutrient(userPreferences.Fat, "Fat", fieldName[2]);
+    validateNutrient(userPreferences.Protein, "Protein", fieldName[1]);
 
     setValidationErrors(errors);
 

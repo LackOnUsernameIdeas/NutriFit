@@ -99,13 +99,18 @@ function SignIn() {
             setError("Паролата ви не е правилна.");
             break;
           case "Firebase: Error (auth/invalid-credential).":
-            setError("Потребителят не бе намерен.");
+            setError("Невалиден email или парола.");
             break;
           case "Firebase: Error (auth/user-not-found).":
-            setError("Потребителят не бе намерен.");
+            setError("Потребителят не е намерен.");
             break;
           case "Firebase: Error (auth/missing-password).":
             setError("Моля напишете вашата парола.");
+            break;
+          case "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).":
+            setError(
+              "Достъпът до този акаунт е временно деактивиран поради много неуспешни опити за влизане. Можете незабавно да го възстановите, като нулирате паролата си, или можете да опитате отново по-късно."
+            );
             break;
           default:
             setError("Грешка се случи: " + error.message);
