@@ -318,6 +318,27 @@ export default function WeightStats() {
                     >
                       Вашето перфектно тегло е:
                     </Text>
+                  </Flex>
+                  <Flex align="center" justify="center">
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightLiftingUp}
+                              color={brandColor}
+                            />
+                          }
+                        />
+                      }
+                      name="Перфектно тегло"
+                      value={perfectWeight + " kg"}
+                    />
                     <Menu
                       isOpen={isOpenPerfectWeight}
                       onClose={onClosePerfectWeight}
@@ -329,12 +350,11 @@ export default function WeightStats() {
                         _hover={bgHover}
                         _focus={bgFocus}
                         _active={bgFocus}
-                        w="30px"
-                        h="30px"
+                        w="35px"
+                        h="33px"
                         lineHeight="50%"
                         onClick={onOpenPerfectWeight}
                         borderRadius="10px"
-                        ml="20px"
                       >
                         <Icon
                           as={MdOutlineInfo}
@@ -431,27 +451,6 @@ export default function WeightStats() {
                         </Box>
                       </MenuList>
                     </Menu>
-                  </Flex>
-                  <Flex justify="center">
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg={boxBg}
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={GiWeightLiftingUp}
-                              color={brandColor}
-                            />
-                          }
-                        />
-                      }
-                      name="Перфектно тегло"
-                      value={perfectWeight + " kg"}
-                    />
                   </Flex>
                 </Card>
                 <Card
