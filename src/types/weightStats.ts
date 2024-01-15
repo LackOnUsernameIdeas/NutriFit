@@ -43,10 +43,6 @@ export type UserData = {
   goal: Goal;
 };
 
-export type HealthInfo = {
-  Devine: number;
-};
-
 export type BMIInfo = {
   bmi: number;
   health: string;

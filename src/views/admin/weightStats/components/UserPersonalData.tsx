@@ -11,7 +11,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
-import { UserData, HealthInfo, BodyMass } from "../../../../types/weightStats";
+import { UserData, BodyMass } from "../../../../types/weightStats";
 
 interface UserPersonalDataProps {
   userData: UserData;
@@ -22,12 +22,12 @@ interface UserPersonalDataProps {
 
 const userDataPropertiesTranslated = [
   "пол",
-  "ръст",
+  "ръст (см)",
   "възраст",
-  "тегло",
-  "обиколка на врат",
-  "обиколка на талия",
-  "oбиколка на таз",
+  "тегло (кг)",
+  "обиколка на врат (см)",
+  "обиколка на талия (см)",
+  "oбиколка на таз (см)",
   "цел"
 ];
 

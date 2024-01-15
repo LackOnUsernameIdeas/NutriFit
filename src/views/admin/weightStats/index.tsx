@@ -33,7 +33,6 @@ import { HSeparator } from "components/separator/Separator";
 // Types
 import {
   BMIInfo,
-  HealthInfo,
   BodyMass,
   UserData,
   DailyCaloryRequirements,
@@ -84,12 +83,10 @@ export default function WeightStats() {
   const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
     bmi: null,
     health: "",
-    healthy_bmi_range: ""
+    healthy_bmi_range: "18.5 - 25"
   });
 
-  const [perfectWeight, setPerfectWeight] = useState<HealthInfo>({
-    Devine: 0
-  });
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
 
   const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
     useState<BodyMass>({
@@ -211,11 +208,10 @@ export default function WeightStats() {
 
   // Масиви с преведени имена
   const bmiData: string[] = [
-    "ИТМ(Индексът на телесната маса)",
+    "ИТМ(Индекс на телесната маса)",
     "Статус",
-    "диапазон на здравословен ИТМ"
+    "Диапазон на здравословен ИТМ"
   ];
-  const perfectWeightWidgetsData: string[] = ["Дивайн"];
   const bodyFatAndLeanMassWidgetsData: string[] = [
     "% телесни мазнини",
     "Мастна телесна маса",
@@ -313,152 +309,31 @@ export default function WeightStats() {
                   w="100%"
                   mb="20px"
                 >
-                  <Flex align="center" justify="center">
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      fontWeight="700"
-                      display="inline"
-                    >
-                      Вашето перфектно тегло е:
-                    </Text>
-                    <Menu
-                      isOpen={isOpenPerfectWeight}
-                      onClose={onClosePerfectWeight}
-                    >
-                      <MenuButton
-                        alignItems="center"
-                        justifyContent="center"
-                        bg={bgButton}
-                        _hover={bgHover}
-                        _focus={bgFocus}
-                        _active={bgFocus}
-                        w="30px"
-                        h="30px"
-                        lineHeight="50%"
-                        onClick={onOpenPerfectWeight}
-                        borderRadius="10px"
-                        ml="20px"
-                      >
-                        <Icon
-                          as={MdOutlineInfo}
-                          color={iconColor}
-                          w="24px"
-                          h="24px"
-                        />
-                      </MenuButton>
-                      <MenuList
-                        w="100%"
-                        minW="unset"
-                        ml={{ base: "2%", lg: 0 }}
-                        mr={{ base: "2%", lg: 0 }}
-                        maxW={{ base: "80%", lg: "100%" }}
-                        border="transparent"
-                        backdropFilter="blur(100px)"
-                        bg={bgList}
-                        borderRadius="20px"
-                        p="15px"
-                      >
-                        <Box
-                          transition="0.2s linear"
-                          color={textColor}
-                          p="0px"
-                          maxW={{ base: "80%", lg: "100%" }}
-                          borderRadius="8px"
-                        >
-                          <Flex align="center">
-                            <Text fontSize="1xl" fontWeight="400">
-                              Бутони за определяне на ниво на натовареност.
-                            </Text>
-                          </Flex>
-                          <HSeparator />
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 1 - Малко или въобще не спортувате.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 2 - Спортувате умерено 1-3 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 3 - Спортувате умерено 4-5 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 4 - Спортувате умерено дневно или интензивно
-                              3-4 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 5 - Спортувате интензивно 6-7 пъти в
-                              седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text fontSize="sm" fontWeight="400" mt="10px">
-                              Ниво 6 - Спортувате много интензивно цялата
-                              седмица.
-                            </Text>
-                          </Flex>
-                        </Box>
-                      </MenuList>
-                    </Menu>
-                  </Flex>
-                  <Flex justify="center">
-                    {Object.entries(perfectWeight).map(
-                      ([key, value], index) => (
-                        <MiniStatistics
-                          key={key}
-                          startContent={
-                            <IconBox
-                              w="56px"
-                              h="56px"
-                              bg={boxBg}
-                              icon={
-                                <Icon
-                                  w="32px"
-                                  h="32px"
-                                  as={GiWeightLiftingUp}
-                                  color={brandColor}
-                                />
-                              }
+                  <SimpleGrid
+                    columns={{ base: 1, md: 1, lg: 1 }}
+                    gap="20px"
+                    mb="10px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightLiftingUp}
+                              color={brandColor}
                             />
                           }
-                          value={value + " kg"}
                         />
-                      )
-                    )}
-                  </Flex>
+                      }
+                      name="Перфектно тегло"
+                      value={perfectWeight + " kg"}
+                    />
+                  </SimpleGrid>
                 </Card>
                 <Card
                   p="20px"
