@@ -3,9 +3,12 @@ import { NavLink, useHistory } from "react-router-dom";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence
 } from "firebase/auth";
 // Chakra imports
+import { saveAdditionalUserData } from "database/setAdditionalUserData";
 import {
   Box,
   Button,
@@ -19,14 +22,17 @@ import {
   InputGroup,
   InputRightElement,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Select,
+  RadioGroup,
+  Radio,
+  HStack
 } from "@chakra-ui/react";
 // Custom components
 import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/auth/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
-import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
@@ -46,6 +52,7 @@ function SignUp() {
   const [password2, setPassword2] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [gender, setGender] = useState("male");
 
   const handleSignUp = async () => {
     try {
@@ -55,23 +62,25 @@ function SignUp() {
       }
 
       const auth = getAuth();
+      await setPersistence(auth, browserSessionPersistence);
       await createUserWithEmailAndPassword(auth, email, password).then(() => {
-        signInWithEmailAndPassword(auth, email, password);
+        signInWithEmailAndPassword(auth, email, password).then(() => {
+          const user = auth.currentUser;
+          const userId = user.uid;
+          saveAdditionalUserData(userId, gender);
+
+          let key = sessionStorage.key(0);
+          const userData = sessionStorage.getItem(key);
+          let jsonUserData = JSON.parse(userData);
+          let token = jsonUserData.stsTokenManager.accessToken;
+          if (token) {
+            history.push("/admin/default");
+            setError("");
+          } else {
+            setError("Unable to retrieve user token");
+          }
+        });
       });
-
-      let key = sessionStorage.key(0);
-
-      const userData = sessionStorage.getItem(key);
-      let jsonUserData = JSON.parse(userData);
-
-      let token = jsonUserData.stsTokenManager.accessToken;
-
-      if (token) {
-        history.push("/admin/default"); // Redirect to sign in after signing up
-        setError("");
-      } else {
-        setError("idk man");
-      }
     } catch (error) {
       if (error instanceof Error) {
         switch (error.message) {
@@ -96,6 +105,9 @@ function SignUp() {
               "Този еmail е регистриран. Да не би да искахте да влезете в профила ви?"
             );
             break;
+          case "Firebase: Password should be at least 6 characters (auth/weak-password).":
+            setError("Паролата ви трябва да бъде поне 6 символа.");
+            break;
           default:
             setError("Грешка се случи: " + error.message);
         }
@@ -108,9 +120,7 @@ function SignUp() {
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
   useEffect(() => {
-    // Check if passwords match on every change
     if (password1 === password2) {
-      // Set the new 'password' state
       setPassword(password1);
       setPasswordsMatch(true);
       setError("");
@@ -244,6 +254,26 @@ function SignUp() {
                 />
               </InputRightElement>
             </InputGroup>
+            <FormLabel
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              display="flex"
+            >
+              Пол
+            </FormLabel>
+            <Flex direction="row" mb="24px">
+              <RadioGroup
+                defaultValue="male"
+                onChange={(value) => setGender(value)}
+              >
+                <HStack spacing="24px">
+                  <Radio value="male">Мъж</Radio>
+                  <Radio value="female">Жена</Radio>
+                </HStack>
+              </RadioGroup>
+            </Flex>
             <Button
               onClick={handleSignUp}
               fontSize="sm"
@@ -255,7 +285,6 @@ function SignUp() {
             >
               Създаване на Профил
             </Button>
-            {/* Display error message */}
             {error && (
               <Text color="red" fontSize="sm" mb="8px">
                 {error}
