@@ -77,11 +77,6 @@ export default function ColumnTable(props: {
   const [data, setData] = React.useState(() => tableData);
 
   const [selectedRow, setSelectedRow] = React.useState(null);
-  const {
-    isOpen: isOpenDiet,
-    onOpen: onOpenDiet,
-    onClose: onCloseDiet
-  } = useDisclosure();
   const columns = columnsData.map((column) => {
     return columnHelper.accessor(column.name as any, {
       id: column.name,
@@ -144,103 +139,6 @@ export default function ColumnTable(props: {
         >
           {tableName}
         </Text>
-        <SimpleGrid>
-          <Menu isOpen={isOpenDiet} onClose={onCloseDiet}>
-            <MenuButton
-              alignItems="center"
-              justifyContent="center"
-              bg={bgButton}
-              _hover={bgHover}
-              _focus={bgFocus}
-              _active={bgFocus}
-              w="30px"
-              h="30px"
-              lineHeight="50%"
-              onClick={onOpenDiet}
-              borderRadius="10px"
-              ml="10%"
-            >
-              <Icon as={MdOutlineInfo} color={iconColor} w="24px" h="24px" />
-            </MenuButton>
-            <MenuList
-              w="100%"
-              minW="unset"
-              ml={{ base: "2%", lg: 0 }}
-              mr={{ base: "2%", lg: 0 }}
-              maxW={{ base: "80%", lg: "100%" }}
-              border="transparent"
-              backdropFilter="blur(100px)"
-              bg={bgList}
-              borderRadius="20px"
-              p="15px"
-            >
-              <Box
-                transition="0.2s linear"
-                color={textColor}
-                p="0px"
-                borderRadius="8px"
-                maxW={{ base: "2xl", lg: "100%" }}
-              >
-                <Flex align="center">
-                  <Text fontSize="2xl" fontWeight="400">
-                    Изберете тип диета по вашите предпочитания.
-                  </Text>
-                </Flex>
-                <HSeparator />
-                <Flex align="center">
-                  <Text fontSize="1xl" fontWeight="400" mt="4px">
-                    Балансирана:
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="sm" fontWeight="200" mb="10px">
-                    Балансирано разпределение на макронутриенти с умерени нива
-                    на протеини, въглехидрати и мазнини. Идеална за поддържане
-                    на здравето.
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="1xl" fontWeight="400" mt="4px">
-                    Ниско съдържание на мазнини:
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="sm" fontWeight="200" mb="10px">
-                    Набляга на намаляване на приема на мазнини и поддържане на
-                    адекватни нива на протеини и въглехидрати. Подходящ за тези,
-                    които се стремят да намалят общия прием на калории и да
-                    контролират теглото си.
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="1xl" fontWeight="400" mt="4px">
-                    Ниско съдържание на въглехидрати:
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="sm" fontWeight="400" mb="10px">
-                    Фокусира се върху минимизиране на приема на въглехидрати,
-                    като същевременно осигурява достатъчно протеини и
-                    здравословни мазнини.
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="1xl" fontWeight="400" mt="4px">
-                    Високо съдържание на протеин:
-                  </Text>
-                </Flex>
-                <Flex align="center">
-                  <Text fontSize="sm" fontWeight="400">
-                    Дава приоритет на по-висок прием на протеин с умерени нива
-                    на въглехидрати и мазнини. Идеална за тези, които искат да
-                    подпомогнат развитието на мускулите, особено при силови
-                    тренировки или фитнес програми.
-                  </Text>
-                </Flex>
-              </Box>
-            </MenuList>
-          </Menu>
-        </SimpleGrid>
       </Flex>
       <Box>
         <Table variant="simple" color="gray.500" mt="12px">

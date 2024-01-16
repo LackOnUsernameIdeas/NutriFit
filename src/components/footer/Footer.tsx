@@ -27,100 +27,112 @@ const Footer = () => {
       mt="auto"
     >
       <Box maxW="64rem" pb="2rem" mx="auto">
-        <Flex flexWrap="wrap" alignItems="start" justifyContent="space-between">
-          <Box
-            w={{ base: "100%", sm: "50%", md: "max-content" }}
-            mb={{ base: "1.5rem", lg: "0" }}
+        <Flex
+          flexWrap="wrap"
+          alignItems="start"
+          justifyContent="center" // Center the content on mobile
+        >
+          <SimpleGrid
+            columns={{ base: 1, md: 4, lg: 4 }}
+            gap={{ base: "50px", md: "100px", lg: "150px" }}
+            mb="20px"
+            textAlign="center"
           >
-            <Text
-              color={textColor}
-              mb="0.5rem"
-              fontSize="1.5rem"
-              fontWeight="600"
-              fontFamily="DM Sans"
-              display="inline"
-              mr="1px"
-            >
-              Nutri
-            </Text>
-            <Text
-              color={textColor}
-              mb="0.5rem"
-              fontSize="1.5rem"
-              fontWeight="600"
-              fontFamily="Leckerli One"
-              display="inline"
-            >
-              Fit
-            </Text>
-            <List lineHeight="2" justifyContent="center">
-              <LinkItem
-                text="НОИТ 2024"
-                href="https://edusoft.fmi.uni-sofia.bg/"
-              />
-              <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
-                Проект 249
+            {" "}
+            {/* Center text on mobile */}
+            <Box mb={{ base: "1.5rem", lg: "0" }}>
+              <Text
+                color={textColor}
+                mb="0.5rem"
+                fontSize="1.5rem"
+                fontWeight="600"
+                fontFamily="DM Sans"
+                display="inline"
+                mr="1px"
+              >
+                Nutri
               </Text>
-              <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
-                Калоян Костадинов
+              <Text
+                color={textColor}
+                mb="0.5rem"
+                fontSize="1.5rem"
+                fontWeight="600"
+                fontFamily="Leckerli One"
+                display="inline"
+              >
+                Fit
               </Text>
-              <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
-                Ивайло Здравков
-              </Text>
-              <LinkItem
-                text="ПГИ Перник"
-                href="https://pgi-pernik.bg-schools.com/"
-              />
-            </List>
-          </Box>
-          <Box
-            w={{ base: "100%", sm: "50%", md: "max-content" }}
-            mb={{ base: "1.5rem", lg: "0" }}
-          >
-            <Text
-              color={textColor}
-              mb="0.5rem"
-              fontSize="1.5rem"
-              fontWeight="600"
-              display="inline"
-            >
-              Бързи Връзки
-            </Text>
-            <List lineHeight="2">
-              <LinkItem text="Статистики за Тегло" href="/#/admin/weight" />
-            </List>
-          </Box>
-          <Box
-            w={{ base: "100%", sm: "50%", md: "max-content" }}
-            mb={{ base: "1.5rem", lg: "0" }}
-          >
-            <Text
-              color={textColor}
-              mb="0.5rem"
-              fontSize="1.5rem"
-              fontWeight="600"
-              display="inline"
-            >
-              Източници
-            </Text>
-            <List lineHeight="2">
-              <LinkItem
-                text="Nutritionix API"
-                href="https://www.nutritionix.com/business/api"
-              />
-            </List>
-          </Box>
-          <Box
-            w={{ base: "100%", sm: "50%", md: "max-content" }}
-            mb={{ base: "1.5rem", lg: "0" }}
-          >
-            <Box boxSize="170px">
-              <Image
-                src="https://tubefeel.noit.eu/static/media/footer_technologies.e02131cc1165be88341a.png"
-                alt="Dan Abramov"
-              />
+              <List lineHeight="2" justifyContent="center">
+                <LinkItem
+                  text="НОИТ 2024"
+                  href="https://edusoft.fmi.uni-sofia.bg/"
+                />
+                <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
+                  Проект 249
+                </Text>
+                <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
+                  Калоян Костадинов
+                </Text>
+                <Text color="rgba(113, 128, 150, 1)" fontWeight="600">
+                  Ивайло Здравков
+                </Text>
+                <LinkItem
+                  text="ПГИ Перник"
+                  href="https://pgi-pernik.bg-schools.com/"
+                />
+              </List>
             </Box>
-          </Box>
+            <Box mb={{ base: "1.5rem", lg: "0" }}>
+              <Text
+                color={textColor}
+                mb="0.5rem"
+                fontSize="1.5rem"
+                fontWeight="600"
+                display="inline"
+              >
+                Бързи Връзки
+              </Text>
+              <List lineHeight="2">
+                <LinkItem text="Статистики за Тегло" href="/#/admin/weight" />
+              </List>
+            </Box>
+            <Box mb={{ base: "1.5rem", lg: "0" }}>
+              <Text
+                color={textColor}
+                mb="0.5rem"
+                fontSize="1.5rem"
+                fontWeight="600"
+                display="inline"
+              >
+                Източници
+              </Text>
+              <List lineHeight="2">
+                <LinkItem
+                  text="Nutritionix API"
+                  href="https://www.nutritionix.com/business/api"
+                />
+              </List>
+            </Box>
+            <Box mb={{ base: "1.5rem", lg: "0" }} position="relative">
+              {" "}
+              {/* Position relative for absolute positioning */}
+              <Box
+                boxSize="170px"
+                mx="auto"
+                maxWidth="100%" // Set maximum width to prevent overflow
+              >
+                <Image
+                  src="https://tubefeel.noit.eu/static/media/footer_technologies.e02131cc1165be88341a.png"
+                  alt="Dan Abramov"
+                  width="100%" // Ensure image responsiveness
+                  position="absolute"
+                  top="50%"
+                  left="50%"
+                  transform="translate(-50%, -50%)" // Center the image
+                />
+              </Box>
+            </Box>
+          </SimpleGrid>
         </Flex>
       </Box>
     </Box>
@@ -136,7 +148,9 @@ type LinkItemProps = {
 
 const LinkItem = ({ text, isTag = false, tagText, href }: LinkItemProps) => {
   return (
-    <ListItem display="flex">
+    <ListItem display="flex" justifyContent="center" textAlign="center">
+      {" "}
+      {/* Center the content */}
       <Link
         fontWeight="600"
         href={href}
