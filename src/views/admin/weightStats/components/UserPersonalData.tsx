@@ -57,60 +57,36 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
     });
   }, []);
 
+  const validateField = (
+    value: number,
+    min: number,
+    max: number,
+    fieldName: string
+  ): string | undefined => {
+    if (value === 0) {
+      return `Моля, въведете ${fieldName}.`;
+    }
+
+    if (value < min || value > max) {
+      return `Полето ${fieldName} трябва да бъде между ${min} и ${max} см.`;
+    }
+
+    return undefined;
+  };
+
   const isUserDataValid = () => {
     const errors: { [key: string]: string } = {};
 
-    if (userData.height < 130 || userData.height > 230) {
-      errors.height = "Височината трябва да бъде между 130 и 230 см.";
-    }
-
-    if (userData.height == 0) {
-      errors.height = "Моля въведете височина.";
-    }
-
-    if (userData.age < 1 || userData.age > 80) {
-      errors.age = "Възрастта трябва да е между 1 и 80 години.";
-    }
-
-    if (userData.age == 0) {
-      errors.age = "Моля въведете възраст.";
-    }
-
-    if (userData.weight < 40 || userData.weight > 160) {
-      errors.weight = "Теглото трябва да бъде между 40 и 160 кг.";
-    }
-
-    if (userData.weight == 0) {
-      errors.weight = "Моля въведете тегло.";
-    }
-
-    if (userData.neck < 20 || userData.neck > 60) {
-      errors.neck = "Обиколката на врата трябва да бъде между 20 и 60 cm.";
-    }
-
-    if (userData.neck == 0) {
-      errors.neck = "Моля въведете обиколка на врат.";
-    }
-
-    if (userData.waist < 40 || userData.waist > 130) {
-      errors.waist = "Обиколката на талията трябва да бъде между 40 и 130 cm.";
-    }
-
-    if (userData.waist == 0) {
-      errors.waist = "Моля въведете обиколка на талия.";
-    }
-
-    if (userData.hip < 40 || userData.hip > 130) {
-      errors.hip = "Обиколката на таза трябва да бъде между 40 и 130 cm.";
-    }
-
-    if (userData.hip == 0) {
-      errors.hip = "Моля въведете обиколка на таз.";
-    }
+    errors.height = validateField(userData.height, 130, 230, "височина");
+    errors.age = validateField(userData.age, 1, 80, "възраст");
+    errors.weight = validateField(userData.weight, 40, 160, "тегло");
+    errors.neck = validateField(userData.neck, 20, 60, "обиколка на врата");
+    errors.waist = validateField(userData.waist, 40, 130, "обиколка на талия");
+    errors.hip = validateField(userData.hip, 40, 130, "обиколка на таз");
 
     setValidationErrors(errors);
 
-    return Object.keys(errors).length === 0;
+    return Object.values(errors).every((error) => error === undefined);
   };
 
   const handleInputChangeWithMemory = (

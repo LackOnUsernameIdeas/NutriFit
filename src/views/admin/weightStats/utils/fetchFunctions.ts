@@ -15,10 +15,10 @@ const headers = {
 
 function translateBMIHealthToBulgarian(englishHealth: string) {
   const bulgarianTranslations = {
-    "Severe Thinness": "Сериозно поднормено тегло",
-    "Moderate Thinness": "Поднормено тегло",
+    "Severe Thinness": "Сериозно недохранване",
+    "Moderate Thinness": "Средно недохранване",
+    "Mild Thinness": "Леко недохранване",
     "Normal": "Нормално",
-    "Healthy weight": "Здравословно тегло",
     "Overweight": "Наднормено тегло",
     "Obese Class I": "Затлъстяване I Клас",
     "Obese Class II": "Затлъстяване II Клас",
