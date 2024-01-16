@@ -16,6 +16,7 @@ import {
   Image
 } from "@chakra-ui/react";
 
+import { InfoLabel, InfoLabelProps, Link } from "@fluentui/react-components";
 // React Icons
 import { MdOutlineInfo } from "react-icons/md";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
@@ -30,7 +31,7 @@ import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
 import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
-
+import { InfoBox } from "components/infobox/InfoBox";
 // Types
 import {
   BMIInfo,
@@ -503,6 +504,7 @@ export default function WeightStats() {
                         </Box>
                       </MenuList>
                     </Menu>
+                    <InfoBox info="testing" label="test"/>
                   </Flex>
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 3 }}
