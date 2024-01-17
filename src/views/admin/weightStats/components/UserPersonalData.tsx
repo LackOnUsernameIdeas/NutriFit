@@ -11,8 +11,10 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
-import { UserData, BodyMass } from "../../../../types/weightStats";
-
+import { UserData, Goal } from "../../../../types/weightStats";
+import { saveAdditionalUserData } from "database/setAdditionalUserData";
+import { fetchAdditionalUserData } from "database/getAdditionalUserData";
+import { getAuth } from "firebase/auth";
 interface UserPersonalDataProps {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -44,17 +46,45 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    // Load stored values from local storage when component mounts
-    const storedValues = JSON.parse(
-      localStorage.getItem("lastTypedValues") || "{}"
-    );
-    Object.keys(storedValues).forEach((key) => {
-      handleInputChange({
-        target: { name: key, value: storedValues[key] }
-      } as React.ChangeEvent<HTMLInputElement>);
-    });
+    const fetchData = async () => {
+      try {
+        const user = getAuth().currentUser;
+
+        // Check if user is authenticated
+        if (user) {
+          // Delay execution for 500 milliseconds (adjust as needed)
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          const uid = user.uid;
+          const additionalUserData = await fetchAdditionalUserData(uid);
+
+          // Check if properties exist before accessing them
+          if (additionalUserData) {
+            // Assuming fetchAdditionalUserData returns an object with all properties
+            Object.entries(additionalUserData).forEach(([key, value]) => {
+              if (key === "gender" || key === "goal") {
+                handleRadioChange(key, value as "male" | "female" | Goal);
+              } else {
+                handleInputChange({
+                  target: {
+                    name: key,
+                    value: value !== undefined ? value.toString() : ""
+                  }
+                } as React.ChangeEvent<HTMLInputElement>);
+              }
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching additional user data:", error);
+        // Handle the error as needed
+      }
+    };
+
+    fetchData();
   }, []);
 
   const validateField = (
@@ -107,11 +137,29 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
     );
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (isUserDataValid()) {
-      generateStats();
+      // Instead of directly generating stats, call saveAdditionalUserData
+      try {
+        const uid = getAuth().currentUser.uid;
+        await saveAdditionalUserData(
+          uid,
+          userData.gender,
+          userData.height,
+          userData.age,
+          userData.weight,
+          userData.neck,
+          userData.waist,
+          userData.hip,
+          userData.goal
+        );
+        generateStats(); // You can keep this line if you still need to generate stats
+      } catch (error) {
+        console.error("Error saving additional user data:", error);
+        // Handle the error as needed
+      }
     }
   };
 
@@ -270,7 +318,7 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
           onClick={handleSubmit}
           backgroundColor={bgButton}
           color={brandColor}
-          mt={{sm: "5px", md: "0px", lg: "0px"}}
+          mt={{ sm: "5px", md: "0px", lg: "0px" }}
         >
           Изпрати
         </Button>
