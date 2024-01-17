@@ -125,7 +125,7 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
       mb="20px"
       maxW="100%"
     >
-      <Box gap="10px" mb="20px">
+      <Box gap="10px">
         {Object.entries(userData).map(([key, value], index) => (
           <label key={key}>
             {userDataPropertiesTranslated[index].charAt(0).toUpperCase() +
@@ -270,6 +270,7 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
           onClick={handleSubmit}
           backgroundColor={bgButton}
           color={brandColor}
+          mt={{sm: "5px", md: "0px", lg: "0px"}}
         >
           Изпрати
         </Button>

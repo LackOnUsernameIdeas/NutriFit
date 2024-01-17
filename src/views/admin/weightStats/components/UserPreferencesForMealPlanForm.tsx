@@ -77,7 +77,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         {Object.entries(userPreferences).map(([key, value], index) => (
           <Box key={key}>
             <Flex justify="center" pt="5px" w="100%" mt="5px">
-              <Text fontSize="2xl">
+              <Text fontSize="2xl" mb="0px">
                 {fieldName[index].charAt(0).toUpperCase() +
                   fieldName[index].slice(1)}
                 :
@@ -93,7 +93,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                   placeholder={"Въведете " + fieldName[index]}
                   _placeholder={{ opacity: 1, color: "gray.500" }}
                   value={value || ""}
-                  mt={{ base: "1%", md: "2%" }}
+                  mt={{ base: "0", md: "1%", sm: "0"}}
+                  mb={{ base: "1%", md: "2%", sm: "4%"}}
                   fontWeight="500"
                   size="lg"
                   type="number"
@@ -109,7 +110,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                   placeholder={"Въведете " + fieldName[index]}
                   _placeholder={{ opacity: 1, color: "gray.500" }}
                   value={""}
-                  mt={{ base: "1%", md: "2%" }}
+                  mt={{ base: "0", md: "1%", sm: "0"}}
+                  mb={{ base: "1%", md: "2%", sm: "4%"}}
                   fontWeight="500"
                   size="lg"
                   type="number"
@@ -128,7 +130,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
       </SimpleGrid>
       <Button
         onClick={handleSubmit}
-        mt={{ base: "10%", lg: "2%" }}
+        mt={{ base: "10%", lg: "5%" }}
         mb={{ base: "15%", lg: "0%" }}
         minH="15%"
         backgroundColor={bgButton}
