@@ -46,7 +46,6 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
-  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +70,7 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                 handleInputChange({
                   target: {
                     name: key,
-                    value: value !== undefined ? value.toString() : ""
+                    value: value?.toString() || ""
                   }
                 } as React.ChangeEvent<HTMLInputElement>);
               }

@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { UserData } from "types/weightStats";
 // Chakra imports
-import { saveAdditionalUserData } from "database/setAdditionalUserData";
+import { saveGenderOnSignUp } from "database/setGenderOnSignUp";
 import {
   Box,
   Button,
@@ -72,7 +72,7 @@ function SignUp() {
         signInWithEmailAndPassword(auth, email, password).then(() => {
           const user = auth.currentUser;
           const userId = user.uid;
-          saveAdditionalUserData(userId, gender);
+          saveGenderOnSignUp(userId, gender);
 
           let key = sessionStorage.key(0);
           const userData = sessionStorage.getItem(key);
