@@ -13,6 +13,7 @@ import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
+import MealPlanner from "views/admin/mealPlanner";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -39,11 +40,11 @@ const routes = [
   {
     name: "Хранителен План",
     layout: "/admin",
-    path: "/meal-plan",
+    path: "/mealplan",
     icon: (
       <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
     ),
-    component: WeightStats
+    component: MealPlanner
   },
   {
     name: "NFT Marketplace",
