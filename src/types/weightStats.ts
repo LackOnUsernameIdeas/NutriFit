@@ -42,6 +42,11 @@ export type UserData = {
   goal?: Goal;
 };
 
+export type WeightDifference = {
+  difference: number;
+  isUnderOrAbove: "above" | "under" | "";
+};
+
 export type BMIInfo = {
   bmi: number;
   health: string;

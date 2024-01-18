@@ -109,7 +109,18 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (isUserDataValid()) {
+    // Load stored values from local storage
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+
+    // Check if any input values have changed
+    const hasChanged = Object.keys(userData).some(
+      (key) => (userData as any)[key] !== storedValues[key]
+    );
+
+    console.log(storedValues);
+    if (hasChanged && isUserDataValid()) {
       generateStats();
     }
   };

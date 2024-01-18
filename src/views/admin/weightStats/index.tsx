@@ -26,7 +26,12 @@ import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
 import { HSeparator } from "components/separator/Separator";
 // Types
-import { BMIInfo, BodyMass, UserData } from "../../../types/weightStats";
+import {
+  BMIInfo,
+  BodyMass,
+  UserData,
+  WeightDifference
+} from "../../../types/weightStats";
 
 // Помощни функции за извличане на данни
 import {
@@ -73,8 +78,6 @@ export default function WeightStats() {
     healthy_bmi_range: "18.5 - 25"
   });
 
-  const [perfectWeight, setPerfectWeight] = useState<number>(0);
-
   const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
     useState<BodyMass>({
       "Body Fat (U.S. Navy Method)": 0,
@@ -95,8 +98,24 @@ export default function WeightStats() {
     hip: 0
   });
 
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
+  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
+    useState<WeightDifference>({
+      difference: 0,
+      isUnderOrAbove: ""
+    });
+
   // Submission state
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  React.useEffect(() => {
+    const diff = perfectWeight - userData.weight;
+    setDifferenceFromPerfectWeight({
+      difference: diff,
+      isUnderOrAbove: userData.weight > perfectWeight ? "above" : "under"
+    });
+    console.log(differenceFromPerfectWeight.isUnderOrAbove, diff);
+  }, [BMIIndex]);
 
   // Функция за генериране на статистики
   function generateStats() {
@@ -147,8 +166,6 @@ export default function WeightStats() {
       [name]: parsedValue
     }));
   };
-
-  console.log(userData);
 
   const handleRadioChange = (key: string, radioValue: string) => {
     setUserData((prevData) => ({
@@ -543,6 +560,33 @@ export default function WeightStats() {
                         </Box>
                       </MenuList>
                     </Menu>
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightLiftingUp}
+                              color={brandColor}
+                            />
+                          }
+                        />
+                      }
+                      name={`Вие сте ${
+                        differenceFromPerfectWeight.isUnderOrAbove == "above"
+                          ? "над"
+                          : "под"
+                      } нормата:`}
+                      value={
+                        Math.abs(
+                          differenceFromPerfectWeight.difference
+                        ).toFixed(2) + " kg"
+                      }
+                    />
                   </Flex>
                 </Card>
                 <Card
