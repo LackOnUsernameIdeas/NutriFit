@@ -76,7 +76,7 @@ export default function AdminNavbar(props: {
       alignItems={{ xl: "center" }}
       display={secondary ? "block" : "flex"}
       minH="75px"
-      justifyContent={{ xl: "center" }}
+      justifyContent={{ sm: "flex-start", md: "center", xl: "center" }}
       lineHeight="25.6px"
       mx="auto"
       mt={secondaryMargin}
@@ -105,7 +105,7 @@ export default function AdminNavbar(props: {
           sm: "column",
           md: "row"
         }}
-        alignItems={{ xl: "center" }}
+        alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
         mb={gap}
       >
         <Box mb={{ sm: "8px", md: "0px" }}>
@@ -130,6 +130,7 @@ export default function AdminNavbar(props: {
             borderRadius="inherit"
             fontWeight="bold"
             fontSize="34px"
+            textOverflow="ellipsis"
             _hover={{ color: { mainText } }}
             _active={{
               bg: "inherit",
@@ -143,7 +144,7 @@ export default function AdminNavbar(props: {
             {brandText}
           </Link>
         </Box>
-        <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
+        <Box ms="auto" w={{ sm: "100%", md: "unset" }} justifySelf="center">
           <AdminNavbarLinks
             onOpen={props.onOpen}
             secondary={props.secondary}

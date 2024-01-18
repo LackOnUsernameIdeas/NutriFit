@@ -93,8 +93,8 @@ const Footer = () => {
                 Бързи Връзки
               </Text>
               <List lineHeight="2">
-              <LinkItem text="Калкулатор за Тегло" href="/#/admin/weight" />
-              <LinkItem text="Хранителен План" href="/#/admin/meal-plan" />
+                <LinkItem text="Калкулатор за Тегло" href="/#/admin/weight" />
+                <LinkItem text="Хранителен План" href="/#/admin/meal-plan" />
               </List>
             </Box>
             <Box mb={{ base: "1.5rem", lg: "0" }}>

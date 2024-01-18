@@ -54,7 +54,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <Box ml={{ base: "10px", lg: "0", md: "0" }}>
+      <Box ml={{ base: "20px", lg: "0", md: "0" }}>
         <SidebarResponsive routes={routes} />
       </Box>
       <Button
@@ -65,7 +65,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         minH="unset"
         h="18px"
         w="max-content"
-        ml={{ base: "20px", lg: "0", md: "0" }}
+        ml={{ base: "40px", lg: "0", md: "0" }}
         onClick={toggleColorMode}
       >
         <Icon
@@ -76,22 +76,21 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           as={colorMode === "light" ? IoMdMoon : IoMdSunny}
         />
       </Button>
-      <Menu>
-        <Link href="/#/auth/sign-in">
-          <MenuItem
-            _hover={bgHover}
-            _focus={{ bg: "none" }}
-            backgroundColor={bgButton}
-            color={buttonColor}
-            borderRadius="20px"
-            px="14px"
-            onClick={handleLogOut}
-            ml={{ base: "70px", lg: "0", md: "0" }}
-          >
-            <Text fontSize="sm">Излизане</Text>
-          </MenuItem>
-        </Link>
-      </Menu>
+      <Link href="/#/auth/sign-in">
+        <Button
+          _hover={bgHover}
+          _focus={{ bg: "none" }}
+          backgroundColor={bgButton}
+          color={buttonColor}
+          borderRadius="20px"
+          maxW={{ sm: "100px", lg: "100px" }}
+          px="14px"
+          onClick={handleLogOut}
+          ml={{ base: "110px", lg: "0", md: "0" }}
+        >
+          <Text fontSize="sm">Излизане</Text>
+        </Button>
+      </Link>
     </Flex>
   );
 }

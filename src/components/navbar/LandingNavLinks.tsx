@@ -69,7 +69,7 @@ export default function LandingLinks(props: { secondary: boolean }) {
             size="sm"
             w="40px"
             h="40px"
-            ml={{ base: "100px", lg: "0", md: "0" }}
+            ml={{ base: "20px", lg: "0", md: "0" }}
           />
         </MenuButton>
       </Menu>

@@ -111,8 +111,10 @@ export default function LandingNavbar(props: {
             borderRadius="inherit"
             fontFamily="DM Sans"
             fontWeight="bold"
-            fontSize="34px"
+            fontSize="40px"
             display="inline"
+            position="relative"
+            top="10px" // Adjust this value to set the desired gap
           >
             Nutri
           </Text>{" "}
@@ -122,13 +124,15 @@ export default function LandingNavbar(props: {
             borderRadius="inherit"
             fontFamily="Leckerli One"
             fontWeight="bold"
-            fontSize="34px"
+            fontSize="40px"
             display="inline"
+            position="relative"
+            top="10px" // Adjust this value to set the desired gap
           >
             Fit
           </Text>
         </Box>
-        <Box ms="auto" w={{ sm: "90%", md: "unset" }}>
+        <Box ms="auto" w={{ sm: "50%", md: "unset" }}>
           <LandingNavbarLinks
             onOpen={props.onOpen}
             secondary={props.secondary}
