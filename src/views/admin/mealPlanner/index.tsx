@@ -12,17 +12,13 @@ import {
   MenuList,
   useDisclosure,
   useColorModeValue,
-  Menu,
-  Image
+  Menu
 } from "@chakra-ui/react";
 
 // React Icons
 import { MdOutlineInfo } from "react-icons/md";
-import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 // Custom components
 import Card from "components/card/Card";
-import MiniStatistics from "components/card/MiniStatistics";
-import IconBox from "components/icons/IconBox";
 import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import UserPersonalData from "./components/UserPersonalData";
@@ -31,8 +27,6 @@ import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
 // Types
 import {
-  BMIInfo,
-  BodyMass,
   UserData,
   DailyCaloryRequirements,
   MacroNutrientsData
@@ -40,9 +34,6 @@ import {
 
 // Помощни функции за извличане на данни
 import {
-  fetchBMIData,
-  fetchPerfectWeightData,
-  fetchBodyFatAndLeanMassData,
   fetchCaloriesForActivityLevels,
   fetchMacroNutrients
 } from "./utils/fetchFunctions";
@@ -73,38 +64,10 @@ export default function WeightStats() {
   } = useDisclosure();
 
   const {
-    isOpen: isOpenPerfectWeight,
-    onOpen: onOpenPerfectWeight,
-    onClose: onClosePerfectWeight
-  } = useDisclosure();
-
-  const {
-    isOpen: isOpenBMI,
-    onOpen: onOpenBMI,
-    onClose: onCloseBMI
-  } = useDisclosure();
-
-  const {
     isOpen: isOpenDiet,
     onOpen: onOpenDiet,
     onClose: onCloseDiet
   } = useDisclosure();
-
-  // States за запазване на извличените данни
-  const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
-    bmi: null,
-    health: "",
-    healthy_bmi_range: "18.5 - 25"
-  });
-
-  const [perfectWeight, setPerfectWeight] = useState<number>(0);
-
-  const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
-    useState<BodyMass>({
-      "Body Fat (U.S. Navy Method)": 0,
-      "Body Fat Mass": 0,
-      "Lean Body Mass": 0
-    });
 
   const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<
     DailyCaloryRequirements[]
@@ -158,7 +121,6 @@ export default function WeightStats() {
 
   // State за въведени потребителски данни
   const [userData, setUserData] = useState<UserData>({
-    gender: "male",
     height: 0,
     age: 0,
     weight: 0,
@@ -173,37 +135,14 @@ export default function WeightStats() {
 
   // Функция за генериране на статистики
   function generateStats() {
-    fetchBMIData(
-      userData["age"],
-      userData["height"],
-      userData["weight"],
-      setBMIIndex
-    );
-    fetchPerfectWeightData(
-      userData["gender"],
-      userData["height"],
-      setPerfectWeight
-    );
-    fetchBodyFatAndLeanMassData(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      userData["neck"],
-      userData["waist"],
-      userData["hip"],
-      setBodyFatMassAndLeanMass
-    );
     fetchCaloriesForActivityLevels(
       userData["age"],
-      userData["gender"],
       userData["height"],
       userData["weight"],
       setDailyCaloryRequirements
     );
     fetchMacroNutrients(
       userData["age"],
-      userData["gender"],
       userData["height"],
       userData["weight"],
       userData["goal"],
@@ -216,19 +155,6 @@ export default function WeightStats() {
       setIsLoading(false);
     }, 1000);
   }
-
-  // Масиви с преведени имена
-  const bmiData: string[] = [
-    "ИТМ(Индекс на телесната маса)",
-    "Състояние",
-    "Диапазон на здравословен ИТМ"
-  ];
-  const bodyFatAndLeanMassWidgetsData: string[] = [
-    "% телесни мазнини",
-    "Мастна телесна маса",
-    "Чиста телесна маса"
-  ];
-  const bodyFatAndLeanMassWidgetsUnits: string[] = ["%", "kg", "kg"];
 
   // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

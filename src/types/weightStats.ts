@@ -33,14 +33,13 @@ export interface Recipe {
 }
 
 export type UserData = {
-  gender: "male" | "female";
   height: number;
   age: number;
   weight: number;
   neck: number;
   waist: number;
   hip: number;
-  goal: Goal;
+  goal?: Goal;
 };
 
 export type BMIInfo = {

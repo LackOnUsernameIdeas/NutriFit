@@ -21,7 +21,6 @@ interface UserPersonalDataProps {
 }
 
 const userDataPropertiesTranslated = [
-  "пол",
   "ръст (см)",
   "възраст",
   "тегло (кг)",
