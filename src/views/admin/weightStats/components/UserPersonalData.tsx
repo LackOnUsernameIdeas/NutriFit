@@ -11,10 +11,8 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
-import { UserData, Goal } from "../../../../types/weightStats";
-import { saveAdditionalUserData } from "database/setAdditionalUserData";
-import { fetchAdditionalUserData } from "database/getAdditionalUserData";
-import { getAuth } from "firebase/auth";
+import { UserData, BodyMass } from "../../../../types/weightStats";
+
 interface UserPersonalDataProps {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -48,42 +46,15 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   }>({});
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = getAuth().currentUser;
-
-        // Check if user is authenticated
-        if (user) {
-          // Delay execution for 500 milliseconds (adjust as needed)
-          await new Promise((resolve) => setTimeout(resolve, 500));
-
-          const uid = user.uid;
-          const additionalUserData = await fetchAdditionalUserData(uid);
-
-          // Check if properties exist before accessing them
-          if (additionalUserData) {
-            // Assuming fetchAdditionalUserData returns an object with all properties
-            Object.entries(additionalUserData).forEach(([key, value]) => {
-              if (key === "gender" || key === "goal") {
-                handleRadioChange(key, value as "male" | "female" | Goal);
-              } else {
-                handleInputChange({
-                  target: {
-                    name: key,
-                    value: value?.toString() || ""
-                  }
-                } as React.ChangeEvent<HTMLInputElement>);
-              }
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching additional user data:", error);
-        // Handle the error as needed
-      }
-    };
-
-    fetchData();
+    // Load stored values from local storage when component mounts
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+    Object.keys(storedValues).forEach((key) => {
+      handleInputChange({
+        target: { name: key, value: storedValues[key] }
+      } as React.ChangeEvent<HTMLInputElement>);
+    });
   }, []);
 
   const validateField = (
@@ -136,29 +107,11 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
     );
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (isUserDataValid()) {
-      // Instead of directly generating stats, call saveAdditionalUserData
-      try {
-        const uid = getAuth().currentUser.uid;
-        await saveAdditionalUserData(
-          uid,
-          userData.gender,
-          userData.height,
-          userData.age,
-          userData.weight,
-          userData.neck,
-          userData.waist,
-          userData.hip,
-          userData.goal
-        );
-        generateStats(); // You can keep this line if you still need to generate stats
-      } catch (error) {
-        console.error("Error saving additional user data:", error);
-        // Handle the error as needed
-      }
+      generateStats();
     }
   };
 
@@ -175,9 +128,11 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
       <Box gap="10px">
         {Object.entries(userData).map(([key, value], index) => (
           <label key={key}>
-            {userDataPropertiesTranslated[index].charAt(0).toUpperCase() +
-              userDataPropertiesTranslated[index].slice(1)}
-            :
+            {key !== "gender" &&
+              key !== "goal" &&
+              userDataPropertiesTranslated[index].charAt(0).toUpperCase() +
+                userDataPropertiesTranslated[index].slice(1) +
+                " :"}
             {typeof value === "number" ? (
               value !== 0 ? (
                 <Input
@@ -206,104 +161,8 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                   onChange={(e) => handleInputChangeWithMemory(e)}
                 />
               )
-            ) : key === "gender" ? (
-              <Stack direction="row">
-                <Radio
-                  value="male"
-                  onChange={() => handleRadioChange(key, "male")}
-                  isChecked={value === "male"}
-                >
-                  Мъж
-                </Radio>
-                <Radio
-                  value="female"
-                  onChange={() => handleRadioChange(key, "female")}
-                  isChecked={value === "female"}
-                >
-                  Жена
-                </Radio>
-              </Stack>
-            ) : key === "goal" ? (
-              <Stack direction="row" alignContent="center" justify="center">
-                <SimpleGrid
-                  columns={{ base: 3, md: 1, lg: 7 }}
-                  spacing="10px"
-                  alignItems="center"
-                  mb="10px"
-                >
-                  <Radio
-                    value="maintain"
-                    onChange={() => handleRadioChange(key, "maintain")}
-                    isChecked={value === "maintain"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
-                    ml={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Запази тегло
-                  </Radio>
-                  <Radio
-                    value="mildlose"
-                    onChange={() => handleRadioChange(key, "mildlose")}
-                    isChecked={value === "mildlose"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
-                    mr={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Леко сваляне на тегло
-                  </Radio>
-                  <Radio
-                    value="weightlose"
-                    onChange={() => handleRadioChange(key, "weightlose")}
-                    isChecked={value === "weightlose"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
-                    mr={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Сваляне на тегло
-                  </Radio>
-                  <Radio
-                    value="extremelose"
-                    onChange={() => handleRadioChange(key, "extremelose")}
-                    isChecked={value === "extremelose"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
-                    mr={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Екстремно сваляне на тегло
-                  </Radio>
-                  <Radio
-                    value="mildgain"
-                    onChange={() => handleRadioChange(key, "mildgain")}
-                    isChecked={value === "mildgain"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
-                    mr={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Леко качване на тегло
-                  </Radio>
-                  <Radio
-                    value="weightgain"
-                    onChange={() => handleRadioChange(key, "weightgain")}
-                    isChecked={value === "weightgain"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
-                    mr={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Качване на тегло
-                  </Radio>
-                  <Radio
-                    value="extremegain"
-                    onChange={() => handleRadioChange(key, "extremegain")}
-                    isChecked={value === "extremegain"}
-                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your designfontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
-                    mr={{ base: "3%", md: "3%", lg: "3%" }}
-                  >
-                    Екстремно качване на тегло
-                  </Radio>
-                </SimpleGrid>
-              </Stack>
             ) : (
-              <Input
-                type="radio"
-                id={value}
-                name="goal"
-                value={value}
-                onChange={(e) => handleInputChange(e)}
-              />
+              <></>
             )}
             {validationErrors[key] && (
               <Text color="red" fontSize="sm">
