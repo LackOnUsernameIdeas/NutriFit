@@ -7,8 +7,9 @@ import {
   setPersistence,
   browserSessionPersistence
 } from "firebase/auth";
+import { UserData } from "types/weightStats";
 // Chakra imports
-import { saveAdditionalUserData } from "database/setAdditionalUserData";
+import { saveGenderOnSignUp } from "database/setGenderOnSignUp";
 import {
   Box,
   Button,
@@ -36,6 +37,10 @@ import illustration from "assets/img/auth/auth.png";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
+type GenderData = {
+  gender: "male" | "female";
+};
+
 function SignUp() {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
@@ -52,7 +57,7 @@ function SignUp() {
   const [password2, setPassword2] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [gender, setGender] = useState("male");
+  const [gender, setGender] = useState<"male" | "female">("male");
 
   const handleSignUp = async () => {
     try {
@@ -67,7 +72,7 @@ function SignUp() {
         signInWithEmailAndPassword(auth, email, password).then(() => {
           const user = auth.currentUser;
           const userId = user.uid;
-          saveAdditionalUserData(userId, gender);
+          saveGenderOnSignUp(userId, gender);
 
           let key = sessionStorage.key(0);
           const userData = sessionStorage.getItem(key);
@@ -266,7 +271,7 @@ function SignUp() {
             <Flex direction="row" mb="24px">
               <RadioGroup
                 defaultValue="male"
-                onChange={(value) => setGender(value)}
+                onChange={(value) => setGender(value as "male" | "female")}
               >
                 <HStack spacing="24px">
                   <Radio value="male">Мъж</Radio>

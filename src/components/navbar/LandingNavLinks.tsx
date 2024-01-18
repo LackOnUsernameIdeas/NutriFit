@@ -7,6 +7,7 @@ import {
   Menu,
   MenuList,
   MenuButton,
+  Box,
   Avatar
 } from "@chakra-ui/react";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
@@ -35,7 +36,9 @@ export default function LandingLinks(props: { secondary: boolean }) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <SidebarResponsive routes={routes} />
+      <Box ml={{ base: "10px", lg: "0", md: "0" }}>
+        <SidebarResponsive routes={routes} />
+      </Box>
       <Button
         variant="no-hover"
         bg="transparent"
@@ -44,6 +47,7 @@ export default function LandingLinks(props: { secondary: boolean }) {
         minH="unset"
         h="18px"
         w="max-content"
+        ml={{ base: "20px", lg: "0", md: "0" }}
         onClick={toggleColorMode}
       >
         <Icon
@@ -65,11 +69,63 @@ export default function LandingLinks(props: { secondary: boolean }) {
             size="sm"
             w="40px"
             h="40px"
+            ml={{ base: "100px", lg: "0", md: "0" }}
           />
         </MenuButton>
       </Menu>
     </Flex>
   );
+  // return (
+  //   <Flex
+  //     w={{ sm: "auto", md: "auto" }}
+  //     alignItems="center"
+  //     flexDirection="row"
+  //     bg={menuBg}
+  //     flexWrap={secondary ? { base: "wrap", md: "nowrap" } : "unset"}
+  //     p="10px"
+  //     borderRadius="30px"
+  //     boxShadow={shadow}
+  //   >
+  //     <Box ml={{ base: "10px", lg: "0", md: "0" }}>
+  //       <SidebarResponsive routes={routes} />
+  //     </Box>
+  //     <Button
+  //       variant="no-hover"
+  //       bg="transparent"
+  //       p="0px"
+  //       minW="unset"
+  //       minH="unset"
+  //       h="18px"
+  //       w="max-content"
+  //       ml={{ base: "20px", lg: "0", md: "0" }}
+  //       onClick={toggleColorMode}
+  //     >
+  //       <Icon
+  //         me="10px"
+  //         h="18px"
+  //         w="18px"
+  //         color={navbarIcon}
+  //         as={colorMode === "light" ? IoMdMoon : IoMdSunny}
+  //       />
+  //     </Button>
+  //     <Menu>
+  //       <Link href="/#/auth/sign-in">
+  //         <MenuItem
+  //           _hover={bgHover}
+  //           _focus={{ bg: "none" }}
+  //           backgroundColor={bgButton}
+  //           color={buttonColor}
+  //           borderRadius="20px"
+  //           px="14px"
+  //           onClick={handleLogOut}
+  //           ml={{ base: "70px", lg: "0", md: "0" }}
+  //         >
+  //           <Text fontSize="sm">Излизане</Text>
+  //         </MenuItem>
+  //       </Link>
+  //     </Menu>
+  //   </Flex>
+  // );
 }
 
 LandingLinks.propTypes = {

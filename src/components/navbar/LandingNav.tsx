@@ -128,7 +128,7 @@ export default function LandingNavbar(props: {
             Fit
           </Text>
         </Box>
-        <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
+        <Box ms="auto" w={{ sm: "90%", md: "unset" }}>
           <LandingNavbarLinks
             onOpen={props.onOpen}
             secondary={props.secondary}

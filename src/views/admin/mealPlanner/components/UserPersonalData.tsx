@@ -109,18 +109,7 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Load stored values from local storage
-    const storedValues = JSON.parse(
-      localStorage.getItem("lastTypedValues") || "{}"
-    );
-
-    // Check if any input values have changed
-    const hasChanged = Object.keys(userData).some(
-      (key) => (userData as any)[key] !== storedValues[key]
-    );
-
-    console.log(storedValues);
-    if (hasChanged && isUserDataValid()) {
+    if (isUserDataValid()) {
       generateStats();
     }
   };
@@ -138,11 +127,9 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
       <Box gap="10px">
         {Object.entries(userData).map(([key, value], index) => (
           <label key={key}>
-            {key !== "gender" &&
-              key !== "goal" &&
-              userDataPropertiesTranslated[index].charAt(0).toUpperCase() +
-                userDataPropertiesTranslated[index].slice(1) +
-                " :"}
+            {userDataPropertiesTranslated[index].charAt(0).toUpperCase() +
+              userDataPropertiesTranslated[index].slice(1)}
+            :
             {typeof value === "number" ? (
               value !== 0 ? (
                 <Input
@@ -171,8 +158,87 @@ const UserPersonalData: React.FC<UserPersonalDataProps> = ({
                   onChange={(e) => handleInputChangeWithMemory(e)}
                 />
               )
+            ) : key === "goal" ? (
+              <Stack direction="row" alignContent="center" justify="center">
+                <SimpleGrid
+                  columns={{ base: 3, md: 1, lg: 7 }}
+                  spacing="10px"
+                  alignItems="center"
+                  mb="10px"
+                >
+                  <Radio
+                    value="maintain"
+                    onChange={() => handleRadioChange(key, "maintain")}
+                    isChecked={value === "maintain"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
+                    ml={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Запази тегло
+                  </Radio>
+                  <Radio
+                    value="mildlose"
+                    onChange={() => handleRadioChange(key, "mildlose")}
+                    isChecked={value === "mildlose"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
+                    mr={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Леко сваляне на тегло
+                  </Radio>
+                  <Radio
+                    value="weightlose"
+                    onChange={() => handleRadioChange(key, "weightlose")}
+                    isChecked={value === "weightlose"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
+                    mr={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Сваляне на тегло
+                  </Radio>
+                  <Radio
+                    value="extremelose"
+                    onChange={() => handleRadioChange(key, "extremelose")}
+                    isChecked={value === "extremelose"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
+                    mr={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Екстремно сваляне на тегло
+                  </Radio>
+                  <Radio
+                    value="mildgain"
+                    onChange={() => handleRadioChange(key, "mildgain")}
+                    isChecked={value === "mildgain"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
+                    mr={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Леко качване на тегло
+                  </Radio>
+                  <Radio
+                    value="weightgain"
+                    onChange={() => handleRadioChange(key, "weightgain")}
+                    isChecked={value === "weightgain"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your design
+                    mr={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Качване на тегло
+                  </Radio>
+                  <Radio
+                    value="extremegain"
+                    onChange={() => handleRadioChange(key, "extremegain")}
+                    isChecked={value === "extremegain"}
+                    fontSize={{ base: "sm", md: "md", lg: "lg" }} // Adjust the sizes based on your designfontSize={{ base: "sm", md: "md", lg: "lg" }}  // Adjust the sizes based on your design
+                    mr={{ base: "3%", md: "3%", lg: "3%" }}
+                  >
+                    Екстремно качване на тегло
+                  </Radio>
+                </SimpleGrid>
+              </Stack>
             ) : (
-              <></>
+              <Input
+                type="radio"
+                id={value}
+                name="goal"
+                value={value}
+                onChange={(e) => handleInputChange(e)}
+              />
             )}
             {validationErrors[key] && (
               <Text color="red" fontSize="sm">

@@ -63,7 +63,7 @@ export default function UserReports() {
   const brandColor = useColorModeValue("secondaryGray.900", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   return (
-    <Box pt={{ base: "150px", md: "80px", xl: "80px" }}>
+    <Box pt="80px">
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card minH="200px">
           <Flex justify="left" pt="5px" w="100%">

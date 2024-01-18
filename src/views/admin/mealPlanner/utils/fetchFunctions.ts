@@ -18,8 +18,8 @@ function translateBMIHealthToBulgarian(englishHealth: string) {
     "Severe Thinness": "Сериозно недохранване",
     "Moderate Thinness": "Средно недохранване",
     "Mild Thinness": "Леко недохранване",
-    "Normal": "Нормално",
-    "Overweight": "Наднормено тегло",
+    Normal: "Нормално",
+    Overweight: "Наднормено тегло",
     "Obese Class I": "Затлъстяване I Клас",
     "Obese Class II": "Затлъстяване II Клас",
     "Obese Class III": "Затлъстяване III Клас"
@@ -71,7 +71,7 @@ export const fetchPerfectWeightData = async (
 ) => {
   try {
     fetch(
-      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${'male'}&height=${height}`,
+      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${"male"}&height=${height}`,
       {
         method: "GET",
         headers: headers
@@ -107,7 +107,7 @@ export const fetchBodyFatAndLeanMassData = async (
 ) => {
   try {
     fetch(
-      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${'male'}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
+      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
       {
         method: "GET",
         headers: headers
@@ -149,7 +149,7 @@ export const fetchCaloriesForActivityLevels = async (
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${'male'}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
 
       requests.push(
         fetch(url, {
@@ -226,7 +226,7 @@ export const fetchMacroNutrients = async (
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${'male'}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${"male"}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
       requests.push(
         fetch(url, {

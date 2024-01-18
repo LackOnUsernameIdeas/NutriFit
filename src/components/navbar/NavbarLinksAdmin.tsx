@@ -10,23 +10,16 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Box,
   Text,
   useColorModeValue,
   useColorMode
 } from "@chakra-ui/react";
 // Custom Components
-import { ItemContent } from "components/menu/ItemContent";
 import { SidebarResponsive } from "components/sidebar/Sidebar";
 import PropTypes from "prop-types";
-import React from "react";
-import letterLogo from "assets/img/layout/letterLogo.png";
-// Assets
-import navImage from "assets/img/layout/Navbar.png";
-import { MdNotificationsNone, MdInfoOutline } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
-import { FaEthereum } from "react-icons/fa";
 import routes from "routes";
-import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props;
@@ -34,12 +27,6 @@ export default function HeaderLinks(props: { secondary: boolean }) {
   // Chakra Color Mode
   const navbarIcon = useColorModeValue("gray.400", "white");
   let menuBg = useColorModeValue("white", "navy.800");
-  const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorBrand = useColorModeValue("brand.700", "brand.400");
-  const ethColor = useColorModeValue("gray.700", "white");
-  const borderColor = useColorModeValue("#E6ECFA", "rgba(135, 140, 189, 0.3)");
-  const ethBg = useColorModeValue("secondaryGray.300", "navy.900");
-  const ethBox = useColorModeValue("white", "navy.800");
   const shadow = useColorModeValue(
     "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
@@ -58,7 +45,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 
   return (
     <Flex
-      w={{ sm: "100%", md: "auto" }}
+      w={{ sm: "auto", md: "auto" }}
       alignItems="center"
       flexDirection="row"
       bg={menuBg}
@@ -67,7 +54,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <SidebarResponsive routes={routes} />
+      <Box ml={{ base: "10px", lg: "0", md: "0" }}>
+        <SidebarResponsive routes={routes} />
+      </Box>
       <Button
         variant="no-hover"
         bg="transparent"
@@ -76,6 +65,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         minH="unset"
         h="18px"
         w="max-content"
+        ml={{ base: "20px", lg: "0", md: "0" }}
         onClick={toggleColorMode}
       >
         <Icon
@@ -96,6 +86,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
             borderRadius="20px"
             px="14px"
             onClick={handleLogOut}
+            ml={{ base: "70px", lg: "0", md: "0" }}
           >
             <Text fontSize="sm">Излизане</Text>
           </MenuItem>
