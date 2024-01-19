@@ -79,7 +79,7 @@ function SignIn() {
       await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
       setError("");
-      history.push("/admin/default");
+      history.push("/measurements/userData");
       if (rememberMe) {
         // Set cookie with user UID only when "Remember Me" is checked
         Cookies.set("remember", "remember", { expires: 5 }); // Set cookie to expire in 5 days

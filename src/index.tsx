@@ -13,6 +13,7 @@ import theme from "./theme/theme";
 import AuthLayout from "./layouts/auth";
 import AdminLayout from "./layouts/admin";
 import LandingLayout from "./layouts/landing";
+import MeasurementsLayout from "./layouts/measurements";
 import Landing from "views/test/default";
 import Cookies from "js-cookie";
 
@@ -69,6 +70,7 @@ ReactDOM.render(
       <HashRouter>
         <Switch>
           <PrivateRoute path="/admin" component={AdminLayout} />
+          <PrivateRoute path="/measurements" component={MeasurementsLayout} />
           <Route path="/auth" component={AuthLayout} />
           <LandingRoute path="/" component={LandingLayout} />
         </Switch>
