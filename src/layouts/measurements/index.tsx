@@ -13,11 +13,11 @@ export default function Measurements() {
   // states and functions
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const getRoute = () => {
-    return window.location.pathname !== "/auth/full-screen-maps";
+    return window.location.pathname !== "/measurements/full-screen-maps";
   };
   const getRoutes = (routes: RoutesType[]): any => {
     return routes.map((route: RoutesType, key: any) => {
-      if (route.layout === "/auth") {
+      if (route.layout === "/measurements") {
         return (
           <Route
             path={route.layout + route.path}
@@ -57,8 +57,8 @@ export default function Measurements() {
               <Switch>
                 {getRoutes(routes)}
                 <Redirect
-                  from="/auth"
-                  to="/auth/sign-in/default
+                  from="/measurements"
+                  to="/measurements/userData
                   "
                 />
               </Switch>

@@ -14,7 +14,7 @@ import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
-import UserMeasurements from "views/admin/userMeasurements";
+import UserMeasurements from "views/userMeasurements";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";

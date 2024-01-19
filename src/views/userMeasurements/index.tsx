@@ -57,7 +57,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import Cookies from "js-cookie";
 
-function SignIn() {
+function UserMeasurements() {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -77,4 +77,4 @@ function SignIn() {
   return <h1>wfwf</h1>;
 }
 
-export default SignIn;
+export default UserMeasurements;
