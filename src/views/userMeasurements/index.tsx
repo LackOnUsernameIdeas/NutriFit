@@ -31,6 +31,8 @@ import {
   onAuthStateChanged,
   User
 } from "firebase/auth";
+
+import { saveAdditionalUserData } from "database/setAdditionalUserData";
 // Chakra imports
 import {
   Box,
@@ -102,15 +104,6 @@ const UserMeasurements = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const handleRememberMeChange = async () => {
     setRememberMe(!rememberMe); // Toggle the rememberMe state
-  };
-  const handleSignIn = async (event: React.FormEvent) => {
-    history.push("/admin/default");
-
-    event.preventDefault();
-
-    if (isUserDataValid()) {
-      generateStats();
-    }
   };
 
   // State за въведени потребителски данни
@@ -226,7 +219,7 @@ const UserMeasurements = () => {
   }>({});
 
   React.useEffect(() => {
-    // Load stored values from local storage when component mounts
+    // Зарежда последно запазените данни от Local Storage
     const storedValues = JSON.parse(
       localStorage.getItem("lastTypedValues") || "{}"
     );
@@ -277,7 +270,7 @@ const UserMeasurements = () => {
 
     setValidationErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
 
-    // Save the input value to local storage
+    // Запазва последно написаните данни в Local Storage
     const storedValues = JSON.parse(
       localStorage.getItem("lastTypedValues") || "{}"
     );
@@ -285,6 +278,30 @@ const UserMeasurements = () => {
       "lastTypedValues",
       JSON.stringify({ ...storedValues, [name]: value })
     );
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    // Ако датата е валидна я записва в базата и изпраща потребителят на главната страница
+    if (isUserDataValid()) {
+      try {
+        const uid = getAuth().currentUser.uid;
+        await saveAdditionalUserData(
+          uid,
+          userData.height,
+          userData.age,
+          userData.weight,
+          userData.neck,
+          userData.waist,
+          userData.hip,
+          userData.goal
+        ).then(() => {
+          history.push("/admin/default");
+        });
+      } catch (error) {
+        console.error("Error saving additional user data:", error);
+      }
+    }
   };
 
   return (
@@ -307,7 +324,7 @@ const UserMeasurements = () => {
             Напишете вашите данни:
           </Heading>
           <Text
-            mb="36px"
+            mb="10px"
             ms="4px"
             color={textColorSecondary}
             fontWeight="400"
@@ -341,7 +358,7 @@ const UserMeasurements = () => {
                     fontSize="sm"
                     fontWeight="500"
                     color={textColor}
-                    mb="8px"
+                    mb="4px"
                   >
                     {userDataPropertiesTranslated[index]
                       .charAt(0)
@@ -365,6 +382,7 @@ const UserMeasurements = () => {
                         type="number"
                         name={key}
                         value={value || ""}
+                        variant="auth"
                         placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
                         _placeholder={{ opacity: 1, color: "gray.500" }}
                         onChange={(e) => handleInputChangeWithMemory(e)}
@@ -380,6 +398,7 @@ const UserMeasurements = () => {
                         type="number"
                         name={key}
                         value={""}
+                        variant="auth"
                         placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
                         _placeholder={{ opacity: 1, color: "gray.500" }}
                         onChange={(e) => handleInputChangeWithMemory(e)}
@@ -399,7 +418,7 @@ const UserMeasurements = () => {
               </Box>
             ))}
             <Button
-              onClick={handleSignIn}
+              onClick={handleSubmit}
               fontSize="sm"
               variant="brand"
               fontWeight="500"
