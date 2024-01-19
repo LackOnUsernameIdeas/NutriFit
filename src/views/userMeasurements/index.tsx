@@ -73,8 +73,230 @@ function UserMeasurements() {
   const handleRememberMeChange = async () => {
     setRememberMe(!rememberMe); // Toggle the rememberMe state
   };
-
-  return <h1>wfwf</h1>;
+  const handleSignIn = async () => {
+    history.push("/admin/default");
+  };
+  return (
+    <DefaultAuth illustrationBackground={illustration} image={illustration}>
+      <Flex
+        maxW={{ base: "100%", md: "max-content" }}
+        w="100%"
+        mx={{ base: "auto", lg: "0px" }}
+        me="auto"
+        h="100%"
+        alignItems="start"
+        justifyContent="center"
+        mb={{ base: "30px", md: "60px" }}
+        px={{ base: "25px", md: "0px" }}
+        mt={{ base: "40px", md: "20px" }}
+        flexDirection="column"
+      >
+        <Box me="auto">
+          <Heading color={textColor} fontSize="36px" mb="10px">
+            Напишете вашите данни:
+          </Heading>
+          <Text
+            mb="36px"
+            ms="4px"
+            color={textColorSecondary}
+            fontWeight="400"
+            fontSize="md"
+          >
+            Попълнете вашите данни за да можем да калкулираме нещата бла бла
+            бла!
+          </Text>
+        </Box>
+        <Flex
+          zIndex="2"
+          direction="column"
+          w={{ base: "100%", md: "420px" }}
+          maxW="100%"
+          background="transparent"
+          borderRadius="15px"
+          mx={{ base: "auto", lg: "unset" }}
+          me="auto"
+          mb={{ base: "20px", md: "auto" }}
+        >
+          <Flex align="center" mb="25px">
+            <HSeparator />
+          </Flex>
+          <FormControl>
+            <FormLabel
+              display="flex"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              mb="8px"
+            >
+              Години<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant="auth"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              type="email"
+              placeholder="example@noit.eu"
+              mb="10px"
+              fontWeight="500"
+              size="lg"
+            />
+            <FormLabel
+              display="flex"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              mb="8px"
+            >
+              Ръст<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant="auth"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              type="email"
+              placeholder="example@noit.eu"
+              mb="24px"
+              fontWeight="500"
+              size="lg"
+            />
+            <FormLabel
+              display="flex"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              mb="8px"
+            >
+              Тегло<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant="auth"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              type="email"
+              placeholder="example@noit.eu"
+              mb="24px"
+              fontWeight="500"
+              size="lg"
+            />
+            <FormLabel
+              display="flex"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              mb="8px"
+            >
+              Таза<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant="auth"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              type="email"
+              placeholder="example@noit.eu"
+              mb="10px"
+              fontWeight="500"
+              size="lg"
+            />
+            <FormLabel
+              display="flex"
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              mb="8px"
+            >
+              асдасд<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Input
+              isRequired={true}
+              variant="auth"
+              fontSize="sm"
+              ms={{ base: "0px", md: "0px" }}
+              type="email"
+              placeholder="example@noit.eu"
+              mb="10px"
+              fontWeight="500"
+              size="lg"
+            />
+            <Flex justifyContent="space-between" align="center" mb="24px">
+              <FormControl display="flex" alignItems="center">
+                <Checkbox
+                  id="remember-login"
+                  colorScheme="brandScheme"
+                  me="10px"
+                  onChange={handleRememberMeChange}
+                />
+                <FormLabel
+                  htmlFor="remember-login"
+                  mb="0"
+                  fontWeight="normal"
+                  color={textColor}
+                  fontSize="sm"
+                >
+                  Запомни ме
+                </FormLabel>
+              </FormControl>
+              <NavLink to="/auth/forgot-password">
+                <Text
+                  color={textColorBrand}
+                  fontSize="sm"
+                  w="124px"
+                  fontWeight="500"
+                >
+                  Забравена парола?
+                </Text>
+              </NavLink>
+            </Flex>
+            <Button
+              onClick={handleSignIn}
+              fontSize="sm"
+              variant="brand"
+              fontWeight="500"
+              w="100%"
+              h="50"
+              mb="24px"
+            >
+              Влизане
+            </Button>
+            {error && (
+              <Text color="red" fontSize="sm" mb="8px">
+                {error}
+              </Text>
+            )}
+          </FormControl>
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="start"
+            maxW="100%"
+            mt="0px"
+          >
+            <Text color={textColorDetails} fontWeight="400" fontSize="14px">
+              Не сте се регистрирали?
+              <NavLink to="/auth/sign-up">
+                <Text
+                  color={textColorBrand}
+                  as="span"
+                  ms="5px"
+                  fontWeight="500"
+                >
+                  Създаване на профил.
+                </Text>
+              </NavLink>
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
+    </DefaultAuth>
+  );
 }
 
 export default UserMeasurements;
