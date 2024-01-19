@@ -57,7 +57,37 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import Cookies from "js-cookie";
 
-function UserMeasurements() {
+// Помощни функции за извличане на данни
+import {
+  fetchCaloriesForActivityLevels,
+  fetchMacroNutrients
+} from "./utils/fetchFunctions";
+
+import {
+  UserData,
+  BodyMass,
+  DailyCaloryRequirements,
+  MacroNutrientsData
+} from "../../types/weightStats";
+
+interface UserMeasurements {
+  userData: UserData;
+  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleRadioChange: (key: string, value: string) => void;
+  generateStats: () => void;
+}
+
+const userDataPropertiesTranslated = [
+  "ръст (см)",
+  "възраст",
+  "тегло (кг)",
+  "обиколка на врат (см)",
+  "обиколка на талия (см)",
+  "oбиколка на таз (см)",
+  "цел"
+];
+
+const UserMeasurements = () => {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -73,9 +103,190 @@ function UserMeasurements() {
   const handleRememberMeChange = async () => {
     setRememberMe(!rememberMe); // Toggle the rememberMe state
   };
-  const handleSignIn = async () => {
+  const handleSignIn = async (event: React.FormEvent) => {
     history.push("/admin/default");
+
+    event.preventDefault();
+
+    if (isUserDataValid()) {
+      generateStats();
+    }
   };
+
+  // State за въведени потребителски данни
+  const [userData, setUserData] = useState<UserData>({
+    height: 0,
+    age: 0,
+    weight: 0,
+    neck: 0,
+    waist: 0,
+    hip: 0,
+    goal: "maintain"
+  });
+
+  const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<
+    DailyCaloryRequirements[]
+  >(
+    Array.from({ length: 6 }, (_, index) => ({
+      level: index + 1,
+      BMR: 0,
+      goals: {
+        "maintain weight": 0,
+        "Mild weight loss": { "loss weight": "0", calory: 0 },
+        "Weight loss": { "loss weight": "0", calory: 0 },
+        "Extreme weight loss": { "loss weight": "0", calory: 0 },
+        "Mild weight gain": { "gain weight": "0", calory: 0 },
+        "Weight gain": { "gain weight": "0", calory: 0 },
+        "Extreme weight gain": { "gain weight": "0", calory: 0 }
+      }
+    }))
+  );
+
+  const [tableData, setTableData] = useState<MacroNutrientsData[]>(
+    Array.from({ length: 6 }, (_) => [
+      { name: "Балансирана", protein: 0, fat: 0, carbs: 0 },
+      { name: "Ниско съдържание на мазнини", protein: 0, fat: 0, carbs: 0 },
+      {
+        name: "Ниско съдържание на въглехидрати",
+        protein: 0,
+        fat: 0,
+        carbs: 0
+      },
+      { name: "Високо съдържание на протеин", protein: 0, fat: 0, carbs: 0 }
+    ])
+  );
+
+  // State за избрани стойности
+  const [clickedValueNutrients, setClickedValueNutrients] = useState({
+    name: "",
+    protein: null,
+    fat: null,
+    carbs: null
+  });
+
+  const [clickedValueCalories, setClickedValueCalories] = useState<
+    number | null
+  >(null);
+
+  // State за избрано ниво на натовареност
+  const [activityLevel, setActivityLevel] = useState<number>(1);
+
+  // State за зареждане на страницата
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Submission state
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Event handler-и за реакция при промяна
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    const parsedValue = value.trim() === "" ? 0 : parseFloat(value);
+
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: parsedValue
+    }));
+  };
+
+  console.log(userData);
+
+  const handleRadioChange = (key: string, radioValue: string) => {
+    setUserData((prevData) => ({
+      ...prevData,
+      [key]: radioValue
+    }));
+  };
+
+  // Функция за генериране на статистики
+  function generateStats() {
+    fetchCaloriesForActivityLevels(
+      userData["age"],
+      userData["height"],
+      userData["weight"],
+      setDailyCaloryRequirements
+    );
+    fetchMacroNutrients(
+      userData["age"],
+      userData["height"],
+      userData["weight"],
+      userData["goal"],
+      setTableData
+    );
+
+    setIsSubmitted(true);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }
+
+  const [validationErrors, setValidationErrors] = React.useState<{
+    [key: string]: string;
+  }>({});
+
+  React.useEffect(() => {
+    // Load stored values from local storage when component mounts
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+    Object.keys(storedValues).forEach((key) => {
+      handleInputChange({
+        target: { name: key, value: storedValues[key] }
+      } as React.ChangeEvent<HTMLInputElement>);
+    });
+  }, []);
+
+  const validateField = (
+    value: number,
+    min: number,
+    max: number,
+    fieldName: string
+  ): string | undefined => {
+    if (value === 0) {
+      return `Моля, въведете ${fieldName}.`;
+    }
+
+    if (value < min || value > max) {
+      return `Полето ${fieldName} трябва да бъде между ${min} и ${max} см.`;
+    }
+
+    return undefined;
+  };
+
+  const isUserDataValid = () => {
+    const errors: { [key: string]: string } = {};
+
+    errors.height = validateField(userData.height, 130, 230, "височина");
+    errors.age = validateField(userData.age, 1, 80, "възраст");
+    errors.weight = validateField(userData.weight, 40, 160, "тегло");
+    errors.neck = validateField(userData.neck, 20, 60, "обиколка на врата");
+    errors.waist = validateField(userData.waist, 40, 130, "обиколка на талия");
+    errors.hip = validateField(userData.hip, 40, 130, "обиколка на таз");
+
+    setValidationErrors(errors);
+
+    return Object.values(errors).every((error) => error === undefined);
+  };
+
+  const handleInputChangeWithMemory = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    handleInputChange(e);
+
+    setValidationErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+
+    // Save the input value to local storage
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+    localStorage.setItem(
+      "lastTypedValues",
+      JSON.stringify({ ...storedValues, [name]: value })
+    );
+  };
+
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -121,140 +332,72 @@ function UserMeasurements() {
             <HSeparator />
           </Flex>
           <FormControl>
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Години<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="example@noit.eu"
-              mb="10px"
-              fontWeight="500"
-              size="lg"
-            />
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Ръст<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="example@noit.eu"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-            />
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Тегло<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="example@noit.eu"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-            />
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Таза<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="example@noit.eu"
-              mb="10px"
-              fontWeight="500"
-              size="lg"
-            />
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              асдасд<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="example@noit.eu"
-              mb="10px"
-              fontWeight="500"
-              size="lg"
-            />
-            <Flex justifyContent="space-between" align="center" mb="24px">
-              <FormControl display="flex" alignItems="center">
-                <Checkbox
-                  id="remember-login"
-                  colorScheme="brandScheme"
-                  me="10px"
-                  onChange={handleRememberMeChange}
-                />
-                <FormLabel
-                  htmlFor="remember-login"
-                  mb="0"
-                  fontWeight="normal"
-                  color={textColor}
-                  fontSize="sm"
-                >
-                  Запомни ме
-                </FormLabel>
-              </FormControl>
-              <NavLink to="/auth/forgot-password">
-                <Text
-                  color={textColorBrand}
-                  fontSize="sm"
-                  w="124px"
-                  fontWeight="500"
-                >
-                  Забравена парола?
-                </Text>
-              </NavLink>
-            </Flex>
+            {Object.entries(userData).map(([key, value], index) => (
+              <Box key={key} mb="10px">
+                {key !== "gender" && key !== "goal" && (
+                  <FormLabel
+                    display="flex"
+                    ms="4px"
+                    fontSize="sm"
+                    fontWeight="500"
+                    color={textColor}
+                    mb="8px"
+                  >
+                    {userDataPropertiesTranslated[index]
+                      .charAt(0)
+                      .toUpperCase() +
+                      userDataPropertiesTranslated[index].slice(1)}
+                    {key === "age" && (
+                      <Text color="brandStars" ml="1">
+                        *
+                      </Text>
+                    )}
+                  </FormLabel>
+                )}
+                {key !== "gender" &&
+                  key !== "goal" &&
+                  (typeof value === "number" ? (
+                    value !== 0 ? (
+                      <Input
+                        isRequired={key === "age"}
+                        color={textColor}
+                        focusBorderColor="#7551ff"
+                        type="number"
+                        name={key}
+                        value={value || ""}
+                        placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
+                        _placeholder={{ opacity: 1, color: "gray.500" }}
+                        onChange={(e) => handleInputChangeWithMemory(e)}
+                        fontSize="sm"
+                        fontWeight="500"
+                        size="lg"
+                      />
+                    ) : (
+                      <Input
+                        isRequired={key === "age"}
+                        color={textColor}
+                        focusBorderColor="#7551ff"
+                        type="number"
+                        name={key}
+                        value={""}
+                        placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
+                        _placeholder={{ opacity: 1, color: "gray.500" }}
+                        onChange={(e) => handleInputChangeWithMemory(e)}
+                        fontSize="sm"
+                        fontWeight="500"
+                        size="lg"
+                      />
+                    )
+                  ) : (
+                    <></>
+                  ))}
+                {validationErrors[key] && (
+                  <Text color="red" fontSize="sm">
+                    {validationErrors[key]}
+                  </Text>
+                )}
+              </Box>
+            ))}
             <Button
               onClick={handleSignIn}
               fontSize="sm"
@@ -264,7 +407,7 @@ function UserMeasurements() {
               h="50"
               mb="24px"
             >
-              Влизане
+              Изпрати
             </Button>
             {error && (
               <Text color="red" fontSize="sm" mb="8px">
@@ -272,31 +415,10 @@ function UserMeasurements() {
               </Text>
             )}
           </FormControl>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="start"
-            maxW="100%"
-            mt="0px"
-          >
-            <Text color={textColorDetails} fontWeight="400" fontSize="14px">
-              Не сте се регистрирали?
-              <NavLink to="/auth/sign-up">
-                <Text
-                  color={textColorBrand}
-                  as="span"
-                  ms="5px"
-                  fontWeight="500"
-                >
-                  Създаване на профил.
-                </Text>
-              </NavLink>
-            </Text>
-          </Flex>
         </Flex>
       </Flex>
     </DefaultAuth>
   );
-}
+};
 
 export default UserMeasurements;
