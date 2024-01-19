@@ -54,7 +54,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <Box ml={{ base: "20px", lg: "0", md: "0" }}>
+      <Box ml={{ base: "10px", lg: "0", md: "0" }}>
         <SidebarResponsive routes={routes} />
       </Box>
       <Button
@@ -65,7 +65,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
         minH="unset"
         h="18px"
         w="max-content"
-        ml={{ base: "40px", lg: "0", md: "0" }}
+        ml={{ base: "20px", lg: "0", md: "0" }}
         onClick={toggleColorMode}
       >
         <Icon
@@ -86,7 +86,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           maxW={{ sm: "100px", lg: "100px" }}
           px="14px"
           onClick={handleLogOut}
-          ml={{ base: "110px", lg: "0", md: "0" }}
+          ml={{ base: "20px", lg: "0", md: "0" }}
         >
           <Text fontSize="sm">Излизане</Text>
         </Button>

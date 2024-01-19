@@ -34,7 +34,7 @@ const Footer = () => {
         >
           <SimpleGrid
             columns={{ base: 1, md: 4, lg: 4 }}
-            gap={{ base: "50px", md: "100px", lg: "150px" }}
+            gap={{ base: "50px", md: "100px", lg: "100px" }}
             mb="20px"
             textAlign="center"
           >

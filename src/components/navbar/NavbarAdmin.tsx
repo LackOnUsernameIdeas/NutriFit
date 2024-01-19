@@ -8,10 +8,13 @@ import {
   Flex,
   Link,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  useBreakpointValue,
+  SimpleGrid
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import AdminNavbarLinks from "components/navbar/NavbarLinksAdmin";
+import { HSeparator } from "components/separator/Separator";
 
 export default function AdminNavbar(props: {
   secondary: boolean;
@@ -34,6 +37,7 @@ export default function AdminNavbar(props: {
   const { secondary, brandText } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
+  const isMobile = useBreakpointValue({ base: true, md: false });
   let mainText = useColorModeValue("navy.700", "white");
   let secondaryText = useColorModeValue("gray.700", "white");
   let navbarPosition = "fixed" as const;
@@ -57,7 +61,8 @@ export default function AdminNavbar(props: {
   };
 
   return (
-    <Box
+    <Flex
+      direction="column"
       position={navbarPosition}
       boxShadow={navbarShadow}
       bg={navbarBg}
@@ -101,10 +106,7 @@ export default function AdminNavbar(props: {
     >
       <Flex
         w="100%"
-        flexDirection={{
-          sm: "column",
-          md: "row"
-        }}
+        direction={{ sm: "column", md: "row" }}
         alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
         mb={gap}
       >
@@ -122,7 +124,6 @@ export default function AdminNavbar(props: {
               </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-          {/* Here we create navbar brand, based on route name */}
           <Link
             color={mainText}
             href="#"
@@ -144,14 +145,50 @@ export default function AdminNavbar(props: {
             {brandText}
           </Link>
         </Box>
-        <Box ms="auto" w={{ sm: "100%", md: "unset" }} justifySelf="center">
+        {isMobile && <HSeparator />}
+        <Flex
+          mt="12px"
+          ml={{ sm: "0", lg: "auto" }}
+          w={{ sm: "130%", md: "unset" }}
+          justifySelf="center"
+        >
+          {isMobile && (
+            <Box mr="20px" mt="8px">
+              <Text
+                color={mainText}
+                bg="inherit"
+                borderRadius="inherit"
+                fontFamily="DM Sans"
+                fontWeight="bold"
+                fontSize="30px"
+                display="inline"
+                position="relative"
+                top="10px" // Adjust this value to set the desired gap
+              >
+                Nutri
+              </Text>{" "}
+              <Text
+                color={mainText}
+                bg="inherit"
+                borderRadius="inherit"
+                fontFamily="Leckerli One"
+                fontWeight="bold"
+                fontSize="30px"
+                display="inline"
+                position="relative"
+                top="10px" // Adjust this value to set the desired gap
+              >
+                Fit
+              </Text>
+            </Box>
+          )}
           <AdminNavbarLinks
             onOpen={props.onOpen}
             secondary={props.secondary}
             fixed={props.fixed}
           />
-        </Box>
+        </Flex>
       </Flex>
-    </Box>
+    </Flex>
   );
 }
