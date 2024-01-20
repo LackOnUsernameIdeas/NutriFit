@@ -33,6 +33,7 @@ export interface Recipe {
 }
 
 export type UserData = {
+  gender?: "male" | "female";
   height: number;
   age: number;
   weight: number;
