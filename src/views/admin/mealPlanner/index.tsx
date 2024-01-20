@@ -421,8 +421,8 @@ export default function WeightStats() {
                       ms="24px"
                       fontWeight="700"
                     >
-                      Изберете колко калории искате да приемате на ден според
-                      целите:
+                      Изберете желаната от вас цел и съответните калории, които
+                      трябва да приемате на ден според желания резултат:
                     </Text>
                     <CalorieRequirements
                       calorieRequirements={dailyCaloryRequirements}
