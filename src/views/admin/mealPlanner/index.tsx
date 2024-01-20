@@ -125,7 +125,9 @@ export default function WeightStats() {
   const [activityLevel, setActivityLevel] = useState<number>(null);
 
   // State за зареждане на страницата
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingForCalories, setIsLoadingForCalories] = useState(false);
+  const [isLoadingForMacroNutrients, setIsLoadingForMacroNutrients] =
+    useState(false);
 
   // State-ове за въведени потребителски данни
   const [user, setUser] = useState(null);
@@ -186,9 +188,9 @@ export default function WeightStats() {
       setDailyCaloryRequirements
     );
 
-    setIsLoading(true);
+    setIsLoadingForCalories(true);
     setTimeout(() => {
-      setIsLoading(false);
+      setIsLoadingForCalories(false);
     }, 1000);
   }
 
@@ -202,9 +204,9 @@ export default function WeightStats() {
       setTableData
     );
 
-    setIsLoading(true);
+    setIsLoadingForMacroNutrients(true);
     setTimeout(() => {
-      setIsLoading(false);
+      setIsLoadingForMacroNutrients(false);
     }, 1000);
   }
 
@@ -233,7 +235,7 @@ export default function WeightStats() {
       style={{ overflow: "hidden" }}
     >
       <Box>
-        {isLoading || !isGenerateStatsForCaloriesCalled ? (
+        {!isGenerateStatsForCaloriesCalled ? (
           <Loading />
         ) : (
           <Box>
@@ -454,9 +456,7 @@ export default function WeightStats() {
                     />
                   </Card>
                   {clickedValueCalories !== null &&
-                  !isGenerateStatsForMacroNutrientsCalled ? (
-                    <Loading />
-                  ) : (
+                  !isLoadingForMacroNutrients ? (
                     <>
                       <Card>
                         <Flex align="center">
@@ -603,6 +603,10 @@ export default function WeightStats() {
                         clickedValueProtein={clickedValueNutrients.protein}
                       />
                     </>
+                  ) : isLoadingForMacroNutrients ? (
+                    <Loading />
+                  ) : (
+                    <></>
                   )}
                 </Card>
                 {clickedValueNutrients.protein !== null && (
