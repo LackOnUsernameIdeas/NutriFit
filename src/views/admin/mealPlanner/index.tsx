@@ -27,7 +27,6 @@ import CardBody from "components/card/Card";
 
 import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
-import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
 import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
@@ -123,7 +122,7 @@ export default function WeightStats() {
   >(null);
 
   // State за избрано ниво на натовареност
-  const [activityLevel, setActivityLevel] = useState<number>(1);
+  const [activityLevel, setActivityLevel] = useState<number>(null);
 
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
@@ -132,6 +131,7 @@ export default function WeightStats() {
   const [user, setUser] = useState(null);
 
   const [userData, setUserData] = useState<UserData>({
+    gender: "male" || "female",
     height: 0,
     age: 0,
     weight: 0,
@@ -140,9 +140,6 @@ export default function WeightStats() {
     hip: 0,
     goal: "maintain"
   });
-
-  // Submission state
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
     useState<boolean>(false);
@@ -176,19 +173,20 @@ export default function WeightStats() {
   function generateStats() {
     fetchCaloriesForActivityLevels(
       userData["age"],
+      userData["gender"],
       userData["height"],
       userData["weight"],
       setDailyCaloryRequirements
     );
     fetchMacroNutrients(
       userData["age"],
+      userData["gender"],
       userData["height"],
       userData["weight"],
       userData["goal"],
       setTableData
     );
 
-    setIsSubmitted(true);
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -206,27 +204,6 @@ export default function WeightStats() {
       setIsGenerateStatsCalled(true);
     }
   }, [userData]);
-
-  // Event handler-и за реакция при промяна
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    const parsedValue = value.trim() === "" ? 0 : parseFloat(value);
-
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: parsedValue
-    }));
-  };
-
-  console.log(userData);
-
-  const handleRadioChange = (key: string, radioValue: string) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      [key]: radioValue
-    }));
-  };
 
   return (
     <Box
@@ -293,289 +270,324 @@ export default function WeightStats() {
                 </Stack>
               </CardBody>
             </Card>
-            <Card p="20px" flexDirection="column" w="100%" mb="20px">
-              <Card alignItems="center">
-                <Text
-                  color={textColor}
-                  fontSize="2xl"
-                  ms="24px"
-                  fontWeight="700"
-                >
-                  Изберете ниво на натовареност:
-                </Text>
-                <Box gap="10px" mb="20px" mt="20px">
-                  <Flex justifyContent="space-between" align="center">
-                    <SimpleGrid
-                      columns={{ base: 3, md: 2, lg: 7 }}
-                      spacing="10px"
-                      alignItems="center"
-                      mb="10px"
+            <Card
+              alignItems="center"
+              p="20px"
+              flexDirection="column"
+              w="100%"
+              mb="20px"
+            >
+              <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                Изберете ниво на натовареност:
+              </Text>
+              <Box gap="10px" mb="20px" mt="20px">
+                <Flex justifyContent="space-between" align="center">
+                  <SimpleGrid
+                    columns={{ base: 3, md: 2, lg: 7 }}
+                    spacing="10px"
+                    alignItems="center"
+                    mb="10px"
+                  >
+                    {[1, 2, 3, 4, 5, 6].map((level) => (
+                      <Button
+                        key={level}
+                        fontSize={{ base: "sm", md: "md" }}
+                        margin="0"
+                        colorScheme={activityLevel === level ? "blue" : "gray"}
+                        onClick={() => setActivityLevel(level)}
+                      >
+                        Ниво {level}
+                      </Button>
+                    ))}
+                    <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
+                      <MenuButton
+                        alignItems="center"
+                        justifyContent="center"
+                        bg={bgButton}
+                        _hover={bgHover}
+                        _focus={bgFocus}
+                        _active={bgFocus}
+                        w="30px"
+                        h="30px"
+                        lineHeight="50%"
+                        onClick={onOpenLevels}
+                        borderRadius="10px"
+                        ml="10%"
+                      >
+                        <Icon
+                          as={MdOutlineInfo}
+                          color={iconColor}
+                          w="24px"
+                          h="24px"
+                        />
+                      </MenuButton>
+                      <MenuList
+                        w="100%"
+                        minW="unset"
+                        ml={{ base: "2%", lg: 0 }}
+                        mr={{ base: "2%", lg: 0 }}
+                        maxW={{ base: "70%", lg: "80%" }}
+                        border="transparent"
+                        backdropFilter="blur(100px)"
+                        bg={bgList}
+                        borderRadius="20px"
+                        p="15px"
+                      >
+                        <Box
+                          transition="0.2s linear"
+                          color={textColor}
+                          p="0px"
+                          maxW={{ base: "80%", lg: "100%" }}
+                          borderRadius="8px"
+                        >
+                          <Flex align="center">
+                            <Text fontSize="1xl" fontWeight="400">
+                              Бутони за определяне на ниво на натовареност.
+                            </Text>
+                          </Flex>
+                          <HSeparator />
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Ниво 1 - Малко или въобще не спортувате.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Ниво 2 - Спортувате умерено 1-3 пъти в седмицата.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Ниво 3 - Спортувате умерено 4-5 пъти в седмицата.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Ниво 4 - Спортувате умерено дневно или интензивно
+                              3-4 пъти в седмицата.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text
+                              fontSize="sm"
+                              fontWeight="400"
+                              mt="10px"
+                              mb="5px"
+                            >
+                              Ниво 5 - Спортувате интензивно 6-7 пъти в
+                              седмицата.
+                            </Text>
+                          </Flex>
+                          <Flex align="center">
+                            <Text fontSize="sm" fontWeight="400" mt="10px">
+                              Ниво 6 - Спортувате много интензивно цялата
+                              седмица.
+                            </Text>
+                          </Flex>
+                        </Box>
+                      </MenuList>
+                    </Menu>
+                  </SimpleGrid>
+                </Flex>
+              </Box>
+            </Card>
+            {activityLevel && (
+              <>
+                <Card p="20px" flexDirection="column" w="100%" mb="20px">
+                  <Card alignItems="center">
+                    <Text
+                      color={textColor}
+                      fontSize="2xl"
+                      ms="24px"
+                      fontWeight="700"
                     >
-                      {[1, 2, 3, 4, 5, 6].map((level) => (
-                        <Button
-                          key={level}
-                          fontSize={{ base: "sm", md: "md" }}
-                          margin="0"
-                          colorScheme={
-                            activityLevel === level ? "blue" : "gray"
-                          }
-                          onClick={() => setActivityLevel(level)}
-                        >
-                          Ниво {level}
-                        </Button>
-                      ))}
-                      <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
-                        <MenuButton
-                          alignItems="center"
-                          justifyContent="center"
-                          bg={bgButton}
-                          _hover={bgHover}
-                          _focus={bgFocus}
-                          _active={bgFocus}
-                          w="30px"
-                          h="30px"
-                          lineHeight="50%"
-                          onClick={onOpenLevels}
-                          borderRadius="10px"
-                          ml="10%"
-                        >
-                          <Icon
-                            as={MdOutlineInfo}
-                            color={iconColor}
-                            w="24px"
-                            h="24px"
-                          />
-                        </MenuButton>
-                        <MenuList
-                          w="100%"
-                          minW="unset"
-                          ml={{ base: "2%", lg: 0 }}
-                          mr={{ base: "2%", lg: 0 }}
-                          maxW={{ base: "70%", lg: "80%" }}
-                          border="transparent"
-                          backdropFilter="blur(100px)"
-                          bg={bgList}
-                          borderRadius="20px"
-                          p="15px"
-                        >
-                          <Box
-                            transition="0.2s linear"
-                            color={textColor}
-                            p="0px"
-                            maxW={{ base: "80%", lg: "100%" }}
-                            borderRadius="8px"
-                          >
-                            <Flex align="center">
-                              <Text fontSize="1xl" fontWeight="400">
-                                Бутони за определяне на ниво на натовареност.
-                              </Text>
-                            </Flex>
-                            <HSeparator />
-                            <Flex align="center">
-                              <Text
-                                fontSize="sm"
-                                fontWeight="400"
-                                mt="10px"
-                                mb="5px"
+                      Изберете колко калории искате да приемате на ден според
+                      целите:
+                    </Text>
+                    <CalorieRequirements
+                      calorieRequirements={dailyCaloryRequirements}
+                      selectedActivityLevel={activityLevel}
+                      clickedValueCalories={clickedValueCalories}
+                      setClickedValueCalories={setClickedValueCalories}
+                    />
+                  </Card>
+                  {clickedValueCalories !== null && (
+                    <>
+                      <Card>
+                        <Flex align="center">
+                          <Menu isOpen={isOpenDiet} onClose={onCloseDiet}>
+                            <MenuButton
+                              alignItems="center"
+                              justifyContent="center"
+                              bg={bgButton}
+                              _hover={bgHover}
+                              _focus={bgFocus}
+                              _active={bgFocus}
+                              w="30px"
+                              h="30px"
+                              lineHeight="50%"
+                              onClick={onOpenDiet}
+                              borderRadius="10px"
+                              order={1} // Set a higher order value
+                            >
+                              <Icon
+                                as={MdOutlineInfo}
+                                color={iconColor}
+                                w="24px"
+                                h="24px"
+                              />
+                            </MenuButton>
+                            <MenuList
+                              w="100%"
+                              minW="unset"
+                              ml={{ base: "2%", lg: 0 }}
+                              mr={{ base: "2%", lg: 0 }}
+                              maxW={{ base: "47%", lg: "80%" }}
+                              border="transparent"
+                              backdropFilter="blur(100px)"
+                              bg={bgList}
+                              borderRadius="20px"
+                            >
+                              <Box
+                                transition="0.2s linear"
+                                color={textColor}
+                                borderRadius="8px"
+                                maxW={{ base: "2xl", lg: "100%" }}
                               >
-                                Ниво 1 - Малко или въобще не спортувате.
-                              </Text>
-                            </Flex>
-                            <Flex align="center">
-                              <Text
-                                fontSize="sm"
-                                fontWeight="400"
-                                mt="10px"
-                                mb="5px"
-                              >
-                                Ниво 2 - Спортувате умерено 1-3 пъти в
-                                седмицата.
-                              </Text>
-                            </Flex>
-                            <Flex align="center">
-                              <Text
-                                fontSize="sm"
-                                fontWeight="400"
-                                mt="10px"
-                                mb="5px"
-                              >
-                                Ниво 3 - Спортувате умерено 4-5 пъти в
-                                седмицата.
-                              </Text>
-                            </Flex>
-                            <Flex align="center">
-                              <Text
-                                fontSize="sm"
-                                fontWeight="400"
-                                mt="10px"
-                                mb="5px"
-                              >
-                                Ниво 4 - Спортувате умерено дневно или
-                                интензивно 3-4 пъти в седмицата.
-                              </Text>
-                            </Flex>
-                            <Flex align="center">
-                              <Text
-                                fontSize="sm"
-                                fontWeight="400"
-                                mt="10px"
-                                mb="5px"
-                              >
-                                Ниво 5 - Спортувате интензивно 6-7 пъти в
-                                седмицата.
-                              </Text>
-                            </Flex>
-                            <Flex align="center">
-                              <Text fontSize="sm" fontWeight="400" mt="10px">
-                                Ниво 6 - Спортувате много интензивно цялата
-                                седмица.
-                              </Text>
-                            </Flex>
-                          </Box>
-                        </MenuList>
-                      </Menu>
-                    </SimpleGrid>
-                  </Flex>
-                </Box>
-                <Text
-                  color={textColor}
-                  fontSize="2xl"
-                  ms="24px"
-                  fontWeight="700"
-                >
-                  Изберете колко калории искате да приемате на ден според
-                  целите:
-                </Text>
-                {activityLevel && (
-                  <CalorieRequirements
-                    calorieRequirements={dailyCaloryRequirements}
-                    selectedActivityLevel={activityLevel}
-                    clickedValueCalories={clickedValueCalories}
-                    setClickedValueCalories={setClickedValueCalories}
+                                <Flex align="center">
+                                  <Text fontSize="2xl" fontWeight="400">
+                                    Изберете тип диета по вашите предпочитания.
+                                  </Text>
+                                </Flex>
+                                <HSeparator />
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="1xl"
+                                    fontWeight="400"
+                                    mt="4px"
+                                  >
+                                    Балансирана:
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="sm"
+                                    fontWeight="200"
+                                    mb="10px"
+                                  >
+                                    Балансирано разпределение на макронутриенти
+                                    с умерени нива на протеини, въглехидрати и
+                                    мазнини. Идеална за поддържане на здравето.
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="1xl"
+                                    fontWeight="400"
+                                    mt="4px"
+                                  >
+                                    Ниско съдържание на мазнини:
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="sm"
+                                    fontWeight="200"
+                                    mb="10px"
+                                  >
+                                    Набляга на намаляване на приема на мазнини и
+                                    поддържане на адекватни нива на протеини и
+                                    въглехидрати. Подходящ за тези, които се
+                                    стремят да намалят общия прием на калории и
+                                    да контролират теглото си.
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="1xl"
+                                    fontWeight="400"
+                                    mt="4px"
+                                  >
+                                    Ниско съдържание на въглехидрати:
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="sm"
+                                    fontWeight="400"
+                                    mb="10px"
+                                  >
+                                    Фокусира се върху минимизиране на приема на
+                                    въглехидрати, като същевременно осигурява
+                                    достатъчно протеини и здравословни мазнини.
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text
+                                    fontSize="1xl"
+                                    fontWeight="400"
+                                    mt="4px"
+                                  >
+                                    Високо съдържание на протеин:
+                                  </Text>
+                                </Flex>
+                                <Flex align="center">
+                                  <Text fontSize="sm" fontWeight="400">
+                                    Дава приоритет на по-висок прием на протеин
+                                    с умерени нива на въглехидрати и мазнини.
+                                    Идеална за тези, които искат да подпомогнат
+                                    развитието на мускулите, особено при силови
+                                    тренировки или фитнес програми.
+                                  </Text>
+                                </Flex>
+                              </Box>
+                            </MenuList>
+                          </Menu>
+                        </Flex>
+                      </Card>
+                      <DietTable
+                        tableName="Изберете тип диета:"
+                        tableData={tableData[activityLevel - 1]}
+                        columnsData={[
+                          { name: "name", label: "Тип диета" },
+                          { name: "protein", label: "Протеин (гр.)" },
+                          { name: "fat", label: "Мазнини (гр.)" },
+                          { name: "carbs", label: "Въглехидрати (гр.)" }
+                        ]}
+                        setState={setClickedValueNutrients}
+                        clickedValueProtein={clickedValueNutrients.protein}
+                      />
+                    </>
+                  )}
+                </Card>
+                {clickedValueNutrients.protein !== null && (
+                  <MealPlanner
+                    chosenCalories={clickedValueCalories}
+                    chosenNutrients={clickedValueNutrients}
                   />
                 )}
-              </Card>
-              <Card>
-                <Flex align="center">
-                  <Menu isOpen={isOpenDiet} onClose={onCloseDiet}>
-                    <MenuButton
-                      alignItems="center"
-                      justifyContent="center"
-                      bg={bgButton}
-                      _hover={bgHover}
-                      _focus={bgFocus}
-                      _active={bgFocus}
-                      w="30px"
-                      h="30px"
-                      lineHeight="50%"
-                      onClick={onOpenDiet}
-                      borderRadius="10px"
-                      order={1} // Set a higher order value
-                    >
-                      <Icon
-                        as={MdOutlineInfo}
-                        color={iconColor}
-                        w="24px"
-                        h="24px"
-                      />
-                    </MenuButton>
-                    <MenuList
-                      w="100%"
-                      minW="unset"
-                      ml={{ base: "2%", lg: 0 }}
-                      mr={{ base: "2%", lg: 0 }}
-                      maxW={{ base: "47%", lg: "80%" }}
-                      border="transparent"
-                      backdropFilter="blur(100px)"
-                      bg={bgList}
-                      borderRadius="20px"
-                    >
-                      <Box
-                        transition="0.2s linear"
-                        color={textColor}
-                        borderRadius="8px"
-                        maxW={{ base: "2xl", lg: "100%" }}
-                      >
-                        <Flex align="center">
-                          <Text fontSize="2xl" fontWeight="400">
-                            Изберете тип диета по вашите предпочитания.
-                          </Text>
-                        </Flex>
-                        <HSeparator />
-                        <Flex align="center">
-                          <Text fontSize="1xl" fontWeight="400" mt="4px">
-                            Балансирана:
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="sm" fontWeight="200" mb="10px">
-                            Балансирано разпределение на макронутриенти с
-                            умерени нива на протеини, въглехидрати и мазнини.
-                            Идеална за поддържане на здравето.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="1xl" fontWeight="400" mt="4px">
-                            Ниско съдържание на мазнини:
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="sm" fontWeight="200" mb="10px">
-                            Набляга на намаляване на приема на мазнини и
-                            поддържане на адекватни нива на протеини и
-                            въглехидрати. Подходящ за тези, които се стремят да
-                            намалят общия прием на калории и да контролират
-                            теглото си.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="1xl" fontWeight="400" mt="4px">
-                            Ниско съдържание на въглехидрати:
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="sm" fontWeight="400" mb="10px">
-                            Фокусира се върху минимизиране на приема на
-                            въглехидрати, като същевременно осигурява достатъчно
-                            протеини и здравословни мазнини.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="1xl" fontWeight="400" mt="4px">
-                            Високо съдържание на протеин:
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text fontSize="sm" fontWeight="400">
-                            Дава приоритет на по-висок прием на протеин с
-                            умерени нива на въглехидрати и мазнини. Идеална за
-                            тези, които искат да подпомогнат развитието на
-                            мускулите, особено при силови тренировки или фитнес
-                            програми.
-                          </Text>
-                        </Flex>
-                      </Box>
-                    </MenuList>
-                  </Menu>
-                </Flex>
-              </Card>
-              <DietTable
-                tableName="Изберете тип диета:"
-                tableData={tableData[activityLevel - 1]}
-                columnsData={[
-                  { name: "name", label: "Тип диета" },
-                  { name: "protein", label: "Протеин (гр.)" },
-                  { name: "fat", label: "Мазнини (гр.)" },
-                  { name: "carbs", label: "Въглехидрати (гр.)" }
-                ]}
-                setState={setClickedValueNutrients}
-                clickedValueProtein={clickedValueNutrients.protein}
-              />
-            </Card>
-            <MealPlanner
-              chosenCalories={clickedValueCalories}
-              chosenNutrients={clickedValueNutrients}
-            />
+              </>
+            )}
           </Box>
         )}
       </Box>

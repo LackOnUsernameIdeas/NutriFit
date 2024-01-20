@@ -28,7 +28,6 @@ import CardBody from "components/card/Card";
 
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
-import UserPersonalData from "./components/UserPersonalData";
 import Loading from "./components/Loading";
 import { HSeparator } from "components/separator/Separator";
 // Types
@@ -155,9 +154,14 @@ export default function WeightStats() {
       userData["weight"],
       setBMIIndex
     );
-    fetchPerfectWeightData(userData["height"], setPerfectWeight);
+    fetchPerfectWeightData(
+      userData["height"],
+      userData["gender"],
+      setPerfectWeight
+    );
     fetchBodyFatAndLeanMassData(
       userData["age"],
+      userData["gender"],
       userData["height"],
       userData["weight"],
       userData["neck"],
