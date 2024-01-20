@@ -14,7 +14,7 @@ import AuthLayout from "./layouts/auth";
 import AdminLayout from "./layouts/admin";
 import LandingLayout from "./layouts/landing";
 import MeasurementsLayout from "./layouts/measurements";
-import Landing from "views/test/default";
+import Landing from "views/landing";
 import Cookies from "js-cookie";
 
 interface PrivateRouteProps extends RouteProps {

@@ -21,7 +21,7 @@ import SignInCentered from "views/auth/signIn";
 import SignUpCentered from "views/auth/signUp";
 import ForgotPass from "views/auth/forgotPass";
 
-import Landing from "views/test/default";
+import Landing from "views/landing";
 
 const routes = [
   {
