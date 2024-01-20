@@ -13,7 +13,8 @@ import {
 } from "react-icons/fa";
 import { DailyCaloryRequirements } from "../../../../types/weightStats";
 import { useState, useEffect } from "react";
-
+import { saveGoal } from "database/setGoalUserData";
+import { getAuth } from "firebase/auth";
 export default function CalorieRequirements(props: {
   calorieRequirements: DailyCaloryRequirements[];
   selectedActivityLevel: number;
@@ -22,7 +23,6 @@ export default function CalorieRequirements(props: {
 }) {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-
   const { clickedValueCalories, setClickedValueCalories } = props;
 
   const [dailyCaloryRequirements, setDailyCaloryRequirement] = useState<
@@ -32,7 +32,7 @@ export default function CalorieRequirements(props: {
   useEffect(() => {
     setDailyCaloryRequirement(props.calorieRequirements);
   }, [props.calorieRequirements, props.selectedActivityLevel]);
-
+  const uid = getAuth().currentUser.uid;
   const selectedLevelData =
     dailyCaloryRequirements[props.selectedActivityLevel - 1];
 
@@ -86,13 +86,14 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Mild weight loss"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "mildlose");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(
@@ -132,13 +133,14 @@ export default function CalorieRequirements(props: {
           value={
             selectedLevelData.goals["Weight loss"].calory.toFixed(2) + " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Weight loss"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "weightlose");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight loss"].calory.toFixed(2))
@@ -180,13 +182,14 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "extremelose");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(
@@ -224,11 +227,12 @@ export default function CalorieRequirements(props: {
           value={
             selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
-            )
-          }
+            );
+            saveGoal(uid, "maintain");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
@@ -270,13 +274,14 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Mild weight gain"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "mildgain");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(
@@ -316,13 +321,14 @@ export default function CalorieRequirements(props: {
           value={
             selectedLevelData.goals["Weight gain"].calory.toFixed(2) + " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Weight gain"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "weightgain");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight gain"].calory.toFixed(2))
@@ -364,13 +370,14 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "extremegain");
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(

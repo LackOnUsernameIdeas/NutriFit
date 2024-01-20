@@ -293,8 +293,7 @@ const UserMeasurements = () => {
           userData.weight,
           userData.neck,
           userData.waist,
-          userData.hip,
-          userData.goal
+          userData.hip
         ).then(() => {
           history.push("/admin/default");
         });

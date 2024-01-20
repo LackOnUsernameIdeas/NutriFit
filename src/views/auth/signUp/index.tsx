@@ -79,7 +79,7 @@ function SignUp() {
           let jsonUserData = JSON.parse(userData);
           let token = jsonUserData.stsTokenManager.accessToken;
           if (token) {
-            history.push("/admin/default");
+            history.push("/measurements/userData");
             setError("");
           } else {
             setError("Unable to retrieve user token");

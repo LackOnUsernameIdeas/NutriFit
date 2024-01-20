@@ -94,7 +94,7 @@ export default function AdminNavbar(props: {
       ps={{
         xl: "12px"
       }}
-      pt="8px"
+      pt="6px"
       top={{ base: "12px", md: "16px", xl: "18px" }}
       w={{
         base: "calc(100vw - 6%)",
@@ -110,9 +110,9 @@ export default function AdminNavbar(props: {
         alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
         mb={gap}
       >
-        <Box mb={{ sm: "8px", md: "0px" }}>
+        <Box mb={{ sm: "12px", md: "0px" }}>
           <Breadcrumb>
-            <BreadcrumbItem color={secondaryText} fontSize="sm" mb="5px">
+            <BreadcrumbItem color={secondaryText} fontSize="sm" mb="6px">
               <BreadcrumbLink href="#" color={secondaryText}>
                 Страници
               </BreadcrumbLink>
