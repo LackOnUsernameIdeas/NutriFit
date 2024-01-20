@@ -176,7 +176,7 @@ export default function WeightStats() {
 
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
-  }, [clickedValueCalories]);
+  }, []);
 
   // Функция за генериране на статистики
   function generateStatsForCalories() {
@@ -223,8 +223,6 @@ export default function WeightStats() {
   }, [userData]);
 
   React.useEffect(() => {
-    // Check if numeric values in userData are different from 0 and not null
-
     generateStatsForMacroNutrients();
     setIsGenerateStatsForMacroNutrientsCalled(true);
   }, [userData.goal]);
@@ -453,6 +451,7 @@ export default function WeightStats() {
                       selectedActivityLevel={activityLevel}
                       clickedValueCalories={clickedValueCalories}
                       setClickedValueCalories={setClickedValueCalories}
+                      setUserData={setUserData}
                     />
                   </Card>
                   {clickedValueCalories !== null &&

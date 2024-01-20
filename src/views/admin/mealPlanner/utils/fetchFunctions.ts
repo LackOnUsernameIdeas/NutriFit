@@ -9,7 +9,7 @@ import {
 
 const headers = {
   "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
-  "X-RapidAPI-Key": "9f28f7d48amsh2d3e88bff5dc3e3p128d8ajsn8d2c53ac54e5",
+  "X-RapidAPI-Key": "e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab",
   "Content-Type": "application/json"
 };
 
