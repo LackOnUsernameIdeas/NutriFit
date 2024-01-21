@@ -5,17 +5,140 @@ import {
   DailyCaloryRequirements,
   MacroNutrientsData,
   Goal
-} from "../../../../types/weightStats";
+} from "../../../types/weightStats";
 
 const headers = {
   "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
-  "X-RapidAPI-Key": "e3ed959789msh812fb49d4659a43p1f5983jsnd957c64a5aab",
+  "X-RapidAPI-Key": "9f28f7d48amsh2d3e88bff5dc3e3p128d8ajsn8d2c53ac54e5",
   "Content-Type": "application/json"
+};
+
+function translateBMIHealthToBulgarian(englishHealth: string) {
+  const bulgarianTranslations = {
+    "Severe Thinness": "Сериозно недохранване",
+    "Moderate Thinness": "Средно недохранване",
+    "Mild Thinness": "Леко недохранване",
+    Normal: "Нормално",
+    Overweight: "Наднормено тегло",
+    "Obese Class I": "Затлъстяване I Клас",
+    "Obese Class II": "Затлъстяване II Клас",
+    "Obese Class III": "Затлъстяване III Клас"
+  };
+
+  return (bulgarianTranslations as any)[englishHealth] || englishHealth;
+}
+
+export const fetchBMIData = async (
+  age: number,
+  height: number,
+  weight: number,
+  setBMIIndex: React.Dispatch<React.SetStateAction<BMIInfo>>
+) => {
+  try {
+    fetch(
+      `https://fitness-calculator.p.rapidapi.com/bmi?age=21&weight=${weight}&height=${height}`,
+      {
+        method: "GET",
+        headers: headers
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const BMIInfo: BMIInfo = {
+          bmi: data.data.bmi,
+          health: translateBMIHealthToBulgarian(data.data.health),
+          healthy_bmi_range: "18.5 - 25"
+        };
+        setBMIIndex(BMIInfo);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  } catch (err: any) {
+    if (err instanceof TypeError && err.message.includes("failed to fetch")) {
+      console.error(
+        "Error fetching data. Please check your internet connection."
+      );
+    } else {
+      console.error("An error occurred while fetching data:", err.message);
+    }
+  }
+};
+
+export const fetchPerfectWeightData = async (
+  height: number,
+  setPerfectWeight: React.Dispatch<React.SetStateAction<number>>
+) => {
+  try {
+    fetch(
+      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${"male"}&height=${height}`,
+      {
+        method: "GET",
+        headers: headers
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const bodyMassInfo: number = data.data.Devine;
+        setPerfectWeight(bodyMassInfo);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  } catch (err: any) {
+    if (err instanceof TypeError && err.message.includes("failed to fetch")) {
+      console.error(
+        "Error fetching data. Please check your internet connection."
+      );
+    } else {
+      console.error("An error occurred while fetching data:", err.message);
+    }
+  }
+};
+
+export const fetchBodyFatAndLeanMassData = async (
+  age: number,
+  height: number,
+  weight: number,
+  neck: number,
+  waist: number,
+  hip: number,
+  setBodyFatMassAndLeanMass: React.Dispatch<React.SetStateAction<BodyMass>>
+) => {
+  try {
+    fetch(
+      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
+      {
+        method: "GET",
+        headers: headers
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const bodyMassInfo: BodyMass = {
+          "Body Fat (U.S. Navy Method)":
+            data.data["Body Fat (U.S. Navy Method)"],
+          "Body Fat Mass": data.data["Body Fat Mass"],
+          "Lean Body Mass": data.data["Lean Body Mass"]
+        };
+        setBodyFatMassAndLeanMass(bodyMassInfo);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  } catch (err: any) {
+    if (err instanceof TypeError && err.message.includes("failed to fetch")) {
+      console.error(
+        "Error fetching data. Please check your internet connection."
+      );
+    } else {
+      console.error("An error occurred while fetching data:", err.message);
+    }
+  }
 };
 
 export const fetchCaloriesForActivityLevels = async (
   age: number,
-  gender: string,
   height: number,
   weight: number,
   setDailyCaloryRequirements: React.Dispatch<
@@ -26,7 +149,7 @@ export const fetchCaloriesForActivityLevels = async (
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${gender}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
 
       requests.push(
         fetch(url, {
@@ -94,7 +217,6 @@ export const fetchCaloriesForActivityLevels = async (
 
 export const fetchMacroNutrients = async (
   age: number,
-  gender: string,
   height: number,
   weight: number,
   goal: Goal | "",
@@ -104,7 +226,7 @@ export const fetchMacroNutrients = async (
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${"male"}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
       requests.push(
         fetch(url, {

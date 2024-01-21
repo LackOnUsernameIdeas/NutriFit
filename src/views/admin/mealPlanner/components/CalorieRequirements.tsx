@@ -11,19 +11,23 @@ import {
   FaAngleDoubleUp,
   FaAngleUp
 } from "react-icons/fa";
-import { DailyCaloryRequirements } from "../../../../types/weightStats";
+import {
+  DailyCaloryRequirements,
+  UserData
+} from "../../../../types/weightStats";
 import { useState, useEffect } from "react";
-
+import { saveGoal } from "database/setGoalUserData";
+import { getAuth } from "firebase/auth";
 export default function CalorieRequirements(props: {
   calorieRequirements: DailyCaloryRequirements[];
   selectedActivityLevel: number;
   clickedValueCalories?: number | null;
   setClickedValueCalories?: React.Dispatch<React.SetStateAction<number | null>>;
+  setUserData?: React.Dispatch<React.SetStateAction<UserData>>;
 }) {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-
-  const { clickedValueCalories, setClickedValueCalories } = props;
+  const { clickedValueCalories, setClickedValueCalories, setUserData } = props;
 
   const [dailyCaloryRequirements, setDailyCaloryRequirement] = useState<
     DailyCaloryRequirements[]
@@ -32,11 +36,10 @@ export default function CalorieRequirements(props: {
   useEffect(() => {
     setDailyCaloryRequirement(props.calorieRequirements);
   }, [props.calorieRequirements, props.selectedActivityLevel]);
-
+  const uid = getAuth().currentUser.uid;
   const selectedLevelData =
     dailyCaloryRequirements[props.selectedActivityLevel - 1];
 
-  console.log(clickedValueCalories);
   return (
     <Card>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px">
@@ -86,13 +89,15 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Mild weight loss"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "mildlose");
+            setUserData((prevState) => ({ ...prevState, goal: "mildlose" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(
@@ -132,13 +137,15 @@ export default function CalorieRequirements(props: {
           value={
             selectedLevelData.goals["Weight loss"].calory.toFixed(2) + " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Weight loss"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "weightlose");
+            setUserData((prevState) => ({ ...prevState, goal: "weightlose" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight loss"].calory.toFixed(2))
@@ -180,13 +187,15 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "extremelose");
+            setUserData((prevState) => ({ ...prevState, goal: "extremelose" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(
@@ -224,11 +233,13 @@ export default function CalorieRequirements(props: {
           value={
             selectedLevelData.goals["maintain weight"].toFixed(2) + " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
-            )
-          }
+            );
+            saveGoal(uid, "maintain");
+            setUserData((prevState) => ({ ...prevState, goal: "maintain" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
@@ -270,13 +281,15 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Mild weight gain"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "mildgain");
+            setUserData((prevState) => ({ ...prevState, goal: "mildgain" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(
@@ -316,13 +329,15 @@ export default function CalorieRequirements(props: {
           value={
             selectedLevelData.goals["Weight gain"].calory.toFixed(2) + " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Weight gain"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "weightgain");
+            setUserData((prevState) => ({ ...prevState, goal: "weightgain" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight gain"].calory.toFixed(2))
@@ -364,13 +379,15 @@ export default function CalorieRequirements(props: {
             selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2) +
             " kcal"
           }
-          onClick={() =>
+          onClick={() => {
             setClickedValueCalories(
               parseFloat(
                 selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
               )
-            )
-          }
+            );
+            saveGoal(uid, "extremegain");
+            setUserData((prevState) => ({ ...prevState, goal: "extremegain" }));
+          }}
           backgroundColor={
             clickedValueCalories ===
             parseFloat(

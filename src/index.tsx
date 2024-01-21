@@ -13,12 +13,39 @@ import theme from "./theme/theme";
 import AuthLayout from "./layouts/auth";
 import AdminLayout from "./layouts/admin";
 import LandingLayout from "./layouts/landing";
-import Landing from "views/test/default";
+import MeasurementsLayout from "./layouts/measurements";
+import Landing from "views/landing";
 import Cookies from "js-cookie";
 
 interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
 }
+
+interface AdminRouteProps extends RouteProps {
+  component: ComponentType<any>;
+}
+const AdminRoute: React.FC<AdminRouteProps> = ({
+  component: Component,
+  ...rest
+}) => {
+  const key = sessionStorage.key(0);
+  const userData = sessionStorage.getItem(key);
+  const rememberedUser = Cookies.get("remember");
+  const userFilledOut = Cookies.get("userFilledOut");
+
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        (userData || rememberedUser) && userFilledOut === "true" ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/auth/sign-in" />
+        )
+      }
+    />
+  );
+};
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
@@ -27,15 +54,16 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const key = sessionStorage.key(0);
   const userData = sessionStorage.getItem(key);
   const RememberedUser = Cookies.get("remember");
+  const userFilledOut = Cookies.get("userFilledOut");
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        userData || RememberedUser ? (
+        (userData || RememberedUser) && userFilledOut !== "true" ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/auth/sign-in" />
+          <Redirect to="/admin/default" />
         )
       }
     />
@@ -68,7 +96,8 @@ ReactDOM.render(
     <React.StrictMode>
       <HashRouter>
         <Switch>
-          <PrivateRoute path="/admin" component={AdminLayout} />
+          <AdminRoute path="/admin" component={AdminLayout} />
+          <PrivateRoute path="/measurements" component={MeasurementsLayout} />
           <Route path="/auth" component={AuthLayout} />
           <LandingRoute path="/" component={LandingLayout} />
         </Switch>
