@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import FixedPlugin from "components/fixedPlugin/FixedPlugin";
 // Custom components
 import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
 // Assets
 import { FaChevronLeft } from "react-icons/fa";
 
@@ -11,7 +12,12 @@ function MeasurementsIllustration(props: {
   illustrationBackground: string;
 }) {
   const { children, illustrationBackground } = props;
-  // Chakra color mode
+  const handleLogOut = async () => {
+    const key = sessionStorage.key(0);
+    sessionStorage.removeItem(key);
+    Cookies.remove("remember");
+  };
+
   return (
     <Flex position="relative" h="max-content">
       <Flex
@@ -36,6 +42,7 @@ function MeasurementsIllustration(props: {
             width: "fit-content",
             marginTop: "40px"
           })}
+          onClick={handleLogOut}
         >
           <Flex
             align="center"
