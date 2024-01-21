@@ -147,7 +147,7 @@ export default function AdminNavbar(props: {
         </Box>
         {isMobile && <HSeparator />}
         <Flex
-          mt="12px"
+          mt={{ sm: "12px", lg: "0px" }}
           ml={{ sm: "0", lg: "auto" }}
           w={{ sm: "130%", md: "unset" }}
           justifySelf="center"

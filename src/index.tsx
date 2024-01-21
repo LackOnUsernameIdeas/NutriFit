@@ -21,6 +21,32 @@ interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
 }
 
+interface AdminRouteProps extends RouteProps {
+  component: ComponentType<any>;
+}
+const AdminRoute: React.FC<AdminRouteProps> = ({
+  component: Component,
+  ...rest
+}) => {
+  const key = sessionStorage.key(0);
+  const userData = sessionStorage.getItem(key);
+  const rememberedUser = Cookies.get("remember");
+  const userFilledOut = Cookies.get("userFilledOut");
+
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        (userData || rememberedUser) && userFilledOut === "true" ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/auth/sign-in" />
+        )
+      }
+    />
+  );
+};
+
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
@@ -69,7 +95,7 @@ ReactDOM.render(
     <React.StrictMode>
       <HashRouter>
         <Switch>
-          <PrivateRoute path="/admin" component={AdminLayout} />
+          <AdminRoute path="/admin" component={AdminLayout} />
           <PrivateRoute path="/measurements" component={MeasurementsLayout} />
           <Route path="/auth" component={AuthLayout} />
           <LandingRoute path="/" component={LandingLayout} />

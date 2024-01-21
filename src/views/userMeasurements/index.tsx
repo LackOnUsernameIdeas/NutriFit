@@ -106,6 +106,8 @@ const UserMeasurements = () => {
     setRememberMe(!rememberMe); // Toggle the rememberMe state
   };
 
+  const [isFilledOut, setIsFilledOut] = useState(false);
+
   // State за въведени потребителски данни
   const [userData, setUserData] = useState<UserData>({
     height: 0,
@@ -295,6 +297,7 @@ const UserMeasurements = () => {
           userData.waist,
           userData.hip
         ).then(() => {
+          setIsFilledOut(true);
           history.push("/admin/default");
         });
       } catch (error) {
@@ -302,6 +305,14 @@ const UserMeasurements = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isFilledOut) {
+      // Set a cookie named 'userFilledOut' with value 'true' and expiration time of 1 day
+      Cookies.set("userFilledOut", "true", { expires: 1 });
+      console.log("Cookieee");
+    }
+  }, [isFilledOut]);
 
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
@@ -315,7 +326,7 @@ const UserMeasurements = () => {
         justifyContent="center"
         mb={{ base: "30px", md: "60px" }}
         px={{ base: "25px", md: "0px" }}
-        mt={{ base: "40px", md: "20px" }}
+        mt={{ base: "40px", md: "5%" }}
         flexDirection="column"
       >
         <Box me="auto">
@@ -328,9 +339,10 @@ const UserMeasurements = () => {
             color={textColorSecondary}
             fontWeight="400"
             fontSize="md"
+            style={{ whiteSpace: "pre-line" }}
           >
-            Попълнете вашите данни за да можем да калкулираме нещата бла бла
-            бла!
+            Напишете вашите данни и ние ще направим калкулации, за{"\u00a0"}
+            <br /> да определим
           </Text>
         </Box>
         <Flex
@@ -364,7 +376,7 @@ const UserMeasurements = () => {
                       .toUpperCase() +
                       userDataPropertiesTranslated[index].slice(1)}
                     {key === "age" && (
-                      <Text color="brandStars" ml="1">
+                      <Text color={brandStars} ml="1">
                         *
                       </Text>
                     )}
