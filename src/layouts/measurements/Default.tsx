@@ -37,7 +37,7 @@ function MeasurementsIllustration(props: {
         direction="column"
       >
         <NavLink
-          to="/"
+          to="/auth/sign-in"
           style={() => ({
             width: "fit-content",
             marginTop: "40px"
