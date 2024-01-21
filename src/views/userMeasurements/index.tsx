@@ -314,6 +314,26 @@ const UserMeasurements = () => {
     }
   }, [isFilledOut]);
 
+  const setCookieAtEndOfDay = (cookieName: string, cookieValue: string) => {
+    // Calculate time until the end of the day
+    const now = new Date().getTime();
+    const endOfDay = new Date().setUTCHours(23, 59, 59, 999); // Set to the start of the next day
+    const timeUntilEndOfDay = endOfDay - now;
+
+    // Set the cookie with the calculated expiration time
+    Cookies.set(cookieName, cookieValue, {
+      expires: new Date(now + timeUntilEndOfDay)
+    });
+  };
+
+  useEffect(() => {
+    if (isFilledOut) {
+      // Set a cookie named 'userFilledOut' with value 'true' and expiration at the end of the current day
+      setCookieAtEndOfDay("userFilledOut", "true");
+      console.log("Cookieee");
+    }
+  }, [isFilledOut]);
+
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
