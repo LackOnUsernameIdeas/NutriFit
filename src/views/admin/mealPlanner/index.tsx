@@ -185,6 +185,47 @@ export default function WeightStats() {
     }, 1000);
   }
 
+  const mapGoalToDisplayValue = (goal: string) => {
+    switch (goal) {
+      case "maintain":
+        return "Запазване на Тегло";
+        break;
+      case "mildlose":
+        return "Леко Сваляне на Тегло";
+        break;
+      case "weightlose":
+        return "Сваляне на Тегло";
+        break;
+      case "extremelose":
+        return "Екстремно Сваляне на Тегло";
+        break;
+      case "mildgain":
+        return "Леко Качване на Тегло";
+        break;
+      case "weightlose":
+        return "Качване на Тегло";
+        break;
+      case "extremegain":
+        return "Екстремно Качване на Тегло";
+        break;
+      default:
+        return goal; // Return the original value if not found in the mapping
+    }
+  };
+
+  const mapGenderToDisplayValue = (gender: string) => {
+    switch (gender) {
+      case "male":
+        return "Мъж";
+        break;
+      case "female":
+        return "Жена";
+        break;
+      default:
+        return gender; // Return the original value if not found in the mapping
+    }
+  };
+
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -223,9 +264,11 @@ export default function WeightStats() {
   }, [userData]);
 
   React.useEffect(() => {
-    generateStatsForMacroNutrients();
-    setIsGenerateStatsForMacroNutrientsCalled(true);
-  }, [userData.goal]);
+    if (isGenerateStatsForCaloriesCalled && userData.goal) {
+      generateStatsForMacroNutrients();
+      setIsGenerateStatsForMacroNutrientsCalled(true);
+    }
+  }, [isGenerateStatsForCaloriesCalled, userData.goal]);
 
   return (
     <Box
@@ -256,14 +299,16 @@ export default function WeightStats() {
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Пол: {userData.gender}
+                      Пол: {mapGenderToDisplayValue(userData.gender)}
                     </Heading>
                   </Box>
-                  <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Цел: {userData.goal}
-                    </Heading>
-                  </Box>
+                  {userData.goal && (
+                    <Box>
+                      <Heading size="xs" textTransform="uppercase">
+                        Цел: {mapGoalToDisplayValue(userData.goal)}
+                      </Heading>
+                    </Box>
+                  )}
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Височина: {userData.height}
