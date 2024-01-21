@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 // Assets
 import { FaChevronLeft } from "react-icons/fa";
 
-function TestIllustration(props: {
+function MeasurementsIllustration(props: {
   children: JSX.Element | string;
   illustrationBackground: string;
 }) {
@@ -83,9 +83,9 @@ function TestIllustration(props: {
 }
 // PROPS
 
-TestIllustration.propTypes = {
+MeasurementsIllustration.propTypes = {
   illustrationBackground: PropTypes.string,
   image: PropTypes.any
 };
 
-export default TestIllustration;
+export default MeasurementsIllustration;
