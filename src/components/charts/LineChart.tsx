@@ -7,13 +7,11 @@ type ChartProps = {
   lineChartLabels: string[];
 };
 
-
 const LineChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
-  lineChartOptions,
+  lineChartOptions
 }) => {
-
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -23,7 +21,7 @@ const LineChart: React.FC<ChartProps> = ({
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
-      
+
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
         chartInstance.current = new Chart(ctx, {
@@ -36,11 +34,11 @@ const LineChart: React.FC<ChartProps> = ({
                 data: lineChartData,
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
-                borderWidth: 1,
-              },
-            ],
+                borderWidth: 1
+              }
+            ]
           },
-          options: lineChartOptions,
+          options: lineChartOptions
         });
       }
     }
@@ -50,7 +48,6 @@ const LineChart: React.FC<ChartProps> = ({
         chartInstance.current.destroy();
       }
     };
-
   }, [lineChartData, lineChartLabels, lineChartOptions]);
 
   return <canvas ref={chartRef} style={{ width: "100%", height: "100%" }} />;

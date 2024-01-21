@@ -4,8 +4,9 @@ import {
   MdPerson,
   MdHome,
   MdLock,
-  MdOutlineShoppingCart,
+  MdOutlineShoppingCart
 } from "react-icons/md";
+import { BiSolidBowlHot } from "react-icons/bi";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -13,19 +14,38 @@ import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
+import UserMeasurements from "views/userMeasurements";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
 import SignUpCentered from "views/auth/signUp";
 import ForgotPass from "views/auth/forgotPass";
 
+import Landing from "views/landing";
+
 const routes = [
   {
-    name: "Главна Страница",
+    name: "Начало",
     layout: "/admin",
     path: "/default",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: MainDashboard,
+    component: MainDashboard
+  },
+  {
+    name: "Калкулатор за тегло",
+    layout: "/admin",
+    path: "/weight",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: WeightStats
+  },
+  {
+    name: "Хранителен План",
+    layout: "/admin",
+    path: "/mealplan",
+    icon: (
+      <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
+    ),
+    component: MealPlanner
   },
   {
     name: "NFT Marketplace",
@@ -40,7 +60,8 @@ const routes = [
       />
     ),
     component: NFTMarketplace,
-    secondary: true
+    secondary: true,
+    hideInSidebar: true
   },
   {
     name: "Data Tables",
@@ -48,13 +69,7 @@ const routes = [
     icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     path: "/data-tables",
     component: DataTables,
-  },
-  {
-    name: "Статистики за Тегло",
-    layout: "/admin",
-    path: "/weight",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: WeightStats
+    hideInSidebar: true
   },
   {
     name: "Вход",
@@ -78,14 +93,23 @@ const routes = [
     path: "/forgot-password",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: ForgotPass,
-    hideInSidebar: true 
+    hideInSidebar: true
   },
   {
-    name: "Съставяне на план за хранене",
-    layout: "/admin",
-    path: "/mealplanner",
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: MealPlanner,
+    name: "NutriFit",
+    layout: "/",
+    path: "/",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: Landing,
+    hideInSidebar: true
+  },
+  {
+    name: "NutriFit",
+    layout: "/measurements",
+    path: "/userData",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: UserMeasurements,
+    hideInSidebar: true
   }
 ];
 

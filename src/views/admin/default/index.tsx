@@ -30,17 +30,20 @@ import {
   Select,
   SimpleGrid,
   useColorModeValue,
+  Text
 } from "@chakra-ui/react";
 // Assets
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
+import Card from "components/card/Card";
+import { HSeparator } from "components/separator/Separator";
 import IconBox from "components/icons/IconBox";
 import {
   MdAddTask,
   MdAttachMoney,
   MdBarChart,
-  MdFileCopy,
+  MdFileCopy
 } from "react-icons/md";
 import ComplexTable from "views/admin/default/components/ComplexTable";
 import DailyTraffic from "views/admin/default/components/DailyTraffic";
@@ -142,20 +145,41 @@ export default function UserReports() {
         />
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <TotalSpent />
-        <WeeklyRevenue />
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        <Card minH="200px">
+          <Flex justify="center" pt="5px" w="100%">
+            <Text fontSize="5xl" fontStyle="italic">
+              Добре дошли в NutriFit!
+            </Text>
+          </Flex>
+          <HSeparator />
+          <Flex justify="center" mt="1%" pt="10px">
+            <Text fontSize="3xl">
+              Нашата цел е да помогнем на нашите потребители да поддържат
+              перфектното тегло с помощта на статистики и диаграми.
+            </Text>
+          </Flex>
+        </Card>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
         <DailyTraffic />
         <ComplexTable tableData={tableDataComplex} />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
           <PieCard />
           <Tasks />
         </SimpleGrid>
-        <ColumnsTable tableName='Macro Nutrients' tableData={tableDataColumns} columnsData={[ { name: 'name', label: 'Diet type' }, { name: 'quantity', label: 'Protein' }, { name: 'progress', label: 'Fat' }, { name: 'date', label: 'Carbohydrates' } ]}/>
+        <ColumnsTable
+          tableName="Macro Nutrients"
+          tableData={tableDataColumns}
+          columnsData={[
+            { name: "name", label: "Diet type" },
+            { name: "quantity", label: "Protein" },
+            { name: "progress", label: "Fat" },
+            { name: "date", label: "Carbohydrates" }
+          ]}
+        />
       </SimpleGrid>
     </Box>
   );

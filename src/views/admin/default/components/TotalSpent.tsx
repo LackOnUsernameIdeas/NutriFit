@@ -26,7 +26,7 @@ import { RiArrowUpSFill } from "react-icons/ri";
 // Assets for charts
 import {
   lineChartOptions
-} from "variables/charts";
+} from "variables/chartjs";
 
 export default function TotalSpent(props: { [x: string]: any }) {
   const { ...rest } = props;
