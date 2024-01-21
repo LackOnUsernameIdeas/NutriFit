@@ -54,15 +54,16 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const key = sessionStorage.key(0);
   const userData = sessionStorage.getItem(key);
   const RememberedUser = Cookies.get("remember");
+  const userFilledOut = Cookies.get("userFilledOut");
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        userData || RememberedUser ? (
+        (userData || RememberedUser) && userFilledOut !== "true" ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/auth/sign-in" />
+          <Redirect to="/admin/default" />
         )
       }
     />
