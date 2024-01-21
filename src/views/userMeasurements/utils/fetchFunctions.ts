@@ -219,7 +219,7 @@ export const fetchMacroNutrients = async (
   age: number,
   height: number,
   weight: number,
-  goal: Goal,
+  goal: Goal | "",
   setTableData: React.Dispatch<React.SetStateAction<MacroNutrientsData[]>>
 ) => {
   try {

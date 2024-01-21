@@ -153,31 +153,6 @@ export default function WeightStats() {
     setIsGenerateStatsForMacroNutrientsCalled
   ] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-
-      if (user) {
-        try {
-          const additionalData = await fetchAdditionalUserData(user.uid);
-          setUserData(additionalData as any);
-          console.log(
-            "ID: ",
-            user.uid,
-            "Additional user data:",
-            additionalData
-          );
-        } catch (error) {
-          console.error("Error fetching additional user data:", error);
-        }
-      }
-    });
-
-    // Cleanup the subscription when the component unmounts
-    return () => unsubscribe();
-  }, []);
-
   // Функция за генериране на статистики
   function generateStatsForCalories() {
     fetchCaloriesForActivityLevels(
@@ -209,6 +184,31 @@ export default function WeightStats() {
       setIsLoadingForMacroNutrients(false);
     }, 1000);
   }
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+
+      if (user) {
+        try {
+          const additionalData = await fetchAdditionalUserData(user.uid);
+          setUserData(additionalData as any);
+          console.log(
+            "ID: ",
+            user.uid,
+            "Additional user data:",
+            additionalData
+          );
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
