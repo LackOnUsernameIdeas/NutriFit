@@ -330,7 +330,6 @@ const UserMeasurements = () => {
     if (isFilledOut) {
       // Set a cookie named 'userFilledOut' with value 'true' and expiration at the end of the current day
       setCookieAtEndOfDay("userFilledOut", "true");
-      console.log("Cookieee");
     }
   }, [isFilledOut]);
 
