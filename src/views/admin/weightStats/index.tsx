@@ -39,6 +39,9 @@ import {
   WeightDifference
 } from "../../../types/weightStats";
 
+import { lineChartOptions } from "variables/chartjs";
+import LineChart from "components/charts/LineChart";
+
 // Помощни функции за извличане на данни
 import {
   fetchBMIData,
@@ -111,6 +114,21 @@ export default function WeightStats() {
     goal: "maintain"
   });
 
+  const [userDataForCharts, setUserDataForCharts] = useState([
+    {
+      date: "",
+      height: 0,
+      weight: 0
+    }
+  ]);
+
+  const lineChartLabels = userDataForCharts.map((entry) => entry.date);
+
+  const lineChartForKilogramsData = userDataForCharts.map(
+    (entry) => entry.weight
+  );
+  const lineChartForHeightData = userDataForCharts.map((entry) => entry.height);
+
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
   const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
     useState<WeightDifference>({
@@ -128,8 +146,38 @@ export default function WeightStats() {
 
       if (user) {
         try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
           const additionalData = await fetchAdditionalUserData(user.uid);
-          setUserData(additionalData as any);
+          setUserData({
+            gender: additionalData.gender,
+            goal: additionalData.goal,
+            age: additionalData[timestampKey].age,
+            height: additionalData[timestampKey].height,
+            waist: additionalData[timestampKey].waist,
+            neck: additionalData[timestampKey].neck,
+            hip: additionalData[timestampKey].hip,
+            weight: additionalData[timestampKey].weight
+          } as UserData);
+
+          const userChartData = [];
+
+          for (const key in additionalData) {
+            if (
+              key !== "gender" &&
+              key !== "goal" &&
+              typeof additionalData[key] === "object"
+            ) {
+              const dateData = additionalData[key];
+              userChartData.push({
+                date: key,
+                height: dateData.height,
+                weight: dateData.weight
+              });
+            }
+          }
+
+          setUserDataForCharts(userChartData);
           console.log(
             "ID: ",
             user.uid,
@@ -667,6 +715,38 @@ export default function WeightStats() {
               )}
             </SimpleGrid>
           </Card>
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "100px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+            >
+              <LineChart
+                lineChartLabels={lineChartLabels}
+                lineChartData={lineChartForKilogramsData}
+                lineChartOptions={lineChartOptions}
+                lineChartLabelName="Килограми"
+              />
+            </Card>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "100px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+            >
+              <LineChart
+                lineChartLabels={lineChartLabels}
+                lineChartData={lineChartForHeightData}
+                lineChartOptions={lineChartOptions}
+                lineChartLabelName="Височина"
+              />
+            </Card>
+          </SimpleGrid>
         </Box>
       )}
     </Box>

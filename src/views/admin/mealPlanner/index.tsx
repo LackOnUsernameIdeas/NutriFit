@@ -233,13 +233,24 @@ export default function WeightStats() {
 
       if (user) {
         try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
           const additionalData = await fetchAdditionalUserData(user.uid);
-          setUserData(additionalData as any);
+          setUserData({
+            gender: additionalData.gender,
+            goal: additionalData.goal,
+            age: additionalData[timestampKey].age,
+            height: additionalData[timestampKey].height,
+            waist: additionalData[timestampKey].waist,
+            neck: additionalData[timestampKey].neck,
+            hip: additionalData[timestampKey].hip,
+            weight: additionalData[timestampKey].weight
+          } as UserData);
           console.log(
             "ID: ",
             user.uid,
             "Additional user data:",
-            additionalData
+            additionalData[timestampKey]
           );
         } catch (error) {
           console.error("Error fetching additional user data:", error);

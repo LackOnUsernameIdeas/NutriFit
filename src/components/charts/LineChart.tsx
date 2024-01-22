@@ -5,12 +5,14 @@ type ChartProps = {
   lineChartData: number[];
   lineChartOptions: object;
   lineChartLabels: string[];
+  lineChartLabelName: string;
 };
 
 const LineChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
-  lineChartOptions
+  lineChartOptions,
+  lineChartLabelName
 }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
@@ -30,7 +32,7 @@ const LineChart: React.FC<ChartProps> = ({
             labels: lineChartLabels,
             datasets: [
               {
-                label: "Chart Data",
+                label: lineChartLabelName,
                 data: lineChartData,
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
