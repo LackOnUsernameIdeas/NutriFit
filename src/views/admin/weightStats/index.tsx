@@ -222,7 +222,7 @@ export default function WeightStats() {
       difference: diff,
       isUnderOrAbove: userData.weight > perfectWeight ? "above" : "under"
     });
-  }, [BMIIndex]);
+  }, [perfectWeight, userData]);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
