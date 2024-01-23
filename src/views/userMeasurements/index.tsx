@@ -348,7 +348,10 @@ const UserMeasurements = () => {
                     )}
                   </Box>
                 ))}
-                <MeasurementsAlertDialog handleSubmit={handleSubmit} />
+                <MeasurementsAlertDialog
+                  handleSubmit={handleSubmit}
+                  userData={userData}
+                />
                 {error && (
                   <Text color="red" fontSize="sm" mb="8px">
                     {error}

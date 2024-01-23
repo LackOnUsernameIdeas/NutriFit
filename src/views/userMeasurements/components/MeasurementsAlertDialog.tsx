@@ -10,13 +10,49 @@ import {
 } from "@chakra-ui/react";
 import { useDisclosure, Button } from "@chakra-ui/react";
 
+import { UserData } from "../../../types/weightStats";
+
 function MeasurementsAlertDialog(props: {
   handleSubmit: (event: React.FormEvent) => void;
+  userData: UserData;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
-  const [valuesToCheck, setValuesToCheck] = React.useState({});
+  const [valuesToCheck, setValuesToCheck] = React.useState(
+    JSON.parse(localStorage.getItem("lastTypedValues"))
+  );
+
+  React.useEffect(() => {
+    // Зарежда последно запазените данни от Local Storage
+    const storedValues = JSON.parse(
+      localStorage.getItem("lastTypedValues") || "{}"
+    );
+    Object.keys(storedValues).forEach((key) => {
+      setValuesToCheck(storedValues);
+    });
+  }, [props.userData]);
+
+  const translateKey = (key: any) => {
+    // Replace this logic with your actual translation logic
+    // For simplicity, let's assume a simple translation for demonstration purposes
+    switch (key) {
+      case "height":
+        return "Височина";
+      case "age":
+        return "Възраст";
+      case "weight":
+        return "Тегло";
+      case "neck":
+        return "Обиколка на врат";
+      case "waist":
+        return "Обиколка на талия";
+      case "hip":
+        return "Oбиколка на таз";
+      default:
+        return key;
+    }
+  };
 
   const handleOpen = () => {
     onOpen();
@@ -24,7 +60,6 @@ function MeasurementsAlertDialog(props: {
 
   const handleConfirm = (event: React.FormEvent) => {
     props.handleSubmit(event);
-    setValuesToCheck(localStorage.getItem("lastTypedValues"));
     onClose();
   };
 
@@ -65,7 +100,11 @@ function MeasurementsAlertDialog(props: {
             </AlertDialogBody>
 
             <AlertDialogBody>
-              {/* {Object.keys(valuesToCheck).forEach((key) => {})} */}
+              {Object.entries(valuesToCheck).map(([key, value]) => (
+                <p key={key}>
+                  {translateKey(key as any)}: {value}
+                </p>
+              ))}
             </AlertDialogBody>
 
             <AlertDialogFooter>
