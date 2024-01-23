@@ -15,12 +15,15 @@ import { UserData } from "../../../types/weightStats";
 function MeasurementsAlertDialog(props: {
   handleSubmit: (event: React.FormEvent) => void;
   userData: UserData;
+  checkUpdate: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
-
   const [valuesToCheck, setValuesToCheck] = React.useState(
     JSON.parse(localStorage.getItem("lastTypedValues"))
+  );
+  const [buttonText, setButtonText] = React.useState<string>(
+    props.checkUpdate ? "Актуализирайте" : "Изпратете"
   );
 
   React.useEffect(() => {
@@ -33,6 +36,15 @@ function MeasurementsAlertDialog(props: {
     });
   }, [props.userData]);
 
+  React.useEffect(() => {
+    console.log("checkUpdate value:", props.checkUpdate);
+
+    if (props.checkUpdate) {
+      setButtonText("Актуализирайте");
+    } else {
+      setButtonText("Изпратете");
+    }
+  }, [props.checkUpdate]);
   const translateKey = (key: any) => {
     // Replace this logic with your actual translation logic
     // For simplicity, let's assume a simple translation for demonstration purposes
@@ -78,9 +90,8 @@ function MeasurementsAlertDialog(props: {
         h="50"
         mb="24px"
       >
-        Изпрати
+        {buttonText}
       </Button>
-
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

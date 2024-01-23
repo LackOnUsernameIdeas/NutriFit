@@ -74,6 +74,7 @@ const UserMeasurements = () => {
   const [error, setError] = useState("");
   const [isFilledOut, setIsFilledOut] = useState(false);
   const [userDataForToday, setUserDataForToday] = useState(null);
+  const [userDataLastSavedDate, setUserDataLastSavedDate] = useState(null);
   const [isTodaysDataFetched, setIsTodaysDataFetched] =
     useState<boolean>(false);
   const isMounted = useRef(true);
@@ -222,11 +223,12 @@ const UserMeasurements = () => {
           // Find the first date before today
           const today = new Date().toISOString().slice(0, 10);
           const lastSavedDate = dateKeys.find((date) => date < today);
-
+          const rawUserDataForToday = additionalData[today];
           const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
 
           if (isMounted.current) {
-            setUserDataForToday(rawUserDataForLastSavedDate);
+            setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+            setUserDataForToday(rawUserDataForToday);
             setIsTodaysDataFetched(true);
           }
 
@@ -246,15 +248,25 @@ const UserMeasurements = () => {
   }, []);
 
   const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
-
+  const [updateWithNewData, setUpdateWithNewData] = useState<boolean>(false);
+  // TODO: Make this dumb shit work cause it no no wanna :( for some reason
   useEffect(() => {
-    if (userDataForToday) {
+    if (userDataLastSavedDate) {
+      // const areDataEqual = Object.keys(userData).every(
+      //   (key) => userData[key] === userDataLastSavedDate[key]
+      // );
+
+      // setUpdateWithNewData(!areDataEqual);
+
       const differentFields = Object.keys(userData).filter(
-        (key) => userData[key] !== userDataForToday[key]
+        (key) => userData[key] !== userDataLastSavedDate[key]
       );
+
       setHighlightedFields(differentFields);
+
+      // console.log("updateWithNewData:", !areDataEqual);
     }
-  }, [userData, userDataForToday]);
+  }, [userData, userDataLastSavedDate]);
 
   return (
     <Box>
@@ -384,6 +396,7 @@ const UserMeasurements = () => {
                 <MeasurementsAlertDialog
                   handleSubmit={handleSubmit}
                   userData={userData}
+                  checkUpdate={updateWithNewData}
                 />
                 {error && (
                   <Text color="red" fontSize="sm" mb="8px">
