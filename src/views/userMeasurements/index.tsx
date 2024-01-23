@@ -205,17 +205,34 @@ const UserMeasurements = () => {
 
       if (user) {
         try {
-          const timestampKey = new Date().toISOString().slice(0, 10);
           setIsLoading(true);
+
+          const additionalData = await fetchAdditionalUserData(user.uid);
+
+          // Extract date keys from additionalData
+          const dateKeys = Object.keys(additionalData).filter((key) =>
+            /^\d{4}-\d{2}-\d{2}$/.test(key)
+          );
+
+          // Sort date keys in descending order
+          dateKeys.sort(
+            (a, b) => new Date(b).getTime() - new Date(a).getTime()
+          );
+
+          // Find the first date before today
+          const today = new Date().toISOString().slice(0, 10);
+          const lastSavedDate = dateKeys.find((date) => date < today);
+
+          const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
+
+          if (isMounted.current) {
+            setUserDataForToday(rawUserDataForLastSavedDate);
+            setIsTodaysDataFetched(true);
+          }
+
           setTimeout(() => {
             setIsLoading(false);
           }, 1000);
-          const additionalData = await fetchAdditionalUserData(user.uid);
-          const rawUserDataForToday = additionalData[timestampKey];
-          if (isMounted.current) {
-            setUserDataForToday(rawUserDataForToday);
-          }
-          setIsTodaysDataFetched(true);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
