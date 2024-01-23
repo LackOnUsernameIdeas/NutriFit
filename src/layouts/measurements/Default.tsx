@@ -58,7 +58,7 @@ function MeasurementsIllustration(props: {
               color="secondaryGray.600"
             />
             <Text ms="0px" fontSize="sm" color="secondaryGray.600">
-              Към Главна Страница
+              Към Вход
             </Text>
           </Flex>
         </NavLink>

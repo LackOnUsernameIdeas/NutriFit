@@ -1,4 +1,4 @@
-import React, { ComponentType, useState } from "react";
+import React, { ComponentType, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import "./assets/css/App.css";
 import {
@@ -16,6 +16,8 @@ import LandingLayout from "./layouts/landing";
 import MeasurementsLayout from "./layouts/measurements";
 import Landing from "views/landing";
 import Cookies from "js-cookie";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 
 interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
@@ -31,13 +33,44 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   const key = sessionStorage.key(0);
   const userData = sessionStorage.getItem(key);
   const rememberedUser = Cookies.get("remember");
-  const userFilledOut = Cookies.get("userFilledOut");
+  const [user, setUser] = useState(null);
+  const uid = getAuth().currentUser.uid;
+  const [userDataForToday, setUserDataForToday] = useState(null);
+  const isMounted = useRef(true);
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (isMounted.current) {
+        setUser(user);
+      }
+
+      if (user) {
+        try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
+          const additionalData = await fetchAdditionalUserData(uid);
+          const userDataForToday = additionalData[timestampKey];
+          if (isMounted.current) {
+            setUserDataForToday(userDataForToday);
+          }
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+
+    return () => {
+      isMounted.current = false;
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        (userData || rememberedUser) && userFilledOut === "true" ? (
+        (userData || rememberedUser) && userDataForToday !== undefined ? (
           <Component {...props} />
         ) : (
           <Redirect to="/auth/sign-in" />
@@ -54,13 +87,44 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const key = sessionStorage.key(0);
   const userData = sessionStorage.getItem(key);
   const RememberedUser = Cookies.get("remember");
-  const userFilledOut = Cookies.get("userFilledOut");
+  const [user, setUser] = useState(null);
+  const uid = getAuth().currentUser.uid;
+  const [userDataForToday, setUserDataForToday] = useState(null);
+  const isMounted = useRef(true);
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (isMounted.current) {
+        setUser(user);
+      }
+
+      if (user) {
+        try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
+          const additionalData = await fetchAdditionalUserData(uid);
+          const userDataForToday = additionalData[timestampKey];
+          if (isMounted.current) {
+            setUserDataForToday(userDataForToday);
+          }
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+
+    return () => {
+      isMounted.current = false;
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        (userData || RememberedUser) && userFilledOut !== "true" ? (
+        (userData || RememberedUser) && userDataForToday == undefined ? (
           <Component {...props} />
         ) : (
           <Redirect to="/admin/default" />
