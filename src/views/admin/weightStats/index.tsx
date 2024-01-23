@@ -9,6 +9,7 @@ import {
   SimpleGrid,
   MenuButton,
   MenuList,
+  MenuItem,
   useDisclosure,
   useColorModeValue,
   Menu,
@@ -69,7 +70,19 @@ export default function WeightStats() {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+  const [showITM, setShowITM] = useState(false);
 
+  // Function to toggle the display of raw data
+  const toggleITM = () => {
+    setShowITM(!showITM);
+  };
+
+  const [showStatus, setShowStatus] = useState(false);
+
+  // Function to toggle the display of raw data
+  const toggleStatus = () => {
+    setShowStatus(!showStatus);
+  };
   // State за разкриване на информация за менюто с информация
   const {
     isOpen: isOpenPerfectWeight,
@@ -121,7 +134,9 @@ export default function WeightStats() {
       weight: 0
     }
   ]);
-
+  userDataForCharts.sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
   const lineChartLabels = userDataForCharts.map((entry) => entry.date);
 
   const lineChartForKilogramsData = userDataForCharts.map(
@@ -421,108 +436,182 @@ export default function WeightStats() {
                       </Text>
                     </Flex>
                     <HSeparator />
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        Индексът на телесната маса(ИТМ) e медико-биологичен
-                        показател, който служи за определяне на нормалното,
-                        здравословно тегло при хора с различен ръст и за
-                        диагностициране на затлъстяване и недохранване.
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        Индексът на телесната маса се измерва в килограми на
-                        квадратен метър и се определя по следната формула:
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Image
-                        src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
-                        alt="Dan Abramov"
-                      />
-                      <Text
-                        fontSize="sm"
-                        fontWeight="400"
-                        mt="10px"
-                        mb="5px"
-                        ml="5px"
-                      >
-                        където:
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        <b>BMI</b> - индекс на телесната маса, <b>W</b> - тегло
-                        в килограми, <b>h</b> - височина в метри
-                      </Text>
-                    </Flex>
-                    <HSeparator />
                     <br></br>
                     <Flex align="center">
                       <Text fontSize="1xl" fontWeight="400">
                         Видовете състояние според ИТМ могат да бъдат:
                       </Text>
                     </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Сериозно недохранване - Този статус показва тежък
-                        недостиг на хранителни вещества, което може да доведе до
-                        сериозни проблеми със здравето и отслабване на
-                        организма.
+                    <MenuItem onClick={toggleITM}>
+                      <Text fontSize="1xl" fontWeight="400">
+                        {showITM ? "Hide Raw Data" : "Show Raw Data"}
                       </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Средно недохранване - Този статус показва недостиган
-                        на хранителни вещества на умерено ниво, което може да
-                        води до отслабване и различни проблеми със здравето.
+                    </MenuItem>
+                    {showITM && (
+                      <>
+                        <HSeparator />
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            Индексът на телесната маса(ИТМ) e медико-биологичен
+                            показател, който служи за определяне на нормалното,
+                            здравословно тегло при хора с различен ръст и за
+                            диагностициране на затлъстяване и недохранване.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            Индексът на телесната маса се измерва в килограми на
+                            квадратен метър и се определя по следната формула:
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Image
+                            src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
+                            alt="Dan Abramov"
+                          />
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                            ml="5px"
+                          >
+                            където:
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            <b>BMI</b> - индекс на телесната маса, <b>W</b> -
+                            тегло в килограми, <b>h</b> - височина в метри
+                          </Text>
+                        </Flex>
+                      </>
+                    )}
+                    <MenuItem onClick={toggleStatus}>
+                      <Text fontSize="1xl" fontWeight="400">
+                        {showStatus ? "Hide Raw Data" : "Show Raw Data"}
                       </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Леко недохранване - В тази категория теглото е леко
-                        под нормата, което може да създаде проблеми със здравето
-                        и да наложи корекции в хранителния режим.
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Нормално - Тази категория отразява здравословно тегло
-                        в съответствие с височината. Хора в тази категория имат
-                        по-нисък риск от различни здравословни проблеми,
-                        свързани с теглото.
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Наднормено тегло - В тази категория теглото е над
-                        нормалната граница, което може да повиши риска от
-                        заболявания, свързани със здравето, като диабет и
-                        сърдечно-съдови заболявания.
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Затлъстяване I Клас - Теглото е значително повишено,
-                        като този статус може да увеличи риска от сериозни
-                        здравословни проблеми.
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Затлъстяване II Клас - Тук има по-висок риск от
-                        здравословни проблеми в сравнение с предишната
-                        категория. Затлъстяването става по-значително.
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        • Затлъстяване III Клас - Този клас показва екстремно
-                        затлъстяване, което може да предизвика сериозни
-                        здравословни проблеми и изисква внимание от специалист в
-                        здравеопазването.
-                      </Text>
-                    </Flex>
+                    </MenuItem>
+                    {showStatus && (
+                      <>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Сериозно недохранване - Този статус показва тежък
+                            недостиг на хранителни вещества, което може да
+                            доведе до сериозни проблеми със здравето и
+                            отслабване на организма.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Средно недохранване - Този статус показва
+                            недостиган на хранителни вещества на умерено ниво,
+                            което може да води до отслабване и различни проблеми
+                            със здравето.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Леко недохранване - В тази категория теглото е
+                            леко под нормата, което може да създаде проблеми със
+                            здравето и да наложи корекции в хранителния режим.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Нормално - Тази категория отразява здравословно
+                            тегло в съответствие с височината. Хора в тази
+                            категория имат по-нисък риск от различни
+                            здравословни проблеми, свързани с теглото.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Наднормено тегло - В тази категория теглото е над
+                            нормалната граница, което може да повиши риска от
+                            заболявания, свързани със здравето, като диабет и
+                            сърдечно-съдови заболявания.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Затлъстяване I Клас - Теглото е значително
+                            повишено, като този статус може да увеличи риска от
+                            сериозни здравословни проблеми.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Затлъстяване II Клас - Тук има по-висок риск от
+                            здравословни проблеми в сравнение с предишната
+                            категория. Затлъстяването става по-значително.
+                          </Text>
+                        </Flex>
+                        <Flex align="center">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="400"
+                            mt="10px"
+                            mb="5px"
+                          >
+                            • Затлъстяване III Клас - Този клас показва
+                            екстремно затлъстяване, което може да предизвика
+                            сериозни здравословни проблеми и изисква внимание от
+                            специалист в здравеопазването.
+                          </Text>
+                        </Flex>
+                      </>
+                    )}
                   </Box>
                 </MenuList>
               </Menu>
@@ -563,26 +652,10 @@ export default function WeightStats() {
             w="100%"
             mb="20px"
           >
-            <Flex align="center" justify="center">
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg={boxBg}
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={GiWeightLiftingUp}
-                        color={brandColor}
-                      />
-                    }
-                  />
-                }
-                name="Перфектно тегло"
-                value={perfectWeight + " kg"}
-              />
+            <Flex justifyContent="space-between" align="center">
+              <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
+                Колко е вашето перфектно тегло :
+              </Text>
               <Menu isOpen={isOpenBMI} onClose={onCloseBMI}>
                 <MenuButton
                   alignItems="center"
@@ -646,6 +719,32 @@ export default function WeightStats() {
                   </Box>
                 </MenuList>
               </Menu>
+            </Flex>
+            <SimpleGrid
+              ml={{ sm: "0", lg: "14%" }}
+              columns={{ base: 1, md: 2, lg: 3 }}
+              gap="20px"
+              mb="10px"
+            >
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon
+                        w="32px"
+                        h="32px"
+                        as={GiWeightLiftingUp}
+                        color={brandColor}
+                      />
+                    }
+                  />
+                }
+                name="Перфектно тегло"
+                value={perfectWeight + " kg"}
+              />
               <MiniStatistics
                 startContent={
                   <IconBox
@@ -672,7 +771,7 @@ export default function WeightStats() {
                   " kg"
                 }
               />
-            </Flex>
+            </SimpleGrid>
           </Card>
           <Card
             p="20px"
@@ -721,8 +820,9 @@ export default function WeightStats() {
               flexDirection="column"
               h="100%"
               w="100%"
-              minH={{ sm: "100px", md: "300px", lg: "auto" }}
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
               minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              maxH={{ sm: "100px", md: "300px", lg: "auto" }}
             >
               <LineChart
                 lineChartLabels={lineChartLabels}
@@ -736,8 +836,9 @@ export default function WeightStats() {
               flexDirection="column"
               h="100%"
               w="100%"
-              minH={{ sm: "100px", md: "300px", lg: "auto" }}
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
               minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
             >
               <LineChart
                 lineChartLabels={lineChartLabels}

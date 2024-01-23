@@ -87,7 +87,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const userData = sessionStorage.getItem(key);
   const RememberedUser = Cookies.get("remember");
   const [user, setUser] = useState(null);
-  const uid = getAuth().currentUser.uid;
   const [userDataForToday, setUserDataForToday] = useState(null);
   const isMounted = useRef(true);
 
@@ -102,7 +101,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         try {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
-          const additionalData = await fetchAdditionalUserData(uid);
+          const additionalData = await fetchAdditionalUserData(user.uid);
           const userDataForToday = additionalData[timestampKey];
           if (isMounted.current) {
             setUserDataForToday(userDataForToday);

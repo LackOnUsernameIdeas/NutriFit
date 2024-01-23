@@ -41,6 +41,7 @@ export type UserData = {
   waist: number;
   hip: number;
   goal?: Goal;
+  [key: string]: number | string;
 };
 
 export type WeightDifference = {

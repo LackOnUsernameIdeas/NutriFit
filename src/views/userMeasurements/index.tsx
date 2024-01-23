@@ -21,7 +21,7 @@
 
 */
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -228,6 +228,17 @@ const UserMeasurements = () => {
     };
   }, []);
 
+  const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (userDataForToday) {
+      const differentFields = Object.keys(userData).filter(
+        (key) => userData[key] !== userDataForToday[key]
+      );
+      setHighlightedFields(differentFields);
+    }
+  }, [userData, userDataForToday]);
+
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
@@ -320,6 +331,11 @@ const UserMeasurements = () => {
                             fontSize="sm"
                             fontWeight="500"
                             size="lg"
+                            borderColor={
+                              highlightedFields.includes(key)
+                                ? "green.500"
+                                : undefined
+                            }
                           />
                         ) : (
                           <Input
