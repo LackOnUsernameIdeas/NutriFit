@@ -39,6 +39,8 @@ import {
   Text,
   useColorModeValue
 } from "@chakra-ui/react";
+
+import MeasurementsAlertDialog from "./components/MeasurementsAlertDialog";
 // Custom components
 import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/measurements/Default";
@@ -346,17 +348,7 @@ const UserMeasurements = () => {
                     )}
                   </Box>
                 ))}
-                <Button
-                  onClick={handleSubmit}
-                  fontSize="sm"
-                  variant="brand"
-                  fontWeight="500"
-                  w="100%"
-                  h="50"
-                  mb="24px"
-                >
-                  Изпрати
-                </Button>
+                <MeasurementsAlertDialog handleSubmit={handleSubmit} />
                 {error && (
                   <Text color="red" fontSize="sm" mb="8px">
                     {error}
