@@ -252,19 +252,21 @@ const UserMeasurements = () => {
   // TODO: Make this dumb shit work cause it no no wanna :( for some reason
   useEffect(() => {
     if (userDataLastSavedDate) {
-      // const areDataEqual = Object.keys(userData).every(
-      //   (key) => userData[key] === userDataLastSavedDate[key]
-      // );
+      const commonKeys = Object.keys(userData).filter((key) =>
+        Object.keys(userDataLastSavedDate).includes(key)
+      );
 
-      // setUpdateWithNewData(!areDataEqual);
+      const areDataEqual = commonKeys.every(
+        (key) => userData[key] === userDataLastSavedDate[key]
+      );
 
-      const differentFields = Object.keys(userData).filter(
+      setUpdateWithNewData(areDataEqual);
+
+      const differentFields = commonKeys.filter(
         (key) => userData[key] !== userDataLastSavedDate[key]
       );
 
       setHighlightedFields(differentFields);
-
-      // console.log("updateWithNewData:", !areDataEqual);
     }
   }, [userData, userDataLastSavedDate]);
 

@@ -40,9 +40,9 @@ function MeasurementsAlertDialog(props: {
     console.log("checkUpdate value:", props.checkUpdate);
 
     if (props.checkUpdate) {
-      setButtonText("Актуализирайте");
-    } else {
       setButtonText("Изпратете");
+    } else {
+      setButtonText("Актуализирайте");
     }
   }, [props.checkUpdate]);
   const translateKey = (key: any) => {
