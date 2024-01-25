@@ -249,7 +249,6 @@ const UserMeasurements = () => {
 
   const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
   const [updateWithNewData, setUpdateWithNewData] = useState<boolean>(false);
-  // TODO: Make this dumb shit work cause it no no wanna :( for some reason
   useEffect(() => {
     if (userDataLastSavedDate) {
       const commonKeys = Object.keys(userData).filter((key) =>

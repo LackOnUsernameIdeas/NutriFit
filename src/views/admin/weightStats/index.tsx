@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 // Chakra UI components
 import {
@@ -52,6 +52,11 @@ import {
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
+import {
+  saveBMI,
+  savePerfectWeight,
+  saveBodyMass
+} from "../../../database/setWeightStatsData";
 
 // Главен компонент
 export default function WeightStats() {
@@ -298,6 +303,141 @@ export default function WeightStats() {
       setIsGenerateStatsCalled(true);
     }
   }, [userData]);
+
+  React.useEffect(() => {
+    const saveBMIData = async () => {
+      try {
+        const { bmi, health, healthy_bmi_range } = BMIIndex;
+        const uid = getAuth().currentUser.uid;
+        await saveBMI(uid, bmi, health, healthy_bmi_range);
+
+        console.log("BMI data saved successfully!");
+      } catch (error) {
+        console.error("Error saving BMI data:", error);
+      }
+    };
+
+    if (BMIIndex.bmi !== null) {
+      saveBMIData();
+    }
+  }, [BMIIndex]);
+
+  // useEffect to handle Perfect Weight data saving
+  React.useEffect(() => {
+    const savePerfectWeightData = async () => {
+      try {
+        const perfect = perfectWeight;
+        const difference = differenceFromPerfectWeight;
+        const uid = getAuth().currentUser.uid;
+        await savePerfectWeight(uid, perfect, difference);
+
+        console.log("Perfect Weight data saved successfully!");
+      } catch (error) {
+        console.error("Error saving Perfect Weight data:", error);
+      }
+    };
+
+    if (perfectWeight !== 0) {
+      savePerfectWeightData();
+    }
+  }, [perfectWeight, differenceFromPerfectWeight]);
+
+  // useEffect to handle Body Mass data saving
+  React.useEffect(() => {
+    const saveBodyMassData = async () => {
+      try {
+        const {
+          "Body Fat (U.S. Navy Method)": bodyFat,
+          "Body Fat Mass": bodyFatMass,
+          "Lean Body Mass": leanBodyMass
+        } = bodyFatMassAndLeanMass;
+        const uid = getAuth().currentUser.uid;
+
+        await saveBodyMass(uid, bodyFat, bodyFatMass, leanBodyMass);
+
+        console.log("Body Mass data saved successfully!");
+      } catch (error) {
+        console.error("Error saving Body Mass data:", error);
+      }
+    };
+
+    if (bodyFatMassAndLeanMass["Body Fat (U.S. Navy Method)"] !== 0) {
+      saveBodyMassData();
+    }
+  }, [bodyFatMassAndLeanMass]);
+  // TODO: Make this work
+
+  // const [userDataForToday, setUserDataForToday] = useState(null);
+  // const [userDataLastSavedDate, setUserDataLastSavedDate] = useState(null);
+  // const [isTodaysDataFetched, setIsTodaysDataFetched] =
+  //   useState<boolean>(false);
+  // const isMounted = useRef(true);
+  // React.useEffect(() => {
+  //   const auth = getAuth();
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     if (isMounted.current) {
+  //       setUser(user);
+  //     }
+
+  //     if (user) {
+  //       try {
+  //         setIsLoading(true);
+
+  //         const additionalData = await fetchAdditionalUserData(user.uid);
+
+  //         // Extract date keys from additionalData
+  //         const dateKeys = Object.keys(additionalData).filter((key) =>
+  //           /^\d{4}-\d{2}-\d{2}$/.test(key)
+  //         );
+
+  //         // Sort date keys in descending order
+  //         dateKeys.sort(
+  //           (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  //         );
+
+  //         // Find the first date before today
+  //         const today = new Date().toISOString().slice(0, 10);
+  //         const lastSavedDate = dateKeys.find((date) => date < today);
+  //         const rawUserDataForToday = additionalData[today];
+  //         const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
+
+  //         if (isMounted.current) {
+  //           setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+  //           setUserDataForToday(rawUserDataForToday);
+  //           setIsTodaysDataFetched(true);
+  //         }
+
+  //         setTimeout(() => {
+  //           setIsLoading(false);
+  //         }, 1000);
+  //       } catch (error) {
+  //         console.error("Error fetching additional user data:", error);
+  //       }
+  //     }
+  //   });
+
+  //   return () => {
+  //     isMounted.current = false;
+  //     unsubscribe();
+  //   };
+  // }, []);
+
+  // const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
+  // React.useEffect(() => {
+  //   if (userDataForToday && userDataLastSavedDate) {
+  //     const commonKeys = Object.keys(userDataForToday).filter((key) =>
+  //       Object.keys(userDataLastSavedDate).includes(key)
+  //     );
+
+  //     const differentFields = commonKeys.filter(
+  //       (key) => userDataForToday[key] !== userDataLastSavedDate[key]
+  //     );
+
+  //     setHighlightedFields(
+  //       differentFields.map((field) => `${field}Highlighted`)
+  //     );
+  //   }
+  // }, [userDataForToday, userDataLastSavedDate]);
 
   // Масиви с преведени имена
   const bmiData: string[] = [
