@@ -172,7 +172,19 @@ export default function WeightStats() {
   const lineChartForKilogramsData = userDataForCharts.map(
     (entry) => entry.weight
   );
-  const lineChartForHeightData = userDataForCharts.map((entry) => entry.height);
+  const lineChartForBMI = userDataForCharts.map((entry) => entry.bmi);
+  const lineChartForBodyFatData = userDataForCharts.map(
+    (entry) => entry.bodyFat
+  );
+  const lineChartForBodyFatMassData = userDataForCharts.map(
+    (entry) => entry.bodyFatMass
+  );
+  const lineChartForLeanBodyMassData = userDataForCharts.map(
+    (entry) => entry.leanBodyMass
+  );
+  const lineChartForDifferenceFromPerfectWeightData = userDataForCharts.map(
+    (entry) => entry.differenceFromPerfectWeight
+  );
 
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
   const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
@@ -318,7 +330,9 @@ export default function WeightStats() {
         sortedData,
         "differenceFromPerfectWeight"
       );
-      setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
+      setDifferenceFromPerfectWeightChange(
+        Math.abs(differenceFromPerfectWeightChange)
+      );
 
       console.log("the last two entries for BMI222222: ", sortedData);
       console.log(
@@ -411,7 +425,7 @@ export default function WeightStats() {
   React.useEffect(() => {
     const diff = perfectWeight - userData.weight;
     setDifferenceFromPerfectWeight({
-      difference: diff,
+      difference: Math.abs(diff),
       isUnderOrAbove: userData.weight > perfectWeight ? "above" : "under"
     });
   }, [perfectWeight, userData]);
@@ -1174,7 +1188,7 @@ export default function WeightStats() {
                 lineChartLabels={lineChartLabels}
                 lineChartData={lineChartForKilogramsData}
                 lineChartOptions={lineChartOptions}
-                lineChartLabelName="Килограми"
+                lineChartLabelName="Изменение на тегло(кг)"
               />
             </Card>
             <Card
@@ -1188,9 +1202,77 @@ export default function WeightStats() {
             >
               <LineChart
                 lineChartLabels={lineChartLabels}
-                lineChartData={lineChartForHeightData}
+                lineChartData={lineChartForBMI}
                 lineChartOptions={lineChartOptions}
-                lineChartLabelName="Височина"
+                lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
+              />
+            </Card>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+            >
+              <LineChart
+                lineChartLabels={lineChartLabels}
+                lineChartData={lineChartForBodyFatData}
+                lineChartOptions={lineChartOptions}
+                lineChartLabelName="Изменение на % телесни мазнини"
+              />
+            </Card>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+            >
+              <LineChart
+                lineChartLabels={lineChartLabels}
+                lineChartData={lineChartForBodyFatMassData}
+                lineChartOptions={lineChartOptions}
+                lineChartLabelName="Изменение на мастна телесна маса"
+              />
+            </Card>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+            >
+              <LineChart
+                lineChartLabels={lineChartLabels}
+                lineChartData={lineChartForLeanBodyMassData}
+                lineChartOptions={lineChartOptions}
+                lineChartLabelName="Изменение на чиста телесна маса"
+              />
+            </Card>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+            >
+              <LineChart
+                lineChartLabels={lineChartLabels}
+                lineChartData={lineChartForDifferenceFromPerfectWeightData}
+                lineChartOptions={lineChartOptions}
+                lineChartLabelName={`Изменение в килограми ${
+                  differenceFromPerfectWeight.isUnderOrAbove == "above"
+                    ? "над"
+                    : "под"
+                } нормата`}
               />
             </Card>
           </SimpleGrid>
