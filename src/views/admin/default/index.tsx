@@ -32,7 +32,10 @@ import {
   SimpleGrid,
   useColorModeValue,
   Text,
-  Link
+  Link,
+  LinkBox,
+  LinkOverlay,
+  Heading
 } from "@chakra-ui/react";
 // Assets
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
@@ -61,14 +64,8 @@ export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const bgHover = useColorModeValue(
-    { bg: "secondaryGray.400" },
-    { bg: "whiteAlpha.200" }
-  );
-  const bgFocus = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.100" }
-  );
+  const bgHover = { bg: "brand.200" };
+  const bgFocus = { bg: "brand.200" };
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -185,43 +182,52 @@ export default function UserReports() {
           </Flex>
         </Card>
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <Link href="/#/admin/weight">
-          <Card
-            minH="200px"
-            _hover={bgHover}
-            _focus={bgFocus}
-            backgroundColor="brand.500"
-          >
-            <Flex pt="5px" w="100%" mb="10px">
-              <Text fontSize="3xl" fontStyle="italic">
-                Калкулации за теглото ви ↪
-              </Text>
-            </Flex>
-            <Flex pt="5px" w="100%" mb="5px">
-              <Text fontSize="xl">
-                Посетете нашата страница с калкулатор за тегло! Предлагаме
-                интерактивни диаграми и статистики, създадени за вас!
-              </Text>
-            </Flex>
-          </Card>
-        </Link>
-        <Link href="/#/admin/mealplan">
-          <Card minH="200px" _hover={bgHover} _focus={bgFocus}>
-            <Flex pt="5px" w="100%" mb="10px">
-              <Text fontSize="3xl" fontStyle="italic">
-                Хранителен план ↪
-              </Text>
-            </Flex>
-            <Flex pt="5px" w="100%" mb="5px">
-              <Text fontSize="xl">
-                Посетете нашата страница за създаване на хранителен план! Имаме
-                обширна база данни със рецепти, която използваме да създадем
-                хранителен режим с вашите предпочитания!
-              </Text>
-            </Flex>
-          </Card>
-        </Link>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
+        <LinkBox
+          as="article"
+          maxW="sm"
+          p="5"
+          borderWidth="1px"
+          rounded="md"
+          minH="200px"
+          _hover={bgHover}
+          _focus={bgFocus}
+          color="white"
+          backgroundColor="brand.900"
+        >
+          <Heading size="md" my="2" fontSize="2xl">
+            <LinkOverlay href="/#/admin/weight">
+              Калкулации за теглото ви ↪
+            </LinkOverlay>
+          </Heading>
+          <Text>
+            Посетете нашата страница с калкулатор за тегло! Предлагаме
+            интерактивни диаграми и статистики, създадени за вас!
+          </Text>
+        </LinkBox>
+        <LinkBox
+          as="article"
+          maxW="sm"
+          p="5"
+          borderWidth="1px"
+          rounded="md"
+          minH="200px"
+          _hover={bgHover}
+          _focus={bgFocus}
+          color="white"
+          backgroundColor="brand.900"
+        >
+          <Heading size="md" my="2" fontSize="2xl">
+            <LinkOverlay href="/#/admin/mealplan">
+              Хранителен план ↪
+            </LinkOverlay>
+          </Heading>
+          <Text>
+            Посетете нашата страница за създаване на хранителен план! Имаме
+            обширна база данни със рецепти, която използваме да създадем
+            хранителен режим с вашите предпочитания!
+          </Text>
+        </LinkBox>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
         <DailyTraffic />
