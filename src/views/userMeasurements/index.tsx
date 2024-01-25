@@ -259,13 +259,15 @@ const UserMeasurements = () => {
         (key) => userData[key] === userDataLastSavedDate[key]
       );
 
-      setUpdateWithNewData(areDataEqual);
+      setUpdateWithNewData(!areDataEqual);
 
       const differentFields = commonKeys.filter(
         (key) => userData[key] !== userDataLastSavedDate[key]
       );
 
       setHighlightedFields(differentFields);
+    } else {
+      setUpdateWithNewData(false);
     }
   }, [userData, userDataLastSavedDate]);
 
