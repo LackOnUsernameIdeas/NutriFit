@@ -23,6 +23,7 @@
 // Chakra imports
 import {
   Avatar,
+  Button,
   Box,
   Flex,
   FormLabel,
@@ -30,7 +31,8 @@ import {
   Select,
   SimpleGrid,
   useColorModeValue,
-  Text
+  Text,
+  Link
 } from "@chakra-ui/react";
 // Assets
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
@@ -59,6 +61,14 @@ export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const bgHover = useColorModeValue(
+    { bg: "secondaryGray.400" },
+    { bg: "whiteAlpha.200" }
+  );
+  const bgFocus = useColorModeValue(
+    { bg: "secondaryGray.300" },
+    { bg: "whiteAlpha.100" }
+  );
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -153,8 +163,17 @@ export default function UserReports() {
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card minH="200px">
           <Flex justify="center" pt="5px" w="100%">
+            <Text fontSize="5xl" fontStyle="italic" mr="2">
+              Добре дошли в
+            </Text>
+            <Text fontSize="5xl" fontStyle="italic" fontFamily="DM Sans">
+              Nutri
+            </Text>
+            <Text fontSize="5xl" fontFamily="Leckerli One" mr="1.5">
+              Fit
+            </Text>
             <Text fontSize="5xl" fontStyle="italic">
-              Добре дошли в NutriFit!
+              !
             </Text>
           </Flex>
           <HSeparator />
@@ -165,6 +184,44 @@ export default function UserReports() {
             </Text>
           </Flex>
         </Card>
+      </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <Link href="/#/admin/weight">
+          <Card
+            minH="200px"
+            _hover={bgHover}
+            _focus={bgFocus}
+            backgroundColor="brand.500"
+          >
+            <Flex pt="5px" w="100%" mb="10px">
+              <Text fontSize="3xl" fontStyle="italic">
+                Калкулации за теглото ви ↪
+              </Text>
+            </Flex>
+            <Flex pt="5px" w="100%" mb="5px">
+              <Text fontSize="xl">
+                Посетете нашата страница с калкулатор за тегло! Предлагаме
+                интерактивни диаграми и статистики, създадени за вас!
+              </Text>
+            </Flex>
+          </Card>
+        </Link>
+        <Link href="/#/admin/mealplan">
+          <Card minH="200px" _hover={bgHover} _focus={bgFocus}>
+            <Flex pt="5px" w="100%" mb="10px">
+              <Text fontSize="3xl" fontStyle="italic">
+                Хранителен план ↪
+              </Text>
+            </Flex>
+            <Flex pt="5px" w="100%" mb="5px">
+              <Text fontSize="xl">
+                Посетете нашата страница за създаване на хранителен план! Имаме
+                обширна база данни със рецепти, която използваме да създадем
+                хранителен режим с вашите предпочитания!
+              </Text>
+            </Flex>
+          </Card>
+        </Link>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
         <DailyTraffic />

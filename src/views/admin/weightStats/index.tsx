@@ -596,7 +596,9 @@ export default function WeightStats() {
       style={{ overflow: "hidden" }}
     >
       {isLoading || !isGenerateStatsCalled ? (
-        <Loading />
+        <Box mt="35vh">
+          <Loading />
+        </Box>
       ) : (
         <Box>
           <Card

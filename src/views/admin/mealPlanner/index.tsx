@@ -288,7 +288,9 @@ export default function WeightStats() {
     >
       <Box>
         {!isGenerateStatsForCaloriesCalled ? (
-          <Loading />
+          <Box mt="35vh">
+            <Loading />
+          </Box>
         ) : (
           <Box>
             <Card
