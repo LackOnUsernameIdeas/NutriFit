@@ -17,6 +17,8 @@ export default function Default(props: {
   endContent?: JSX.Element;
   name?: string;
   growth?: string | number;
+  decrease?: string | number;
+  subtext?: string;
   value: string | number;
   tooltipLabel?: string;
   onClick?: () => void;
@@ -30,6 +32,8 @@ export default function Default(props: {
     endContent,
     name,
     growth,
+    decrease,
+    subtext,
     value,
     tooltipLabel,
     onClick,
@@ -103,7 +107,16 @@ export default function Default(props: {
                   {growth}
                 </Text>
                 <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
-                  since last month
+                  {subtext ? subtext : ""}
+                </Text>
+              </Flex>
+            ) : decrease ? (
+              <Flex align="center">
+                <Text color="red.500" fontSize="xs" fontWeight="700" me="5px">
+                  {decrease}
+                </Text>
+                <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
+                  {subtext ? subtext : ""}
                 </Text>
               </Flex>
             ) : null}

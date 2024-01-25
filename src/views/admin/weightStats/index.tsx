@@ -58,6 +58,8 @@ import {
   saveBodyMass
 } from "../../../database/setWeightStatsData";
 
+import { parseISO, differenceInDays } from "date-fns";
+
 // Главен компонент
 export default function WeightStats() {
   // Color values
@@ -108,6 +110,19 @@ export default function WeightStats() {
     healthy_bmi_range: "18.5 - 25"
   });
 
+  const [bmiChange, setBMIChange] = useState<number | null>(null);
+  const [bodyFatChange, setBodyFatChange] = useState<number | null>(null);
+  const [bodyFatMassChange, setBodyFatMassChange] = useState<number | null>(
+    null
+  );
+  const [leanBodyMassChange, setLeanBodyMassChange] = useState<number | null>(
+    null
+  );
+  const [
+    differenceFromPerfectWeightChange,
+    setDifferenceFromPerfectWeightChange
+  ] = useState<number | null>(null);
+
   const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
     useState<BodyMass>({
       "Body Fat (U.S. Navy Method)": 0,
@@ -129,14 +144,24 @@ export default function WeightStats() {
     neck: 0,
     waist: 0,
     hip: 0,
-    goal: "maintain"
+    goal: "maintain",
+    bmi: 0,
+    bodyFat: 0,
+    bodyFatMass: 0,
+    leanBodyMass: 0,
+    differenceFromPerfectWeight: 0
   });
 
   const [userDataForCharts, setUserDataForCharts] = useState([
     {
       date: "",
       height: 0,
-      weight: 0
+      weight: 0,
+      bmi: 0,
+      bodyFat: 0,
+      bodyFatMass: 0,
+      leanBodyMass: 0,
+      differenceFromPerfectWeight: 0
     }
   ]);
   userDataForCharts.sort((a, b) =>
@@ -177,9 +202,27 @@ export default function WeightStats() {
             waist: additionalData[timestampKey].waist,
             neck: additionalData[timestampKey].neck,
             hip: additionalData[timestampKey].hip,
-            weight: additionalData[timestampKey].weight
-          } as UserData);
+            weight: additionalData[timestampKey].weight,
+            bmi: additionalData[timestampKey].BMIData
+              ? additionalData[timestampKey].BMIData.bmi
+              : undefined,
+            bodyFat: additionalData[timestampKey].BodyMassData
+              ? additionalData[timestampKey].BodyMassData.bodyFat
+              : undefined,
+            bodyFatMass: additionalData[timestampKey].BodyMassData
+              ? additionalData[timestampKey].BodyMassData.bodyFatMass
+              : undefined,
+            leanBodyMass: additionalData[timestampKey].BodyMassData
+              ? additionalData[timestampKey].BodyMassData.leanBodyMass
+              : undefined,
+            differenceFromPerfectWeight: additionalData[timestampKey]
+              .PerfectWeightData
+              ? additionalData[timestampKey].PerfectWeightData
+                  .differenceFromPerfectWeight.difference
+              : undefined
+          } as any);
 
+          console.log(additionalData, "additionalData");
           const userChartData = [];
 
           for (const key in additionalData) {
@@ -192,7 +235,21 @@ export default function WeightStats() {
               userChartData.push({
                 date: key,
                 height: dateData.height,
-                weight: dateData.weight
+                weight: dateData.weight,
+                bmi: dateData.BMIData ? dateData.BMIData.bmi : undefined,
+                bodyFat: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFat
+                  : undefined,
+                bodyFatMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFatMass
+                  : undefined,
+                leanBodyMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.leanBodyMass
+                  : undefined,
+                differenceFromPerfectWeight: dateData.PerfectWeightData
+                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                      .difference
+                  : undefined
               });
             }
           }
@@ -204,6 +261,7 @@ export default function WeightStats() {
             "Additional user data:",
             additionalData
           );
+          console.log("userChartData:", userChartData);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
@@ -213,6 +271,72 @@ export default function WeightStats() {
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
   }, []);
+
+  const calculateChange = (sortedData: any[], property: string) => {
+    const latestValue = sortedData[0][property];
+    const previousValue = sortedData[1][property];
+    const change = latestValue - previousValue;
+    return change;
+  };
+
+  const calculateBMIChange = () => {
+    // Create an object to store unique entries based on date
+    const uniqueEntries: { [date: string]: any } = {};
+
+    // Iterate over userDataForCharts to find the unique entries
+    userDataForCharts.forEach((entry) => {
+      if (entry.bmi !== 0 && !uniqueEntries[entry.date]) {
+        uniqueEntries[entry.date] = {
+          bmi: entry.bmi,
+          bodyFat: entry.bodyFat,
+          bodyFatMass: entry.bodyFatMass,
+          leanBodyMass: entry.leanBodyMass,
+          differenceFromPerfectWeight: entry.differenceFromPerfectWeight
+        };
+      }
+    });
+
+    // Create an array of entries sorted by date
+    const sortedData = Object.entries(uniqueEntries)
+      .sort((a, b) => parseISO(b[0]).getTime() - parseISO(a[0]).getTime())
+      .map(([date, values]) => ({ date, ...values }));
+
+    if (sortedData.length >= 2) {
+      const bmiChange = calculateChange(sortedData, "bmi");
+      setBMIChange(bmiChange);
+
+      const bodyFatChange = calculateChange(sortedData, "bodyFat");
+      setBodyFatChange(bodyFatChange);
+
+      const bodyFatMassChange = calculateChange(sortedData, "bodyFatMass");
+      setBodyFatMassChange(bodyFatMassChange);
+
+      const leanBodyMassChange = calculateChange(sortedData, "leanBodyMass");
+      setLeanBodyMassChange(leanBodyMassChange);
+
+      const differenceFromPerfectWeightChange = calculateChange(
+        sortedData,
+        "differenceFromPerfectWeight"
+      );
+      setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
+
+      console.log("the last two entries for BMI222222: ", sortedData);
+      console.log(
+        "all changes: ",
+        bmiChange,
+        bodyFatChange,
+        bodyFatMassChange,
+        leanBodyMassChange,
+        differenceFromPerfectWeightChange
+      );
+    } else {
+      setBMIChange(null);
+    }
+  };
+
+  React.useEffect(() => {
+    calculateBMIChange();
+  }, [userDataForCharts]);
 
   // Функция за генериране на статистики
   function generateStats() {
@@ -780,6 +904,20 @@ export default function WeightStats() {
                     />
                   }
                   name={bmiData[index]}
+                  growth={
+                    key == "bmi" && bmiChange
+                      ? bmiChange > 0
+                        ? `+${bmiChange.toFixed(2)}`
+                        : null
+                      : null
+                  }
+                  decrease={
+                    key == "bmi" && bmiChange
+                      ? bmiChange < 0
+                        ? `${bmiChange.toFixed(2)}`
+                        : null
+                      : null
+                  }
                   value={value}
                 />
               ))}
@@ -910,6 +1048,20 @@ export default function WeightStats() {
                   Math.abs(differenceFromPerfectWeight.difference).toFixed(2) +
                   " kg"
                 }
+                growth={
+                  differenceFromPerfectWeightChange
+                    ? differenceFromPerfectWeightChange > 0
+                      ? `+${differenceFromPerfectWeightChange.toFixed(2)}`
+                      : null
+                    : null
+                }
+                decrease={
+                  differenceFromPerfectWeightChange
+                    ? differenceFromPerfectWeightChange < 0
+                      ? `${differenceFromPerfectWeightChange.toFixed(2)}`
+                      : null
+                    : null
+                }
               />
             </SimpleGrid>
           </Card>
@@ -949,6 +1101,36 @@ export default function WeightStats() {
                     }
                     name={bodyFatAndLeanMassWidgetsData[index]}
                     value={value + " " + bodyFatAndLeanMassWidgetsUnits[index]}
+                    growth={
+                      key === "Body Fat (U.S. Navy Method)" && bodyFatChange
+                        ? bodyFatChange > 0
+                          ? `+${bodyFatChange.toFixed(2)}`
+                          : null
+                        : key === "Body Fat Mass" && bodyFatMassChange
+                        ? bodyFatMassChange > 0
+                          ? `+${bodyFatMassChange.toFixed(2)}`
+                          : null
+                        : key === "Lean Body Mass" && leanBodyMassChange
+                        ? leanBodyMassChange > 0
+                          ? `+${leanBodyMassChange.toFixed(2)}`
+                          : null
+                        : null
+                    }
+                    decrease={
+                      key === "Body Fat (U.S. Navy Method)" && bodyFatChange
+                        ? bodyFatChange < 0
+                          ? `${bodyFatChange.toFixed(2)}`
+                          : null
+                        : key === "Body Fat Mass" && bodyFatMassChange
+                        ? bodyFatMassChange < 0
+                          ? `${bodyFatMassChange.toFixed(2)}`
+                          : null
+                        : key === "Lean Body Mass" && leanBodyMassChange
+                        ? leanBodyMassChange < 0
+                          ? `${leanBodyMassChange.toFixed(2)}`
+                          : null
+                        : null
+                    }
                   />
                 )
               )}
