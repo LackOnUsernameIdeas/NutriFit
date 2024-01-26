@@ -67,11 +67,12 @@ export const fetchBMIData = async (
 
 export const fetchPerfectWeightData = async (
   height: number,
+  gender: string,
   setPerfectWeight: React.Dispatch<React.SetStateAction<number>>
 ) => {
   try {
     fetch(
-      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${"male"}&height=${height}`,
+      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${gender}&height=${height}`,
       {
         method: "GET",
         headers: headers
@@ -98,6 +99,7 @@ export const fetchPerfectWeightData = async (
 
 export const fetchBodyFatAndLeanMassData = async (
   age: number,
+  gender: string,
   height: number,
   weight: number,
   neck: number,
@@ -107,7 +109,7 @@ export const fetchBodyFatAndLeanMassData = async (
 ) => {
   try {
     fetch(
-      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
+      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${gender}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
       {
         method: "GET",
         headers: headers
@@ -139,6 +141,7 @@ export const fetchBodyFatAndLeanMassData = async (
 
 export const fetchCaloriesForActivityLevels = async (
   age: number,
+  gender: string,
   height: number,
   weight: number,
   setDailyCaloryRequirements: React.Dispatch<
@@ -149,7 +152,7 @@ export const fetchCaloriesForActivityLevels = async (
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${gender}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
 
       requests.push(
         fetch(url, {
@@ -217,6 +220,7 @@ export const fetchCaloriesForActivityLevels = async (
 
 export const fetchMacroNutrients = async (
   age: number,
+  gender: string,
   height: number,
   weight: number,
   goal: Goal | "",
@@ -226,7 +230,7 @@ export const fetchMacroNutrients = async (
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${"male"}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
       requests.push(
         fetch(url, {

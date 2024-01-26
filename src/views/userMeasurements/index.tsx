@@ -47,8 +47,23 @@ import DefaultAuth from "layouts/measurements/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
 import Loading from "views/admin/weightStats/components/Loading";
-import { UserData } from "../../types/weightStats";
-
+import {
+  saveBMI,
+  savePerfectWeight,
+  saveBodyMass
+} from "../../database/setWeightStatsData";
+import {
+  BMIInfo,
+  BodyMass,
+  UserData,
+  Goal,
+  WeightDifference
+} from "../../types/weightStats";
+import {
+  fetchBMIData,
+  fetchPerfectWeightData,
+  fetchBodyFatAndLeanMassData
+} from "./utils/fetchFunctions";
 interface UserMeasurements {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -90,6 +105,17 @@ const UserMeasurements = () => {
     goal: "maintain"
   });
 
+  const [userDataForReq, setUserDataForReq] = useState<UserData>({
+    gender: "male" || "female",
+    height: 0,
+    age: 0,
+    weight: 0,
+    neck: 0,
+    waist: 0,
+    hip: 0,
+    goal: "maintain"
+  });
+
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
 
@@ -110,6 +136,141 @@ const UserMeasurements = () => {
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
+  // States за запазване на извличените данни
+  const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
+    bmi: null,
+    health: "",
+    healthy_bmi_range: "18.5 - 25"
+  });
+  const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
+    useState<BodyMass>({
+      "Body Fat (U.S. Navy Method)": 0,
+      "Body Fat Mass": 0,
+      "Lean Body Mass": 0
+    });
+  const [userDataForCharts, setUserDataForCharts] = useState([
+    {
+      date: "",
+      height: 0,
+      weight: 0,
+      bmi: 0,
+      bodyFat: 0,
+      bodyFatMass: 0,
+      leanBodyMass: 0,
+      differenceFromPerfectWeight: 0
+    }
+  ]);
+  userDataForCharts.sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
+  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
+    useState<WeightDifference>({
+      difference: 0,
+      isUnderOrAbove: ""
+    });
+
+  const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
+    useState<boolean>(false);
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+
+      if (user) {
+        try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
+          const additionalData = await fetchAdditionalUserData(user.uid);
+          setUserDataForReq({
+            gender: additionalData.gender,
+            goal: additionalData.goal,
+            age: additionalData[timestampKey].age,
+            height: additionalData[timestampKey].height,
+            waist: additionalData[timestampKey].waist,
+            neck: additionalData[timestampKey].neck,
+            hip: additionalData[timestampKey].hip,
+            weight: additionalData[timestampKey].weight
+          } as any);
+
+          console.log(additionalData, "additionalData");
+          const userChartData = [];
+
+          for (const key in additionalData) {
+            if (
+              key !== "gender" &&
+              key !== "goal" &&
+              typeof additionalData[key] === "object"
+            ) {
+              const dateData = additionalData[key];
+              userChartData.push({
+                date: key,
+                height: dateData.height,
+                weight: dateData.weight,
+                bmi: dateData.BMIData ? dateData.BMIData.bmi : undefined,
+                bodyFat: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFat
+                  : undefined,
+                bodyFatMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFatMass
+                  : undefined,
+                leanBodyMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.leanBodyMass
+                  : undefined,
+                differenceFromPerfectWeight: dateData.PerfectWeightData
+                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                      .difference
+                  : undefined
+              });
+            }
+          }
+
+          setUserDataForCharts(userChartData);
+          console.log(
+            "ID: ",
+            user.uid,
+            "Additional user data:",
+            additionalData
+          );
+          console.log("userChartData:", userChartData);
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
+  // Функция за генериране на статистики
+  function generateStats() {
+    fetchBMIData(
+      userData["age"],
+      userData["height"],
+      userData["weight"],
+      setBMIIndex
+    );
+    fetchPerfectWeightData(
+      userData["height"],
+      userDataForReq["gender"],
+      setPerfectWeight
+    );
+    fetchBodyFatAndLeanMassData(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"],
+      userData["neck"],
+      userData["waist"],
+      userData["hip"],
+      setBodyFatMassAndLeanMass
+    );
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }
 
   React.useEffect(() => {
     // Зарежда последно запазените данни от Local Storage
@@ -172,13 +333,62 @@ const UserMeasurements = () => {
       JSON.stringify({ ...storedValues, [name]: value })
     );
   };
+  const saveBodyMassData = async () => {
+    try {
+      const {
+        "Body Fat (U.S. Navy Method)": bodyFat,
+        "Body Fat Mass": bodyFatMass,
+        "Lean Body Mass": leanBodyMass
+      } = bodyFatMassAndLeanMass;
+      const uid = getAuth().currentUser.uid;
+
+      await saveBodyMass(uid, bodyFat, bodyFatMass, leanBodyMass);
+
+      console.log("Body Mass data saved successfully!");
+    } catch (error) {
+      console.error("Error saving Body Mass data:", error);
+    }
+  };
+
+  const savePerfectWeightData = async () => {
+    try {
+      const perfect = perfectWeight;
+      const difference = differenceFromPerfectWeight;
+      const uid = getAuth().currentUser.uid;
+      await savePerfectWeight(uid, perfect, difference);
+
+      console.log("Perfect Weight data saved successfully!");
+    } catch (error) {
+      console.error("Error saving Perfect Weight data:", error);
+    }
+  };
+
+  const saveBMIData = async () => {
+    try {
+      const { bmi, health, healthy_bmi_range } = BMIIndex;
+      const uid = getAuth().currentUser.uid;
+      await saveBMI(uid, bmi, health, healthy_bmi_range);
+
+      console.log("BMI data saved successfully!");
+    } catch (error) {
+      console.error("Error saving BMI data:", error);
+    }
+  };
+  const saveAllData = async () => {
+    saveBMIData();
+    saveBodyMassData();
+    savePerfectWeightData();
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
     // Ако датата е валидна я записва в базата и изпраща потребителят на главната страница
     if (isUserDataValid()) {
       try {
         const uid = getAuth().currentUser.uid;
+
+        // Save additional user data
         await saveAdditionalUserData(
           uid,
           userData.height,
@@ -187,10 +397,19 @@ const UserMeasurements = () => {
           userData.neck,
           userData.waist,
           userData.hip
-        ).then(() => {
-          setIsFilledOut(true);
-          history.push("/admin/default");
-        });
+        );
+
+        setIsFilledOut(true);
+
+        // Generate stats and wait for it to complete
+        await generateStats();
+        setIsGenerateStatsCalled(true);
+
+        // Use the latest state values directly in saveAllData
+        await saveAllData();
+
+        // Redirect to the default page
+        history.push("/admin/default");
       } catch (error) {
         console.error("Error saving additional user data:", error);
       }
@@ -271,6 +490,25 @@ const UserMeasurements = () => {
     }
   }, [userData, userDataLastSavedDate]);
 
+  React.useEffect(() => {
+    const diff = perfectWeight - userData.weight;
+    setDifferenceFromPerfectWeight({
+      difference: Math.abs(diff),
+      isUnderOrAbove: userData.weight > perfectWeight ? "above" : "under"
+    });
+  }, [perfectWeight, userData]);
+
+  React.useEffect(() => {
+    // Check if numeric values in userData are different from 0 and not null
+    const areValuesValid = Object.values(userDataForReq).every(
+      (value) => value !== 0
+    );
+
+    if (areValuesValid) {
+      generateStats();
+      setIsGenerateStatsCalled(true);
+    }
+  }, [userDataForReq]);
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
