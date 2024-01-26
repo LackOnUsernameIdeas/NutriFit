@@ -36,7 +36,11 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   const userData = sessionStorage.getItem(key[0]);
   console.log(key, userData, "userData");
 
-  const rememberedUser = Cookies.get("remember");
+  const rememberedKey = Object.keys(localStorage).filter((obj) =>
+    obj.startsWith("firebase:authUser")
+  );
+  const rememberedUser = localStorage.getItem(rememberedKey[0]);
+  console.log(rememberedKey, rememberedUser, "remember");
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
   const isMounted = useRef(true);
@@ -73,7 +77,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
     <Route
       {...rest}
       render={(props) =>
-        (userData !== null || rememberedUser) &&
+        (userData !== null || rememberedUser !== null) &&
         userDataForToday !== undefined ? (
           <Component {...props} />
         ) : (
@@ -95,7 +99,10 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const userData = sessionStorage.getItem(key[0]);
   console.log(key, userData, "userData");
 
-  const RememberedUser = Cookies.get("remember");
+  const rememberedKey = Object.keys(localStorage).filter((obj) =>
+    obj.startsWith("firebase:authUser")
+  );
+  const rememberedUser = localStorage.getItem(rememberedKey[0]);
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
   const isMounted = useRef(true);
@@ -132,7 +139,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     <Route
       {...rest}
       render={(props) =>
-        (userData !== null || RememberedUser) &&
+        (userData !== null || rememberedUser !== null) &&
         userDataForToday == undefined ? (
           <Component {...props} />
         ) : (
@@ -150,15 +157,17 @@ const LandingRoute: React.FC<PrivateRouteProps> = ({
   const key = Object.keys(sessionStorage).filter((obj) =>
     obj.startsWith("firebase:authUser")
   );
-
+  const rememberedKey = Object.keys(localStorage).filter((obj) =>
+    obj.startsWith("firebase:authUser")
+  );
   const userData = sessionStorage.getItem(key[0]);
+  const rememberedUser = localStorage.getItem(rememberedKey[0]);
   console.log(key, userData, "userData");
-  const RememberedUser = Cookies.get("remember");
   return (
     <Route
       {...rest}
       render={(props) =>
-        userData !== null || RememberedUser ? (
+        userData !== null || rememberedUser !== null ? (
           <Redirect to="/admin/default" />
         ) : (
           <Component {...props} />

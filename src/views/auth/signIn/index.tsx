@@ -28,6 +28,7 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserSessionPersistence,
+  browserLocalPersistence,
   onAuthStateChanged,
   User
 } from "firebase/auth";
@@ -76,17 +77,13 @@ function SignIn() {
   const handleSignIn = async () => {
     try {
       const auth = getAuth();
-      await setPersistence(auth, browserSessionPersistence);
+      const firebasePersistence = rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence;
+      await setPersistence(auth, firebasePersistence);
       await signInWithEmailAndPassword(auth, email, password);
       setError("");
       history.push("/measurements/userData");
-      if (rememberMe) {
-        // Set cookie with user UID only when "Remember Me" is checked
-        Cookies.set("remember", "remember", { expires: 5 }); // Set cookie to expire in 5 days
-      } else {
-        // If "Remember Me" is not checked, remove any existing "uid" cookie
-        Cookies.remove("remember");
-      }
     } catch (error) {
       if (error instanceof Error) {
         switch (error.message) {
