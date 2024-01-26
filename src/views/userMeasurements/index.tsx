@@ -48,11 +48,6 @@ import DefaultAuth from "layouts/measurements/Default";
 import illustration from "assets/img/auth/auth.png";
 import Loading from "views/admin/weightStats/components/Loading";
 import {
-  saveBMI,
-  savePerfectWeight,
-  saveBodyMass
-} from "../../database/setWeightStatsData";
-import {
   BMIInfo,
   BodyMass,
   UserData,
@@ -62,7 +57,9 @@ import {
 import {
   fetchBMIData,
   fetchPerfectWeightData,
-  fetchBodyFatAndLeanMassData
+  fetchBodyFatAndLeanMassData,
+  fetchCaloriesForActivityLevels,
+  fetchMacroNutrients
 } from "./utils/fetchFunctions";
 interface UserMeasurements {
   userData: UserData;
@@ -244,21 +241,20 @@ const UserMeasurements = () => {
     return () => unsubscribe();
   }, []);
   // Функция за генериране на статистики
-  async function generateStats() {
-    const bmiData = await fetchBMIData(
+  function generateStats() {
+    console.log(
       userData["age"],
       userData["height"],
+      userData["weight"],
+      "before"
+    );
+    fetchBMIData(userData["age"], userData["height"], userData["weight"]);
+    fetchPerfectWeightData(
+      userData["height"],
+      userDataForReq["gender"],
       userData["weight"]
     );
-    setBMIIndex(bmiData);
-
-    const perfectWeightData = await fetchPerfectWeightData(
-      userData["height"],
-      userDataForReq["gender"]
-    );
-    setPerfectWeight(perfectWeightData);
-
-    const bodyFatAndLeanMassData = await fetchBodyFatAndLeanMassData(
+    fetchBodyFatAndLeanMassData(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
@@ -267,16 +263,21 @@ const UserMeasurements = () => {
       userData["waist"],
       userData["hip"]
     );
-    setBodyFatMassAndLeanMass(bodyFatAndLeanMassData);
-    console.log(
-      bmiData,
-      BMIIndex,
-      perfectWeightData,
-      perfectWeight,
-      bodyFatAndLeanMassData,
-      bodyFatMassAndLeanMass
-    );
-
+    // fetchCaloriesForActivityLevels(
+    //   userData["age"],
+    //   userData["gender"],
+    //   userData["height"],
+    //   userData["weight"],
+    //   setDailyCaloryRequirements
+    // );
+    // fetchMacroNutrients(
+    //   userData["age"],
+    //   userData["gender"],
+    //   userData["height"],
+    //   userData["weight"],
+    //   userData["goal"],
+    //   setTableData
+    // );
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -344,52 +345,6 @@ const UserMeasurements = () => {
       JSON.stringify({ ...storedValues, [name]: value })
     );
   };
-  const saveBodyMassData = async () => {
-    try {
-      const {
-        "Body Fat (U.S. Navy Method)": bodyFat,
-        "Body Fat Mass": bodyFatMass,
-        "Lean Body Mass": leanBodyMass
-      } = bodyFatMassAndLeanMass;
-      const uid = getAuth().currentUser.uid;
-
-      await saveBodyMass(uid, bodyFat, bodyFatMass, leanBodyMass);
-
-      console.log("Body Mass data saved successfully!");
-    } catch (error) {
-      console.error("Error saving Body Mass data:", error);
-    }
-  };
-
-  const savePerfectWeightData = async () => {
-    try {
-      const perfect = perfectWeight;
-      const difference = differenceFromPerfectWeight;
-      const uid = getAuth().currentUser.uid;
-      await savePerfectWeight(uid, perfect, difference);
-
-      console.log("Perfect Weight data saved successfully!");
-    } catch (error) {
-      console.error("Error saving Perfect Weight data:", error);
-    }
-  };
-
-  const saveBMIData = async () => {
-    try {
-      const { bmi, health, healthy_bmi_range } = BMIIndex;
-      const uid = getAuth().currentUser.uid;
-      await saveBMI(uid, bmi, health, healthy_bmi_range);
-
-      console.log("BMI data saved successfully!");
-    } catch (error) {
-      console.error("Error saving BMI data:", error);
-    }
-  };
-  const saveAllData = async () => {
-    saveBMIData();
-    saveBodyMassData();
-    savePerfectWeightData();
-  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -415,9 +370,6 @@ const UserMeasurements = () => {
         // Generate stats and wait for it to complete
         await generateStats();
         setIsGenerateStatsCalled(true);
-
-        // Use the latest state values directly in saveAllData
-        await saveAllData();
 
         // Redirect to the default page
         history.push("/admin/default");
