@@ -183,71 +183,61 @@ export default function UserReports() {
         </Card>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
-        <LinkBox
-          as="article"
-          maxW="sm"
-          p="5"
-          borderWidth="1px"
-          rounded="md"
-          minH="200px"
-          _hover={bgHover}
-          _focus={bgFocus}
-          color="white"
-          backgroundColor="brand.900"
-        >
-          <Heading size="md" my="2" fontSize="2xl">
-            <LinkOverlay href="/#/admin/weight">
+        <Card _hover={bgHover} _focus={bgFocus}>
+          <Flex pt="5px" w="100%">
+            <Text fontSize="xl" fontStyle="italic" mr="2">
               Калкулации за теглото ви ↪
-            </LinkOverlay>
-          </Heading>
-          <Text>
-            Посетете нашата страница с калкулатор за тегло! Предлагаме
-            интерактивни диаграми и статистики, създадени за вас!
-          </Text>
-        </LinkBox>
-        <LinkBox
-          as="article"
-          maxW="sm"
-          p="5"
-          borderWidth="1px"
-          rounded="md"
-          minH="200px"
-          _hover={bgHover}
-          _focus={bgFocus}
-          color="white"
-          backgroundColor="brand.900"
-        >
-          <Heading size="md" my="2" fontSize="2xl">
-            <LinkOverlay href="/#/admin/mealplan">
+            </Text>
+          </Flex>
+          <Flex justify="center" mt="1%" pt="10px">
+            <Text>
+              Посетете нашата страница с калкулатор за тегло! Предлагаме
+              интерактивни диаграми и статистики, създадени за вас!
+            </Text>
+          </Flex>
+        </Card>
+        <Card _hover={bgHover} _focus={bgFocus}>
+          <Flex pt="5px" w="100%">
+            <Text fontSize="xl" fontStyle="italic" mr="2">
               Хранителен план ↪
-            </LinkOverlay>
-          </Heading>
-          <Text>
-            Посетете нашата страница за създаване на хранителен план! Имаме
-            обширна база данни със рецепти, която използваме да създадем
-            хранителен режим с вашите предпочитания!
-          </Text>
-        </LinkBox>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <DailyTraffic />
-        <ComplexTable tableData={tableDataComplex} />
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <PieCard />
-          <Tasks />
-        </SimpleGrid>
-        <ColumnsTable
-          tableName="Macro Nutrients"
-          tableData={tableDataColumns}
-          columnsData={[
-            { name: "name", label: "Diet type" },
-            { name: "quantity", label: "Protein" },
-            { name: "progress", label: "Fat" },
-            { name: "date", label: "Carbohydrates" }
-          ]}
-        />
+            </Text>
+          </Flex>
+          <Flex justify="center" mt="1%" pt="10px">
+            <Text>
+              Посетете нашата страница за създаване на хранителен план! Имаме
+              обширна база данни със рецепти, която използваме да създадем
+              хранителен режим с вашите предпочитания!
+            </Text>
+          </Flex>
+        </Card>
+        <Card _hover={bgHover} _focus={bgFocus}>
+          <Flex pt="5px" w="100%">
+            <Text fontSize="xl" fontStyle="italic" mr="2">
+              Пример ↪
+            </Text>
+          </Flex>
+          <Flex justify="center" mt="1%" pt="10px">
+            <Text>
+              Посетете нашата страница за създаване на хранителен план! Имаме
+              обширна база данни със рецепти, която използваме да създадем
+              хранителен режим с вашите предпочитания!
+            </Text>
+          </Flex>
+        </Card>
+        <Card _hover={bgHover} _focus={bgFocus}>
+          <Flex pt="5px" w="100%">
+            <Text fontSize="xl" fontStyle="italic" mr="2">
+              Пример ↪
+            </Text>
+          </Flex>
+          <Flex justify="center" mt="1%" pt="10px">
+            <Text>
+              Посетете нашата страница за създаване на хранителен план! Имаме
+              обширна база данни със рецепти, която използваме да създадем
+              хранителен режим с вашите предпочитания!
+            </Text>
+          </Flex>
+        </Card>
       </SimpleGrid>
     </Box>
   );

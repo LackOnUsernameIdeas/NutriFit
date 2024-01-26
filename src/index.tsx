@@ -30,8 +30,12 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const key = sessionStorage.key(0);
-  const userData = sessionStorage.getItem(key);
+  const key = Object.keys(sessionStorage).filter((obj) =>
+    obj.startsWith("firebase:authUser")
+  );
+  const userData = sessionStorage.getItem(key[0]);
+  console.log(key, userData, "userData");
+
   const rememberedUser = Cookies.get("remember");
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
@@ -69,10 +73,11 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
     <Route
       {...rest}
       render={(props) =>
-        (userData || rememberedUser) && userDataForToday !== undefined ? (
+        (userData !== null || rememberedUser) &&
+        userDataForToday !== undefined ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/measurements/userData" />
+          <Redirect to="/auth/sign-in" />
         )
       }
     />
@@ -83,8 +88,13 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const key = sessionStorage.key(0);
-  const userData = sessionStorage.getItem(key);
+  const key = Object.keys(sessionStorage).filter((obj) =>
+    obj.startsWith("firebase:authUser")
+  );
+
+  const userData = sessionStorage.getItem(key[0]);
+  console.log(key, userData, "userData");
+
   const RememberedUser = Cookies.get("remember");
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
@@ -122,10 +132,11 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     <Route
       {...rest}
       render={(props) =>
-        (userData || RememberedUser) && userDataForToday == undefined ? (
+        (userData !== null || RememberedUser) &&
+        userDataForToday == undefined ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/auth/sign-in" />
+          <Redirect to="/admin/default" />
         )
       }
     />
@@ -136,14 +147,18 @@ const LandingRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const key = sessionStorage.key(0);
-  const userData = sessionStorage.getItem(key);
+  const key = Object.keys(sessionStorage).filter((obj) =>
+    obj.startsWith("firebase:authUser")
+  );
+
+  const userData = sessionStorage.getItem(key[0]);
+  console.log(key, userData, "userData");
   const RememberedUser = Cookies.get("remember");
   return (
     <Route
       {...rest}
       render={(props) =>
-        userData || RememberedUser ? (
+        userData !== null || RememberedUser ? (
           <Redirect to="/admin/default" />
         ) : (
           <Component {...props} />
