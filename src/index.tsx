@@ -44,11 +44,8 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   );
 
   const userData = sessionStorage.getItem(key[0]);
-  // console.log(key, userData, "userData");
 
   const rememberedUser = localStorage.getItem(rememberedKey[0]);
-
-  console.log("userData", userData, "rememberedUser", rememberedUser);
 
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
@@ -112,7 +109,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   );
 
   const userData = sessionStorage.getItem(key[0]);
-  // console.log(key, userData, "userData");
   const rememberedUser = localStorage.getItem(rememberedKey[0]);
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
@@ -173,7 +169,6 @@ const LandingRoute: React.FC<PrivateRouteProps> = ({
   );
   const userData = sessionStorage.getItem(key[0]);
   const rememberedUser = localStorage.getItem(rememberedKey[0]);
-  // console.log(key, userData, "userData");
   return (
     <Route
       {...rest}

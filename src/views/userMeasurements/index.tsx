@@ -245,6 +245,12 @@ const UserMeasurements = () => {
   }, []);
   // Функция за генериране на статистики
   function generateStats() {
+    console.log(
+      userData["age"],
+      userData["height"],
+      userData["weight"],
+      "before"
+    );
     fetchBMIData(
       userData["age"],
       userData["height"],
