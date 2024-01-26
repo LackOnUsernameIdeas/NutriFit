@@ -72,7 +72,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
         (userData || rememberedUser) && userDataForToday !== undefined ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/auth/sign-in" />
+          <Redirect to="/measurements/userData" />
         )
       }
     />
@@ -125,7 +125,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         (userData || RememberedUser) && userDataForToday == undefined ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/admin/default" />
+          <Redirect to="/auth/sign-in" />
         )
       }
     />
