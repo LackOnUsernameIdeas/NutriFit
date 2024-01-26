@@ -244,34 +244,39 @@ const UserMeasurements = () => {
     return () => unsubscribe();
   }, []);
   // Функция за генериране на статистики
-  function generateStats() {
-    console.log(
+  async function generateStats() {
+    const bmiData = await fetchBMIData(
       userData["age"],
       userData["height"],
-      userData["weight"],
-      "before"
+      userData["weight"]
     );
-    fetchBMIData(
-      userData["age"],
+    setBMIIndex(bmiData);
+
+    const perfectWeightData = await fetchPerfectWeightData(
       userData["height"],
-      userData["weight"],
-      setBMIIndex
+      userDataForReq["gender"]
     );
-    fetchPerfectWeightData(
-      userData["height"],
-      userDataForReq["gender"],
-      setPerfectWeight
-    );
-    fetchBodyFatAndLeanMassData(
+    setPerfectWeight(perfectWeightData);
+
+    const bodyFatAndLeanMassData = await fetchBodyFatAndLeanMassData(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
       userData["weight"],
       userData["neck"],
       userData["waist"],
-      userData["hip"],
-      setBodyFatMassAndLeanMass
+      userData["hip"]
     );
+    setBodyFatMassAndLeanMass(bodyFatAndLeanMassData);
+    console.log(
+      bmiData,
+      BMIIndex,
+      perfectWeightData,
+      perfectWeight,
+      bodyFatAndLeanMassData,
+      bodyFatMassAndLeanMass
+    );
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
