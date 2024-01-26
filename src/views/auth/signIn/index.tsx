@@ -74,6 +74,8 @@ function SignIn() {
   const handleRememberMeChange = async () => {
     setRememberMe(!rememberMe); // Toggle the rememberMe state
   };
+
+  console.log("rememberMe", rememberMe);
   const handleSignIn = async () => {
     try {
       const auth = getAuth();

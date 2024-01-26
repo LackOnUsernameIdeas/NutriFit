@@ -16,7 +16,12 @@ import LandingLayout from "./layouts/landing";
 import MeasurementsLayout from "./layouts/measurements";
 import Landing from "views/landing";
 import Cookies from "js-cookie";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  browserLocalPersistence,
+  setPersistence
+} from "firebase/auth";
 import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 
 interface PrivateRouteProps extends RouteProps {
@@ -33,29 +38,35 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   const key = Object.keys(sessionStorage).filter((obj) =>
     obj.startsWith("firebase:authUser")
   );
-  const userData = sessionStorage.getItem(key[0]);
-  console.log(key, userData, "userData");
 
   const rememberedKey = Object.keys(localStorage).filter((obj) =>
     obj.startsWith("firebase:authUser")
   );
+
+  const userData = sessionStorage.getItem(key[0]);
+  // console.log(key, userData, "userData");
+
   const rememberedUser = localStorage.getItem(rememberedKey[0]);
-  console.log(rememberedKey, rememberedUser, "remember");
+
+  console.log("userData", userData, "rememberedUser", rememberedUser);
+
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
   const isMounted = useRef(true);
 
   React.useEffect(() => {
     const auth = getAuth();
+    const firebasePersistence = browserLocalPersistence;
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      await setPersistence(auth, firebasePersistence);
+
       if (isMounted.current) {
         setUser(user);
       }
-
       if (user) {
         try {
           const timestampKey = new Date().toISOString().slice(0, 10);
-
           const additionalData = await fetchAdditionalUserData(user.uid);
           const userDataForToday = additionalData[timestampKey];
           if (isMounted.current) {
@@ -96,12 +107,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
     obj.startsWith("firebase:authUser")
   );
 
-  const userData = sessionStorage.getItem(key[0]);
-  console.log(key, userData, "userData");
-
   const rememberedKey = Object.keys(localStorage).filter((obj) =>
     obj.startsWith("firebase:authUser")
   );
+
+  const userData = sessionStorage.getItem(key[0]);
+  // console.log(key, userData, "userData");
   const rememberedUser = localStorage.getItem(rememberedKey[0]);
   const [user, setUser] = useState(null);
   const [userDataForToday, setUserDataForToday] = useState(null);
@@ -162,7 +173,7 @@ const LandingRoute: React.FC<PrivateRouteProps> = ({
   );
   const userData = sessionStorage.getItem(key[0]);
   const rememberedUser = localStorage.getItem(rememberedKey[0]);
-  console.log(key, userData, "userData");
+  // console.log(key, userData, "userData");
   return (
     <Route
       {...rest}

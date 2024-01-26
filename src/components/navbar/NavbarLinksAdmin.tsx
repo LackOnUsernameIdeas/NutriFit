@@ -38,8 +38,13 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     { bg: "whiteAlpha.200" }
   );
   const handleLogOut = async () => {
-    const key = sessionStorage.key(0);
-    sessionStorage.removeItem(key);
+    const keySession = sessionStorage.key(0);
+    const keyLocalStorage = Object.keys(localStorage).filter((obj) =>
+      obj.startsWith("firebase:authUser")
+    );
+    console.log("keyLocalStorage", keyLocalStorage);
+    sessionStorage.removeItem(keySession);
+    localStorage.removeItem(keyLocalStorage[0]);
     Cookies.remove("remember");
   };
 
