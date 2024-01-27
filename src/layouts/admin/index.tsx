@@ -108,7 +108,7 @@ export default function Dashboard(props: { [x: string]: any }) {
 
           {getRoute() ? (
             <Box mx="auto" p={{ base: "20px", md: "30px" }} pe="20px" pt="50px">
-              <Box minH="100vh">
+              <Box minH="70vh">
                 <Switch>{getRoutes(routes)}</Switch>
               </Box>
               <Footer />
