@@ -155,17 +155,8 @@ export default function WeightStats() {
     isGenerateStatsForMacroNutrientsCalled,
     setIsGenerateStatsForMacroNutrientsCalled
   ] = useState<boolean>(false);
-
   // Функция за генериране на статистики
   function generateStatsForCalories() {
-    fetchCaloriesForActivityLevels(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      setDailyCaloryRequirements
-    );
-
     setIsLoadingForCalories(true);
     setTimeout(() => {
       setIsLoadingForCalories(false);
@@ -173,15 +164,6 @@ export default function WeightStats() {
   }
 
   function generateStatsForMacroNutrients() {
-    fetchMacroNutrients(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      userData["goal"],
-      setTableData
-    );
-
     setIsLoadingForMacroNutrients(true);
     setTimeout(() => {
       setIsLoadingForMacroNutrients(false);
@@ -249,6 +231,18 @@ export default function WeightStats() {
             hip: additionalData[timestampKey].hip,
             weight: additionalData[timestampKey].weight
           } as UserData);
+          setDailyCaloryRequirements(
+            additionalData[timestampKey].dailyCaloryRequirements
+          );
+          console.log(
+            "MAIKA TI DEEBAAAA -->",
+            additionalData[timestampKey].macroNutrientsData
+          );
+          console.log(
+            "sdasdasddsa -->",
+            additionalData[timestampKey].dailyCaloryRequirements
+          );
+          setTableData(additionalData[timestampKey].macroNutrientsData);
           console.log(
             "ID: ",
             user.uid,

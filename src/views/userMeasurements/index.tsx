@@ -205,7 +205,7 @@ const UserMeasurements = () => {
                 date: key,
                 height: dateData.height,
                 weight: dateData.weight,
-                bmi: dateData.BMIData ? dateData.BMIData.bmi : undefined,
+                bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
                 bodyFat: dateData.BodyMassData
                   ? dateData.BodyMassData.bodyFat
                   : undefined,
