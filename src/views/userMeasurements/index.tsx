@@ -241,7 +241,15 @@ const UserMeasurements = () => {
     return () => unsubscribe();
   }, []);
 
-  const goalsToFetch: Goal[] = ["maintain", "mildlose", "weightlose", "extremelose"];
+  const goalsToFetch: Goal[] = [
+    "maintain",
+    "mildlose",
+    "weightlose",
+    "extremelose",
+    "mildgain",
+    "weightgain",
+    "extremegain"
+  ];
   // Функция за генериране на статистики
   function generateStats() {
     console.log(

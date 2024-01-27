@@ -40,7 +40,7 @@ function translateBMIHealthToBulgarian(englishHealth: string) {
 export const fetchBMIData = async (
   age: number,
   height: number,
-  weight: number,
+  weight: number
 ) => {
   try {
     fetch(
@@ -95,7 +95,7 @@ export const fetchPerfectWeightData = async (
           difference: Math.abs(diff),
           isUnderOrAbove: weight > perfectWeight ? "above" : "under"
         };
-        const uid = getAuth().currentUser.uid; 
+        const uid = getAuth().currentUser.uid;
         savePerfectWeight(uid, perfectWeight, differenceFromPerfectWeight);
       })
       .catch((err) => {
@@ -119,7 +119,7 @@ export const fetchBodyFatAndLeanMassData = async (
   weight: number,
   neck: number,
   waist: number,
-  hip: number,
+  hip: number
 ) => {
   try {
     fetch(
@@ -138,7 +138,12 @@ export const fetchBodyFatAndLeanMassData = async (
           "Lean Body Mass": data.data["Lean Body Mass"]
         };
         const uid = getAuth().currentUser.uid;
-        saveBodyMass(uid, bodyMassInfo["Body Fat (U.S. Navy Method)"], bodyMassInfo["Body Fat Mass"], bodyMassInfo["Lean Body Mass"]);
+        saveBodyMass(
+          uid,
+          bodyMassInfo["Body Fat (U.S. Navy Method)"],
+          bodyMassInfo["Body Fat Mass"],
+          bodyMassInfo["Lean Body Mass"]
+        );
       })
       .catch((err) => {
         console.log(err.message);
@@ -239,52 +244,34 @@ export const fetchMacroNutrients = async (
 ) => {
   try {
     const requests = [];
-    for (const goal of goals) {
-      for (let i = 1; i <= 6; i++) {
+    const dataFromResponse = [];
+
+    for (let i = 1; i <= 6; i++) {
+      const levelData = [];
+      for (const goal of goals) {
         const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
-        requests.push(
-          fetch(url, {
-            method: "GET",
-            headers: headers
-          })
-        );
+        const response = await fetch(url, {
+          method: "GET",
+          headers: headers
+        });
+
+        const data = await response.json();
+        // Attach additional properties for goal and level
+        levelData.push({
+          goal,
+          ...data.data
+        });
       }
+      dataFromResponse.push({
+        level: i,
+        goals: levelData
+      });
     }
 
-    const responses = await Promise.all(requests);
-
-    const data = await Promise.all(responses.map((res) => res.json()));
-    console.log(data);
-    const tableData: MacroNutrientsData = [
-      {
-        name: "Балансирана",
-        protein: +data[0].data.balanced.protein.toFixed(2),
-        fat: +data[0].data.balanced.fat.toFixed(2),
-        carbs: +data[0].data.balanced.carbs.toFixed(2)
-      },
-      {
-        name: "Ниско съдържание на мазнини",
-        protein: +data[1].data.lowfat.protein.toFixed(2),
-        fat: +data[1].data.lowfat.fat.toFixed(2),
-        carbs: +data[1].data.lowfat.carbs.toFixed(2)
-      },
-      {
-        name: "Ниско съдържание на въглехидрати",
-        protein: +data[2].data.lowcarbs.protein.toFixed(2),
-        fat: +data[2].data.lowcarbs.fat.toFixed(2),
-        carbs: +data[2].data.lowcarbs.carbs.toFixed(2)
-      },
-      {
-        name: "Високо съдържание на Протеин",
-        protein: +data[3].data.highprotein.protein.toFixed(2),
-        fat: +data[3].data.highprotein.fat.toFixed(2),
-        carbs: +data[3].data.highprotein.carbs.toFixed(2)
-      }
-    ];
-
-    // const uid = getAuth().currentUser.uid;
-    // saveMacroNutrients(uid, tableData);
+    // Save the grouped data
+    const uid = getAuth().currentUser.uid;
+    saveMacroNutrients(uid, dataFromResponse);
   } catch (err: any) {
     console.error(err.message);
   }
