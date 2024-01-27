@@ -67,13 +67,13 @@ export default function UserReports() {
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card minH="200px">
           <Flex justify="left" pt="5px" w="100%">
-            <Text fontSize="6xl" fontStyle="italic">
+            <Text fontSize="4xl" fontWeight="bold">
               Добре дошли в NutriFit!
             </Text>
           </Flex>
           <HSeparator />
           <Flex justify="left" mt="1%" pt="10px">
-            <Text fontSize="3xl">
+            <Text fontSize="2xl">
               Нашата цел е да помогнем на нашите потребители да поддържат
               перфектното тегло с помощта на статистики и диаграми.
             </Text>
@@ -101,13 +101,14 @@ export default function UserReports() {
               <Link href="/#/auth/sign-in">
                 <Button
                   className="glowing-button"
-                  _hover={{ bg: "transparent" }}
-                  _focus={{ bg: "none" }}
-                  color={brandColor}
-                  backgroundColor="#7551ff"
+                  color="white"
+                  variant="brand"
+                  _hover={{ bg: "secondaryGray.900" }}
                   borderRadius="8px"
                   px="14px"
                   ml="30%"
+                  fontSize="sm"
+                  fontWeight="500"
                 >
                   <Text fontSize="sm">Влезте в профила си!</Text>
                 </Button>

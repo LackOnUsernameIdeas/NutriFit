@@ -608,76 +608,53 @@ export default function WeightStats() {
             w="100%"
             mb="20px"
           >
-            <CardHeader>
-              <Heading size="md">Вашите данни:</Heading>
-            </CardHeader>
             <CardBody>
               <Stack divider={<StackDivider />} spacing="4">
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Години:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Години:</b> {userData.age}
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {userData.age}
-                  </Text>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Пол:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Пол:</b> {mapGenderToDisplayValue(userData.gender)}
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {mapGenderToDisplayValue(userData.gender)}
-                  </Text>
                 </Box>
                 {userData.goal && (
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Цел:
+                    <Heading
+                      size="xs"
+                      textTransform="uppercase"
+                      fontWeight="100"
+                    >
+                      <b>Цел:</b> {mapGoalToDisplayValue(userData.goal)}
                     </Heading>
-                    <Text pt="2" fontSize="sm">
-                      {mapGoalToDisplayValue(userData.goal)}
-                    </Text>
                   </Box>
                 )}
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Височина:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Височина:</b> {userData.height} (см)
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {userData.height} (см)
-                  </Text>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Тегло:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Тегло:</b> {userData.weight} (кг)
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {userData.weight} (кг)
-                  </Text>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Обиколка на врата:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Обиколка на врата:</b> {userData.neck} (см)
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {userData.neck} (см)
-                  </Text>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Обиколка на талията:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Обиколка на талията:</b> {userData.waist} (см)
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {userData.waist} (см)
-                  </Text>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Обиколка на таза:
+                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                    <b>Обиколка на таза:</b> {userData.hip} (см)
                   </Heading>
-                  <Text pt="2" fontSize="sm">
-                    {userData.hip} (см)
-                  </Text>
                 </Box>
               </Stack>
             </CardBody>

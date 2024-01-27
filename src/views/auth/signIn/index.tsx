@@ -64,6 +64,7 @@ function SignIn() {
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
   const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
+
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   const [email, setEmail] = useState("");
@@ -248,6 +249,7 @@ function SignIn() {
               onClick={handleSignIn}
               fontSize="sm"
               variant="brand"
+              _hover={{ bg: "secondaryGray.900" }}
               fontWeight="500"
               w="100%"
               h="50"

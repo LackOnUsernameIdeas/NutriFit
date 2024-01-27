@@ -11,16 +11,18 @@ import {
   Image
 } from "@chakra-ui/react";
 
-const Footer = () => {
+const Footer = (props: { isForLanding?: boolean }) => {
+  const { isForLanding } = props;
+
   const footerColor = useColorModeValue("white", "#111c44");
   const brandColor = useColorModeValue("brand.500", "white");
   const textColor = useColorModeValue("black", "white");
-
   return (
     <Box
       as="footer"
       bg={footerColor}
       borderTop="1px solid"
+      borderRadius={isForLanding ? "" : "21px"}
       borderColor={footerColor}
       py="2.5rem"
       fontSize="0.875rem"

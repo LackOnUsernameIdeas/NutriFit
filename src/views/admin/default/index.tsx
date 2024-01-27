@@ -64,10 +64,29 @@ export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const bgHover = { bg: "brand.200" };
+  const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
   const bgFocus = { bg: "brand.200" };
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        <Card>
+          <Flex justify="left" w="100%">
+            <Text fontSize="5xl" fontWeight="bold">
+              Добре дошли в NutriFit!
+            </Text>
+          </Flex>
+        </Card>
+      </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        <Card>
+          <Flex justify="left">
+            <Text fontSize="2xl">
+              Нашата цел е да помогнем на нашите потребители да поддържат
+              перфектното тегло с помощта на статистики и диаграми.
+            </Text>
+          </Flex>
+        </Card>
+      </SimpleGrid>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
         gap="20px"
@@ -157,35 +176,10 @@ export default function UserReports() {
         />
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        <Card minH="200px">
-          <Flex justify="center" pt="5px" w="100%">
-            <Text fontSize="5xl" fontStyle="italic" mr="2">
-              Добре дошли в
-            </Text>
-            <Text fontSize="5xl" fontStyle="italic" fontFamily="DM Sans">
-              Nutri
-            </Text>
-            <Text fontSize="5xl" fontFamily="Leckerli One" mr="1.5">
-              Fit
-            </Text>
-            <Text fontSize="5xl" fontStyle="italic">
-              !
-            </Text>
-          </Flex>
-          <HSeparator />
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text fontSize="3xl">
-              Нашата цел е да помогнем на нашите потребители да поддържат
-              перфектното тегло с помощта на статистики и диаграми.
-            </Text>
-          </Flex>
-        </Card>
-      </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
-        <Card _hover={bgHover} _focus={bgFocus}>
+        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
           <Flex pt="5px" w="100%">
-            <Text fontSize="xl" fontStyle="italic" mr="2">
+            <Text fontSize="xl" mr="2">
               Калкулации за теглото ви ↪
             </Text>
           </Flex>
@@ -196,9 +190,9 @@ export default function UserReports() {
             </Text>
           </Flex>
         </Card>
-        <Card _hover={bgHover} _focus={bgFocus}>
+        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
           <Flex pt="5px" w="100%">
-            <Text fontSize="xl" fontStyle="italic" mr="2">
+            <Text fontSize="xl" mr="2">
               Хранителен план ↪
             </Text>
           </Flex>
@@ -210,9 +204,9 @@ export default function UserReports() {
             </Text>
           </Flex>
         </Card>
-        <Card _hover={bgHover} _focus={bgFocus}>
+        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
           <Flex pt="5px" w="100%">
-            <Text fontSize="xl" fontStyle="italic" mr="2">
+            <Text fontSize="xl" mr="2">
               Пример ↪
             </Text>
           </Flex>
@@ -224,9 +218,9 @@ export default function UserReports() {
             </Text>
           </Flex>
         </Card>
-        <Card _hover={bgHover} _focus={bgFocus}>
+        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
           <Flex pt="5px" w="100%">
-            <Text fontSize="xl" fontStyle="italic" mr="2">
+            <Text fontSize="xl" mr="2">
               Пример ↪
             </Text>
           </Flex>
