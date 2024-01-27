@@ -15,7 +15,10 @@ import {
   Menu,
   Heading,
   Stack,
-  StackDivider
+  StackDivider,
+  Alert,
+  AlertIcon,
+  Link
 } from "@chakra-ui/react";
 
 // React Icons
@@ -514,6 +517,24 @@ export default function WeightStats() {
                   </SimpleGrid>
                 </Flex>
               </Box>
+            </Card>
+
+            <Card
+              alignItems="center"
+              p="20px"
+              flexDirection="column"
+              w="100%"
+              mb="20px"
+            >
+              <Alert status="info">
+                <AlertIcon />
+                <Link color="teal.500" href="/#/admin/weight">
+                  <b>Съвет:</b> Натиснете тук, за да видите състоянието на
+                  вашето тегло, дали трябва да сваляте или да качвате тегло и
+                  тогава се върнете в тази страница, за да прецените правилно
+                  каква цел да си поставите.
+                </Link>
+              </Alert>
             </Card>
             {activityLevel && (
               <>
