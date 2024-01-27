@@ -23,11 +23,17 @@ export default function CalorieRequirements(props: {
   selectedActivityLevel: number;
   clickedValueCalories?: number | null;
   setClickedValueCalories?: React.Dispatch<React.SetStateAction<number | null>>;
+  setSelectedGoal?: React.Dispatch<React.SetStateAction<string>>;
   setUserData?: React.Dispatch<React.SetStateAction<UserData>>;
 }) {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const { clickedValueCalories, setClickedValueCalories, setUserData } = props;
+  const {
+    clickedValueCalories,
+    setClickedValueCalories,
+    setSelectedGoal,
+    setUserData
+  } = props;
 
   const [dailyCaloryRequirements, setDailyCaloryRequirement] = useState<
     DailyCaloryRequirements[]
@@ -95,6 +101,7 @@ export default function CalorieRequirements(props: {
                 selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
               )
             );
+            setSelectedGoal("mildlose");
             saveGoal(uid, "mildlose");
             setUserData((prevState) => ({ ...prevState, goal: "mildlose" }));
           }}
@@ -143,6 +150,7 @@ export default function CalorieRequirements(props: {
                 selectedLevelData.goals["Weight loss"].calory.toFixed(2)
               )
             );
+            setSelectedGoal("weightlose");
             saveGoal(uid, "weightlose");
             setUserData((prevState) => ({ ...prevState, goal: "weightlose" }));
           }}
@@ -193,6 +201,7 @@ export default function CalorieRequirements(props: {
                 selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
               )
             );
+            setSelectedGoal("extremelose");
             saveGoal(uid, "extremelose");
             setUserData((prevState) => ({ ...prevState, goal: "extremelose" }));
           }}
@@ -237,6 +246,7 @@ export default function CalorieRequirements(props: {
             setClickedValueCalories(
               parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
             );
+            setSelectedGoal("maintain");
             saveGoal(uid, "maintain");
             setUserData((prevState) => ({ ...prevState, goal: "maintain" }));
           }}
@@ -287,6 +297,7 @@ export default function CalorieRequirements(props: {
                 selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
               )
             );
+            setSelectedGoal("mildgain");
             saveGoal(uid, "mildgain");
             setUserData((prevState) => ({ ...prevState, goal: "mildgain" }));
           }}
@@ -335,6 +346,7 @@ export default function CalorieRequirements(props: {
                 selectedLevelData.goals["Weight gain"].calory.toFixed(2)
               )
             );
+            setSelectedGoal("weightgain");
             saveGoal(uid, "weightgain");
             setUserData((prevState) => ({ ...prevState, goal: "weightgain" }));
           }}
@@ -385,6 +397,7 @@ export default function CalorieRequirements(props: {
                 selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
               )
             );
+            setSelectedGoal("extremegain");
             saveGoal(uid, "extremegain");
             setUserData((prevState) => ({ ...prevState, goal: "extremegain" }));
           }}

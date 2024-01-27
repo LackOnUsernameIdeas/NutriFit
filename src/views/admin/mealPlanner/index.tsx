@@ -48,6 +48,7 @@ import {
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
+import { table } from "console";
 
 // Главен компонент
 export default function WeightStats() {
@@ -98,19 +99,7 @@ export default function WeightStats() {
     }))
   );
 
-  const [tableData, setTableData] = useState<MacroNutrientsData[]>(
-    Array.from({ length: 6 }, (_) => [
-      { name: "Балансирана", protein: 0, fat: 0, carbs: 0 },
-      { name: "Ниско съдържание на мазнини", protein: 0, fat: 0, carbs: 0 },
-      {
-        name: "Ниско съдържание на въглехидрати",
-        protein: 0,
-        fat: 0,
-        carbs: 0
-      },
-      { name: "Високо съдържание на протеин", protein: 0, fat: 0, carbs: 0 }
-    ])
-  );
+  const [macroNutrients, setMacroNutrients] = useState<any>([]);
 
   // State за избрани стойности
   const [clickedValueNutrients, setClickedValueNutrients] = useState({
@@ -123,6 +112,8 @@ export default function WeightStats() {
   const [clickedValueCalories, setClickedValueCalories] = useState<
     number | null
   >(null);
+
+  const [selectedGoal, setSelectedGoal] = useState("");
 
   // State за избрано ниво на натовареност
   const [activityLevel, setActivityLevel] = useState<number>(null);
@@ -221,28 +212,39 @@ export default function WeightStats() {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
           const additionalData = await fetchAdditionalUserData(user.uid);
+          const userDataTimestamp = additionalData[timestampKey];
+
           setUserData({
             gender: additionalData.gender,
             goal: additionalData.goal,
-            age: additionalData[timestampKey].age,
-            height: additionalData[timestampKey].height,
-            waist: additionalData[timestampKey].waist,
-            neck: additionalData[timestampKey].neck,
-            hip: additionalData[timestampKey].hip,
-            weight: additionalData[timestampKey].weight
+            age: userDataTimestamp.age,
+            height: userDataTimestamp.height,
+            waist: userDataTimestamp.waist,
+            neck: userDataTimestamp.neck,
+            hip: userDataTimestamp.hip,
+            weight: userDataTimestamp.weight
           } as UserData);
-          setDailyCaloryRequirements(
-            additionalData[timestampKey].dailyCaloryRequirements
+
+          setDailyCaloryRequirements(userDataTimestamp.dailyCaloryRequirements);
+
+          console.log(
+            "macroNutrientsData: ",
+            userDataTimestamp.macroNutrientsData
           );
           console.log(
-            "MAIKA TI DEEBAAAA -->",
-            additionalData[timestampKey].macroNutrientsData
+            "dailyCaloryRequirements: ",
+            userDataTimestamp.dailyCaloryRequirements
           );
-          console.log(
-            "sdasdasddsa -->",
-            additionalData[timestampKey].dailyCaloryRequirements
-          );
-          setTableData(additionalData[timestampKey].macroNutrientsData);
+
+          // Ensure that additionalData[timestampKey].macroNutrientsData is an array
+          const macroNutrientsData = Array.isArray(
+            userDataTimestamp.macroNutrientsData
+          )
+            ? userDataTimestamp.macroNutrientsData
+            : [];
+
+          setMacroNutrients(macroNutrientsData);
+
           console.log(
             "ID: ",
             user.uid,
@@ -277,6 +279,45 @@ export default function WeightStats() {
       setIsGenerateStatsForMacroNutrientsCalled(true);
     }
   }, [isGenerateStatsForCaloriesCalled, userData.goal]);
+
+  let tableData: any = [];
+  if (macroNutrients[activityLevel - 1]) {
+    macroNutrients[activityLevel - 1].goals.forEach((item: any) => {
+      const { goal, calorie, balanced, highprotein, lowcarbs, lowfat } = item;
+
+      if (goal === selectedGoal) {
+        const savedData = [
+          {
+            name: "Балансирана",
+            protein: balanced.protein.toFixed(2),
+            fat: balanced.fat.toFixed(2),
+            carbs: balanced.carbs.toFixed(2)
+          },
+          {
+            name: "Ниско съдържание на мазнини",
+            protein: lowfat.protein.toFixed(2),
+            fat: lowfat.fat.toFixed(2),
+            carbs: lowfat.carbs.toFixed(2)
+          },
+          {
+            name: "Ниско съдържание на въглехидрати",
+            protein: lowcarbs.protein.toFixed(2),
+            fat: lowcarbs.fat.toFixed(2),
+            carbs: lowcarbs.carbs.toFixed(2)
+          },
+          {
+            name: "Високо съдържание на Протеин",
+            protein: highprotein.protein.toFixed(2),
+            fat: highprotein.fat.toFixed(2),
+            carbs: highprotein.carbs.toFixed(2)
+          }
+        ];
+
+        tableData = savedData;
+        // You can use or save the 'savedData' object as needed.
+      }
+    });
+  }
 
   return (
     <Box
@@ -550,6 +591,7 @@ export default function WeightStats() {
                       selectedActivityLevel={activityLevel}
                       clickedValueCalories={clickedValueCalories}
                       setClickedValueCalories={setClickedValueCalories}
+                      setSelectedGoal={setSelectedGoal}
                       setUserData={setUserData}
                     />
                   </Card>
@@ -694,7 +736,7 @@ export default function WeightStats() {
                         </Card>
                         <DietTable
                           tableName="Изберете тип диета:"
-                          tableData={tableData[activityLevel - 1]}
+                          tableData={tableData}
                           columnsData={[
                             { name: "name", label: "Тип диета" },
                             { name: "protein", label: "Протеин (гр.)" },
