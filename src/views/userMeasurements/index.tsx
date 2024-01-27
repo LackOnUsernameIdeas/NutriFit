@@ -251,20 +251,20 @@ const UserMeasurements = () => {
     "extremegain"
   ];
   // Функция за генериране на статистики
-  function generateStats() {
+  async function generateStats() {
     console.log(
       userData["age"],
       userData["height"],
       userData["weight"],
       "before"
     );
-    fetchBMIData(userData["age"], userData["height"], userData["weight"]);
-    fetchPerfectWeightData(
+    await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
+    await fetchPerfectWeightData(
       userData["height"],
       userDataForReq["gender"],
       userData["weight"]
     );
-    fetchBodyFatAndLeanMassData(
+    await fetchBodyFatAndLeanMassData(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
@@ -273,13 +273,13 @@ const UserMeasurements = () => {
       userData["waist"],
       userData["hip"]
     );
-    fetchCaloriesForActivityLevels(
+    await fetchCaloriesForActivityLevels(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
       userData["weight"]
     );
-    fetchMacroNutrients(
+    await fetchMacroNutrients(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
