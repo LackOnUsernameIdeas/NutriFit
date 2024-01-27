@@ -10,7 +10,9 @@ import {
 import {
   saveBMI,
   savePerfectWeight,
-  saveBodyMass
+  saveBodyMass,
+  saveDailyCaloryRequirements,
+  saveMacroNutrients
 } from "../../../database/setWeightStatsData";
 import { getAuth } from "firebase/auth";
 
@@ -156,10 +158,7 @@ export const fetchCaloriesForActivityLevels = async (
   age: number,
   gender: string,
   height: number,
-  weight: number,
-  setDailyCaloryRequirements: React.Dispatch<
-    React.SetStateAction<DailyCaloryRequirements[]>
-  >
+  weight: number
 ) => {
   try {
     const requests = [];
@@ -218,8 +217,8 @@ export const fetchCaloriesForActivityLevels = async (
         };
       }
     );
-
-    setDailyCaloryRequirements(dailyCaloryRequirementsData);
+    const uid = getAuth().currentUser.uid;
+    saveDailyCaloryRequirements(uid, dailyCaloryRequirementsData);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -236,55 +235,56 @@ export const fetchMacroNutrients = async (
   gender: string,
   height: number,
   weight: number,
-  goal: Goal | "",
-  setTableData: React.Dispatch<React.SetStateAction<MacroNutrientsData[]>>
+  goals: Goal[] = [] // Allow passing an array of goals
 ) => {
   try {
     const requests = [];
+    for (const goal of goals) {
+      for (let i = 1; i <= 6; i++) {
+        const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
-    for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
-
-      requests.push(
-        fetch(url, {
-          method: "GET",
-          headers: headers
-        })
-      );
+        requests.push(
+          fetch(url, {
+            method: "GET",
+            headers: headers
+          })
+        );
+      }
     }
 
     const responses = await Promise.all(requests);
 
     const data = await Promise.all(responses.map((res) => res.json()));
-
-    const tableData: MacroNutrientsData[] = data.map((item) => [
+    console.log(data);
+    const tableData: MacroNutrientsData = [
       {
         name: "Балансирана",
-        protein: item.data.balanced.protein.toFixed(2),
-        fat: item.data.balanced.fat.toFixed(2),
-        carbs: item.data.balanced.carbs.toFixed(2)
+        protein: +data[0].data.balanced.protein.toFixed(2),
+        fat: +data[0].data.balanced.fat.toFixed(2),
+        carbs: +data[0].data.balanced.carbs.toFixed(2)
       },
       {
         name: "Ниско съдържание на мазнини",
-        protein: item.data.lowfat.protein.toFixed(2),
-        fat: item.data.lowfat.fat.toFixed(2),
-        carbs: item.data.lowfat.carbs.toFixed(2)
+        protein: +data[1].data.lowfat.protein.toFixed(2),
+        fat: +data[1].data.lowfat.fat.toFixed(2),
+        carbs: +data[1].data.lowfat.carbs.toFixed(2)
       },
       {
         name: "Ниско съдържание на въглехидрати",
-        protein: item.data.lowcarbs.protein.toFixed(2),
-        fat: item.data.lowcarbs.fat.toFixed(2),
-        carbs: item.data.lowcarbs.carbs.toFixed(2)
+        protein: +data[2].data.lowcarbs.protein.toFixed(2),
+        fat: +data[2].data.lowcarbs.fat.toFixed(2),
+        carbs: +data[2].data.lowcarbs.carbs.toFixed(2)
       },
       {
         name: "Високо съдържание на Протеин",
-        protein: item.data.highprotein.protein.toFixed(2),
-        fat: item.data.highprotein.fat.toFixed(2),
-        carbs: item.data.highprotein.carbs.toFixed(2)
+        protein: +data[3].data.highprotein.protein.toFixed(2),
+        fat: +data[3].data.highprotein.fat.toFixed(2),
+        carbs: +data[3].data.highprotein.carbs.toFixed(2)
       }
-    ]);
+    ];
 
-    setTableData(tableData);
+    // const uid = getAuth().currentUser.uid;
+    // saveMacroNutrients(uid, tableData);
   } catch (err: any) {
     console.error(err.message);
   }

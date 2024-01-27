@@ -240,6 +240,8 @@ const UserMeasurements = () => {
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
   }, []);
+
+  const goalsToFetch: Goal[] = ["maintain", "mildlose", "weightlose", "extremelose"];
   // Функция за генериране на статистики
   function generateStats() {
     console.log(
@@ -263,21 +265,19 @@ const UserMeasurements = () => {
       userData["waist"],
       userData["hip"]
     );
-    // fetchCaloriesForActivityLevels(
-    //   userData["age"],
-    //   userData["gender"],
-    //   userData["height"],
-    //   userData["weight"],
-    //   setDailyCaloryRequirements
-    // );
-    // fetchMacroNutrients(
-    //   userData["age"],
-    //   userData["gender"],
-    //   userData["height"],
-    //   userData["weight"],
-    //   userData["goal"],
-    //   setTableData
-    // );
+    fetchCaloriesForActivityLevels(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"]
+    );
+    fetchMacroNutrients(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"],
+      goalsToFetch
+    );
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
