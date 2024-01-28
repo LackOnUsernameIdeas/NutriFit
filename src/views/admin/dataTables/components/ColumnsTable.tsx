@@ -209,22 +209,35 @@ export default function ColumnTable(props: {
                     h="80px"
                     _hover={bgHover}
                     _focus={bgFocus}
-                    borderWidth="2px"
+                    borderWidth="1px"
                   >
                     {row.getVisibleCells().map((cell) => {
+                      console.log("cell.id:", cell.id);
                       return (
                         <Td
                           key={cell.id}
                           fontSize={{ sm: "14px" }}
                           minW={{ sm: "150px", md: "200px", lg: "auto" }}
                           style={{
-                            borderTop: isLitUp
-                              ? "2px solid rgba(75, 15, 229, 0.8)"
-                              : "1px solid",
-                            borderBottom: isLitUp
-                              ? "2px solid rgba(75, 15, 229, 0.8)"
-                              : "1px solid",
-                            borderColor: borderColor
+                            borderTop:
+                              isLitUp && "2px solid rgba(75, 15, 229, 0.8)",
+                            borderBottom:
+                              isLitUp && "2px solid rgba(75, 15, 229, 0.8)",
+                            borderColor: borderColor,
+                            borderLeft:
+                              (cell.id == "0_name" ||
+                                cell.id == "1_name" ||
+                                cell.id == "2_name" ||
+                                cell.id == "3_name") &&
+                              isLitUp &&
+                              "2px solid rgba(75, 15, 229, 0.8)",
+                            borderRight:
+                              (cell.id == "0_carbs" ||
+                                cell.id == "1_carbs" ||
+                                cell.id == "2_carbs" ||
+                                cell.id == "3_carbs") &&
+                              isLitUp &&
+                              "2px solid rgba(75, 15, 229, 0.8)"
                           }}
                         >
                           {flexRender(

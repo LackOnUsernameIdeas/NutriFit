@@ -71,7 +71,7 @@ export default function Default(props: {
             }`
           }
         }
-        borderWidth={hasBorder ? "1px" : "0"}
+        borderWidth={hasBorder ? "2px" : "0"}
         borderColor={
           borderColor ? "rgba(75, 15, 229, 0.8)" : defaultBorderColor
         }
