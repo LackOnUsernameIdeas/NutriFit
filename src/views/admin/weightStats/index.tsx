@@ -2,6 +2,14 @@ import React, { useState, useRef } from "react";
 
 // Chakra UI components
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
+  Button,
   Box,
   Flex,
   Icon,
@@ -79,11 +87,21 @@ export default function WeightStats() {
   };
   const [showStatus, setShowStatus] = useState(false);
 
+  const cancelRef = React.useRef();
+  const cancelRefStats = React.useRef();
+
   // Function to toggle the display of raw data
   const toggleStatus = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent the default behavior of the click event
     setShowStatus(!showStatus);
   };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenStats,
+    onOpen: onOpenStats,
+    onClose: onCloseStats
+  } = useDisclosure();
+
   // State за разкриване на информация за менюто с информация
   const {
     isOpen: isOpenPerfectWeight,
@@ -645,180 +663,172 @@ export default function WeightStats() {
                     maxW={{ base: "80%", lg: "100%" }}
                     borderRadius="8px"
                   >
-                    <MenuItem onClick={(e) => toggleITM(e)}>
+                    <MenuItem onClick={onOpen}>
                       <Text fontSize="1xl" fontWeight="400">
-                        {showITM
-                          ? "Какво е Индекс на Телесната Маса?"
-                          : "Какво е Индекс на Телесната Маса?"}
+                        Какво е Индекс на Телесната Маса?
                       </Text>
                     </MenuItem>
-                    {showITM && (
-                      <>
-                        <HSeparator />
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
+                    <AlertDialog
+                      isOpen={isOpen}
+                      leastDestructiveRef={cancelRef}
+                      onClose={onClose}
+                    >
+                      <AlertDialogOverlay>
+                        <AlertDialogContent>
+                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Какво е Индекс на Телесната Маса?
+                          </AlertDialogHeader>
+
+                          <AlertDialogCloseButton />
+
+                          <AlertDialogBody>
                             Индексът на телесната маса(ИТМ) e медико-биологичен
                             показател, който служи за определяне на нормалното,
                             здравословно тегло при хора с различен ръст и за
                             диагностициране на затлъстяване и недохранване.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
                             Индексът на телесната маса се измерва в килограми на
                             квадратен метър и се определя по следната формула:
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Image
-                            src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
-                            alt="Dan Abramov"
-                          />
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                            ml="5px"
-                          >
-                            където:
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            <b>BMI</b> - индекс на телесната маса, <b>W</b> -
-                            тегло в килограми, <b>h</b> - височина в метри
-                          </Text>
-                        </Flex>
-                      </>
-                    )}
-                    <MenuItem onClick={(e) => toggleStatus(e)}>
+                            <br />
+                            <Image
+                              src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
+                              alt="Dan Abramov"
+                            />
+                            BMI - индекс на телесната маса
+                            <br /> W - тегло в килограми
+                            <br /> h - височина в метри
+                          </AlertDialogBody>
+                          <AlertDialogFooter></AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialogOverlay>
+                    </AlertDialog>
+                    <MenuItem onClick={onOpenStats}>
                       <Text fontSize="1xl" fontWeight="400">
-                        {showStatus
-                          ? "Видовете състояние според ИТМ могат да бъдат:"
-                          : "Видовете състояние според ИТМ могат да бъдат:"}
+                        Видовете състояние според ИТМ могат да бъдат:
                       </Text>
                     </MenuItem>
-                    {showStatus && (
-                      <>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Сериозно недохранване - Този статус показва тежък
-                            недостиг на хранителни вещества, което може да
-                            доведе до сериозни проблеми със здравето и
-                            отслабване на организма.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Средно недохранване - Този статус показва
-                            недостиган на хранителни вещества на умерено ниво,
-                            което може да води до отслабване и различни проблеми
-                            със здравето.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Леко недохранване - В тази категория теглото е
-                            леко под нормата, което може да създаде проблеми със
-                            здравето и да наложи корекции в хранителния режим.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Нормално - Тази категория отразява здравословно
-                            тегло в съответствие с височината. Хора в тази
-                            категория имат по-нисък риск от различни
-                            здравословни проблеми, свързани с теглото.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Наднормено тегло - В тази категория теглото е над
-                            нормалната граница, което може да повиши риска от
-                            заболявания, свързани със здравето, като диабет и
-                            сърдечно-съдови заболявания.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Затлъстяване I Клас - Теглото е значително
-                            повишено, като този статус може да увеличи риска от
-                            сериозни здравословни проблеми.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Затлъстяване II Клас - Тук има по-висок риск от
-                            здравословни проблеми в сравнение с предишната
-                            категория. Затлъстяването става по-значително.
-                          </Text>
-                        </Flex>
-                        <Flex align="center">
-                          <Text
-                            fontSize="sm"
-                            fontWeight="400"
-                            mt="10px"
-                            mb="5px"
-                          >
-                            • Затлъстяване III Клас - Този клас показва
-                            екстремно затлъстяване, което може да предизвика
-                            сериозни здравословни проблеми и изисква внимание от
-                            специалист в здравеопазването.
-                          </Text>
-                        </Flex>
-                      </>
-                    )}
+                    <AlertDialog
+                      isOpen={isOpenStats}
+                      leastDestructiveRef={cancelRefStats}
+                      onClose={onCloseStats}
+                    >
+                      <AlertDialogOverlay>
+                        <AlertDialogContent>
+                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Видовете състояние според ИТМ могат да бъдат:
+                          </AlertDialogHeader>
+
+                          <AlertDialogCloseButton />
+
+                          <AlertDialogBody>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Сериозно недохранване - Този статус показва
+                                тежък недостиг на хранителни вещества, което
+                                може да доведе до сериозни проблеми със здравето
+                                и отслабване на организма.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Средно недохранване - Този статус показва
+                                недостиган на хранителни вещества на умерено
+                                ниво, което може да води до отслабване и
+                                различни проблеми със здравето.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Леко недохранване - В тази категория теглото е
+                                леко под нормата, което може да създаде проблеми
+                                със здравето и да наложи корекции в хранителния
+                                режим.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Нормално - Тази категория отразява
+                                здравословно тегло в съответствие с височината.
+                                Хора в тази категория имат по-нисък риск от
+                                различни здравословни проблеми, свързани с
+                                теглото.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Наднормено тегло - В тази категория теглото е
+                                над нормалната граница, което може да повиши
+                                риска от заболявания, свързани със здравето,
+                                като диабет и сърдечно-съдови заболявания.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Затлъстяване I Клас - Теглото е значително
+                                повишено, като този статус може да увеличи риска
+                                от сериозни здравословни проблеми.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Затлъстяване II Клас - Тук има по-висок риск
+                                от здравословни проблеми в сравнение с
+                                предишната категория. Затлъстяването става
+                                по-значително.
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                • Затлъстяване III Клас - Този клас показва
+                                екстремно затлъстяване, което може да предизвика
+                                сериозни здравословни проблеми и изисква
+                                внимание от специалист в здравеопазването.
+                              </Text>
+                            </Flex>
+                          </AlertDialogBody>
+                          <AlertDialogFooter></AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialogOverlay>
+                    </AlertDialog>
                   </Box>
                 </MenuList>
               </Menu>
