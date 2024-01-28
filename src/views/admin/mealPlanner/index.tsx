@@ -40,12 +40,6 @@ import {
   MacroNutrientsData
 } from "../../../types/weightStats";
 
-// Помощни функции за извличане на данни
-import {
-  fetchCaloriesForActivityLevels,
-  fetchMacroNutrients
-} from "./utils/fetchFunctions";
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { table } from "console";

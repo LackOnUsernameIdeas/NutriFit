@@ -43,13 +43,6 @@ import {
 import { lineChartOptions } from "variables/chartjs";
 import LineChart from "components/charts/LineChart";
 
-// Помощни функции за извличане на данни
-import {
-  fetchBMIData,
-  fetchPerfectWeightData,
-  fetchBodyFatAndLeanMassData
-} from "./utils/fetchFunctions";
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import {

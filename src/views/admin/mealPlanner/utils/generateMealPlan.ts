@@ -26,7 +26,11 @@ export const generateMealPlan = async (
 ) => {
   try {
     // Издърпване на всички рецепти от базата данни
+
+    console.log("Before initializing Firestore");
     const recipesSnapshot = await getDocs(recipesCollection);
+    console.log("After initializing Firestore");
+
     const allRecipes = recipesSnapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() } as Recipe)
     );
