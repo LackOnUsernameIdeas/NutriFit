@@ -16,24 +16,18 @@ jest.mock("firebase/firestore", () => ({
 }));
 
 describe("generateMealPlan", () => {
-  // Define reusable constants and functions
-  const mockedRecipes = [
-    {
-      id: "1",
-      name: "Recipe 1",
-      isForBreakfast: true,
-      suggestedMaxServing: 1,
-      nutrientsForTheRecipe: { main: { Calories: { value: 100 } } }
-    }
-    // Add more mocked recipes as needed for testing
-  ];
+  it("should generate a meal plan based on user preferences", async () => {
+    const mockedRecipes = [
+      {
+        id: "1",
+        name: "Recipe 1",
+        isForBreakfast: true,
+        suggestedMaxServing: 1,
+        nutrientsForTheRecipe: { main: { Calories: { value: 100 } } }
+      }
+      // Add more mocked recipes as needed for testing
+    ];
 
-  const setSuggestedMaxServings = jest.fn();
-  const setCustomServings = jest.fn();
-  const setMealPlan = jest.fn();
-  const setWeightPerServing = jest.fn();
-
-  const setupFirestoreMock = () => {
     const mockedGetDocs = jest.spyOn(firestore, "getDocs");
     mockedGetDocs.mockResolvedValue({
       docs: mockedRecipes.map((recipe) => ({
@@ -41,13 +35,68 @@ describe("generateMealPlan", () => {
         data: () => recipe
       })) as firestore.QueryDocumentSnapshot<unknown, firestore.DocumentData>[]
     } as firestore.QuerySnapshot<unknown, firestore.DocumentData>);
-  };
 
-  it("should generate a meal plan based on user preferences", async () => {
-    // Arrange
-    setupFirestoreMock();
+    const setSuggestedMaxServings = jest.fn();
+    const setCustomServings = jest.fn();
+    const setMealPlan = jest.fn();
+    const setWeightPerServing = jest.fn();
 
-    // Act
+    await act(async () => {
+      try {
+        await generateMealPlan(
+          {
+            Calories: 1000, // Adjust based on your actual preferences
+            Protein: 50,
+            Fat: 30,
+            Carbohydrates: 150
+          },
+          [
+            { type: "Calories", label: "Calories" },
+            { type: "Protein", label: "Protein" },
+            { type: "Carbohydrates", label: "Carbohydrates" },
+            { type: "Fat", label: "Fat" }
+          ],
+          setSuggestedMaxServings,
+          setCustomServings,
+          setMealPlan,
+          setWeightPerServing,
+          {
+            breakfast: 0,
+            lunch: 0,
+            dinner: 0
+          }
+        );
+      } catch (error) {
+        console.error("Test Error:", error);
+        throw error;
+      }
+    });
+
+    // Check if the mocked functions were called
+    expect(setSuggestedMaxServings).toHaveBeenCalled();
+    expect(setCustomServings).toHaveBeenCalled();
+    expect(setMealPlan).toHaveBeenCalled();
+    expect(setWeightPerServing).toHaveBeenCalled();
+
+    // Add assertions for resulting state if needed
+    expect(setCustomServings.mock.calls[0][0]).toEqual({
+      breakfast: 1,
+      lunch: 0,
+      dinner: 0
+    });
+  });
+
+  it("should handle errors during meal plan generation", async () => {
+    // Add test case for error handling
+    const mockedGetDocs = jest.spyOn(firestore, "getDocs");
+    mockedGetDocs.mockRejectedValueOnce(new Error("Simulated error"));
+
+    // Mock state setter functions
+    const setSuggestedMaxServings = jest.fn();
+    const setCustomServings = jest.fn();
+    const setMealPlan = jest.fn();
+    const setWeightPerServing = jest.fn();
+
     await act(async () => {
       try {
         await generateMealPlan(
@@ -78,11 +127,10 @@ describe("generateMealPlan", () => {
       }
     });
 
-    // Assert
-    // Check if the mocked functions were called
-    expect(setSuggestedMaxServings).toHaveBeenCalled();
-    expect(setCustomServings).toHaveBeenCalled();
-    expect(setMealPlan).toHaveBeenCalled();
-    expect(setWeightPerServing).toHaveBeenCalled();
+    // Ensure that state setters are not called in case of an error
+    expect(setSuggestedMaxServings).not.toHaveBeenCalled();
+    expect(setCustomServings).not.toHaveBeenCalled();
+    expect(setMealPlan).not.toHaveBeenCalled();
+    expect(setWeightPerServing).not.toHaveBeenCalled();
   });
 });
