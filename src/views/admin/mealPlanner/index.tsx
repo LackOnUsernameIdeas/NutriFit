@@ -39,9 +39,9 @@ import {
   DailyCaloryRequirements,
   MacroNutrientsData
 } from "../../../types/weightStats";
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
+import { savePreferences } from "../../../database/setWeightStatsData";
 import { table } from "console";
 
 // Главен компонент
@@ -156,6 +156,10 @@ export default function WeightStats() {
     }, 1000);
   }
 
+  const saveUserPreferences = () => {
+    const uid = getAuth().currentUser.uid;
+    savePreferences(uid, clickedValueCalories, clickedValueNutrients);
+  };
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
       case "maintain":
@@ -314,6 +318,16 @@ export default function WeightStats() {
     });
   }
 
+  React.useEffect(() => {
+    // Check if both clickedValueCalories and clickedValueNutrients are set
+    if (
+      clickedValueCalories !== null &&
+      clickedValueNutrients.protein !== null
+    ) {
+      // Call the saveUserPreferences function
+      saveUserPreferences();
+    }
+  }, [clickedValueCalories, clickedValueNutrients]);
   return (
     <Box
       pt={{ base: "130px", md: "80px", xl: "80px" }}
