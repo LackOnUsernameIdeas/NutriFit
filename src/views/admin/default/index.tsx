@@ -175,63 +175,70 @@ export default function UserReports() {
           value="2935"
         />
       </SimpleGrid>
-
       <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
-        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
-          <Flex pt="5px" w="100%">
-            <Text fontSize="xl" mr="2">
-              Калкулации за теглото ви ↪
-            </Text>
-          </Flex>
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text>
-              Посетете нашата страница с калкулатор за тегло! Предлагаме
-              интерактивни диаграми и статистики, създадени за вас!
-            </Text>
-          </Flex>
-        </Card>
-        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
-          <Flex pt="5px" w="100%">
-            <Text fontSize="xl" mr="2">
-              Хранителен план ↪
-            </Text>
-          </Flex>
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text>
-              Посетете нашата страница за създаване на хранителен план! Имаме
-              обширна база данни със рецепти, която използваме да създадем
-              хранителен режим с вашите предпочитания!
-            </Text>
-          </Flex>
-        </Card>
-        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
-          <Flex pt="5px" w="100%">
-            <Text fontSize="xl" mr="2">
-              Пример ↪
-            </Text>
-          </Flex>
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text>
-              Посетете нашата страница за създаване на хранителен план! Имаме
-              обширна база данни със рецепти, която използваме да създадем
-              хранителен режим с вашите предпочитания!
-            </Text>
-          </Flex>
-        </Card>
-        <Card _hover={{ bg: bgHover }} _focus={bgFocus}>
-          <Flex pt="5px" w="100%">
-            <Text fontSize="xl" mr="2">
-              Пример ↪
-            </Text>
-          </Flex>
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text>
-              Посетете нашата страница за създаване на хранителен план! Имаме
-              обширна база данни със рецепти, която използваме да създадем
-              хранителен режим с вашите предпочитания!
-            </Text>
-          </Flex>
-        </Card>
+        <Link href="#/admin/weight">
+          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+            <Flex pt="5px" w="100%">
+              <Text fontSize="xl" mr="2">
+                Калкулации за теглото ви ↪
+              </Text>
+            </Flex>
+            <Flex justify="center" mt="1%" pt="10px">
+              <Text>
+                Посетете нашата страница с калкулатор за тегло! Предлагаме
+                интерактивни диаграми и статистики, създадени за вас!
+              </Text>
+            </Flex>
+          </Card>
+        </Link>
+        <Link href="#/admin/mealplan">
+          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+            <Flex pt="5px" w="100%">
+              <Text fontSize="xl" mr="2">
+                Хранителен план ↪
+              </Text>
+            </Flex>
+            <Flex justify="center" mt="1%" pt="10px">
+              <Text>
+                Посетете нашата страница за създаване на хранителен план! Имаме
+                обширна база данни със рецепти, която използваме да създадем
+                хранителен режим с вашите предпочитания!
+              </Text>
+            </Flex>
+          </Card>
+        </Link>
+        <Link href="#/admin/mealplan">
+          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+            <Flex pt="5px" w="100%">
+              <Text fontSize="xl" mr="2">
+                Пример ↪
+              </Text>
+            </Flex>
+            <Flex justify="center" mt="1%" pt="10px">
+              <Text>
+                Посетете нашата страница за създаване на хранителен план! Имаме
+                обширна база данни със рецепти, която използваме да създадем
+                хранителен режим с вашите предпочитания!
+              </Text>
+            </Flex>
+          </Card>
+        </Link>
+        <Link href="#/admin/mealplan">
+          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+            <Flex pt="5px" w="100%">
+              <Text fontSize="xl" mr="2">
+                Пример ↪
+              </Text>
+            </Flex>
+            <Flex justify="center" mt="1%" pt="10px">
+              <Text>
+                Посетете нашата страница за създаване на хранителен план! Имаме
+                обширна база данни със рецепти, която използваме да създадем
+                хранителен режим с вашите предпочитания!
+              </Text>
+            </Flex>
+          </Card>
+        </Link>
       </SimpleGrid>
     </Box>
   );
