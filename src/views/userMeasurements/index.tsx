@@ -258,6 +258,7 @@ const UserMeasurements = () => {
       userData["weight"],
       "before"
     );
+    setIsLoading(true);
     await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
     await fetchPerfectWeightData(
       userData["height"],
@@ -286,10 +287,7 @@ const UserMeasurements = () => {
       userData["weight"],
       goalsToFetch
     );
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    setIsLoading(false);
   }
 
   React.useEffect(() => {

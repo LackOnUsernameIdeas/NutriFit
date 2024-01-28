@@ -78,28 +78,20 @@ export default function WeightStats() {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
-  const [showITM, setShowITM] = useState(false);
-
-  // Function to toggle the display of raw data
-  const toggleITM = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent the default behavior of the click event
-    setShowITM(!showITM);
-  };
-  const [showStatus, setShowStatus] = useState(false);
-
   const cancelRef = React.useRef();
   const cancelRefStats = React.useRef();
-
-  // Function to toggle the display of raw data
-  const toggleStatus = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent the default behavior of the click event
-    setShowStatus(!showStatus);
-  };
+  const cancelRefWeight = React.useRef();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenStats,
     onOpen: onOpenStats,
     onClose: onCloseStats
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenPW,
+    onOpen: onOpenPW,
+    onClose: onClosePW
   } = useDisclosure();
 
   // State за разкриване на информация за менюто с информация
@@ -898,7 +890,7 @@ export default function WeightStats() {
                   w="37px"
                   h="30px"
                   lineHeight="50%"
-                  onClick={onOpenBMI}
+                  onClick={onOpenPW}
                   borderRadius="10px"
                   ml="20px"
                 >
@@ -928,25 +920,48 @@ export default function WeightStats() {
                     maxW={{ base: "80%", lg: "100%" }}
                     borderRadius="8px"
                   >
-                    <Flex align="center">
-                      <Text fontSize="1xl" fontWeight="400">
-                        Перфектното тегло е калкулация, която се определя по
-                        формулата "Дивайн" както следва:
-                      </Text>
-                    </Flex>
-                    <HSeparator />
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        Мъже: 50.0 кг + 2.3 кг за всеки инч (2.54 см) над 5 фута
-                        (30.48см)
-                      </Text>
-                    </Flex>
-                    <Flex align="center">
-                      <Text fontSize="sm" fontWeight="400" mt="10px" mb="5px">
-                        Жени: 45.5 кг + 2.3 кг за всеки инч (2.54 см) над 5 фута
-                        (30.48см)
-                      </Text>
-                    </Flex>
+                    <AlertDialog
+                      isOpen={isOpenPW}
+                      leastDestructiveRef={cancelRefWeight}
+                      onClose={onClosePW}
+                    >
+                      <AlertDialogOverlay>
+                        <AlertDialogContent>
+                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Перфектното тегло е калкулация, която се определя по
+                            формулата "Дивайн" както следва:
+                          </AlertDialogHeader>
+
+                          <AlertDialogCloseButton />
+
+                          <AlertDialogBody>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                Мъже: 50.0 кг + 2.3 кг за всеки инч (2.54 см)
+                                над 5 фута (30.48см)
+                              </Text>
+                            </Flex>
+                            <Flex align="center">
+                              <Text
+                                fontSize="sm"
+                                fontWeight="400"
+                                mt="10px"
+                                mb="5px"
+                              >
+                                Жени: 45.5 кг + 2.3 кг за всеки инч (2.54 см)
+                                над 5 фута (30.48см)
+                              </Text>
+                            </Flex>
+                          </AlertDialogBody>
+                          <AlertDialogFooter></AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialogOverlay>
+                    </AlertDialog>
                   </Box>
                 </MenuList>
               </Menu>

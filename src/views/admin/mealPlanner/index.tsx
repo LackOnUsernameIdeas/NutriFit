@@ -3,12 +3,20 @@ import React, { useState } from "react";
 // Chakra UI components
 import {
   Box,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
   Flex,
   Icon,
   Text,
   Button,
   SimpleGrid,
   MenuButton,
+  MenuItem,
   MenuList,
   useDisclosure,
   useColorModeValue,
@@ -130,6 +138,30 @@ export default function WeightStats() {
     hip: 0,
     goal: "maintain"
   });
+
+  const [showITM, setShowITM] = useState(false);
+
+  // Function to toggle the display of raw data
+  const toggleITM = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent the default behavior of the click event
+    setShowITM(!showITM);
+  };
+  const [showStatus, setShowStatus] = useState(false);
+
+  const cancelRef = React.useRef();
+  const cancelRefStats = React.useRef();
+
+  // Function to toggle the display of raw data
+  const toggleStatus = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent the default behavior of the click event
+    setShowStatus(!showStatus);
+  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenStats,
+    onOpen: onOpenStats,
+    onClose: onCloseStats
+  } = useDisclosure();
 
   const [
     isGenerateStatsForCaloriesCalled,
@@ -466,7 +498,7 @@ export default function WeightStats() {
                         w="30px"
                         h="30px"
                         lineHeight="50%"
-                        onClick={onOpenLevels}
+                        onClick={onOpenStats}
                         borderRadius="10px"
                         ml="10%"
                       >
@@ -496,70 +528,92 @@ export default function WeightStats() {
                           maxW={{ base: "80%", lg: "100%" }}
                           borderRadius="8px"
                         >
-                          <Flex align="center">
-                            <Text fontSize="1xl" fontWeight="400">
-                              Бутони за определяне на ниво на натовареност.
-                            </Text>
-                          </Flex>
-                          <HSeparator />
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 1 - Малко или въобще не спортувате.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 2 - Спортувате умерено 1-3 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 3 - Спортувате умерено 4-5 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 4 - Спортувате умерено дневно или интензивно
-                              3-4 пъти в седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text
-                              fontSize="sm"
-                              fontWeight="400"
-                              mt="10px"
-                              mb="5px"
-                            >
-                              Ниво 5 - Спортувате интензивно 6-7 пъти в
-                              седмицата.
-                            </Text>
-                          </Flex>
-                          <Flex align="center">
-                            <Text fontSize="sm" fontWeight="400" mt="10px">
-                              Ниво 6 - Спортувате много интензивно цялата
-                              седмица.
-                            </Text>
-                          </Flex>
+                          <AlertDialog
+                            isOpen={isOpenStats}
+                            leastDestructiveRef={cancelRefStats}
+                            onClose={onCloseStats}
+                          >
+                            <AlertDialogOverlay>
+                              <AlertDialogContent>
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
+                                >
+                                  Видовете състояние според ИТМ могат да бъдат:
+                                </AlertDialogHeader>
+
+                                <AlertDialogCloseButton />
+
+                                <AlertDialogBody>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Ниво 1 - Малко или въобще не спортувате.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Ниво 2 - Спортувате умерено 1-3 пъти в
+                                      седмицата.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Ниво 3 - Спортувате умерено 4-5 пъти в
+                                      седмицата.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Ниво 4 - Спортувате умерено дневно или
+                                      интензивно 3-4 пъти в седмицата.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Ниво 5 - Спортувате интензивно 6-7 пъти в
+                                      седмицата.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                    >
+                                      Ниво 6 - Спортувате много интензивно
+                                      цялата седмица.
+                                    </Text>
+                                  </Flex>
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
                         </Box>
                       </MenuList>
                     </Menu>
@@ -619,7 +673,7 @@ export default function WeightStats() {
                               w="30px"
                               h="30px"
                               lineHeight="50%"
-                              onClick={onOpenDiet}
+                              onClick={onOpen}
                               borderRadius="10px"
                               order={1} // Set a higher order value
                             >
@@ -647,92 +701,114 @@ export default function WeightStats() {
                                 borderRadius="8px"
                                 maxW={{ base: "2xl", lg: "100%" }}
                               >
-                                <Flex align="center">
-                                  <Text fontSize="2xl" fontWeight="400">
-                                    Изберете тип диета по вашите предпочитания.
-                                  </Text>
-                                </Flex>
-                                <HSeparator />
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="1xl"
-                                    fontWeight="400"
-                                    mt="4px"
-                                  >
-                                    Балансирана:
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="sm"
-                                    fontWeight="200"
-                                    mb="10px"
-                                  >
-                                    Балансирано разпределение на макронутриенти
-                                    с умерени нива на протеини, въглехидрати и
-                                    мазнини. Идеална за поддържане на здравето.
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="1xl"
-                                    fontWeight="400"
-                                    mt="4px"
-                                  >
-                                    Ниско съдържание на мазнини:
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="sm"
-                                    fontWeight="200"
-                                    mb="10px"
-                                  >
-                                    Набляга на намаляване на приема на мазнини и
-                                    поддържане на адекватни нива на протеини и
-                                    въглехидрати. Подходящ за тези, които се
-                                    стремят да намалят общия прием на калории и
-                                    да контролират теглото си.
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="1xl"
-                                    fontWeight="400"
-                                    mt="4px"
-                                  >
-                                    Ниско съдържание на въглехидрати:
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="sm"
-                                    fontWeight="400"
-                                    mb="10px"
-                                  >
-                                    Фокусира се върху минимизиране на приема на
-                                    въглехидрати, като същевременно осигурява
-                                    достатъчно протеини и здравословни мазнини.
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text
-                                    fontSize="1xl"
-                                    fontWeight="400"
-                                    mt="4px"
-                                  >
-                                    Високо съдържание на протеин:
-                                  </Text>
-                                </Flex>
-                                <Flex align="center">
-                                  <Text fontSize="sm" fontWeight="400">
-                                    Дава приоритет на по-висок прием на протеин
-                                    с умерени нива на въглехидрати и мазнини.
-                                    Идеална за тези, които искат да подпомогнат
-                                    развитието на мускулите, особено при силови
-                                    тренировки или фитнес програми.
-                                  </Text>
-                                </Flex>
+                                <AlertDialog
+                                  isOpen={isOpen}
+                                  leastDestructiveRef={cancelRef}
+                                  onClose={onClose}
+                                >
+                                  <AlertDialogOverlay>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader
+                                        fontSize="lg"
+                                        fontWeight="bold"
+                                      >
+                                        Изберете тип диета по вашите <br />
+                                        предпочитания.
+                                      </AlertDialogHeader>
+
+                                      <AlertDialogCloseButton />
+
+                                      <AlertDialogBody>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="1xl"
+                                            fontWeight="400"
+                                            mt="4px"
+                                          >
+                                            Балансирана:
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="200"
+                                            mb="10px"
+                                          >
+                                            Балансирано разпределение на
+                                            макронутриенти с умерени нива на
+                                            протеини, въглехидрати и мазнини.
+                                            Идеална за поддържане на здравето.
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="1xl"
+                                            fontWeight="400"
+                                            mt="4px"
+                                          >
+                                            Ниско съдържание на мазнини:
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="200"
+                                            mb="10px"
+                                          >
+                                            Набляга на намаляване на приема на
+                                            мазнини и поддържане на адекватни
+                                            нива на протеини и въглехидрати.
+                                            Подходящ за тези, които се стремят
+                                            да намалят общия прием на калории и
+                                            да контролират теглото си.
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="1xl"
+                                            fontWeight="400"
+                                            mt="4px"
+                                          >
+                                            Ниско съдържание на въглехидрати:
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mb="10px"
+                                          >
+                                            Фокусира се върху минимизиране на
+                                            приема на въглехидрати, като
+                                            същевременно осигурява достатъчно
+                                            протеини и здравословни мазнини.
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="1xl"
+                                            fontWeight="400"
+                                            mt="4px"
+                                          >
+                                            Високо съдържание на протеин:
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text fontSize="sm" fontWeight="400">
+                                            Дава приоритет на по-висок прием на
+                                            протеин с умерени нива на
+                                            въглехидрати и мазнини. Идеална за
+                                            тези, които искат да подпомогнат
+                                            развитието на мускулите, особено при
+                                            силови тренировки или фитнес
+                                            програми.
+                                          </Text>
+                                        </Flex>
+                                      </AlertDialogBody>
+                                      <AlertDialogFooter></AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialogOverlay>
+                                </AlertDialog>
                               </Box>
                             </MenuList>
                           </Menu>
