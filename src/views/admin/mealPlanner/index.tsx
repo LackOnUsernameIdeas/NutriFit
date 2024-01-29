@@ -56,6 +56,8 @@ import { table } from "console";
 export default function WeightStats() {
   // Color values
   const brandColor = useColorModeValue("brand.500", "white");
+  const fontWeight = useColorModeValue("550", "100");
+  const tipFontWeight = useColorModeValue("500", "100");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
@@ -367,7 +369,7 @@ export default function WeightStats() {
     >
       <Box>
         {!isGenerateStatsForCaloriesCalled ? (
-          <Box mt="35vh">
+          <Box>
             <Loading />
           </Box>
         ) : (
@@ -385,7 +387,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Години:</b> {userData.age}
                     </Heading>
@@ -394,7 +396,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Пол:</b> {mapGenderToDisplayValue(userData.gender)}
                     </Heading>
@@ -404,7 +406,7 @@ export default function WeightStats() {
                       <Heading
                         size="xs"
                         textTransform="uppercase"
-                        fontWeight="100"
+                        fontWeight={fontWeight}
                       >
                         <b>Цел:</b> {mapGoalToDisplayValue(userData.goal)}
                       </Heading>
@@ -414,7 +416,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Височина:</b> {userData.height} (см)
                     </Heading>
@@ -423,7 +425,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Тегло:</b> {userData.weight} (кг)
                     </Heading>
@@ -432,7 +434,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Обиколка на врата:</b> {userData.neck} (см)
                     </Heading>
@@ -441,7 +443,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Обиколка на талията:</b> {userData.waist} (см)
                     </Heading>
@@ -450,7 +452,7 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Обиколка на таза:</b> {userData.hip} (см)
                     </Heading>
@@ -624,6 +626,7 @@ export default function WeightStats() {
             <Alert
               status="info"
               borderRadius="20px"
+              fontWeight={tipFontWeight}
               p="20px"
               w="100%"
               mb="20px"

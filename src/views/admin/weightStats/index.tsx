@@ -65,6 +65,7 @@ import { parseISO, differenceInDays } from "date-fns";
 export default function WeightStats() {
   // Color values
   const brandColor = useColorModeValue("brand.500", "white");
+  const fontWeight = useColorModeValue("550", "100");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
@@ -78,28 +79,29 @@ export default function WeightStats() {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
-  const cancelRef = React.useRef();
-  const cancelRefStats = React.useRef();
-  const cancelRefWeight = React.useRef();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRefPerfectWeightAlert = React.useRef();
+  const cancelRefStatus = React.useRef();
+  const cancelRefBMIAlert = React.useRef();
   const {
-    isOpen: isOpenStats,
-    onOpen: onOpenStats,
-    onClose: onCloseStats
+    isOpen: isOpenPerfectWeightAlert,
+    onOpen: onOpenPerfectWeightAlert,
+    onClose: onClosePerfectWeightAlert
+  } = useDisclosure();
+  const {
+    isOpen: isOpenStatus,
+    onOpen: onOpenStatus,
+    onClose: onCloseStatus
   } = useDisclosure();
 
   const {
-    isOpen: isOpenPW,
-    onOpen: onOpenPW,
-    onClose: onClosePW
+    isOpen: isOpenBMIAlert,
+    onOpen: onOpenBMIAlert,
+    onClose: onCloseBMIAlert
   } = useDisclosure();
 
   // State за разкриване на информация за менюто с информация
-  const {
-    isOpen: isOpenPerfectWeight,
-    onOpen: onOpenPerfectWeight,
-    onClose: onClosePerfectWeight
-  } = useDisclosure();
+  const { isOpen: isOpenPerfectWeight, onClose: onClosePerfectWeight } =
+    useDisclosure();
 
   const {
     isOpen: isOpenBMI,
@@ -540,7 +542,7 @@ export default function WeightStats() {
       style={{ overflow: "hidden" }}
     >
       {isLoading || !isGenerateStatsCalled ? (
-        <Box mt="35vh">
+        <Box>
           <Loading />
         </Box>
       ) : (
@@ -555,12 +557,20 @@ export default function WeightStats() {
             <CardBody>
               <Stack divider={<StackDivider />} spacing="4">
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Години:</b> {userData.age}
                   </Heading>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Пол:</b> {mapGenderToDisplayValue(userData.gender)}
                   </Heading>
                 </Box>
@@ -569,34 +579,54 @@ export default function WeightStats() {
                     <Heading
                       size="xs"
                       textTransform="uppercase"
-                      fontWeight="100"
+                      fontWeight={fontWeight}
                     >
                       <b>Цел:</b> {mapGoalToDisplayValue(userData.goal)}
                     </Heading>
                   </Box>
                 )}
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Височина:</b> {userData.height} (см)
                   </Heading>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Тегло:</b> {userData.weight} (кг)
                   </Heading>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Обиколка на врата:</b> {userData.neck} (см)
                   </Heading>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Обиколка на талията:</b> {userData.waist} (см)
                   </Heading>
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase" fontWeight="100">
+                  <Heading
+                    size="xs"
+                    textTransform="uppercase"
+                    fontWeight={fontWeight}
+                  >
                     <b>Обиколка на таза:</b> {userData.hip} (см)
                   </Heading>
                 </Box>
@@ -614,7 +644,7 @@ export default function WeightStats() {
               <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
                 Колко е вашият Индекс на Телесна Маса :
               </Text>
-              <Menu isOpen={isOpenPerfectWeight} onClose={onClosePerfectWeight}>
+              <Menu isOpen={isOpenBMI} onClose={onCloseBMI}>
                 <MenuButton
                   alignItems="center"
                   justifyContent="center"
@@ -625,7 +655,7 @@ export default function WeightStats() {
                   w="30px"
                   h="30px"
                   lineHeight="50%"
-                  onClick={onOpenPerfectWeight}
+                  onClick={onOpenBMI}
                   borderRadius="10px"
                   ml="20px"
                 >
@@ -655,15 +685,15 @@ export default function WeightStats() {
                     maxW={{ base: "80%", lg: "100%" }}
                     borderRadius="8px"
                   >
-                    <MenuItem onClick={onOpen}>
+                    <MenuItem onClick={onOpenBMIAlert} borderRadius="20px">
                       <Text fontSize="1xl" fontWeight="400">
                         Какво е Индекс на Телесната Маса?
                       </Text>
                     </MenuItem>
                     <AlertDialog
-                      isOpen={isOpen}
-                      leastDestructiveRef={cancelRef}
-                      onClose={onClose}
+                      isOpen={isOpenBMIAlert}
+                      leastDestructiveRef={cancelRefBMIAlert}
+                      onClose={onCloseBMIAlert}
                     >
                       <AlertDialogOverlay>
                         <AlertDialogContent>
@@ -693,15 +723,15 @@ export default function WeightStats() {
                         </AlertDialogContent>
                       </AlertDialogOverlay>
                     </AlertDialog>
-                    <MenuItem onClick={onOpenStats}>
+                    <MenuItem onClick={onOpenStatus} borderRadius="20px">
                       <Text fontSize="1xl" fontWeight="400">
                         Видовете състояние според ИТМ могат да бъдат:
                       </Text>
                     </MenuItem>
                     <AlertDialog
-                      isOpen={isOpenStats}
-                      leastDestructiveRef={cancelRefStats}
-                      onClose={onCloseStats}
+                      isOpen={isOpenStatus}
+                      leastDestructiveRef={cancelRefStatus}
+                      onClose={onCloseStatus}
                     >
                       <AlertDialogOverlay>
                         <AlertDialogContent>
@@ -879,7 +909,7 @@ export default function WeightStats() {
               <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
                 Колко е вашето перфектно тегло :
               </Text>
-              <Menu isOpen={isOpenBMI} onClose={onCloseBMI}>
+              <Menu isOpen={isOpenPerfectWeight} onClose={onClosePerfectWeight}>
                 <MenuButton
                   alignItems="center"
                   justifyContent="center"
@@ -890,7 +920,7 @@ export default function WeightStats() {
                   w="37px"
                   h="30px"
                   lineHeight="50%"
-                  onClick={onOpenPW}
+                  onClick={onOpenPerfectWeightAlert}
                   borderRadius="10px"
                   ml="20px"
                 >
@@ -921,9 +951,9 @@ export default function WeightStats() {
                     borderRadius="8px"
                   >
                     <AlertDialog
-                      isOpen={isOpenPW}
-                      leastDestructiveRef={cancelRefWeight}
-                      onClose={onClosePW}
+                      isOpen={isOpenPerfectWeightAlert}
+                      leastDestructiveRef={cancelRefPerfectWeightAlert}
+                      onClose={onClosePerfectWeightAlert}
                     >
                       <AlertDialogOverlay>
                         <AlertDialogContent>

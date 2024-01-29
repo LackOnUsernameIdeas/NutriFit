@@ -203,22 +203,22 @@ const UserMeasurements = () => {
               const dateData = additionalData[key];
               userChartData.push({
                 date: key,
-                height: dateData.height,
-                weight: dateData.weight,
-                bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
+                height: dateData ? dateData.height : 0,
+                weight: dateData ? dateData.weight : 0,
+                bmi: dateData.BMI ? dateData.BMI.bmi : 0,
                 bodyFat: dateData.BodyMassData
                   ? dateData.BodyMassData.bodyFat
-                  : undefined,
+                  : 0,
                 bodyFatMass: dateData.BodyMassData
                   ? dateData.BodyMassData.bodyFatMass
-                  : undefined,
+                  : 0,
                 leanBodyMass: dateData.BodyMassData
                   ? dateData.BodyMassData.leanBodyMass
-                  : undefined,
+                  : 0,
                 differenceFromPerfectWeight: dateData.PerfectWeightData
                   ? dateData.PerfectWeightData.differenceFromPerfectWeight
                       .difference
-                  : undefined
+                  : 0
               });
             }
           }

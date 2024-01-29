@@ -19,9 +19,14 @@ function MeasurementsAlertDialog(props: {
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
-  const [valuesToCheck, setValuesToCheck] = React.useState(
-    JSON.parse(localStorage.getItem("lastTypedValues"))
-  );
+  const [valuesToCheck, setValuesToCheck] = React.useState({
+    height: 0,
+    age: 0,
+    weight: 0,
+    neck: 0,
+    waist: 0,
+    hip: 0
+  });
   const [buttonText, setButtonText] = React.useState<string>(
     props.checkUpdate ? "Актуализирайте" : "Изпратете"
   );
@@ -31,9 +36,17 @@ function MeasurementsAlertDialog(props: {
     const storedValues = JSON.parse(
       localStorage.getItem("lastTypedValues") || "{}"
     );
-    Object.keys(storedValues).forEach((key) => {
-      setValuesToCheck(storedValues);
-    });
+
+    // Check if stored values are different from current valuesToCheck
+    if (
+      !Object.keys(storedValues).every(
+        (key) =>
+          storedValues[key] === valuesToCheck[key as keyof typeof valuesToCheck]
+      )
+    ) {
+      // If they are different, update the values to check
+      setValuesToCheck(storedValues as typeof valuesToCheck);
+    }
   }, [props.userData]);
 
   React.useEffect(() => {

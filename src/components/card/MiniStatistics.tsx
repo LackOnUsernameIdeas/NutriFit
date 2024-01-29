@@ -46,6 +46,7 @@ export default function Default(props: {
   const bgHover = useColorModeValue("secondaryGray.400", "whiteAlpha.50");
   const bgFocus = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const defaultBorderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+  const fontWeight = useColorModeValue("550", "550");
   const [isSelected, setIsSelected] = useState(false);
   const handleSelect = () => {
     setIsSelected(!isSelected);
@@ -87,6 +88,7 @@ export default function Default(props: {
             <StatLabel
               lineHeight="100%"
               color={textColor}
+              fontWeight={fontWeight}
               fontSize={{
                 base: "sm"
               }}

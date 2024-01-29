@@ -64,6 +64,7 @@ export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const fontWeight = useColorModeValue("500", "100");
   const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
   const bgFocus = { bg: "brand.200" };
   return (
@@ -71,9 +72,7 @@ export default function UserReports() {
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card>
           <Flex justify="left" w="100%">
-            <Text fontSize="5xl" fontWeight="bold">
-              Добре дошли в NutriFit!
-            </Text>
+            <Text fontSize="5xl">Добре дошли в NutriFit!</Text>
           </Flex>
         </Card>
       </SimpleGrid>
@@ -180,11 +179,11 @@ export default function UserReports() {
           <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
             <Flex pt="5px" w="100%">
               <Text fontSize="xl" mr="2">
-                Калкулации за теглото ви ↪
+                <b>Калкулации за теглото ви ↪</b>
               </Text>
             </Flex>
             <Flex justify="center" mt="1%" pt="10px">
-              <Text>
+              <Text fontWeight={fontWeight}>
                 Посетете нашата страница с калкулатор за тегло! Предлагаме
                 интерактивни диаграми и статистики, създадени за вас!
               </Text>
@@ -195,11 +194,11 @@ export default function UserReports() {
           <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
             <Flex pt="5px" w="100%">
               <Text fontSize="xl" mr="2">
-                Хранителен план ↪
+                <b>Хранителен план ↪</b>
               </Text>
             </Flex>
             <Flex justify="center" mt="1%" pt="10px">
-              <Text>
+              <Text fontWeight={fontWeight}>
                 Посетете нашата страница за създаване на хранителен план! Имаме
                 обширна база данни със рецепти, която използваме да създадем
                 хранителен режим с вашите предпочитания!
@@ -211,11 +210,11 @@ export default function UserReports() {
           <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
             <Flex pt="5px" w="100%">
               <Text fontSize="xl" mr="2">
-                Пример ↪
+                <b>Пример ↪</b>
               </Text>
             </Flex>
             <Flex justify="center" mt="1%" pt="10px">
-              <Text>
+              <Text fontWeight={fontWeight}>
                 Посетете нашата страница за създаване на хранителен план! Имаме
                 обширна база данни със рецепти, която използваме да създадем
                 хранителен режим с вашите предпочитания!
@@ -227,11 +226,11 @@ export default function UserReports() {
           <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
             <Flex pt="5px" w="100%">
               <Text fontSize="xl" mr="2">
-                Пример ↪
+                <b>Пример ↪</b>
               </Text>
             </Flex>
             <Flex justify="center" mt="1%" pt="10px">
-              <Text>
+              <Text fontWeight={fontWeight}>
                 Посетете нашата страница за създаване на хранителен план! Имаме
                 обширна база данни със рецепти, която използваме да създадем
                 хранителен режим с вашите предпочитания!
