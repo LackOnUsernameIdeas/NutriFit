@@ -61,7 +61,8 @@ export default function WeightStats() {
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
-  const bgList = useColorModeValue("white", "whiteAlpha.100");
+  const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
+  const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.400" },
@@ -536,7 +537,11 @@ export default function WeightStats() {
                             onClose={onCloseStats}
                           >
                             <AlertDialogOverlay>
-                              <AlertDialogContent>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                              >
                                 <AlertDialogHeader
                                   fontSize="lg"
                                   fontWeight="bold"
@@ -544,7 +549,7 @@ export default function WeightStats() {
                                   Видовете състояние според ИТМ могат да бъдат:
                                 </AlertDialogHeader>
 
-                                <AlertDialogCloseButton />
+                                <AlertDialogCloseButton borderRadius="20px" />
 
                                 <AlertDialogBody>
                                   <Flex align="center">
@@ -554,7 +559,8 @@ export default function WeightStats() {
                                       mt="10px"
                                       mb="5px"
                                     >
-                                      Ниво 1 - Малко или въобще не спортувате.
+                                      <b>Ниво 1</b> - Малко или въобще не
+                                      спортувате.
                                     </Text>
                                   </Flex>
                                   <Flex align="center">
@@ -564,8 +570,8 @@ export default function WeightStats() {
                                       mt="10px"
                                       mb="5px"
                                     >
-                                      Ниво 2 - Спортувате умерено 1-3 пъти в
-                                      седмицата.
+                                      <b>Ниво 2</b> - Спортувате умерено 1-3
+                                      пъти в седмицата.
                                     </Text>
                                   </Flex>
                                   <Flex align="center">
@@ -575,8 +581,8 @@ export default function WeightStats() {
                                       mt="10px"
                                       mb="5px"
                                     >
-                                      Ниво 3 - Спортувате умерено 4-5 пъти в
-                                      седмицата.
+                                      <b>Ниво 3</b> - Спортувате умерено 4-5
+                                      пъти в седмицата.
                                     </Text>
                                   </Flex>
                                   <Flex align="center">
@@ -586,8 +592,8 @@ export default function WeightStats() {
                                       mt="10px"
                                       mb="5px"
                                     >
-                                      Ниво 4 - Спортувате умерено дневно или
-                                      интензивно 3-4 пъти в седмицата.
+                                      <b>Ниво 4</b> - Спортувате умерено дневно
+                                      или интензивно 3-4 пъти в седмицата.
                                     </Text>
                                   </Flex>
                                   <Flex align="center">
@@ -597,8 +603,8 @@ export default function WeightStats() {
                                       mt="10px"
                                       mb="5px"
                                     >
-                                      Ниво 5 - Спортувате интензивно 6-7 пъти в
-                                      седмицата.
+                                      <b>Ниво 5</b> - Спортувате интензивно 6-7
+                                      пъти в седмицата.
                                     </Text>
                                   </Flex>
                                   <Flex align="center">
@@ -607,8 +613,8 @@ export default function WeightStats() {
                                       fontWeight="400"
                                       mt="10px"
                                     >
-                                      Ниво 6 - Спортувате много интензивно
-                                      цялата седмица.
+                                      <b>Ниво 6</b> - Спортувате много
+                                      интензивно цялата седмица.
                                     </Text>
                                   </Flex>
                                 </AlertDialogBody>
@@ -710,7 +716,11 @@ export default function WeightStats() {
                                   onClose={onClose}
                                 >
                                   <AlertDialogOverlay>
-                                    <AlertDialogContent>
+                                    <AlertDialogContent
+                                      border="2px"
+                                      borderRadius="25px"
+                                      borderColor={borderColor}
+                                    >
                                       <AlertDialogHeader
                                         fontSize="lg"
                                         fontWeight="bold"
@@ -719,7 +729,7 @@ export default function WeightStats() {
                                         предпочитания.
                                       </AlertDialogHeader>
 
-                                      <AlertDialogCloseButton />
+                                      <AlertDialogCloseButton borderRadius="20px" />
 
                                       <AlertDialogBody>
                                         <Flex align="center">
@@ -728,7 +738,8 @@ export default function WeightStats() {
                                             fontWeight="400"
                                             mt="4px"
                                           >
-                                            Балансирана:
+                                            <b>Балансирана:</b>
+                                            <br />
                                           </Text>
                                         </Flex>
                                         <Flex align="center">
@@ -749,7 +760,8 @@ export default function WeightStats() {
                                             fontWeight="400"
                                             mt="4px"
                                           >
-                                            Ниско съдържание на мазнини:
+                                            <b>Ниско съдържание на мазнини:</b>
+                                            <br />
                                           </Text>
                                         </Flex>
                                         <Flex align="center">
@@ -772,7 +784,10 @@ export default function WeightStats() {
                                             fontWeight="400"
                                             mt="4px"
                                           >
-                                            Ниско съдържание на въглехидрати:
+                                            <b>
+                                              Ниско съдържание на въглехидрати:
+                                            </b>
+                                            <br />
                                           </Text>
                                         </Flex>
                                         <Flex align="center">
@@ -793,7 +808,8 @@ export default function WeightStats() {
                                             fontWeight="400"
                                             mt="4px"
                                           >
-                                            Високо съдържание на протеин:
+                                            <b>Високо съдържание на протеин:</b>
+                                            <br />
                                           </Text>
                                         </Flex>
                                         <Flex align="center">

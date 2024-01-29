@@ -70,6 +70,7 @@ export default function WeightStats() {
   const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
   const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
+  const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.400" },
@@ -673,7 +674,7 @@ export default function WeightStats() {
                   mr={{ base: "2%", lg: 0 }}
                   maxW={{ base: "23%", lg: "80%" }}
                   border="1px"
-                  borderColor="secondaryGray.200"
+                  borderColor={borderColor}
                   backdropFilter="blur(100px)"
                   bg={bgList}
                   borderRadius="20px"
@@ -703,28 +704,33 @@ export default function WeightStats() {
                       onClose={onCloseBMIAlert}
                     >
                       <AlertDialogOverlay>
-                        <AlertDialogContent>
+                        <AlertDialogContent
+                          border="2px"
+                          borderRadius="25px"
+                          borderColor={borderColor}
+                        >
                           <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             Какво е Индекс на Телесната Маса?
                           </AlertDialogHeader>
 
-                          <AlertDialogCloseButton />
+                          <AlertDialogCloseButton borderRadius="20px" />
 
                           <AlertDialogBody>
-                            Индексът на телесната маса(ИТМ) e медико-биологичен
-                            показател, който служи за определяне на нормалното,
-                            здравословно тегло при хора с различен ръст и за
-                            диагностициране на затлъстяване и недохранване.
-                            Индексът на телесната маса се измерва в килограми на
-                            квадратен метър и се определя по следната формула:
+                            <b>Индексът на телесната маса(ИТМ)</b> e
+                            медико-биологичен показател, който служи за
+                            определяне на нормалното, здравословно тегло при
+                            хора с различен ръст и за диагностициране на
+                            затлъстяване и недохранване. Индексът на телесната
+                            маса се измерва в килограми на квадратен метър и се
+                            определя по следната формула:
                             <br />
                             <Image
                               src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
                               alt="Dan Abramov"
                             />
-                            BMI - индекс на телесната маса
-                            <br /> W - тегло в килограми
-                            <br /> h - височина в метри
+                            <b>BMI</b> - индекс на телесната маса
+                            <br /> <b>W</b> - тегло в килограми
+                            <br /> <b>h</b> - височина в метри
                           </AlertDialogBody>
                           <AlertDialogFooter></AlertDialogFooter>
                         </AlertDialogContent>
@@ -747,12 +753,16 @@ export default function WeightStats() {
                       onClose={onCloseStatus}
                     >
                       <AlertDialogOverlay>
-                        <AlertDialogContent>
+                        <AlertDialogContent
+                          border="2px"
+                          borderRadius="25px"
+                          borderColor={borderColor}
+                        >
                           <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             Видовете състояние според ИТМ могат да бъдат:
                           </AlertDialogHeader>
 
-                          <AlertDialogCloseButton />
+                          <AlertDialogCloseButton borderRadius="20px" />
 
                           <AlertDialogBody>
                             <Flex align="center">
@@ -762,10 +772,10 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Сериозно недохранване - Този статус показва
-                                тежък недостиг на хранителни вещества, което
-                                може да доведе до сериозни проблеми със здравето
-                                и отслабване на организма.
+                                <b>• Сериозно недохранване</b> - Този статус
+                                показва тежък недостиг на хранителни вещества,
+                                което може да доведе до сериозни проблеми със
+                                здравето и отслабване на организма.
                               </Text>
                             </Flex>
                             <Flex align="center">
@@ -775,9 +785,9 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Средно недохранване - Този статус показва
-                                недостиган на хранителни вещества на умерено
-                                ниво, което може да води до отслабване и
+                                <b>• Средно недохранване</b> - Този статус
+                                показва недостиган на хранителни вещества на
+                                умерено ниво, което може да води до отслабване и
                                 различни проблеми със здравето.
                               </Text>
                             </Flex>
@@ -788,10 +798,10 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Леко недохранване - В тази категория теглото е
-                                леко под нормата, което може да създаде проблеми
-                                със здравето и да наложи корекции в хранителния
-                                режим.
+                                <b>• Леко недохранване</b> - В тази категория
+                                теглото е леко под нормата, което може да
+                                създаде проблеми със здравето и да наложи
+                                корекции в хранителния режим.
                               </Text>
                             </Flex>
                             <Flex align="center">
@@ -801,7 +811,7 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Нормално - Тази категория отразява
+                                <b>• Нормално</b> - Тази категория отразява
                                 здравословно тегло в съответствие с височината.
                                 Хора в тази категория имат по-нисък риск от
                                 различни здравословни проблеми, свързани с
@@ -815,10 +825,11 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Наднормено тегло - В тази категория теглото е
-                                над нормалната граница, което може да повиши
-                                риска от заболявания, свързани със здравето,
-                                като диабет и сърдечно-съдови заболявания.
+                                <b>• Наднормено тегло</b> - В тази категория
+                                теглото е над нормалната граница, което може да
+                                повиши риска от заболявания, свързани със
+                                здравето, като диабет и сърдечно-съдови
+                                заболявания.
                               </Text>
                             </Flex>
                             <Flex align="center">
@@ -828,9 +839,9 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Затлъстяване I Клас - Теглото е значително
-                                повишено, като този статус може да увеличи риска
-                                от сериозни здравословни проблеми.
+                                <b>• Затлъстяване I Клас</b> - Теглото е
+                                значително повишено, като този статус може да
+                                увеличи риска от сериозни здравословни проблеми.
                               </Text>
                             </Flex>
                             <Flex align="center">
@@ -840,8 +851,8 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Затлъстяване II Клас - Тук има по-висок риск
-                                от здравословни проблеми в сравнение с
+                                <b>• Затлъстяване II Клас</b> - Тук има по-висок
+                                риск от здравословни проблеми в сравнение с
                                 предишната категория. Затлъстяването става
                                 по-значително.
                               </Text>
@@ -853,10 +864,11 @@ export default function WeightStats() {
                                 mt="10px"
                                 mb="5px"
                               >
-                                • Затлъстяване III Клас - Този клас показва
-                                екстремно затлъстяване, което може да предизвика
-                                сериозни здравословни проблеми и изисква
-                                внимание от специалист в здравеопазването.
+                                <b>• Затлъстяване III Клас</b> - Този клас
+                                показва екстремно затлъстяване, което може да
+                                предизвика сериозни здравословни проблеми и
+                                изисква внимание от специалист в
+                                здравеопазването.
                               </Text>
                             </Flex>
                           </AlertDialogBody>
@@ -969,13 +981,17 @@ export default function WeightStats() {
                       onClose={onClosePerfectWeightAlert}
                     >
                       <AlertDialogOverlay>
-                        <AlertDialogContent>
+                        <AlertDialogContent
+                          border="2px"
+                          borderRadius="25px"
+                          borderColor={borderColor}
+                        >
                           <AlertDialogHeader fontSize="lg" fontWeight="bold">
                             Перфектното тегло е калкулация, която се определя по
                             формулата "Дивайн" както следва:
                           </AlertDialogHeader>
 
-                          <AlertDialogCloseButton />
+                          <AlertDialogCloseButton borderRadius="20px" />
 
                           <AlertDialogBody>
                             <Flex align="center">
