@@ -69,7 +69,7 @@ export default function WeightStats() {
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
-  const bgList = useColorModeValue("white", "whiteAlpha.100");
+  const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.400" },
@@ -672,7 +672,8 @@ export default function WeightStats() {
                   ml={{ base: "2%", lg: 0 }}
                   mr={{ base: "2%", lg: 0 }}
                   maxW={{ base: "23%", lg: "80%" }}
-                  border="transparent"
+                  border="1px"
+                  borderColor="secondaryGray.200"
                   backdropFilter="blur(100px)"
                   bg={bgList}
                   borderRadius="20px"
@@ -685,7 +686,13 @@ export default function WeightStats() {
                     maxW={{ base: "80%", lg: "100%" }}
                     borderRadius="8px"
                   >
-                    <MenuItem onClick={onOpenBMIAlert} borderRadius="20px">
+                    <MenuItem
+                      onClick={onOpenBMIAlert}
+                      borderRadius="20px"
+                      _hover={bgHover}
+                      _focus={bgFocus}
+                      _active={bgFocus}
+                    >
                       <Text fontSize="1xl" fontWeight="400">
                         Какво е Индекс на Телесната Маса?
                       </Text>
@@ -723,7 +730,13 @@ export default function WeightStats() {
                         </AlertDialogContent>
                       </AlertDialogOverlay>
                     </AlertDialog>
-                    <MenuItem onClick={onOpenStatus} borderRadius="20px">
+                    <MenuItem
+                      onClick={onOpenStatus}
+                      borderRadius="20px"
+                      _hover={bgHover}
+                      _focus={bgFocus}
+                      _active={bgFocus}
+                    >
                       <Text fontSize="1xl" fontWeight="400">
                         Видовете състояние според ИТМ могат да бъдат:
                       </Text>
@@ -917,7 +930,7 @@ export default function WeightStats() {
                   _hover={bgHover}
                   _focus={bgFocus}
                   _active={bgFocus}
-                  w="37px"
+                  w="30px"
                   h="30px"
                   lineHeight="50%"
                   onClick={onOpenPerfectWeightAlert}
