@@ -13,8 +13,16 @@ function MeasurementsIllustration(props: {
 }) {
   const { children, illustrationBackground } = props;
   const handleLogOut = async () => {
-    const key = sessionStorage.key(0);
-    sessionStorage.removeItem(key);
+    const key = Object.keys(sessionStorage).filter((obj) =>
+      obj.startsWith("firebase:authUser")
+    );
+
+    const rememberedKey = Object.keys(localStorage).filter((obj) =>
+      obj.startsWith("firebase:authUser")
+    );
+
+    sessionStorage.removeItem(key[0]);
+    localStorage.removeItem(rememberedKey[0]);
     Cookies.remove("remember");
   };
 

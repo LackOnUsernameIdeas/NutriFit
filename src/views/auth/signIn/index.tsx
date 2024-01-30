@@ -83,7 +83,7 @@ function SignIn() {
       const firebasePersistence = rememberMe
         ? browserLocalPersistence
         : browserSessionPersistence;
-      await setPersistence(auth, firebasePersistence);
+      await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
       setError("");
       history.push("/measurements/userData");

@@ -38,7 +38,7 @@ import CardBody from "components/card/Card";
 
 import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
-import Loading from "./components/Loading";
+import Loading from "views/admin/weightStats/components/Loading";
 import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
 // Types
@@ -51,7 +51,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { savePreferences } from "../../../database/setWeightStatsData";
 import { table } from "console";
-
 // Главен компонент
 export default function WeightStats() {
   // Color values
@@ -370,7 +369,7 @@ export default function WeightStats() {
     >
       <Box>
         {!isGenerateStatsForCaloriesCalled ? (
-          <Box>
+          <Box mt="37vh" minH="600px">
             <Loading />
           </Box>
         ) : (

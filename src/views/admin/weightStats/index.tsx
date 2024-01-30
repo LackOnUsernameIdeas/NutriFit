@@ -37,7 +37,7 @@ import CardBody from "components/card/Card";
 
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
-import Loading from "./components/Loading";
+import Loading from "views/admin/weightStats/components/Loading";
 import { HSeparator } from "components/separator/Separator";
 // Types
 import {
@@ -543,7 +543,7 @@ export default function WeightStats() {
       style={{ overflow: "hidden" }}
     >
       {isLoading || !isGenerateStatsCalled ? (
-        <Box>
+        <Box mt="37vh" minH="600px">
           <Loading />
         </Box>
       ) : (
