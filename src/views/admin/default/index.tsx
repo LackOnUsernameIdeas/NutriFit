@@ -19,7 +19,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-
+import React from "react";
 // Chakra imports
 import {
   Avatar,
@@ -33,17 +33,13 @@ import {
   useColorMode,
   useColorModeValue,
   Text,
-  Link,
-  LinkBox,
-  LinkOverlay,
-  Heading
+  Link
 } from "@chakra-ui/react";
 // Assets
 import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
 import Card from "components/card/Card";
-import { HSeparator } from "components/separator/Separator";
 import IconBox from "components/icons/IconBox";
 import {
   MdAddTask,
@@ -53,6 +49,10 @@ import {
 } from "react-icons/md";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
+import {
+  getTotalUsers,
+  getAverageWeightOfAllUsers
+} from "database/getMeanUsersData";
 
 interface LinearGradientTextProps {
   text: any;
@@ -99,6 +99,28 @@ export default function UserReports() {
   const fontWeight = useColorModeValue("500", "100");
   const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
   const bgFocus = { bg: "brand.200" };
+  const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
+  const [averageWeight, setAverageWeight] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    // Fetch the total number of users when the component mounts
+    getTotalUsers()
+      .then((users) => {
+        setTotalUsers(users);
+      })
+      .catch((error) => {
+        console.error("Error fetching total users:", error);
+      });
+    getAverageWeightOfAllUsers()
+      .then((weight) => {
+        setAverageWeight(weight);
+        console.log("WEIGHT ->>>", weight);
+      })
+      .catch((error) => {
+        console.error("Error fetching average weight:", error);
+      });
+  }, []); // Run this effect only once when the component mounts
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
@@ -149,8 +171,8 @@ export default function UserReports() {
               }
             />
           }
-          name="Earnings"
-          value="$350.4"
+          name="Total Users"
+          value={totalUsers !== null ? totalUsers.toString() : "Loading..."}
         />
         <MiniStatistics
           startContent={
@@ -164,7 +186,11 @@ export default function UserReports() {
             />
           }
           name="Spend this month"
-          value="$642.39"
+          value={
+            averageWeight !== null
+              ? `${averageWeight.toFixed(2)}`
+              : "Loading..."
+          }
         />
         <MiniStatistics
           growth="+23%"
@@ -228,6 +254,7 @@ export default function UserReports() {
         backgroundSize="cover"
         backgroundPosition="center"
         transition="background-image 0.5s ease-in-out"
+        mb="20px"
       >
         <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
           <Link href="#/admin/weight">
