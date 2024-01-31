@@ -23,6 +23,7 @@ import React from "react";
 // Chakra imports
 import {
   Avatar,
+  Button,
   Box,
   Flex,
   FormLabel,
@@ -50,7 +51,12 @@ import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-hai
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import {
   getTotalUsers,
-  getAverageStatsOfAllUsers
+  getAverageWeightOfAllUsers,
+  getAverageCaloriesOfAllUsers,
+  getAverageProteinOfAllUsers,
+  getAverageCarbsOfAllUsers,
+  getAverageFatOfAllUsers,
+  getAverageBodyFatPercentageOfAllUsers
 } from "database/getMeanUsersData";
 
 interface LinearGradientTextProps {
@@ -106,21 +112,10 @@ export default function UserReports() {
   const [averageProtein, setAverageProtein] = React.useState<number | null>(
     null
   );
+  const [averageCarbs, setAverageCarbs] = React.useState<number | null>(null);
   const [averageFat, setAverageFat] = React.useState<number | null>(null);
-  const [averageCarbohydrates, setAverageCarbohydrates] = React.useState<
-    number | null
-  >(null);
   const [averageBodyFatPercentage, setAverageBodyFatPercentage] =
     React.useState<number | null>(null);
-
-  interface AvarageData {
-    weight: number;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    fatPercentage: number;
-  }
 
   React.useEffect(() => {
     // Fetch the total number of users when the component mounts
@@ -131,26 +126,58 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching total users:", error);
       });
-    getAverageStatsOfAllUsers()
-      .then((stats: AvarageData) => {
-        setAverageWeight(stats.weight);
-        setAverageCalories(stats.calories);
-        setAverageProtein(stats.protein);
-        setAverageFat(stats.fat);
-        setAverageCarbohydrates(stats.carbs);
-        setAverageBodyFatPercentage(stats.fatPercentage);
-        console.log("stats ->>>", stats);
+    getAverageWeightOfAllUsers()
+      .then((weight) => {
+        setAverageWeight(weight);
+        console.log("WEIGHT ->>>", weight);
       })
-      .catch((error: any) => {
+      .catch((error) => {
         console.error("Error fetching average weight:", error);
+      });
+    getAverageCaloriesOfAllUsers()
+      .then((calories) => {
+        setAverageCalories(calories);
+        console.log("CALORIES ->>>", calories);
+      })
+      .catch((error) => {
+        console.error("Error fetching average calories:", error);
+      });
+    getAverageProteinOfAllUsers()
+      .then((protein) => {
+        setAverageProtein(protein);
+        console.log("PROTEIN ->>>", protein);
+      })
+      .catch((error) => {
+        console.error("Error fetching average protein:", error);
+      });
+    getAverageCarbsOfAllUsers()
+      .then((carbs) => {
+        setAverageCarbs(carbs);
+        console.log("CARBS ->>>", carbs);
+      })
+      .catch((error) => {
+        console.error("Error fetching average carbs:", error);
+      });
+    getAverageFatOfAllUsers()
+      .then((fat) => {
+        setAverageFat(fat);
+        console.log("FAT ->>>", fat);
+      })
+      .catch((error) => {
+        console.error("Error fetching average fat:", error);
+      });
+    getAverageBodyFatPercentageOfAllUsers()
+      .then((bodyFatPercentage) => {
+        setAverageBodyFatPercentage(bodyFatPercentage);
+        console.log("BODY FAT PERCENTAGE ->>>", bodyFatPercentage);
+      })
+      .catch((error) => {
+        console.error("Error fetching average body fat percentage:", error);
       });
   }, []); // Run this effect only once when the component mounts
 
   return (
-    <Box
-      pt={{ base: "130px", md: "80px", xl: "80px" }}
-      transition="0.2s ease-in-out"
-    >
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card>
           <Flex justify="left" alignItems="center">
@@ -213,13 +240,14 @@ export default function UserReports() {
               }
             />
           }
-          name="Средно тегло"
+          name="Weight"
           value={
             averageWeight !== null
               ? `${averageWeight.toFixed(2)}`
               : "Loading..."
           }
         />
+
         <MiniStatistics
           startContent={
             <IconBox
@@ -229,7 +257,7 @@ export default function UserReports() {
               icon={<Icon w="28px" h="28px" as={MdAddTask} color="white" />}
             />
           }
-          name="Препоръчани калории средно"
+          name="Calories"
           value={
             averageCalories !== null
               ? `${averageCalories.toFixed(2)}`
@@ -247,7 +275,7 @@ export default function UserReports() {
               }
             />
           }
-          name="Total Projects"
+          name="Protein"
           value={
             averageProtein !== null
               ? `${averageProtein.toFixed(2)}`
@@ -265,11 +293,9 @@ export default function UserReports() {
               }
             />
           }
-          name="Total Projects"
+          name="Carbs"
           value={
-            averageCarbohydrates !== null
-              ? `${averageCarbohydrates.toFixed(2)}`
-              : "Loading..."
+            averageCarbs !== null ? `${averageCarbs.toFixed(2)}` : "Loading..."
           }
         />
         <MiniStatistics
@@ -283,7 +309,7 @@ export default function UserReports() {
               }
             />
           }
-          name="Total Projects"
+          name="Fat"
           value={
             averageFat !== null ? `${averageFat.toFixed(2)}` : "Loading..."
           }
@@ -299,7 +325,7 @@ export default function UserReports() {
               }
             />
           }
-          name="Total Projects"
+          name="Body Fat %"
           value={
             averageBodyFatPercentage !== null
               ? `${averageBodyFatPercentage.toFixed(2)}`
