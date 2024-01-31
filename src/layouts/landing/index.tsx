@@ -1,5 +1,5 @@
 // Chakra imports
-import { Portal, Box, useDisclosure } from "@chakra-ui/react";
+import { Portal, Box, useDisclosure, useColorMode } from "@chakra-ui/react";
 import Footer from "components/footer/Footer";
 // Layout components
 import Navbar from "components/navbar/LandingNav";
@@ -7,10 +7,14 @@ import { SidebarContext } from "contexts/SidebarContext";
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import routes from "routes";
-
+import backgroundImageWhite from "assets/img/layout/stacked-waves-haikei-light.svg";
+import backgroundImageDark from "assets/img/layout/stacked-waves-haikei-dark.svg";
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {
   const { ...rest } = props;
+  const { colorMode } = useColorMode();
+  const backgroundImage =
+    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -69,25 +73,36 @@ export default function Dashboard(props: { [x: string]: any }) {
   document.documentElement.dir = "ltr";
   const { onOpen } = useDisclosure();
   return (
-    <Box minHeight="100vh" display="flex" flexDirection="column">
-      <Portal>
-        <Box>
-          <Navbar
-            onOpen={onOpen}
-            logoText={"Horizon UI Dashboard PRO"}
-            brandText={getActiveRoute(routes)}
-            secondary={getActiveNavbar(routes)}
-            message={getActiveNavbarText(routes)}
-            fixed={fixed}
-            {...rest}
-          />
-        </Box>
-      </Portal>
-      {getRoute() ? (
-        <Box p={{ base: "20px", md: "40px" }} pe="20px">
-          <Switch>{getRoutes(routes)}</Switch>
-        </Box>
-      ) : null}
+    <Box
+      minHeight="100vh"
+      display="flex"
+      flexDirection="column"
+      backgroundImage={`url(${backgroundImage})`}
+      backgroundRepeat="no-repeat"
+      backgroundSize="cover"
+      backgroundPosition="center"
+      transition="background-image 0.5s ease-in-out"
+    >
+      <Box>
+        <Portal>
+          <Box>
+            <Navbar
+              onOpen={onOpen}
+              logoText={"Horizon UI Dashboard PRO"}
+              brandText={getActiveRoute(routes)}
+              secondary={getActiveNavbar(routes)}
+              message={getActiveNavbarText(routes)}
+              fixed={fixed}
+              {...rest}
+            />
+          </Box>
+        </Portal>
+        {getRoute() ? (
+          <Box p={{ base: "20px", md: "40px" }} pe="20px">
+            <Switch>{getRoutes(routes)}</Switch>
+          </Box>
+        ) : null}
+      </Box>
       <Footer isForLanding={true} />
     </Box>
   );

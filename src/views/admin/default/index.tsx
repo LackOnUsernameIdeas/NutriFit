@@ -23,7 +23,6 @@ import React from "react";
 // Chakra imports
 import {
   Avatar,
-  Button,
   Box,
   Flex,
   FormLabel,

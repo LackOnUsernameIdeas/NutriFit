@@ -65,13 +65,14 @@ export default function UserReports() {
   return (
     <Box pt="80px">
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        <Card minH="200px">
+        <Card mb="20px">
           <Flex justify="left" pt="5px" w="100%">
             <Text fontSize="4xl" fontWeight="bold">
               Добре дошли в NutriFit!
             </Text>
           </Flex>
-          <HSeparator />
+        </Card>
+        <Card>
           <Flex justify="left" mt="1%" pt="10px">
             <Text fontSize="2xl">
               Нашата цел е да помогнем на нашите потребители да поддържат
@@ -81,7 +82,7 @@ export default function UserReports() {
           <Flex justify="left" mt="1%" pt="10px">
             <ChakraBox
               animate={{
-                scale: [1.15, 1.35, 1.15],
+                scale: [1.15, 1.2, 1.15],
                 rotate: [0, 0, 0],
                 borderRadius: ["20%", "20%", "20%"]
               }}

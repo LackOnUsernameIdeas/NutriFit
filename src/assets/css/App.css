@@ -15,13 +15,13 @@ option {
 
 @keyframes glowing {
   0% {
-    box-shadow: 0 0 10px #422afb;
+    box-shadow: 0 0 10px #5d4cdb;
   }
   50% {
-    box-shadow: 0 0 20px #422afb, 0 0 25px #422afb;
+    box-shadow: 0 0 20px #5d4cdb, 0 0 25px #5d4cdb;
   }
   100% {
-    box-shadow: 0 0 10px #422afb;
+    box-shadow: 0 0 10px #5d4cdb;
   }
 }
 
