@@ -134,6 +134,10 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching average weight:", error);
       });
+  }, []); // Run this effect only once when the component mounts
+
+  React.useEffect(() => {
+    // Fetch the total number of users when the component mounts
     getAverageCaloriesOfAllUsers()
       .then((calories) => {
         setAverageCalories(calories);
@@ -142,6 +146,10 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching average calories:", error);
       });
+  }, []); // Run this effect only once when the component mounts
+
+  React.useEffect(() => {
+    // Fetch the total number of users when the component mounts
     getAverageProteinOfAllUsers()
       .then((protein) => {
         setAverageProtein(protein);
@@ -150,6 +158,10 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching average protein:", error);
       });
+  }, []); // Run this effect only once when the component mounts
+
+  React.useEffect(() => {
+    // Fetch the total number of users when the component mounts
     getAverageCarbsOfAllUsers()
       .then((carbs) => {
         setAverageCarbs(carbs);
@@ -158,6 +170,10 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching average carbs:", error);
       });
+  }, []); // Run this effect only once when the component mounts
+
+  React.useEffect(() => {
+    // Fetch the total number of users when the component mounts
     getAverageFatOfAllUsers()
       .then((fat) => {
         setAverageFat(fat);
@@ -166,6 +182,10 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching average fat:", error);
       });
+  }, []); // Run this effect only once when the component mounts
+
+  React.useEffect(() => {
+    // Fetch the total number of users when the component mounts
     getAverageBodyFatPercentageOfAllUsers()
       .then((bodyFatPercentage) => {
         setAverageBodyFatPercentage(bodyFatPercentage);
@@ -211,7 +231,7 @@ export default function UserReports() {
         </Card>
       </SimpleGrid>
       <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
+        columns={{ base: 1, md: 2, lg: 3, "2xl": 7 }}
         gap="20px"
         mb="20px"
       >
@@ -334,7 +354,7 @@ export default function UserReports() {
         />
       </SimpleGrid>
       <Card
-        minH="285px"
+        minH="225px"
         backgroundImage={`url(${backgroundImage})`}
         backgroundRepeat="no-repeat"
         backgroundSize="cover"
@@ -342,19 +362,19 @@ export default function UserReports() {
         transition="background-image 0.5s ease-in-out"
         mb="20px"
       >
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px">
           <Link href="#/admin/weight">
             <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
               <Flex pt="5px" w="100%">
                 <LinearGradientText
                   text={<b>Калкулации за теглото ви ↪</b>}
                   gradient={gradientNutri}
-                  fontSize="2xl"
+                  fontSize="xl"
                   mr="2"
                 />
               </Flex>
               <Flex justify="center" mt="1%" pt="10px">
-                <Text fontWeight={fontWeight}>
+                <Text fontWeight={fontWeight} fontSize="l">
                   Посетете нашата страница с калкулатор за тегло! Предлагаме
                   интерактивни диаграми и статистики, създадени за вас!
                 </Text>
@@ -367,12 +387,12 @@ export default function UserReports() {
                 <LinearGradientText
                   text={<b>Хранителен план ↪</b>}
                   gradient={gradientNutri}
-                  fontSize="2xl"
+                  fontSize="xl"
                   mr="2"
                 />
               </Flex>
               <Flex justify="center" mt="1%" pt="10px">
-                <Text fontWeight={fontWeight}>
+                <Text fontWeight={fontWeight} fontSize="l">
                   Посетете нашата страница за създаване на хранителен план!
                   Имаме обширна база данни със рецепти, която използваме да
                   създадем хранителен режим с вашите предпочитания!
@@ -386,12 +406,12 @@ export default function UserReports() {
                 <LinearGradientText
                   text={<b>Пример ↪</b>}
                   gradient={gradientNutri}
-                  fontSize="2xl"
+                  fontSize="xl"
                   mr="2"
                 />
               </Flex>
               <Flex justify="center" mt="1%" pt="10px">
-                <Text fontWeight={fontWeight}>
+                <Text fontWeight={fontWeight} fontSize="l">
                   Посетете нашата страница за създаване на хранителен план!
                   Имаме обширна база данни със рецепти, която използваме да
                   създадем хранителен режим с вашите предпочитания!
@@ -405,12 +425,12 @@ export default function UserReports() {
                 <LinearGradientText
                   text={<b>Пример ↪</b>}
                   gradient={gradientNutri}
-                  fontSize="2xl"
+                  fontSize="xl"
                   mr="2"
                 />
               </Flex>
               <Flex justify="center" mt="1%" pt="10px">
-                <Text fontWeight={fontWeight}>
+                <Text fontWeight={fontWeight} fontSize="l">
                   Посетете нашата страница за създаване на хранителен план!
                   Имаме обширна база данни със рецепти, която използваме да
                   създадем хранителен режим с вашите предпочитания!
