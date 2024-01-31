@@ -279,7 +279,11 @@ export default function MealPlanner(props: {
                       </SimpleGrid>
                     </Flex>
                   ) : (
-                    <Text fontSize="5xl" fontStyle="italic">
+                    <Text
+                      fontSize="5xl"
+                      fontStyle="italic"
+                      transition="0.25s ease-in-out"
+                    >
                       Няма намерен план :(
                     </Text>
                   )}

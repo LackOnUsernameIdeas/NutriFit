@@ -374,11 +374,11 @@ export default function WeightStats() {
     >
       <Box>
         {!isGenerateStatsForCaloriesCalled ? (
-          <Box mt="37vh" minH="600px">
+          <Box mt="37vh" minH="600px" transition="0.25s ease-in-out">
             <Loading />
           </Box>
         ) : (
-          <Box>
+          <Box transition="0.2s ease-in-out">
             <Card
               p="20px"
               alignItems="center"

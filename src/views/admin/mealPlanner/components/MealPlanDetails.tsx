@@ -7,7 +7,15 @@ import {
   CustomServings,
   WeightPerServing
 } from "../../../../types/weightStats";
-import { Box, Text, Flex, VStack, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Flex,
+  VStack,
+  SimpleGrid,
+  Tooltip,
+  useColorModeValue
+} from "@chakra-ui/react";
 import { HSeparator } from "components/separator/Separator";
 import RecipeWidget from "components/card/NFT";
 import Card from "components/card/Card";
@@ -45,7 +53,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
       </Flex>
       <HSeparator />
       <Flex direction="column">
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px">
+        <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px" mt="40px" mb="40px">
           {Object.keys(customServings).map((mealType, index) => (
             <Box key={mealType}>
               <RecipeWidget
@@ -57,16 +65,21 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                     mt="5px"
                     overflow="hidden"
                   >
-                    <Text
-                      fontSize="2xl"
-                      maxW="210px"
-                      whiteSpace="nowrap"
-                      overflow="hidden"
-                      textOverflow="ellipsis"
+                    <Tooltip
+                      label={(mealPlan as any)[mealType]?.title}
+                      borderRadius="10px"
                     >
-                      {bulgarianMealType[index]}:{" "}
-                      {(mealPlan as any)[mealType]?.title || "Няма рецепта"}
-                    </Text>
+                      <Text
+                        fontSize="2xl"
+                        maxW="210px"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
+                        {bulgarianMealType[index]}:{" "}
+                        {(mealPlan as any)[mealType]?.title || "Няма рецепта"}
+                      </Text>
+                    </Tooltip>
                   </Flex>
                 }
                 author={

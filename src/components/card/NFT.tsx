@@ -26,9 +26,9 @@ export default function RecipeWidget(props: {
   const { image, name, author, currentbid } = props;
   const [like, setLike] = useState(false);
   const textColor = useColorModeValue("navy.700", "white");
-  const textColorBid = useColorModeValue("brand.500", "white");
+  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
-    <Card p="20px">
+    <Card p="20px" borderColor={borderColor} borderWidth="2px">
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "20px", "2xl": "20px" }} position="relative">
           <Image

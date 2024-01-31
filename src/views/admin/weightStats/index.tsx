@@ -542,7 +542,7 @@ export default function WeightStats() {
           <Loading />
         </Box>
       ) : (
-        <Box>
+        <Box transition="0.2s ease-in-out">
           <Card
             p="20px"
             alignItems="center"

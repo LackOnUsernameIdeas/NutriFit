@@ -121,7 +121,10 @@ export default function UserReports() {
   }, []); // Run this effect only once when the component mounts
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box
+      pt={{ base: "130px", md: "80px", xl: "80px" }}
+      transition="0.2s ease-in-out"
+    >
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card>
           <Flex justify="left" alignItems="center">
