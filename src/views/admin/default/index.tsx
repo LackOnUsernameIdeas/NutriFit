@@ -50,7 +50,7 @@ import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-hai
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import {
   getTotalUsers,
-  getAverageWeightOfAllUsers
+  getAverageStatsOfAllUsers
 } from "database/getMeanUsersData";
 
 interface LinearGradientTextProps {
@@ -100,6 +100,27 @@ export default function UserReports() {
   const bgFocus = { bg: "brand.200" };
   const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
   const [averageWeight, setAverageWeight] = React.useState<number | null>(null);
+  const [averageCalories, setAverageCalories] = React.useState<number | null>(
+    null
+  );
+  const [averageProtein, setAverageProtein] = React.useState<number | null>(
+    null
+  );
+  const [averageFat, setAverageFat] = React.useState<number | null>(null);
+  const [averageCarbohydrates, setAverageCarbohydrates] = React.useState<
+    number | null
+  >(null);
+  const [averageBodyFatPercentage, setAverageBodyFatPercentage] =
+    React.useState<number | null>(null);
+
+  interface AvarageData {
+    weight: number;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    fatPercentage: number;
+  }
 
   React.useEffect(() => {
     // Fetch the total number of users when the component mounts
@@ -110,12 +131,17 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching total users:", error);
       });
-    getAverageWeightOfAllUsers()
-      .then((weight) => {
-        setAverageWeight(weight);
-        console.log("WEIGHT ->>>", weight);
+    getAverageStatsOfAllUsers()
+      .then((stats: AvarageData) => {
+        setAverageWeight(stats.weight);
+        setAverageCalories(stats.calories);
+        setAverageProtein(stats.protein);
+        setAverageFat(stats.fat);
+        setAverageCarbohydrates(stats.carbs);
+        setAverageBodyFatPercentage(stats.fatPercentage);
+        console.log("stats ->>>", stats);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error fetching average weight:", error);
       });
   }, []); // Run this effect only once when the component mounts
@@ -187,40 +213,12 @@ export default function UserReports() {
               }
             />
           }
-          name="Spend this month"
+          name="Средно тегло"
           value={
             averageWeight !== null
               ? `${averageWeight.toFixed(2)}`
               : "Loading..."
           }
-        />
-        <MiniStatistics
-          growth="+23%"
-          name="Sales"
-          subtext="since last month"
-          value="$574.34"
-        />
-        <MiniStatistics
-          endContent={
-            <Flex me="-16px" mt="10px">
-              <FormLabel htmlFor="balance">
-                <Avatar src={Bulgaria} />
-              </FormLabel>
-              <Select
-                id="balance"
-                variant="mini"
-                mt="5px"
-                me="0px"
-                defaultValue="usd"
-              >
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="gba">GBA</option>
-              </Select>
-            </Flex>
-          }
-          name="Your balance"
-          value="$1,000"
         />
         <MiniStatistics
           startContent={
@@ -231,8 +229,12 @@ export default function UserReports() {
               icon={<Icon w="28px" h="28px" as={MdAddTask} color="white" />}
             />
           }
-          name="Tasks"
-          value="210"
+          name="Препоръчани калории средно"
+          value={
+            averageCalories !== null
+              ? `${averageCalories.toFixed(2)}`
+              : "Loading..."
+          }
         />
         <MiniStatistics
           startContent={
@@ -246,7 +248,63 @@ export default function UserReports() {
             />
           }
           name="Total Projects"
-          value="2935"
+          value={
+            averageProtein !== null
+              ? `${averageProtein.toFixed(2)}`
+              : "Loading..."
+          }
+        />
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />
+              }
+            />
+          }
+          name="Total Projects"
+          value={
+            averageCarbohydrates !== null
+              ? `${averageCarbohydrates.toFixed(2)}`
+              : "Loading..."
+          }
+        />
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />
+              }
+            />
+          }
+          name="Total Projects"
+          value={
+            averageFat !== null ? `${averageFat.toFixed(2)}` : "Loading..."
+          }
+        />
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w="56px"
+              h="56px"
+              bg={boxBg}
+              icon={
+                <Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />
+              }
+            />
+          }
+          name="Total Projects"
+          value={
+            averageBodyFatPercentage !== null
+              ? `${averageBodyFatPercentage.toFixed(2)}`
+              : "Loading..."
+          }
         />
       </SimpleGrid>
       <Card
