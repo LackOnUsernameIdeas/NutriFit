@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 // Assets
 import { FaChevronLeft } from "react-icons/fa";
+import { getAuth } from "firebase/auth";
 
 function MeasurementsIllustration(props: {
   children: JSX.Element | string;
@@ -23,7 +24,8 @@ function MeasurementsIllustration(props: {
 
     sessionStorage.removeItem(key[0]);
     localStorage.removeItem(rememberedKey[0]);
-    Cookies.remove("remember");
+    const uid = getAuth().currentUser.uid;
+    Cookies.remove(btoa(uid));
   };
 
   return (

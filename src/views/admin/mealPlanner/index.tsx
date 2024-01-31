@@ -19,6 +19,7 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
+  useColorMode,
   useColorModeValue,
   Menu,
   Heading,
@@ -35,7 +36,8 @@ import { MdOutlineInfo } from "react-icons/md";
 import Card from "components/card/Card";
 import CardHeader from "components/card/Card";
 import CardBody from "components/card/Card";
-
+import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
+import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "views/admin/weightStats/components/Loading";
@@ -54,6 +56,9 @@ import { table } from "console";
 // Главен компонент
 export default function WeightStats() {
   // Color values
+  const { colorMode } = useColorMode();
+  const backgroundImage =
+    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   const brandColor = useColorModeValue("brand.500", "white");
   const fontWeight = useColorModeValue("550", "100");
   const tipFontWeight = useColorModeValue("500", "100");
@@ -380,6 +385,11 @@ export default function WeightStats() {
               flexDirection="column"
               w="100%"
               mb="20px"
+              backgroundImage={`url(${backgroundImage})`}
+              backgroundRepeat="no-repeat"
+              backgroundSize="cover"
+              backgroundPosition="center"
+              transition="background-image 0.25s ease-in-out"
             >
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">

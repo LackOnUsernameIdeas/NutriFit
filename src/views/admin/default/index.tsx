@@ -30,6 +30,7 @@ import {
   Icon,
   Select,
   SimpleGrid,
+  useColorMode,
   useColorModeValue,
   Text,
   Link,
@@ -50,19 +51,50 @@ import {
   MdBarChart,
   MdFileCopy
 } from "react-icons/md";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
-import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex";
+import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
+import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
+
+interface LinearGradientTextProps {
+  text: any;
+  gradient: string;
+  fontSize?: string;
+  fontFamily?: string;
+  mr?: string;
+}
+
+const LinearGradientText: React.FC<LinearGradientTextProps> = ({
+  text,
+  gradient,
+  fontSize,
+  fontFamily,
+  mr
+}) => (
+  <Text
+    as="span"
+    fontSize={fontSize}
+    fontFamily={fontFamily}
+    fontWeight="bold"
+    mr={mr}
+    style={{
+      backgroundImage: gradient,
+      WebkitBackgroundClip: "text",
+      color: "transparent"
+    }}
+  >
+    {text}
+  </Text>
+);
 
 export default function UserReports() {
   // Chakra Color Mode
+  const { colorMode } = useColorMode();
+  const backgroundImage =
+    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   const brandColor = useColorModeValue("brand.500", "white");
+  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
+  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
+  const gradientNutri = useColorModeValue(gradientLight, gradientDark);
+  const gradientFit = useColorModeValue(gradientDark, gradientLight);
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const fontWeight = useColorModeValue("500", "100");
   const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
@@ -71,8 +103,23 @@ export default function UserReports() {
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card>
-          <Flex justify="left" w="100%">
-            <Text fontSize="5xl">Добре дошли в NutriFit!</Text>
+          <Flex justify="left" alignItems="center">
+            <Text fontSize="5xl" mr="2">
+              Добре дошли в{" "}
+            </Text>
+            <LinearGradientText
+              text={<b>Nutri</b>}
+              gradient={gradientNutri}
+              fontSize="5xl"
+              fontFamily="DM Sans"
+            />
+            <LinearGradientText
+              text={<b>Fit⠀</b>}
+              gradient={gradientFit}
+              fontFamily="Leckerli One"
+              fontSize="5xl"
+              mr="2px"
+            />
           </Flex>
         </Card>
       </SimpleGrid>
@@ -152,7 +199,7 @@ export default function UserReports() {
             <IconBox
               w="56px"
               h="56px"
-              bg="linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)"
+              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
               icon={<Icon w="28px" h="28px" as={MdAddTask} color="white" />}
             />
           }
@@ -174,71 +221,92 @@ export default function UserReports() {
           value="2935"
         />
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
-        <Link href="#/admin/weight">
-          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-            <Flex pt="5px" w="100%">
-              <Text fontSize="xl" mr="2">
-                <b>Калкулации за теглото ви ↪</b>
-              </Text>
-            </Flex>
-            <Flex justify="center" mt="1%" pt="10px">
-              <Text fontWeight={fontWeight}>
-                Посетете нашата страница с калкулатор за тегло! Предлагаме
-                интерактивни диаграми и статистики, създадени за вас!
-              </Text>
-            </Flex>
-          </Card>
-        </Link>
-        <Link href="#/admin/mealplan">
-          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-            <Flex pt="5px" w="100%">
-              <Text fontSize="xl" mr="2">
-                <b>Хранителен план ↪</b>
-              </Text>
-            </Flex>
-            <Flex justify="center" mt="1%" pt="10px">
-              <Text fontWeight={fontWeight}>
-                Посетете нашата страница за създаване на хранителен план! Имаме
-                обширна база данни със рецепти, която използваме да създадем
-                хранителен режим с вашите предпочитания!
-              </Text>
-            </Flex>
-          </Card>
-        </Link>
-        <Link href="#/admin/mealplan">
-          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-            <Flex pt="5px" w="100%">
-              <Text fontSize="xl" mr="2">
-                <b>Пример ↪</b>
-              </Text>
-            </Flex>
-            <Flex justify="center" mt="1%" pt="10px">
-              <Text fontWeight={fontWeight}>
-                Посетете нашата страница за създаване на хранителен план! Имаме
-                обширна база данни със рецепти, която използваме да създадем
-                хранителен режим с вашите предпочитания!
-              </Text>
-            </Flex>
-          </Card>
-        </Link>
-        <Link href="#/admin/mealplan">
-          <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-            <Flex pt="5px" w="100%">
-              <Text fontSize="xl" mr="2">
-                <b>Пример ↪</b>
-              </Text>
-            </Flex>
-            <Flex justify="center" mt="1%" pt="10px">
-              <Text fontWeight={fontWeight}>
-                Посетете нашата страница за създаване на хранителен план! Имаме
-                обширна база данни със рецепти, която използваме да създадем
-                хранителен режим с вашите предпочитания!
-              </Text>
-            </Flex>
-          </Card>
-        </Link>
-      </SimpleGrid>
+      <Card
+        minH="285px"
+        backgroundImage={`url(${backgroundImage})`}
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover"
+        backgroundPosition="center"
+        transition="background-image 0.5s ease-in-out"
+      >
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px" mb="20px">
+          <Link href="#/admin/weight">
+            <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+              <Flex pt="5px" w="100%">
+                <LinearGradientText
+                  text={<b>Калкулации за теглото ви ↪</b>}
+                  gradient={gradientNutri}
+                  fontSize="2xl"
+                  mr="2"
+                />
+              </Flex>
+              <Flex justify="center" mt="1%" pt="10px">
+                <Text fontWeight={fontWeight}>
+                  Посетете нашата страница с калкулатор за тегло! Предлагаме
+                  интерактивни диаграми и статистики, създадени за вас!
+                </Text>
+              </Flex>
+            </Card>
+          </Link>
+          <Link href="#/admin/mealplan">
+            <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+              <Flex pt="5px" w="100%">
+                <LinearGradientText
+                  text={<b>Хранителен план ↪</b>}
+                  gradient={gradientNutri}
+                  fontSize="2xl"
+                  mr="2"
+                />
+              </Flex>
+              <Flex justify="center" mt="1%" pt="10px">
+                <Text fontWeight={fontWeight}>
+                  Посетете нашата страница за създаване на хранителен план!
+                  Имаме обширна база данни със рецепти, която използваме да
+                  създадем хранителен режим с вашите предпочитания!
+                </Text>
+              </Flex>
+            </Card>
+          </Link>
+          <Link href="#/admin/mealplan">
+            <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+              <Flex pt="5px" w="100%">
+                <LinearGradientText
+                  text={<b>Пример ↪</b>}
+                  gradient={gradientNutri}
+                  fontSize="2xl"
+                  mr="2"
+                />
+              </Flex>
+              <Flex justify="center" mt="1%" pt="10px">
+                <Text fontWeight={fontWeight}>
+                  Посетете нашата страница за създаване на хранителен план!
+                  Имаме обширна база данни със рецепти, която използваме да
+                  създадем хранителен режим с вашите предпочитания!
+                </Text>
+              </Flex>
+            </Card>
+          </Link>
+          <Link href="#/admin/mealplan">
+            <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
+              <Flex pt="5px" w="100%">
+                <LinearGradientText
+                  text={<b>Пример ↪</b>}
+                  gradient={gradientNutri}
+                  fontSize="2xl"
+                  mr="2"
+                />
+              </Flex>
+              <Flex justify="center" mt="1%" pt="10px">
+                <Text fontWeight={fontWeight}>
+                  Посетете нашата страница за създаване на хранителен план!
+                  Имаме обширна база данни със рецепти, която използваме да
+                  създадем хранителен режим с вашите предпочитания!
+                </Text>
+              </Flex>
+            </Card>
+          </Link>
+        </SimpleGrid>
+      </Card>
     </Box>
   );
 }

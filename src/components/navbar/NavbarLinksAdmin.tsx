@@ -21,6 +21,7 @@ import PropTypes from "prop-types";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import routes from "routes";
 import Cookies from "js-cookie";
+import { getAuth } from "firebase/auth";
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
@@ -45,7 +46,8 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     console.log("keyLocalStorage", keyLocalStorage);
     sessionStorage.removeItem(keySession);
     localStorage.removeItem(keyLocalStorage[0]);
-    Cookies.remove("remember");
+    const uid = getAuth().currentUser.uid;
+    Cookies.remove(btoa(uid));
   };
 
   return (

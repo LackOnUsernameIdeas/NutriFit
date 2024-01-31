@@ -57,6 +57,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import Cookies from "js-cookie";
+import { uid } from "chart.js/dist/helpers/helpers.core";
 
 function SignIn() {
   const textColor = useColorModeValue("navy.700", "white");
@@ -83,8 +84,12 @@ function SignIn() {
       const firebasePersistence = rememberMe
         ? browserLocalPersistence
         : browserSessionPersistence;
-      await setPersistence(auth, browserSessionPersistence);
+      await setPersistence(auth, firebasePersistence);
       await signInWithEmailAndPassword(auth, email, password);
+      const uid = auth.currentUser.uid;
+      if (rememberMe) {
+        Cookies.set(btoa(uid), "REM", { expires: 999 });
+      }
       setError("");
       history.push("/measurements/userData");
     } catch (error) {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 // Chakra UI components
 import {
@@ -9,7 +9,6 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   AlertDialogCloseButton,
-  Button,
   Box,
   Flex,
   Icon,
@@ -19,6 +18,7 @@ import {
   MenuList,
   MenuItem,
   useDisclosure,
+  useColorMode,
   useColorModeValue,
   Menu,
   Image,
@@ -32,19 +32,17 @@ import { MdOutlineInfo } from "react-icons/md";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 // Custom components
 import Card from "components/card/Card";
-import CardHeader from "components/card/Card";
 import CardBody from "components/card/Card";
-
+import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
+import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import Loading from "views/admin/weightStats/components/Loading";
-import { HSeparator } from "components/separator/Separator";
 // Types
 import {
   BMIInfo,
   BodyMass,
   UserData,
-  Goal,
   WeightDifference
 } from "../../../types/weightStats";
 
@@ -53,17 +51,14 @@ import LineChart from "components/charts/LineChart";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
-import {
-  saveBMI,
-  savePerfectWeight,
-  saveBodyMass
-} from "../../../database/setWeightStatsData";
-
-import { parseISO, differenceInDays } from "date-fns";
+import { parseISO } from "date-fns";
 
 // Главен компонент
 export default function WeightStats() {
   // Color values
+  const { colorMode } = useColorMode();
+  const backgroundImage =
+    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   const brandColor = useColorModeValue("brand.500", "white");
   const fontWeight = useColorModeValue("550", "100");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -554,6 +549,11 @@ export default function WeightStats() {
             flexDirection="column"
             w="100%"
             mb="20px"
+            backgroundImage={`url(${backgroundImage})`}
+            backgroundRepeat="no-repeat"
+            backgroundSize="cover"
+            backgroundPosition="center"
+            transition="background-image 0.25s ease-in-out"
           >
             <CardBody>
               <Stack divider={<StackDivider />} spacing="4">
