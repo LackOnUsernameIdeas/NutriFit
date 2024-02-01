@@ -49,6 +49,17 @@ export type UserData = {
   [key: string]: number | string;
 };
 
+export type AllUsersPreferences = {
+  date: string;
+  calories: number;
+  nutrients: {
+    protein: number;
+    fat: number;
+    carbs: number;
+    name: string;
+  };
+};
+
 export type WeightDifference = {
   difference: number;
   isUnderOrAbove: "above" | "under" | "";

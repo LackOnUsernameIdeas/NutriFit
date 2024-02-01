@@ -46,6 +46,7 @@ import { HSeparator } from "components/separator/Separator";
 // Types
 import {
   UserData,
+  AllUsersPreferences,
   DailyCaloryRequirements,
   MacroNutrientsData
 } from "../../../types/weightStats";
@@ -53,6 +54,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { savePreferences } from "../../../database/setWeightStatsData";
 import { table } from "console";
+
+import { lineChartOptions } from "variables/chartjs";
+import LineChart from "components/charts/LineChart";
+
 // Главен компонент
 export default function WeightStats() {
   // Color values
@@ -146,6 +151,23 @@ export default function WeightStats() {
     goal: "maintain"
   });
 
+  const [allUsersPreferences, setAllUsersPreferences] = useState<
+    AllUsersPreferences[]
+  >([
+    {
+      date: "",
+      calories: 0,
+      nutrients: {
+        protein: 0,
+        fat: 0,
+        carbs: 0,
+        name: ""
+      }
+    }
+  ]);
+  allUsersPreferences.sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
   const [showITM, setShowITM] = useState(false);
 
   // Function to toggle the display of raw data
@@ -240,6 +262,20 @@ export default function WeightStats() {
     }
   };
 
+  const lineChartLabels = allUsersPreferences.map((entry) => entry.date);
+  const lineChartForCalories = allUsersPreferences.map(
+    (entry) => entry.calories
+  );
+  const lineChartForProtein = allUsersPreferences.map(
+    (entry) => entry.nutrients.protein
+  );
+  const lineChartForFat = allUsersPreferences.map(
+    (entry) => entry.nutrients.fat
+  );
+  const lineChartForCarbs = allUsersPreferences.map(
+    (entry) => entry.nutrients.carbs
+  );
+
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -251,6 +287,25 @@ export default function WeightStats() {
 
           const additionalData = await fetchAdditionalUserData(user.uid);
           const userDataTimestamp = additionalData[timestampKey];
+
+          const timestampedObjects = Object.entries(additionalData)
+            .filter(
+              ([key, value]) =>
+                typeof value === "object" && value.hasOwnProperty("Preferences")
+            )
+            .map(([key, value]) => {
+              return { date: key, ...value.Preferences };
+            });
+
+          const orderedTimestampObjects = [...timestampedObjects].sort(
+            (a, b) => {
+              const keyA = a.key;
+              const keyB = b.key;
+              return new Date(keyB).getTime() - new Date(keyA).getTime();
+            }
+          );
+
+          setAllUsersPreferences(orderedTimestampObjects);
 
           setUserData({
             gender: additionalData.gender,
@@ -265,14 +320,14 @@ export default function WeightStats() {
 
           setDailyCaloryRequirements(userDataTimestamp.dailyCaloryRequirements);
 
-          console.log(
-            "macroNutrientsData: ",
-            userDataTimestamp.macroNutrientsData
-          );
-          console.log(
-            "dailyCaloryRequirements: ",
-            userDataTimestamp.dailyCaloryRequirements
-          );
+          // console.log(
+          //   "macroNutrientsData: ",
+          //   userDataTimestamp.macroNutrientsData
+          // );
+          // console.log(
+          //   "dailyCaloryRequirements: ",
+          //   userDataTimestamp.dailyCaloryRequirements
+          // );
 
           // Ensure that additionalData[timestampKey].macroNutrientsData is an array
           const macroNutrientsData = Array.isArray(
@@ -283,12 +338,12 @@ export default function WeightStats() {
 
           setMacroNutrients(macroNutrientsData);
 
-          console.log(
-            "ID: ",
-            user.uid,
-            "Additional user data:",
-            additionalData[timestampKey]
-          );
+          // console.log(
+          //   "ID: ",
+          //   user.uid,
+          //   "Additional user data:",
+          //   additionalData[timestampKey]
+          // );
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
@@ -865,6 +920,76 @@ export default function WeightStats() {
                 )}
               </>
             )}
+            <SimpleGrid
+              columns={{ base: 1, md: 2, xl: 2 }}
+              gap="20px"
+              mb="20px"
+            >
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                maxH={{ sm: "100px", md: "300px", lg: "auto" }}
+              >
+                <LineChart
+                  lineChartLabels={lineChartLabels}
+                  lineChartData={lineChartForCalories}
+                  lineChartOptions={lineChartOptions}
+                  lineChartLabelName="Изменение на калории(kcal)"
+                />
+              </Card>
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+              >
+                <LineChart
+                  lineChartLabels={lineChartLabels}
+                  lineChartData={lineChartForProtein}
+                  lineChartOptions={lineChartOptions}
+                  lineChartLabelName="Изменение на протеин(g)"
+                />
+              </Card>
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+              >
+                <LineChart
+                  lineChartLabels={lineChartLabels}
+                  lineChartData={lineChartForFat}
+                  lineChartOptions={lineChartOptions}
+                  lineChartLabelName="Изменение на мазнини(g)"
+                />
+              </Card>
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+              >
+                <LineChart
+                  lineChartLabels={lineChartLabels}
+                  lineChartData={lineChartForCarbs}
+                  lineChartOptions={lineChartOptions}
+                  lineChartLabelName="Изменение на въглехидрати(g)"
+                />
+              </Card>
+            </SimpleGrid>
           </Box>
         )}
       </Box>

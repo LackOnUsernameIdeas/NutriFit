@@ -212,7 +212,6 @@ export default function ColumnTable(props: {
                     borderWidth="1px"
                   >
                     {row.getVisibleCells().map((cell) => {
-                      console.log("cell.id:", cell.id);
                       return (
                         <Td
                           key={cell.id}
