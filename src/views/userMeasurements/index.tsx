@@ -360,22 +360,27 @@ const UserMeasurements = () => {
         const uid = getAuth().currentUser.uid;
 
         // Save additional user data to the server
-        const response = await fetch("https://nutri-api.noit.eu/saveUserData", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(userData)
-        });
+        const response = await fetch(
+          "https://nutri-api.noit.eu/processUserData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+          }
+        );
 
-        // Log the response data to the console
-        const responseData = await response.json();
-        console.log("Server response:", responseData);
-
-        setIsFilledOut(true);
-        await generateStats();
-        setIsGenerateStatsCalled(true);
-        history.push("/admin/default");
+        if (response.ok) {
+          // Data processed successfully
+          setIsFilledOut(true);
+          // Redirect or perform additional actions as needed
+          history.push("/admin/default");
+        } else {
+          // Handle server error
+          console.error("Server error:", response.statusText);
+          setError("Failed to process data on the server.");
+        }
       } catch (error) {
         console.error("Error saving additional user data:", error);
       }
