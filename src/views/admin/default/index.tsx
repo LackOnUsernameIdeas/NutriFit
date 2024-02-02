@@ -59,6 +59,7 @@ import {
   getAverageFatOfAllUsers,
   getAverageBodyFatPercentageOfAllUsers
 } from "database/getMeanUsersData";
+import TotalSpent from "./components/TotalSpent";
 
 interface LinearGradientTextProps {
   text: any;
@@ -233,6 +234,13 @@ export default function UserReports() {
               </Text>
             </Flex>
           </Card>
+        </SimpleGrid>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 1, "2xl": 3 }}
+          gap="20px"
+          mb="20px"
+        >
+          <TotalSpent />
         </SimpleGrid>
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 3, "2xl": 7 }}
