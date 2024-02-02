@@ -236,13 +236,6 @@ export default function UserReports() {
           </Card>
         </SimpleGrid>
         <SimpleGrid
-          columns={{ base: 1, md: 2, lg: 1, "2xl": 3 }}
-          gap="20px"
-          mb="20px"
-        >
-          <TotalSpent />
-        </SimpleGrid>
-        <SimpleGrid
           columns={{ base: 1, md: 2, lg: 3, "2xl": 7 }}
           gap="20px"
           mb="20px"
