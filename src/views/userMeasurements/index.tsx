@@ -372,9 +372,14 @@ const UserMeasurements = () => {
         );
 
         if (response.ok) {
+          // Log the response data to the console
+          const responseData = await response.json();
+          console.log("Server response:", responseData);
+
           // Data processed successfully
           setIsFilledOut(true);
-          // Redirect or perform additional actions as needed
+          await generateStats();
+          setIsGenerateStatsCalled(true);
           history.push("/admin/default");
         } else {
           // Handle server error
