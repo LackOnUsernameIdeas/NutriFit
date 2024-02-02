@@ -359,18 +359,6 @@ const UserMeasurements = () => {
       try {
         const uid = getAuth().currentUser.uid;
 
-        // Save additional user data to the server
-        const response = await fetch(
-          "https://nutri-api.noit.eu/processUserData",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(userData)
-          }
-        );
-
         // Save additional user data
         await saveAdditionalUserData(
           uid,
@@ -383,6 +371,18 @@ const UserMeasurements = () => {
         );
         await generateStats();
         setIsGenerateStatsCalled(true);
+
+        // Save additional user data to the server
+        const response = await fetch(
+          "https://nutri-api.noit.eu/processUserData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+          }
+        );
         if (response.ok) {
           // Log the response data to the console
           const responseData = await response.json();

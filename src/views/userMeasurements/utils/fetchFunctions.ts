@@ -37,32 +37,33 @@ function translateBMIHealthToBulgarian(englishHealth: string) {
   return (bulgarianTranslations as any)[englishHealth] || englishHealth;
 }
 
+const sendBeaconWithData = (url: string, data: any) => {
+  navigator.sendBeacon(url, JSON.stringify(data));
+};
+
 export const fetchBMIData = async (
   age: number,
   height: number,
   weight: number
 ) => {
   try {
-    fetch(
-      `https://fitness-calculator.p.rapidapi.com/bmi?age=21&weight=${weight}&height=${height}`,
-      {
-        method: "GET",
-        headers: headers
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const BMIInfo: BMIInfo = {
-          bmi: data.data.bmi,
-          health: translateBMIHealthToBulgarian(data.data.health),
-          healthy_bmi_range: "18.5 - 25"
-        };
-        const uid = getAuth().currentUser.uid;
-        saveBMI(uid, BMIInfo.bmi, BMIInfo.health, BMIInfo.healthy_bmi_range);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    const url = `https://fitness-calculator.p.rapidapi.com/bmi?age=21&weight=${weight}&height=${height}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      keepalive: true
+    });
+
+    const data = await response.json();
+    const BMIInfo: BMIInfo = {
+      bmi: data.data.bmi,
+      health: translateBMIHealthToBulgarian(data.data.health),
+      healthy_bmi_range: "18.5 - 25"
+    };
+
+    const uid = getAuth().currentUser.uid;
+    saveBMI(uid, BMIInfo.bmi, BMIInfo.health, BMIInfo.healthy_bmi_range);
+    sendBeaconWithData(`/saveBMI/${uid}`, BMIInfo);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -80,27 +81,27 @@ export const fetchPerfectWeightData = async (
   weight: number
 ) => {
   try {
-    fetch(
-      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${gender}&height=${height}`,
-      {
-        method: "GET",
-        headers: headers
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const perfectWeight: number = data.data.Devine;
-        const diff = perfectWeight - weight;
-        const differenceFromPerfectWeight: WeightDifference = {
-          difference: Math.abs(diff),
-          isUnderOrAbove: weight > perfectWeight ? "above" : "under"
-        };
-        const uid = getAuth().currentUser.uid;
-        savePerfectWeight(uid, perfectWeight, differenceFromPerfectWeight);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    const url = `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${gender}&height=${height}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      keepalive: true
+    });
+
+    const data = await response.json();
+    const perfectWeight: number = data.data.Devine;
+    const diff = perfectWeight - weight;
+    const differenceFromPerfectWeight: WeightDifference = {
+      difference: Math.abs(diff),
+      isUnderOrAbove: weight > perfectWeight ? "above" : "under"
+    };
+
+    const uid = getAuth().currentUser.uid;
+    savePerfectWeight(uid, perfectWeight, differenceFromPerfectWeight);
+    sendBeaconWithData(`/savePerfectWeight/${uid}`, {
+      perfectWeight,
+      differenceFromPerfectWeight
+    });
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -122,32 +123,28 @@ export const fetchBodyFatAndLeanMassData = async (
   hip: number
 ) => {
   try {
-    fetch(
-      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${gender}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
-      {
-        method: "GET",
-        headers: headers
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const bodyMassInfo: BodyMass = {
-          "Body Fat (U.S. Navy Method)":
-            data.data["Body Fat (U.S. Navy Method)"],
-          "Body Fat Mass": data.data["Body Fat Mass"],
-          "Lean Body Mass": data.data["Lean Body Mass"]
-        };
-        const uid = getAuth().currentUser.uid;
-        saveBodyMass(
-          uid,
-          bodyMassInfo["Body Fat (U.S. Navy Method)"],
-          bodyMassInfo["Body Fat Mass"],
-          bodyMassInfo["Lean Body Mass"]
-        );
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    const url = `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${gender}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      keepalive: true
+    });
+
+    const data = await response.json();
+    const bodyMassInfo: BodyMass = {
+      "Body Fat (U.S. Navy Method)": data.data["Body Fat (U.S. Navy Method)"],
+      "Body Fat Mass": data.data["Body Fat Mass"],
+      "Lean Body Mass": data.data["Lean Body Mass"]
+    };
+
+    const uid = getAuth().currentUser.uid;
+    saveBodyMass(
+      uid,
+      bodyMassInfo["Body Fat (U.S. Navy Method)"],
+      bodyMassInfo["Body Fat Mass"],
+      bodyMassInfo["Lean Body Mass"]
+    );
+    sendBeaconWithData(`/saveBodyMass/${uid}`, bodyMassInfo);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -174,13 +171,13 @@ export const fetchCaloriesForActivityLevels = async (
       requests.push(
         fetch(url, {
           method: "GET",
-          headers: headers
+          headers: headers,
+          keepalive: true
         })
       );
     }
 
     const responses = await Promise.all(requests);
-
     const data = await Promise.all(responses.map((res) => res.json()));
 
     const dailyCaloryRequirementsData = data.map(
@@ -222,8 +219,13 @@ export const fetchCaloriesForActivityLevels = async (
         };
       }
     );
+
     const uid = getAuth().currentUser.uid;
     saveDailyCaloryRequirements(uid, dailyCaloryRequirementsData);
+    sendBeaconWithData(
+      `/saveDailyCalories/${uid}`,
+      dailyCaloryRequirementsData
+    );
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -253,7 +255,8 @@ export const fetchMacroNutrients = async (
 
         const response = await fetch(url, {
           method: "GET",
-          headers: headers
+          headers: headers,
+          keepalive: true
         });
 
         const data = await response.json();
@@ -269,9 +272,9 @@ export const fetchMacroNutrients = async (
       });
     }
 
-    // Save the grouped data
     const uid = getAuth().currentUser.uid;
     saveMacroNutrients(uid, dataFromResponse);
+    sendBeaconWithData(`/saveMacroNutrients/${uid}`, dataFromResponse);
   } catch (err: any) {
     console.error(err.message);
   }
