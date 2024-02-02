@@ -48,10 +48,6 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
 }) => {
   return (
     <Card>
-      <Flex justify="center" w="100%" mb="1%">
-        <Text fontSize="5xl">Създаден хранителен план</Text>
-      </Flex>
-      <HSeparator />
       <Flex direction="column">
         <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px" mt="40px" mb="40px">
           {Object.keys(customServings).map((mealType, index) => (
@@ -71,8 +67,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                     >
                       <Text
                         fontSize="2xl"
-                        maxW="210px"
                         whiteSpace="nowrap"
+                        maxW="360px"
                         overflow="hidden"
                         textOverflow="ellipsis"
                       >

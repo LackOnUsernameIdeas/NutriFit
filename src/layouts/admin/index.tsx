@@ -7,6 +7,7 @@ import Sidebar from "components/sidebar/Sidebar";
 import { SidebarContext } from "contexts/SidebarContext";
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import FadeInWrapper from "../../components/wrapper/FadeInWrapper";
 import routes from "routes";
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {

@@ -26,8 +26,9 @@ export default function CalorieRequirements(props: {
   setSelectedGoal?: React.Dispatch<React.SetStateAction<string>>;
   setUserData?: React.Dispatch<React.SetStateAction<UserData>>;
 }) {
+  const bgHover = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
   const brandColor = useColorModeValue("brand.500", "white");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const boxBg = useColorModeValue("secondaryGray.400", "whiteAlpha.100");
   const {
     clickedValueCalories,
     setClickedValueCalories,
@@ -110,7 +111,7 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Mild weight loss"].calory.toFixed(2)
             )
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
@@ -157,7 +158,7 @@ export default function CalorieRequirements(props: {
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight loss"].calory.toFixed(2))
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
@@ -210,7 +211,7 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Extreme weight loss"].calory.toFixed(2)
             )
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
@@ -253,7 +254,7 @@ export default function CalorieRequirements(props: {
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["maintain weight"].toFixed(2))
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
@@ -306,7 +307,7 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Mild weight gain"].calory.toFixed(2)
             )
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
@@ -353,7 +354,7 @@ export default function CalorieRequirements(props: {
           backgroundColor={
             clickedValueCalories ===
             parseFloat(selectedLevelData.goals["Weight gain"].calory.toFixed(2))
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
@@ -406,7 +407,7 @@ export default function CalorieRequirements(props: {
             parseFloat(
               selectedLevelData.goals["Extreme weight gain"].calory.toFixed(2)
             )
-              ? "rgba(0, 0, 0, 0.3)"
+              ? bgHover
               : undefined
           }
           hasBorder={true}
