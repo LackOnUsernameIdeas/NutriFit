@@ -51,6 +51,7 @@ import { lineChartOptions } from "variables/chartjs";
 import LineChart from "components/charts/LineChart";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onSnapshot, doc, getFirestore } from "firebase/firestore";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { parseISO } from "date-fns";
 
@@ -206,120 +207,134 @@ export default function WeightStats() {
 
       if (user) {
         try {
-          const timestampKey = new Date().toISOString().slice(0, 10);
-
-          const additionalData = await fetchAdditionalUserData(user.uid);
-
-          const userDataSaveable: UserData = {
-            gender: additionalData.gender,
-            goal: additionalData.goal,
-            age: additionalData[timestampKey].age,
-            height: additionalData[timestampKey].height,
-            waist: additionalData[timestampKey].waist,
-            neck: additionalData[timestampKey].neck,
-            hip: additionalData[timestampKey].hip,
-            weight: additionalData[timestampKey].weight,
-            bmi: additionalData[timestampKey].BMI
-              ? additionalData[timestampKey].BMI.bmi
-              : undefined,
-            bodyFat: additionalData[timestampKey].BodyMassData
-              ? additionalData[timestampKey].BodyMassData.bodyFat
-              : undefined,
-            bodyFatMass: additionalData[timestampKey].BodyMassData
-              ? additionalData[timestampKey].BodyMassData.bodyFatMass
-              : undefined,
-            leanBodyMass: additionalData[timestampKey].BodyMassData
-              ? additionalData[timestampKey].BodyMassData.leanBodyMass
-              : undefined,
-            differenceFromPerfectWeight: additionalData[timestampKey]
-              .PerfectWeightData
-              ? additionalData[timestampKey].PerfectWeightData
-                  .differenceFromPerfectWeight.difference
-              : undefined
-          };
-          const bmiData: BMIInfo = {
-            bmi: additionalData[timestampKey].BMI.bmi,
-            health: additionalData[timestampKey].BMI.health,
-            healthy_bmi_range:
-              additionalData[timestampKey].BMI.healthy_bmi_range
-          };
-          const bodyMass: BodyMass = {
-            "Body Fat (U.S. Navy Method)":
-              additionalData[timestampKey].BodyMassData.bodyFat,
-            "Body Fat Mass":
-              additionalData[timestampKey].BodyMassData.bodyFatMass,
-            "Lean Body Mass":
-              additionalData[timestampKey].BodyMassData.leanBodyMass
-          };
-          setPerfectWeight(
-            additionalData[timestampKey].PerfectWeightData.perfectWeight
+          const userId = user.uid;
+          const additionalDataRef = doc(
+            getFirestore(),
+            "additionalUserData",
+            userId
           );
-          setDifferenceFromPerfectWeight(
-            additionalData[timestampKey].PerfectWeightData
-              .differenceFromPerfectWeight
-          );
-          setBMIIndex(bmiData);
-          setBodyFatMassAndLeanMass(bodyMass);
-          setUserData((prevUserData) => ({
-            ...prevUserData,
-            ...userDataSaveable
-          }));
 
-          // Log the updated state in the callback
-          setUserData((updatedUserData) => {
-            console.log("Updated userData:", updatedUserData);
-            return updatedUserData;
-          });
-          console.log("i hate myserlf ----->", userDataSaveable);
-          console.log("USERDATA ----> ", userData);
-          const userChartData = [];
+          // Subscribe to real-time updates using onSnapshot
+          const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
+            if (doc.exists()) {
+              const additionalData = doc.data();
+              const timestampKey = new Date().toISOString().slice(0, 10);
 
-          for (const key in additionalData) {
-            if (
-              key !== "gender" &&
-              key !== "goal" &&
-              typeof additionalData[key] === "object"
-            ) {
-              const dateData = additionalData[key];
-              userChartData.push({
-                date: key,
-                height: dateData.height,
-                weight: dateData.weight,
-                bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
-                bodyFat: dateData.BodyMassData
-                  ? dateData.BodyMassData.bodyFat
+              const userDataSaveable: UserData = {
+                gender: additionalData.gender,
+                goal: additionalData.goal,
+                age: additionalData[timestampKey].age,
+                height: additionalData[timestampKey].height,
+                waist: additionalData[timestampKey].waist,
+                neck: additionalData[timestampKey].neck,
+                hip: additionalData[timestampKey].hip,
+                weight: additionalData[timestampKey].weight,
+                bmi: additionalData[timestampKey].BMI
+                  ? additionalData[timestampKey].BMI.bmi
                   : undefined,
-                bodyFatMass: dateData.BodyMassData
-                  ? dateData.BodyMassData.bodyFatMass
+                bodyFat: additionalData[timestampKey].BodyMassData
+                  ? additionalData[timestampKey].BodyMassData.bodyFat
                   : undefined,
-                leanBodyMass: dateData.BodyMassData
-                  ? dateData.BodyMassData.leanBodyMass
+                bodyFatMass: additionalData[timestampKey].BodyMassData
+                  ? additionalData[timestampKey].BodyMassData.bodyFatMass
                   : undefined,
-                differenceFromPerfectWeight: dateData.PerfectWeightData
-                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
-                      .difference
+                leanBodyMass: additionalData[timestampKey].BodyMassData
+                  ? additionalData[timestampKey].BodyMassData.leanBodyMass
+                  : undefined,
+                differenceFromPerfectWeight: additionalData[timestampKey]
+                  .PerfectWeightData
+                  ? additionalData[timestampKey].PerfectWeightData
+                      .differenceFromPerfectWeight.difference
                   : undefined
-              });
-            }
-          }
+              };
+              const bmiData: BMIInfo = {
+                bmi: additionalData[timestampKey].BMI.bmi,
+                health: additionalData[timestampKey].BMI.health,
+                healthy_bmi_range:
+                  additionalData[timestampKey].BMI.healthy_bmi_range
+              };
+              const bodyMass: BodyMass = {
+                "Body Fat (U.S. Navy Method)":
+                  additionalData[timestampKey].BodyMassData.bodyFat,
+                "Body Fat Mass":
+                  additionalData[timestampKey].BodyMassData.bodyFatMass,
+                "Lean Body Mass":
+                  additionalData[timestampKey].BodyMassData.leanBodyMass
+              };
+              setPerfectWeight(
+                additionalData[timestampKey].PerfectWeightData.perfectWeight
+              );
+              setDifferenceFromPerfectWeight(
+                additionalData[timestampKey].PerfectWeightData
+                  .differenceFromPerfectWeight
+              );
+              setBMIIndex(bmiData);
+              setBodyFatMassAndLeanMass(bodyMass);
+              setUserData((prevUserData) => ({
+                ...prevUserData,
+                ...userDataSaveable
+              }));
 
-          setUserDataForCharts(userChartData);
-          setIsLoading(false);
-          console.log(
-            "ID: ",
-            user.uid,
-            "Additional user data:",
-            additionalData
-          );
-          console.log("userChartData:", userChartData);
+              // Log the updated state in the callback
+              setUserData((updatedUserData) => {
+                console.log("Updated userData:", updatedUserData);
+                return updatedUserData;
+              });
+              console.log("i hate myserlf ----->", userDataSaveable);
+              console.log("USERDATA ----> ", userData);
+
+              const userChartData = [];
+
+              for (const key in additionalData) {
+                if (
+                  key !== "gender" &&
+                  key !== "goal" &&
+                  typeof additionalData[key] === "object"
+                ) {
+                  const dateData = additionalData[key];
+                  userChartData.push({
+                    date: key,
+                    height: dateData.height,
+                    weight: dateData.weight,
+                    bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
+                    bodyFat: dateData.BodyMassData
+                      ? dateData.BodyMassData.bodyFat
+                      : undefined,
+                    bodyFatMass: dateData.BodyMassData
+                      ? dateData.BodyMassData.bodyFatMass
+                      : undefined,
+                    leanBodyMass: dateData.BodyMassData
+                      ? dateData.BodyMassData.leanBodyMass
+                      : undefined,
+                    differenceFromPerfectWeight: dateData.PerfectWeightData
+                      ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                          .difference
+                      : undefined
+                  });
+                }
+              }
+
+              setUserDataForCharts(userChartData);
+              setIsLoading(false);
+              console.log(
+                "ID: ",
+                user.uid,
+                "Additional user data:",
+                additionalData
+              );
+              console.log("userChartData:", userChartData);
+            }
+          });
+
+          // Cleanup the subscription when the component unmounts
+          return () => {
+            unsubscribeData();
+          };
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
       }
     });
-
-    // Cleanup the subscription when the component unmounts
-    return () => unsubscribe();
   }, []);
 
   const calculateChange = (sortedData: any[], property: string) => {
