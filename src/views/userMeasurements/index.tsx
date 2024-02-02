@@ -371,6 +371,18 @@ const UserMeasurements = () => {
           }
         );
 
+        // Save additional user data
+        await saveAdditionalUserData(
+          uid,
+          userData.height,
+          userData.age,
+          userData.weight,
+          userData.neck,
+          userData.waist,
+          userData.hip
+        );
+        await generateStats();
+        setIsGenerateStatsCalled(true);
         if (response.ok) {
           // Log the response data to the console
           const responseData = await response.json();
@@ -378,8 +390,6 @@ const UserMeasurements = () => {
 
           // Data processed successfully
           setIsFilledOut(true);
-          await generateStats();
-          setIsGenerateStatsCalled(true);
           history.push("/admin/default");
         } else {
           // Handle server error
