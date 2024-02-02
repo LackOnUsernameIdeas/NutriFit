@@ -355,29 +355,26 @@ const UserMeasurements = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Ако датата е валидна я записва в базата и изпраща потребителят на главната страница
     if (isUserDataValid()) {
       try {
         const uid = getAuth().currentUser.uid;
 
-        // Save additional user data
-        await saveAdditionalUserData(
-          uid,
-          userData.height,
-          userData.age,
-          userData.weight,
-          userData.neck,
-          userData.waist,
-          userData.hip
-        );
+        // Save additional user data to the server
+        const response = await fetch("https://nutri-api.noit.eu/saveUserData", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(userData)
+        });
+
+        // Log the response data to the console
+        const responseData = await response.json();
+        console.log("Server response:", responseData);
 
         setIsFilledOut(true);
-
-        // Generate stats and wait for it to complete
         await generateStats();
         setIsGenerateStatsCalled(true);
-
-        // Redirect to the default page
         history.push("/admin/default");
       } catch (error) {
         console.error("Error saving additional user data:", error);
