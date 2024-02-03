@@ -49,6 +49,14 @@ const routes = [
     component: MealPlanner
   },
   {
+    name: "За контакт",
+    layout: "/admin",
+    path: "/contact",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: Contact,
+    hideInSidebar: false
+  },
+  {
     name: "NFT Marketplace",
     layout: "/admin",
     path: "/nft-marketplace",
