@@ -19,15 +19,34 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 
 // Chakra UI components
-import { Box, Text, useColorMode, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+  Textarea,
+  useColorMode,
+  useColorModeValue
+} from "@chakra-ui/react";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import Card from "components/card/Card";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { RiEyeCloseLine } from "react-icons/ri";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import Loading from "views/admin/weightStats/components/Loading";
+import { HSeparator } from "components/separator/Separator";
 interface LinearGradientTextProps {
   text: any;
   gradient: string;
@@ -83,16 +102,40 @@ export default function UserReports() {
   const fontWeight = useColorModeValue("500", "100");
   const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
   const bgFocus = { bg: "brand.200" };
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); //set to true if loading implements
+  const textColor = useColorModeValue("navy.700", "white");
+  const textColorSecondary = "gray.400";
+  const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
+  const textColorBrand = useColorModeValue("brand.500", "white");
+  const brandStars = useColorModeValue("brand.500", "brand.400");
 
-  function maikaTi() {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }
-  React.useEffect(() => {
-    maikaTi();
-  }, []);
+  const [show, setShow] = React.useState(false);
+  const handleClick = () => setShow(!show);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [message, setMessage] = useState("");
+  const handleRememberMeChange = async () => {
+    setRememberMe(!rememberMe); // Toggle the rememberMe state
+  };
+
+  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const inputValue = event.target.value;
+    // Set a character limit, in this case, 200 characters
+    if (inputValue.length <= 2000) {
+      setMessage(inputValue);
+    }
+  };
+
+  // function maikaTi() {
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 1000);
+  // }
+  // React.useEffect(() => {
+  //   maikaTi();
+  // }, []);
   return (
     <FadeInWrapper>
       <Box
@@ -116,13 +159,108 @@ export default function UserReports() {
               flexDirection="column"
               w="100%"
               mb="20px"
-              backgroundImage={`url(${backgroundImage})`}
-              backgroundRepeat="no-repeat"
-              backgroundSize="cover"
-              backgroundPosition="center"
-              transition="background-image 0.25s ease-in-out"
             >
-              maika ti
+              <Text textAlign="start" fontSize="4xl" mb="10px">
+                В тази страница имате възможността да направите обратна връзка!
+              </Text>
+              <HSeparator />
+              <Text textAlign="start" fontSize="1xl" mt="20px">
+                Ако намерите някакъв проблем в нашето приложение или имате
+                препоръки, напишете ни и ние ще отговорим възможно най-бързо!
+              </Text>
+            </Card>
+            <Card
+              p="20px"
+              alignItems="center"
+              flexDirection="column"
+              w="100%"
+              mb="20px"
+            >
+              <Flex boxSize="75%">
+                <FormControl>
+                  <FormLabel
+                    display="flex"
+                    ms="4px"
+                    fontSize="sm"
+                    fontWeight="500"
+                    color={textColor}
+                    mb="8px"
+                  >
+                    Email<Text color={brandStars}>*</Text>
+                  </FormLabel>
+                  <Input
+                    isRequired={true}
+                    variant="auth"
+                    fontSize="sm"
+                    type="email"
+                    placeholder="example@noit.eu..."
+                    mb="24px"
+                    fontWeight="500"
+                    size="lg"
+                    // onChange={(email) => setEmail(email.target.value)}
+                  />
+                  <FormLabel
+                    ms="4px"
+                    fontSize="sm"
+                    fontWeight="500"
+                    color={textColor}
+                    display="flex"
+                  >
+                    Вашето име<Text color={brandStars}>*</Text>
+                  </FormLabel>
+                  <Input
+                    isRequired={true}
+                    variant="auth"
+                    fontSize="sm"
+                    type="email"
+                    placeholder="Моля напишете вашето име тук..."
+                    mb="24px"
+                    fontWeight="500"
+                    size="lg"
+                    // onChange={(email) => setEmail(email.target.value)}
+                  />
+                  <FormLabel
+                    ms="4px"
+                    fontSize="sm"
+                    fontWeight="500"
+                    color={textColor}
+                    display="flex"
+                  >
+                    Вашето съобщение<Text color={brandStars}>*</Text>
+                  </FormLabel>
+                  <Textarea
+                    isRequired={true}
+                    variant="auth"
+                    borderRadius="20px"
+                    borderWidth="2px"
+                    fontSize="sm"
+                    placeholder="Моля напишете вашето съобщение тук..."
+                    _placeholder={{
+                      verticalAlign: "top" // Align placeholder text to the top
+                    }}
+                    value={message}
+                    onChange={handleInputChange}
+                    mb="24px"
+                    fontWeight="500"
+                    minHeight="200px"
+                    size="lg"
+                    maxLength={2000} // Set the maximum number of characters
+                    resize="none" // Disable textarea resizing
+                  />
+                  <Button
+                    // onClick={handleSignIn}
+                    fontSize="sm"
+                    variant="brand"
+                    _hover={{ bg: "secondaryGray.900" }}
+                    fontWeight="500"
+                    w="100%"
+                    h="50"
+                    mb="24px"
+                  >
+                    Влизане
+                  </Button>
+                </FormControl>
+              </Flex>
             </Card>
           </Box>
         )}
