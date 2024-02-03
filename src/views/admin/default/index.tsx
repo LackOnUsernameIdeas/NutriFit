@@ -47,6 +47,13 @@ import {
   MdBarChart,
   MdFileCopy
 } from "react-icons/md";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  DocumentData,
+  getDocs
+} from "firebase/firestore";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
@@ -67,6 +74,16 @@ interface LinearGradientTextProps {
   fontSize?: string;
   fontFamily?: string;
   mr?: string;
+}
+
+interface TimestampedObject {
+  date: string;
+  weight?: number;
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  bodyFatPercentage?: number;
 }
 
 const LinearGradientText: React.FC<LinearGradientTextProps> = ({
@@ -129,76 +146,106 @@ export default function UserReports() {
       .catch((error) => {
         console.error("Error fetching total users:", error);
       });
-    getAverageWeightOfAllUsers()
-      .then((weight) => {
-        setAverageWeight(weight);
-        console.log("WEIGHT ->>>", weight);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching average weight:", error);
-      });
-  }, []); // Run this effect only once when the component mounts
-
+  }, []);
   React.useEffect(() => {
-    // Fetch the total number of users when the component mounts
-    getAverageCaloriesOfAllUsers()
-      .then((calories) => {
-        setAverageCalories(calories);
-        console.log("CALORIES ->>>", calories);
-      })
-      .catch((error) => {
-        console.error("Error fetching average calories:", error);
-      });
-  }, []); // Run this effect only once when the component mounts
+    const fetchData = async () => {
+      try {
+        const firestore = getFirestore();
+        const usersDataCollectionRef = collection(
+          firestore,
+          "additionalUserData"
+        );
+        const usersCollectionSnapshot = await getDocs(usersDataCollectionRef);
+        const numberOfUsers = usersCollectionSnapshot.size;
 
-  React.useEffect(() => {
-    // Fetch the total number of users when the component mounts
-    getAverageProteinOfAllUsers()
-      .then((protein) => {
-        setAverageProtein(protein);
-        console.log("PROTEIN ->>>", protein);
-      })
-      .catch((error) => {
-        console.error("Error fetching average protein:", error);
-      });
-  }, []); // Run this effect only once when the component mounts
+        let totalCalories = 0;
+        let totalProtein = 0;
+        let totalCarbs = 0;
+        let totalFat = 0;
+        let totalWeight = 0;
+        let totalBodyFatPercentage = 0;
 
-  React.useEffect(() => {
-    // Fetch the total number of users when the component mounts
-    getAverageCarbsOfAllUsers()
-      .then((carbs) => {
-        setAverageCarbs(carbs);
-        console.log("CARBS ->>>", carbs);
-      })
-      .catch((error) => {
-        console.error("Error fetching average carbs:", error);
-      });
-  }, []); // Run this effect only once when the component mounts
+        // Subscribe to real-time updates using onSnapshot
+        const unsubscribe = onSnapshot(
+          usersDataCollectionRef,
+          (querySnapshot) => {
+            querySnapshot.forEach((userDoc) => {
+              const userData = userDoc.data() as DocumentData;
 
-  React.useEffect(() => {
-    // Fetch the total number of users when the component mounts
-    getAverageFatOfAllUsers()
-      .then((fat) => {
-        setAverageFat(fat);
-        console.log("FAT ->>>", fat);
-      })
-      .catch((error) => {
-        console.error("Error fetching average fat:", error);
-      });
-  }, []); // Run this effect only once when the component mounts
+              // Filter out non-timestamped objects
+              const timestampedObjects = Object.entries(userData)
+                .filter(
+                  ([key, value]) =>
+                    typeof value === "object" &&
+                    value.Preferences &&
+                    value.Preferences.hasOwnProperty("calories")
+                )
+                .map(([key, value]) => {
+                  return { key, ...value };
+                });
 
-  React.useEffect(() => {
-    // Fetch the total number of users when the component mounts
-    getAverageBodyFatPercentageOfAllUsers()
-      .then((bodyFatPercentage) => {
-        setAverageBodyFatPercentage(bodyFatPercentage);
-        console.log("BODY FAT PERCENTAGE ->>>", bodyFatPercentage);
-      })
-      .catch((error) => {
-        console.error("Error fetching average body fat percentage:", error);
-      });
-  }, []); // Run this effect only once when the component mounts
+              const orderedTimestampObjects = [...timestampedObjects].sort(
+                (a, b) => {
+                  const keyA = a.key;
+                  const keyB = b.key;
+                  return new Date(keyB).getTime() - new Date(keyA).getTime();
+                }
+              );
+
+              // Find the latest timestamped object
+              const latestTimestampData = orderedTimestampObjects[0];
+
+              // Check if the timestamped object has a weight field
+              if (
+                typeof latestTimestampData?.Preferences?.calories === "number"
+              ) {
+                totalCalories += latestTimestampData.Preferences.calories;
+                totalProtein +=
+                  latestTimestampData.Preferences.nutrients.protein;
+                totalCarbs += latestTimestampData.Preferences.nutrients.carbs;
+                totalFat += latestTimestampData.Preferences.nutrients.fat;
+                totalWeight += latestTimestampData.weight;
+                totalBodyFatPercentage +=
+                  latestTimestampData.BodyMassData.bodyFat;
+              }
+            });
+
+            // Calculate the average weight
+            const meanCalories =
+              numberOfUsers > 0 ? totalCalories / numberOfUsers : 0;
+            const meanProtein =
+              numberOfUsers > 0 ? totalProtein / numberOfUsers : 0;
+            const meanCarbs =
+              numberOfUsers > 0 ? totalCarbs / numberOfUsers : 0;
+            const meanFat = numberOfUsers > 0 ? totalFat / numberOfUsers : 0;
+            const meanWeight =
+              numberOfUsers > 0 ? totalWeight / numberOfUsers : 0;
+            const meanBodyFatPercentage =
+              numberOfUsers > 0 ? totalBodyFatPercentage / numberOfUsers : 0;
+
+            // Update state with calculated averages
+            setTotalUsers(numberOfUsers);
+            setAverageCalories(meanCalories);
+            setAverageProtein(meanProtein);
+            setAverageCarbs(meanCarbs);
+            setAverageFat(meanFat);
+            setAverageWeight(meanWeight);
+            setAverageBodyFatPercentage(meanBodyFatPercentage);
+            setLoading(false);
+          }
+        );
+
+        // Cleanup the subscription when the component unmounts
+        return () => {
+          unsubscribe();
+        };
+      } catch (error) {
+        console.error("Error fetching additional user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <FadeInWrapper>
@@ -275,7 +322,6 @@ export default function UserReports() {
             value={averageWeight !== null ? `${averageWeight.toFixed(2)}` : "0"}
             loading={loading}
           />
-
           <MiniStatistics
             startContent={
               <IconBox
