@@ -7,6 +7,7 @@ import {
   MdOutlineShoppingCart
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
+import { FiHelpCircle } from "react-icons/fi";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -52,7 +53,7 @@ const routes = [
     name: "За контакт",
     layout: "/admin",
     path: "/contact",
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={FiHelpCircle} width="20px" height="20px" color="inherit" />,
     component: Contact,
     hideInSidebar: false
   },
