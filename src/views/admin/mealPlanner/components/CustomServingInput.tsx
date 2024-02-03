@@ -1,6 +1,6 @@
 import React from "react";
 // Chakra imports
-import { Input, Button, Flex } from "@chakra-ui/react";
+import { Input, Button, Flex, useColorModeValue } from "@chakra-ui/react";
 import { CustomServingInputProps } from "../../../../types/weightStats";
 
 export const CustomServingInput: React.FC<CustomServingInputProps> = ({
@@ -8,9 +8,10 @@ export const CustomServingInput: React.FC<CustomServingInputProps> = ({
   onIncrement,
   onDecrement
 }) => {
+  const bgButton = useColorModeValue("secondaryGray.400", "whiteAlpha.200");
   return (
     <Flex>
-      <Button size="lg" onClick={onDecrement}>
+      <Button size="lg" onClick={onDecrement} bg={bgButton} mr="1">
         -
       </Button>
       <Input
@@ -26,7 +27,7 @@ export const CustomServingInput: React.FC<CustomServingInputProps> = ({
         mb="2px"
         size="lg"
       />
-      <Button size="lg" onClick={onIncrement}>
+      <Button size="lg" onClick={onIncrement} bg={bgButton} ml="1">
         +
       </Button>
     </Flex>

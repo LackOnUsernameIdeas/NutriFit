@@ -58,22 +58,71 @@ const ChakraBox = chakra(motion.div, {
     isValidMotionProp(prop) || shouldForwardProp(prop)
 });
 
+interface LinearGradientTextProps {
+  text: any;
+  gradient: string;
+  fontSize?: string;
+  fontFamily?: string;
+  mr?: string;
+}
+
+const LinearGradientText: React.FC<LinearGradientTextProps> = ({
+  text,
+  gradient,
+  fontSize,
+  fontFamily,
+  mr
+}) => (
+  <Text
+    as="span"
+    fontSize={fontSize}
+    fontFamily={fontFamily}
+    fontWeight="bold"
+    mr={mr}
+    style={{
+      backgroundImage: gradient,
+      WebkitBackgroundClip: "text",
+      color: "transparent"
+    }}
+  >
+    {text}
+  </Text>
+);
+
 export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("secondaryGray.900", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
+  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
+  const gradientNutri = useColorModeValue(gradientLight, gradientDark);
+  const gradientFit = useColorModeValue(gradientDark, gradientLight);
   return (
     <Box pt="80px">
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        <Card minH="200px">
-          <Flex justify="left" pt="5px" w="100%">
-            <Text fontSize="6xl" fontStyle="italic">
-              Добре дошли в NutriFit!
+        <Card>
+          <Flex justify="left" alignItems="center">
+            <Text fontSize="5xl" mr="2">
+              Добре дошли в{" "}
             </Text>
+            <LinearGradientText
+              text={<b>Nutri</b>}
+              gradient={gradientNutri}
+              fontSize="5xl"
+              fontFamily="DM Sans"
+            />
+            <LinearGradientText
+              text={<b>Fit⠀</b>}
+              gradient={gradientFit}
+              fontFamily="Leckerli One"
+              fontSize="5xl"
+              mr="2px"
+            />
           </Flex>
-          <HSeparator />
-          <Flex justify="left" mt="1%" pt="10px">
-            <Text fontSize="3xl">
+        </Card>
+        <Card>
+          <Flex justify="left" mt="1%">
+            <Text fontSize="2xl">
               Нашата цел е да помогнем на нашите потребители да поддържат
               перфектното тегло с помощта на статистики и диаграми.
             </Text>
@@ -81,7 +130,7 @@ export default function UserReports() {
           <Flex justify="left" mt="1%" pt="10px">
             <ChakraBox
               animate={{
-                scale: [1.15, 1.35, 1.15],
+                scale: [1.2, 1.2, 1.2],
                 rotate: [0, 0, 0],
                 borderRadius: ["20%", "20%", "20%"]
               }}
@@ -101,13 +150,14 @@ export default function UserReports() {
               <Link href="/#/auth/sign-in">
                 <Button
                   className="glowing-button"
-                  _hover={{ bg: "transparent" }}
-                  _focus={{ bg: "none" }}
-                  color={brandColor}
-                  backgroundColor="#7551ff"
+                  color="white"
+                  variant="brand"
+                  _hover={{ bg: "secondaryGray.900" }}
                   borderRadius="8px"
                   px="14px"
                   ml="30%"
+                  fontSize="sm"
+                  fontWeight="500"
                 >
                   <Text fontSize="sm">Влезте в профила си!</Text>
                 </Button>

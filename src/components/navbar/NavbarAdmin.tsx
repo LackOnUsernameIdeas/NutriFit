@@ -104,55 +104,19 @@ export default function AdminNavbar(props: {
         "2xl": "calc(100vw - 365px)"
       }}
     >
-      <Flex
-        w="100%"
-        direction={{ sm: "column", md: "row" }}
-        alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
-        mb={gap}
-      >
-        <Box mb={{ sm: "12px", md: "0px" }}>
-          <Breadcrumb>
-            <BreadcrumbItem color={secondaryText} fontSize="sm" mb="6px">
-              <BreadcrumbLink href="#" color={secondaryText}>
-                Страници
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem color={secondaryText} fontSize="sm">
-              <BreadcrumbLink href="#" color={secondaryText}>
-                {brandText}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          <Link
-            color={mainText}
-            href="#"
-            bg="inherit"
-            borderRadius="inherit"
-            fontWeight="bold"
-            fontSize="34px"
-            textOverflow="ellipsis"
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: "inherit",
-              transform: "none",
-              borderColor: "transparent"
-            }}
-            _focus={{
-              boxShadow: "none"
-            }}
-          >
-            {brandText}
-          </Link>
-        </Box>
-        {isMobile && <HSeparator />}
+      {isMobile ? (
         <Flex
-          mt={{ sm: "12px", lg: "0px" }}
-          ml={{ sm: "0", lg: "auto" }}
-          w={{ sm: "130%", md: "unset" }}
-          justifySelf="center"
+          w="100%"
+          direction={{ sm: "column", md: "row" }}
+          alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
+          mb={gap}
         >
-          {isMobile && (
+          <Flex
+            ml={{ sm: "0", lg: "auto" }}
+            mb={{ sm: "12px", md: "0px" }}
+            w={{ sm: "130%", md: "unset" }}
+            justifySelf="center"
+          >
             <Box mr="20px" mt="8px">
               <Text
                 color={mainText}
@@ -181,14 +145,99 @@ export default function AdminNavbar(props: {
                 Fit
               </Text>
             </Box>
-          )}
+            <AdminNavbarLinks
+              onOpen={props.onOpen}
+              secondary={props.secondary}
+              fixed={props.fixed}
+            />
+          </Flex>
+          <HSeparator />
+          <Box mt={{ sm: "12px", md: "0px" }}>
+            <Breadcrumb>
+              <BreadcrumbItem color={secondaryText} fontSize="sm" mb="6px">
+                <BreadcrumbLink href="#" color={secondaryText}>
+                  Страници
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbItem color={secondaryText} fontSize="sm">
+                <BreadcrumbLink href="#" color={secondaryText}>
+                  {brandText}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+            <Link
+              color={mainText}
+              href="#"
+              bg="inherit"
+              borderRadius="inherit"
+              fontWeight="bold"
+              fontSize="34px"
+              textOverflow="ellipsis"
+              _hover={{ color: { mainText } }}
+              _active={{
+                bg: "inherit",
+                transform: "none",
+                borderColor: "transparent"
+              }}
+              _focus={{
+                boxShadow: "none"
+              }}
+            >
+              {brandText}
+            </Link>
+          </Box>
+        </Flex>
+      ) : (
+        <Flex
+          w="100%"
+          direction={{ sm: "column", md: "row" }}
+          alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
+          justifyContent="space-between" // Add this line
+          mb={gap}
+        >
+          <Box mb={{ sm: "12px", md: "0px" }}>
+            <Breadcrumb>
+              <BreadcrumbItem color={secondaryText} fontSize="sm" mb="6px">
+                <BreadcrumbLink href="#" color={secondaryText}>
+                  Страници
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbItem color={secondaryText} fontSize="sm">
+                <BreadcrumbLink href="#" color={secondaryText}>
+                  {brandText}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+            <Link
+              color={mainText}
+              href="#"
+              bg="inherit"
+              borderRadius="inherit"
+              fontWeight="bold"
+              fontSize="34px"
+              textOverflow="ellipsis"
+              _hover={{ color: { mainText } }}
+              _active={{
+                bg: "inherit",
+                transform: "none",
+                borderColor: "transparent"
+              }}
+              _focus={{
+                boxShadow: "none"
+              }}
+            >
+              {brandText}
+            </Link>
+          </Box>
           <AdminNavbarLinks
             onOpen={props.onOpen}
             secondary={props.secondary}
             fixed={props.fixed}
           />
         </Flex>
-      </Flex>
+      )}
     </Flex>
   );
 }

@@ -2,11 +2,8 @@
 // Chakra Imports
 import {
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
+  useBreakpointValue,
   Flex,
-  Link,
   Text,
   useColorModeValue
 } from "@chakra-ui/react";
@@ -35,6 +32,7 @@ export default function LandingNavbar(props: {
   const { secondary, brandText } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
+  const isMobile = useBreakpointValue({ base: true, md: false });
   let mainText = useColorModeValue("navy.700", "white");
   let secondaryText = useColorModeValue("gray.700", "white");
   let navbarPosition = "fixed" as const;
@@ -114,7 +112,7 @@ export default function LandingNavbar(props: {
             fontSize="40px"
             display="inline"
             position="relative"
-            top="10px" // Adjust this value to set the desired gap
+            top={isMobile ? "10px" : "0px"}
           >
             Nutri
           </Text>{" "}
@@ -127,7 +125,7 @@ export default function LandingNavbar(props: {
             fontSize="40px"
             display="inline"
             position="relative"
-            top="10px" // Adjust this value to set the desired gap
+            top={isMobile ? "10px" : "0px"}
           >
             Fit
           </Text>

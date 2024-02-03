@@ -15,12 +15,20 @@ import { UserData } from "../../../types/weightStats";
 function MeasurementsAlertDialog(props: {
   handleSubmit: (event: React.FormEvent) => void;
   userData: UserData;
+  checkUpdate: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
-
-  const [valuesToCheck, setValuesToCheck] = React.useState(
-    JSON.parse(localStorage.getItem("lastTypedValues"))
+  const [valuesToCheck, setValuesToCheck] = React.useState({
+    height: 0,
+    age: 0,
+    weight: 0,
+    neck: 0,
+    waist: 0,
+    hip: 0
+  });
+  const [buttonText, setButtonText] = React.useState<string>(
+    props.checkUpdate ? "Актуализирайте" : "Изпратете"
   );
 
   React.useEffect(() => {
@@ -28,11 +36,28 @@ function MeasurementsAlertDialog(props: {
     const storedValues = JSON.parse(
       localStorage.getItem("lastTypedValues") || "{}"
     );
-    Object.keys(storedValues).forEach((key) => {
-      setValuesToCheck(storedValues);
-    });
+
+    // Check if stored values are different from current valuesToCheck
+    if (
+      !Object.keys(storedValues).every(
+        (key) =>
+          storedValues[key] === valuesToCheck[key as keyof typeof valuesToCheck]
+      )
+    ) {
+      // If they are different, update the values to check
+      setValuesToCheck(storedValues as typeof valuesToCheck);
+    }
   }, [props.userData]);
 
+  React.useEffect(() => {
+    console.log("checkUpdate value:", props.checkUpdate);
+
+    if (props.checkUpdate) {
+      setButtonText("Актуализирайте");
+    } else {
+      setButtonText("Изпратете");
+    }
+  }, [props.checkUpdate]);
   const translateKey = (key: any) => {
     // Replace this logic with your actual translation logic
     // For simplicity, let's assume a simple translation for demonstration purposes
@@ -78,9 +103,8 @@ function MeasurementsAlertDialog(props: {
         h="50"
         mb="24px"
       >
-        Изпрати
+        {buttonText}
       </Button>
-
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

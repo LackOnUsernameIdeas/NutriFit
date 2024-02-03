@@ -26,11 +26,39 @@ export default function RecipeWidget(props: {
   const { image, name, author, currentbid } = props;
   const [like, setLike] = useState(false);
   const textColor = useColorModeValue("navy.700", "white");
-  const textColorBid = useColorModeValue("brand.500", "white");
+  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
-    <Card p="20px">
+    <Card p="20px" borderColor={borderColor} borderWidth="2px">
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "20px", "2xl": "20px" }} position="relative">
+          <Flex
+            justify="center"
+            direction={{
+              base: "row",
+              md: "column",
+              lg: "row",
+              xl: "column",
+              "2xl": "row"
+            }}
+            mb="auto"
+          >
+            <Text
+              color={textColor}
+              fontSize={{
+                base: "xl",
+                md: "lg",
+                lg: "lg",
+                xl: "lg",
+                "2xl": "md",
+                "3xl": "lg"
+              }}
+              mb="10px"
+              fontWeight="bold"
+              me="14px"
+            >
+              {name}
+            </Text>
+          </Flex>
           <Image
             src={image}
             w={{ base: "100%", "3xl": "100%" }}
@@ -67,34 +95,6 @@ export default function RecipeWidget(props: {
 					</Button> */}
         </Box>
         <Flex flexDirection="column" justify="space-between" h="100%">
-          <Flex
-            justify="center"
-            direction={{
-              base: "row",
-              md: "column",
-              lg: "row",
-              xl: "column",
-              "2xl": "row"
-            }}
-            mb="auto"
-          >
-            <Text
-              color={textColor}
-              fontSize={{
-                base: "xl",
-                md: "lg",
-                lg: "lg",
-                xl: "lg",
-                "2xl": "md",
-                "3xl": "lg"
-              }}
-              mb="5px"
-              fontWeight="bold"
-              me="14px"
-            >
-              {name}
-            </Text>
-          </Flex>
           <Flex justify="center">
             <Text
               color="secondaryGray.600"

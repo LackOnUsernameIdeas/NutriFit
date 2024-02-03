@@ -15,6 +15,7 @@ import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
+import Contact from "views/admin/contact";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -46,6 +47,14 @@ const routes = [
       <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
     ),
     component: MealPlanner
+  },
+  {
+    name: "За контакт",
+    layout: "/admin",
+    path: "/contact",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: Contact,
+    hideInSidebar: false
   },
   {
     name: "NFT Marketplace",
@@ -80,7 +89,7 @@ const routes = [
     hideInSidebar: true
   },
   {
-    name: "Вход",
+    name: "Регистрация",
     layout: "/auth",
     path: "/sign-up",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
@@ -88,7 +97,7 @@ const routes = [
     hideInSidebar: true
   },
   {
-    name: "Вход",
+    name: "Забравена парола",
     layout: "/auth",
     path: "/forgot-password",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,

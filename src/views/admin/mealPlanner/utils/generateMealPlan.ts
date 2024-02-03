@@ -25,18 +25,18 @@ export const generateMealPlan = async (
   customServings: CustomServings
 ) => {
   try {
-    // Издърпване на всички рецепти от базата данни
+    // Fetch all recipes from the database
     const recipesSnapshot = await getDocs(recipesCollection);
     const allRecipes = recipesSnapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() } as Recipe)
     );
 
-    // Избиране на рецепта за закуска
+    // Select a breakfast recipe
     const selectedBreakfastMeal = getRandomRecipe(
       allRecipes.filter((recipe) => recipe.isForBreakfast)
     );
 
-    //Калкулиране на оставащите калории за обяд и вечеря
+    // Calculate remaining nutrients for lunch and dinner
     const remainingNutrients: { [key: string]: number } = nutrientTypes.reduce(
       (remaining, { type }) => {
         remaining[type] =
@@ -50,7 +50,7 @@ export const generateMealPlan = async (
     console.log(selectedBreakfastMeal);
     console.log(remainingNutrients);
 
-    // Избиране на рецепта за обяд
+    // Select a lunch recipe
     const selectedLunchMeal = getRandomRecipe(
       allRecipes.filter(
         (recipe) =>
@@ -62,7 +62,7 @@ export const generateMealPlan = async (
       )
     );
 
-    //Калкулиране на оставащите калории за вечеря
+    // Calculate remaining nutrients for dinner
     const remainingNutrientsForDinner: { [key: string]: number } =
       nutrientTypes.reduce((remaining, { type }) => {
         remaining[type] =
@@ -73,7 +73,7 @@ export const generateMealPlan = async (
     console.log(selectedLunchMeal);
     console.log(remainingNutrientsForDinner);
 
-    // Избиране на рецепта за вечеря
+    // Select a dinner recipe
     const selectedDinnerMeal = getRandomRecipe(
       allRecipes.filter(
         (recipe) =>
@@ -89,17 +89,17 @@ export const generateMealPlan = async (
 
     console.log(selectedDinnerMeal);
 
-    // Задаване на предложени максимални порции и персонализирани порции въз основа на избрани рецепти
+    // Set suggested max servings and custom servings based on selected recipes
     const suggestedMaxServings = {
-      breakfast: selectedBreakfastMeal.suggestedMaxServing || 0,
-      lunch: selectedLunchMeal.suggestedMaxServing || 0,
-      dinner: selectedDinnerMeal.suggestedMaxServing || 0
+      breakfast: selectedBreakfastMeal?.suggestedMaxServing || 0,
+      lunch: selectedLunchMeal?.suggestedMaxServing || 0,
+      dinner: selectedDinnerMeal?.suggestedMaxServing || 0
     };
 
     setSuggestedMaxServings(suggestedMaxServings);
     setCustomServings(suggestedMaxServings);
 
-    // Задаване на избрани ястия в mealPlan state
+    // Set selected meals in mealPlan state
     const selectedMeals = {
       breakfast: selectedBreakfastMeal,
       lunch: selectedLunchMeal || null,
@@ -108,23 +108,23 @@ export const generateMealPlan = async (
 
     setMealPlan(selectedMeals);
 
-    // Задаване на грамаж на всяко ядене
+    // Set weight per serving for each meal
     setWeightPerServing({
       breakfast: {
-        amount: selectedMeals.breakfast.weightPerServing.amount,
-        unit: selectedMeals.breakfast.weightPerServing.unit
+        amount: selectedMeals.breakfast?.weightPerServing?.amount || 0,
+        unit: selectedMeals.breakfast?.weightPerServing?.unit || ""
       },
       lunch: {
-        amount: selectedMeals.lunch.weightPerServing.amount,
-        unit: selectedMeals.lunch.weightPerServing.unit
+        amount: selectedMeals.lunch?.weightPerServing?.amount || 0,
+        unit: selectedMeals.lunch?.weightPerServing?.unit || ""
       },
       dinner: {
-        amount: selectedMeals.dinner.weightPerServing.amount,
-        unit: selectedMeals.dinner.weightPerServing.unit
+        amount: selectedMeals.dinner?.weightPerServing?.amount || 0,
+        unit: selectedMeals.dinner?.weightPerServing?.unit || ""
       }
     });
 
-    // Изчислете стойностите на хранителните вещества за всеки тип хранителни вещества въз основа на избраните ястия и персонализирани порции
+    // Calculate nutrient values for each nutrient type based on selected meals and custom servings
     const calculatedNutrients: Partial<NutrientState> = nutrientTypes.reduce(
       (calculated, { type }) => {
         const customServingValue =
@@ -141,7 +141,7 @@ export const generateMealPlan = async (
       {}
     );
 
-    // Изчислете общата хранителна стойност за всички избрани типове хранителни вещества
+    // Calculate total nutrient value for all selected nutrient types
     const totalNutrients = nutrientTypes.reduce(
       (total, { type }) => total + (calculatedNutrients as any)[type],
       0
@@ -152,8 +152,10 @@ export const generateMealPlan = async (
 };
 
 // Функция за избиране на рецепта
-const getRandomRecipe = (recipes: Recipe[]) => {
-  return recipes[Math.floor(Math.random() * recipes.length)];
+const getRandomRecipe = (recipes: Recipe[]): Recipe | null => {
+  return recipes.length > 0
+    ? recipes[Math.floor(Math.random() * recipes.length)]
+    : null;
 };
 
 // Функция за изчисляване на хранителната стойност за дадена рецепта и тип хранителни вещества
@@ -161,18 +163,26 @@ const calculateNutrient = (
   recipe: Recipe | null,
   nutrientType: string
 ): number => {
+  if (!recipe || !recipe.nutrientsForTheRecipe?.main?.[nutrientType]?.value) {
+    return 0;
+  }
+
   return (
     recipe.nutrientsForTheRecipe.main[nutrientType].value *
-    recipe.suggestedMaxServing
+    (recipe.suggestedMaxServing || 0)
   );
 };
 
 // Функция за изчисляване на хранителната стойност за дадена рецепта и тип хранителни вещества персонализиран брой на порции
-export const calculateNutrientWithCustomServing = (
+const calculateNutrientWithCustomServing = (
   recipe: Recipe | null,
   nutrientType: string,
   suggestedMaxServing: number
 ): number => {
+  if (!recipe || !recipe.nutrientsForTheRecipe?.main?.[nutrientType]?.value) {
+    return 0;
+  }
+
   return (
     recipe.nutrientsForTheRecipe.main[nutrientType].value * suggestedMaxServing
   );

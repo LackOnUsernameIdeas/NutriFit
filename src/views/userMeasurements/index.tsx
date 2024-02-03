@@ -21,7 +21,7 @@
 
 */
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -47,8 +47,20 @@ import DefaultAuth from "layouts/measurements/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
 import Loading from "views/admin/weightStats/components/Loading";
-import { UserData } from "../../types/weightStats";
-
+import {
+  BMIInfo,
+  BodyMass,
+  UserData,
+  Goal,
+  WeightDifference
+} from "../../types/weightStats";
+import {
+  fetchBMIData,
+  fetchPerfectWeightData,
+  fetchBodyFatAndLeanMassData,
+  fetchCaloriesForActivityLevels,
+  fetchMacroNutrients
+} from "./utils/fetchFunctions";
 interface UserMeasurements {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -74,12 +86,24 @@ const UserMeasurements = () => {
   const [error, setError] = useState("");
   const [isFilledOut, setIsFilledOut] = useState(false);
   const [userDataForToday, setUserDataForToday] = useState(null);
+  const [userDataLastSavedDate, setUserDataLastSavedDate] = useState(null);
   const [isTodaysDataFetched, setIsTodaysDataFetched] =
     useState<boolean>(false);
   const isMounted = useRef(true);
   const [user, setUser] = useState(null);
   // State за въведени потребителски данни
   const [userData, setUserData] = useState<UserData>({
+    height: 0,
+    age: 0,
+    weight: 0,
+    neck: 0,
+    waist: 0,
+    hip: 0,
+    goal: "maintain"
+  });
+
+  const [userDataForReq, setUserDataForReq] = useState<UserData>({
+    gender: "male" || "female",
     height: 0,
     age: 0,
     weight: 0,
@@ -109,6 +133,162 @@ const UserMeasurements = () => {
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
+  // States за запазване на извличените данни
+  const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
+    bmi: null,
+    health: "",
+    healthy_bmi_range: "18.5 - 25"
+  });
+  const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
+    useState<BodyMass>({
+      "Body Fat (U.S. Navy Method)": 0,
+      "Body Fat Mass": 0,
+      "Lean Body Mass": 0
+    });
+  const [userDataForCharts, setUserDataForCharts] = useState([
+    {
+      date: "",
+      height: 0,
+      weight: 0,
+      bmi: 0,
+      bodyFat: 0,
+      bodyFatMass: 0,
+      leanBodyMass: 0,
+      differenceFromPerfectWeight: 0
+    }
+  ]);
+  userDataForCharts.sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
+  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
+    useState<WeightDifference>({
+      difference: 0,
+      isUnderOrAbove: ""
+    });
+
+  const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
+    useState<boolean>(false);
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+
+      if (user) {
+        try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
+          const additionalData = await fetchAdditionalUserData(user.uid);
+          setUserDataForReq({
+            gender: additionalData.gender,
+            goal: additionalData.goal,
+            age: additionalData[timestampKey].age,
+            height: additionalData[timestampKey].height,
+            waist: additionalData[timestampKey].waist,
+            neck: additionalData[timestampKey].neck,
+            hip: additionalData[timestampKey].hip,
+            weight: additionalData[timestampKey].weight
+          } as any);
+
+          console.log(additionalData, "additionalData");
+          const userChartData = [];
+
+          for (const key in additionalData) {
+            if (
+              key !== "gender" &&
+              key !== "goal" &&
+              typeof additionalData[key] === "object"
+            ) {
+              const dateData = additionalData[key];
+              userChartData.push({
+                date: key,
+                height: dateData ? dateData.height : 0,
+                weight: dateData ? dateData.weight : 0,
+                bmi: dateData.BMI ? dateData.BMI.bmi : 0,
+                bodyFat: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFat
+                  : 0,
+                bodyFatMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFatMass
+                  : 0,
+                leanBodyMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.leanBodyMass
+                  : 0,
+                differenceFromPerfectWeight: dateData.PerfectWeightData
+                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                      .difference
+                  : 0
+              });
+            }
+          }
+
+          setUserDataForCharts(userChartData);
+          console.log(
+            "ID: ",
+            user.uid,
+            "Additional user data:",
+            additionalData
+          );
+          console.log("userChartData:", userChartData);
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
+
+  const goalsToFetch: Goal[] = [
+    "maintain",
+    "mildlose",
+    "weightlose",
+    "extremelose",
+    "mildgain",
+    "weightgain",
+    "extremegain"
+  ];
+  // Функция за генериране на статистики
+  async function generateStats() {
+    console.log(
+      userData["age"],
+      userData["height"],
+      userData["weight"],
+      "before"
+    );
+    setIsLoading(true);
+    await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
+    await fetchPerfectWeightData(
+      userData["height"],
+      userDataForReq["gender"],
+      userData["weight"]
+    );
+    await fetchBodyFatAndLeanMassData(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"],
+      userData["neck"],
+      userData["waist"],
+      userData["hip"]
+    );
+    await fetchCaloriesForActivityLevels(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"]
+    );
+    await fetchMacroNutrients(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"],
+      goalsToFetch
+    );
+    setIsLoading(false);
+  }
 
   React.useEffect(() => {
     // Зарежда последно запазените данни от Local Storage
@@ -174,10 +354,12 @@ const UserMeasurements = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Ако датата е валидна я записва в базата и изпраща потребителят на главната страница
+
     if (isUserDataValid()) {
       try {
         const uid = getAuth().currentUser.uid;
+
+        // Save additional user data
         await saveAdditionalUserData(
           uid,
           userData.height,
@@ -186,10 +368,34 @@ const UserMeasurements = () => {
           userData.neck,
           userData.waist,
           userData.hip
-        ).then(() => {
+        );
+        await generateStats();
+        setIsGenerateStatsCalled(true);
+        history.push("/admin/default");
+
+        // Save additional user data to the server
+        const response = await fetch(
+          "https://nutri-api.noit.eu/processUserData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+          }
+        );
+        if (response.ok) {
+          // Log the response data to the console
+          const responseData = await response.json();
+          console.log("Server response:", responseData);
+
+          // Data processed successfully
           setIsFilledOut(true);
-          history.push("/admin/default");
-        });
+        } else {
+          // Handle server error
+          console.error("Server error:", response.statusText);
+          setError("Failed to process data on the server.");
+        }
       } catch (error) {
         console.error("Error saving additional user data:", error);
       }
@@ -205,17 +411,35 @@ const UserMeasurements = () => {
 
       if (user) {
         try {
-          const timestampKey = new Date().toISOString().slice(0, 10);
           setIsLoading(true);
+
+          const additionalData = await fetchAdditionalUserData(user.uid);
+
+          // Extract date keys from additionalData
+          const dateKeys = Object.keys(additionalData).filter((key) =>
+            /^\d{4}-\d{2}-\d{2}$/.test(key)
+          );
+
+          // Sort date keys in descending order
+          dateKeys.sort(
+            (a, b) => new Date(b).getTime() - new Date(a).getTime()
+          );
+
+          // Find the first date before today
+          const today = new Date().toISOString().slice(0, 10);
+          const lastSavedDate = dateKeys.find((date) => date < today);
+          const rawUserDataForToday = additionalData[today];
+          const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
+
+          if (isMounted.current) {
+            setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+            setUserDataForToday(rawUserDataForToday);
+            setIsTodaysDataFetched(true);
+          }
+
           setTimeout(() => {
             setIsLoading(false);
           }, 1000);
-          const additionalData = await fetchAdditionalUserData(user.uid);
-          const rawUserDataForToday = additionalData[timestampKey];
-          if (isMounted.current) {
-            setUserDataForToday(rawUserDataForToday);
-          }
-          setIsTodaysDataFetched(true);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
@@ -228,6 +452,49 @@ const UserMeasurements = () => {
     };
   }, []);
 
+  const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
+  const [updateWithNewData, setUpdateWithNewData] = useState<boolean>(false);
+  useEffect(() => {
+    if (userDataLastSavedDate) {
+      const commonKeys = Object.keys(userData).filter((key) =>
+        Object.keys(userDataLastSavedDate).includes(key)
+      );
+
+      const areDataEqual = commonKeys.every(
+        (key) => userData[key] === userDataLastSavedDate[key]
+      );
+
+      setUpdateWithNewData(!areDataEqual);
+
+      const differentFields = commonKeys.filter(
+        (key) => userData[key] !== userDataLastSavedDate[key]
+      );
+
+      setHighlightedFields(differentFields);
+    } else {
+      setUpdateWithNewData(false);
+    }
+  }, [userData, userDataLastSavedDate]);
+
+  React.useEffect(() => {
+    const diff = perfectWeight - userData.weight;
+    setDifferenceFromPerfectWeight({
+      difference: Math.abs(diff),
+      isUnderOrAbove: userData.weight > perfectWeight ? "above" : "under"
+    });
+  }, [perfectWeight, userData]);
+
+  React.useEffect(() => {
+    // Check if numeric values in userData are different from 0 and not null
+    const areValuesValid = Object.values(userDataForReq).every(
+      (value) => value !== 0
+    );
+
+    if (areValuesValid) {
+      generateStats();
+      setIsGenerateStatsCalled(true);
+    }
+  }, [userDataForReq]);
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
@@ -320,6 +587,11 @@ const UserMeasurements = () => {
                             fontSize="sm"
                             fontWeight="500"
                             size="lg"
+                            borderColor={
+                              highlightedFields.includes(key)
+                                ? "green.500"
+                                : undefined
+                            }
                           />
                         ) : (
                           <Input
@@ -351,6 +623,7 @@ const UserMeasurements = () => {
                 <MeasurementsAlertDialog
                   handleSubmit={handleSubmit}
                   userData={userData}
+                  checkUpdate={updateWithNewData}
                 />
                 {error && (
                   <Text color="red" fontSize="sm" mb="8px">

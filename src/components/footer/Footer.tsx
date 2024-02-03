@@ -7,20 +7,32 @@ import {
   Link,
   Text,
   SimpleGrid,
+  useColorMode,
   useColorModeValue,
   Image
 } from "@chakra-ui/react";
+import backgroundImageWhite from "../../assets/img/layout/layered-waves-haikei-white.svg";
+import backgroundImageDark from "../../assets/img/layout/layered-waves-haikei-dark.svg";
+const Footer = (props: { isForLanding?: boolean }) => {
+  const { isForLanding } = props;
+  const { colorMode } = useColorMode();
 
-const Footer = () => {
   const footerColor = useColorModeValue("white", "#111c44");
   const brandColor = useColorModeValue("brand.500", "white");
   const textColor = useColorModeValue("black", "white");
-
+  const backgroundImage =
+    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   return (
     <Box
       as="footer"
       bg={footerColor}
+      backgroundImage={`url(${backgroundImage})`}
+      backgroundRepeat="no-repeat"
+      backgroundSize="cover"
+      backgroundPosition="center"
+      transition="background-image 0.5s ease-in-out"
       borderTop="1px solid"
+      borderRadius={isForLanding ? "" : "21px"}
       borderColor={footerColor}
       py="2.5rem"
       fontSize="0.875rem"
