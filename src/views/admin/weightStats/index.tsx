@@ -200,6 +200,8 @@ export default function WeightStats() {
   const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
     useState<boolean>(false);
 
+  const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
+
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -341,6 +343,7 @@ export default function WeightStats() {
     const latestValue = sortedData[0][property];
     const previousValue = sortedData[1][property];
     const change = latestValue - previousValue;
+    setUserDataLastSavedDate(sortedData[1].date);
     return change;
   };
 
@@ -946,6 +949,7 @@ export default function WeightStats() {
                           : null
                         : null
                     }
+                    subtext={`в сравнение с ${userDataLastSavedDate}`}
                     value={value}
                   />
                 ))}
@@ -1126,6 +1130,7 @@ export default function WeightStats() {
                         : null
                       : null
                   }
+                  subtext={`в сравнение с ${userDataLastSavedDate}`}
                 />
               </SimpleGrid>
             </Card>
@@ -1197,6 +1202,7 @@ export default function WeightStats() {
                             : null
                           : null
                       }
+                      subtext={`в сравнение с ${userDataLastSavedDate}`}
                     />
                   )
                 )}

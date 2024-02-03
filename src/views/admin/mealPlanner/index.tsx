@@ -42,6 +42,9 @@ import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haik
 import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "views/admin/weightStats/components/Loading";
+import MiniStatistics from "components/card/MiniStatistics";
+import { MdLocalFireDepartment } from "react-icons/md";
+import IconBox from "components/icons/IconBox";
 import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
 // Types
@@ -533,6 +536,206 @@ export default function WeightStats() {
                   </Stack>
                 </CardBody>
               </Card>
+              {lineChartForCalories.length > 1 && (
+                <Box>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 4 }}
+                    gap="20px"
+                    mb="20px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={MdLocalFireDepartment}
+                              color={brandColor}
+                            />
+                          }
+                        />
+                      }
+                      tooltipLabel="Средната стойност на всички калории, които сте отбелязвали някога, че ще приемате."
+                      name="Средно приети калории"
+                      value={
+                        lineChartLabels.length > 0
+                          ? (
+                              lineChartForCalories.reduce(
+                                (accumulator, currentValue) =>
+                                  accumulator + currentValue,
+                                0
+                              ) / lineChartLabels.length
+                            ).toFixed(2)
+                          : 0
+                      }
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={MdLocalFireDepartment}
+                              color={brandColor}
+                            />
+                          }
+                        />
+                      }
+                      tooltipLabel="Средната стойност на протеина, които сте отбелязвали някога, че ще приемате."
+                      name="Средно приет протеин"
+                      value={
+                        lineChartLabels.length > 0
+                          ? (
+                              lineChartForProtein.reduce(
+                                (accumulator, currentValue) =>
+                                  accumulator + currentValue,
+                                0
+                              ) / lineChartLabels.length
+                            ).toFixed(2)
+                          : 0
+                      }
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={MdLocalFireDepartment}
+                              color={brandColor}
+                            />
+                          }
+                        />
+                      }
+                      tooltipLabel="Средната стойност на всички въглехидрати, които сте отбелязвали някога, че ще приемате."
+                      name="Средно приети въглехидрати"
+                      value={
+                        lineChartLabels.length > 0
+                          ? (
+                              lineChartForCarbs.reduce(
+                                (accumulator, currentValue) =>
+                                  accumulator + currentValue,
+                                0
+                              ) / lineChartLabels.length
+                            ).toFixed(2)
+                          : 0
+                      }
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg={boxBg}
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={MdLocalFireDepartment}
+                              color={brandColor}
+                            />
+                          }
+                        />
+                      }
+                      tooltipLabel="Средната стойност на всички мазнини, които сте отбелязвали някога, че ще приемате."
+                      name="Средно приети мазнини"
+                      value={
+                        lineChartLabels.length > 0
+                          ? (
+                              lineChartForFat.reduce(
+                                (accumulator, currentValue) =>
+                                  accumulator + currentValue,
+                                0
+                              ) / lineChartLabels.length
+                            ).toFixed(2)
+                          : 0
+                      }
+                    />
+                  </SimpleGrid>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, xl: 2 }}
+                    gap="20px"
+                    mb="20px"
+                  >
+                    <Card
+                      alignItems="center"
+                      flexDirection="column"
+                      h="100%"
+                      w="100%"
+                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                      maxH={{ sm: "100px", md: "300px", lg: "auto" }}
+                    >
+                      <LineChart
+                        lineChartLabels={lineChartLabels}
+                        lineChartData={lineChartForCalories}
+                        lineChartOptions={lineChartOptions}
+                        lineChartLabelName="Изменение на калории(kcal)"
+                      />
+                    </Card>
+                    <Card
+                      alignItems="center"
+                      flexDirection="column"
+                      h="100%"
+                      w="100%"
+                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                    >
+                      <LineChart
+                        lineChartLabels={lineChartLabels}
+                        lineChartData={lineChartForProtein}
+                        lineChartOptions={lineChartOptions}
+                        lineChartLabelName="Изменение на протеин(g)"
+                      />
+                    </Card>
+                    <Card
+                      alignItems="center"
+                      flexDirection="column"
+                      h="100%"
+                      w="100%"
+                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                    >
+                      <LineChart
+                        lineChartLabels={lineChartLabels}
+                        lineChartData={lineChartForFat}
+                        lineChartOptions={lineChartOptions}
+                        lineChartLabelName="Изменение на мазнини(g)"
+                      />
+                    </Card>
+                    <Card
+                      alignItems="center"
+                      flexDirection="column"
+                      h="100%"
+                      w="100%"
+                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                    >
+                      <LineChart
+                        lineChartLabels={lineChartLabels}
+                        lineChartData={lineChartForCarbs}
+                        lineChartOptions={lineChartOptions}
+                        lineChartLabelName="Изменение на въглехидрати(g)"
+                      />
+                    </Card>
+                  </SimpleGrid>
+                </Box>
+              )}
               <Card
                 alignItems="center"
                 p="20px"
@@ -997,77 +1200,6 @@ export default function WeightStats() {
                   )}
                 </Box>
               )}
-
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mb="20px"
-              >
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  maxH={{ sm: "100px", md: "300px", lg: "auto" }}
-                >
-                  <LineChart
-                    lineChartLabels={lineChartLabels}
-                    lineChartData={lineChartForCalories}
-                    lineChartOptions={lineChartOptions}
-                    lineChartLabelName="Изменение на калории(kcal)"
-                  />
-                </Card>
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                >
-                  <LineChart
-                    lineChartLabels={lineChartLabels}
-                    lineChartData={lineChartForProtein}
-                    lineChartOptions={lineChartOptions}
-                    lineChartLabelName="Изменение на протеин(g)"
-                  />
-                </Card>
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                >
-                  <LineChart
-                    lineChartLabels={lineChartLabels}
-                    lineChartData={lineChartForFat}
-                    lineChartOptions={lineChartOptions}
-                    lineChartLabelName="Изменение на мазнини(g)"
-                  />
-                </Card>
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                >
-                  <LineChart
-                    lineChartLabels={lineChartLabels}
-                    lineChartData={lineChartForCarbs}
-                    lineChartOptions={lineChartOptions}
-                    lineChartLabelName="Изменение на въглехидрати(g)"
-                  />
-                </Card>
-              </SimpleGrid>
             </Box>
           )}
         </Box>
