@@ -19,26 +19,15 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-// Chakra imports
-import {
-  Avatar,
-  Button,
-  Box,
-  Flex,
-  FormLabel,
-  Icon,
-  Select,
-  SimpleGrid,
-  useColorMode,
-  useColorModeValue,
-  Text,
-  Link
-} from "@chakra-ui/react";
+import React, { useState } from "react";
+
+// Chakra UI components
+import { Box, Text, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
+import Card from "components/card/Card";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-
+import Loading from "views/admin/weightStats/components/Loading";
 interface LinearGradientTextProps {
   text: any;
   gradient: string;
@@ -94,7 +83,50 @@ export default function UserReports() {
   const fontWeight = useColorModeValue("500", "100");
   const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
   const bgFocus = { bg: "brand.200" };
-  const [loading, setLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  return <Box></Box>;
+  function maikaTi() {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }
+  React.useEffect(() => {
+    maikaTi();
+  }, []);
+  return (
+    <FadeInWrapper>
+      <Box
+        pt={{ base: "130px", md: "80px", xl: "80px" }}
+        style={{ overflow: "hidden" }}
+      >
+        {isLoading ? (
+          <Box
+            mt="37vh"
+            minH="600px"
+            opacity={isLoading ? 1 : 0}
+            transition="opacity 0.5s ease-in-out"
+          >
+            <Loading />
+          </Box>
+        ) : (
+          <Box transition="0.2s ease-in-out">
+            <Card
+              p="20px"
+              alignItems="center"
+              flexDirection="column"
+              w="100%"
+              mb="20px"
+              backgroundImage={`url(${backgroundImage})`}
+              backgroundRepeat="no-repeat"
+              backgroundSize="cover"
+              backgroundPosition="center"
+              transition="background-image 0.25s ease-in-out"
+            >
+              maika ti
+            </Card>
+          </Box>
+        )}
+      </Box>
+    </FadeInWrapper>
+  );
 }
