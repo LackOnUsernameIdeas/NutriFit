@@ -50,9 +50,9 @@ import {
 import {
   getFirestore,
   collection,
+  getDocs,
   onSnapshot,
-  DocumentData,
-  getDocs
+  DocumentData
 } from "firebase/firestore";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
@@ -157,13 +157,13 @@ export default function UserReports() {
         );
         const usersCollectionSnapshot = await getDocs(usersDataCollectionRef);
         const numberOfUsers = usersCollectionSnapshot.size;
-
         let totalCalories = 0;
         let totalProtein = 0;
         let totalCarbs = 0;
         let totalFat = 0;
         let totalWeight = 0;
         let totalBodyFatPercentage = 0;
+        let divider = 0;
 
         // Subscribe to real-time updates using onSnapshot
         const unsubscribe = onSnapshot(
@@ -207,21 +207,18 @@ export default function UserReports() {
                 totalWeight += latestTimestampData.weight;
                 totalBodyFatPercentage +=
                   latestTimestampData.BodyMassData.bodyFat;
+                divider++;
               }
             });
 
             // Calculate the average weight
-            const meanCalories =
-              numberOfUsers > 0 ? totalCalories / numberOfUsers : 0;
-            const meanProtein =
-              numberOfUsers > 0 ? totalProtein / numberOfUsers : 0;
-            const meanCarbs =
-              numberOfUsers > 0 ? totalCarbs / numberOfUsers : 0;
-            const meanFat = numberOfUsers > 0 ? totalFat / numberOfUsers : 0;
-            const meanWeight =
-              numberOfUsers > 0 ? totalWeight / numberOfUsers : 0;
+            const meanCalories = divider > 0 ? totalCalories / divider : 0;
+            const meanProtein = divider > 0 ? totalProtein / divider : 0;
+            const meanCarbs = divider > 0 ? totalCarbs / divider : 0;
+            const meanFat = divider > 0 ? totalFat / divider : 0;
+            const meanWeight = divider > 0 ? totalWeight / divider : 0;
             const meanBodyFatPercentage =
-              numberOfUsers > 0 ? totalBodyFatPercentage / numberOfUsers : 0;
+              divider > 0 ? totalBodyFatPercentage / divider : 0;
 
             // Update state with calculated averages
             setTotalUsers(numberOfUsers);
