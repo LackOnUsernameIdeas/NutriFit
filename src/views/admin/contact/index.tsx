@@ -35,38 +35,9 @@ import {
   Text,
   Link
 } from "@chakra-ui/react";
-// Assets
-import Bulgaria from "assets/img/dashboards/bulgaria.png";
-// Custom components
-import MiniStatistics from "components/card/MiniStatistics";
-import Card from "components/card/Card";
-import IconBox from "components/icons/IconBox";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdBarChart,
-  MdFileCopy
-} from "react-icons/md";
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  DocumentData,
-  getDocs
-} from "firebase/firestore";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import {
-  getTotalUsers,
-  getAverageWeightOfAllUsers,
-  getAverageCaloriesOfAllUsers,
-  getAverageProteinOfAllUsers,
-  getAverageCarbsOfAllUsers,
-  getAverageFatOfAllUsers,
-  getAverageBodyFatPercentageOfAllUsers
-} from "database/getMeanUsersData";
-import TotalSpent from "./components/TotalSpent";
 
 interface LinearGradientTextProps {
   text: any;
