@@ -128,14 +128,6 @@ export default function UserReports() {
     }
   };
 
-  // function maikaTi() {
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 1000);
-  // }
-  // React.useEffect(() => {
-  //   maikaTi();
-  // }, []);
   return (
     <FadeInWrapper>
       <Box
@@ -197,6 +189,7 @@ export default function UserReports() {
                     mb="24px"
                     fontWeight="500"
                     size="lg"
+                    backgroundColor={boxBg}
                     // onChange={(email) => setEmail(email.target.value)}
                   />
                   <FormLabel
@@ -217,6 +210,7 @@ export default function UserReports() {
                     mb="24px"
                     fontWeight="500"
                     size="lg"
+                    backgroundColor={boxBg}
                     // onChange={(email) => setEmail(email.target.value)}
                   />
                   <FormLabel
@@ -240,6 +234,7 @@ export default function UserReports() {
                     }}
                     value={message}
                     onChange={handleInputChange}
+                    backgroundColor={boxBg}
                     mb="24px"
                     fontWeight="500"
                     minHeight="200px"
