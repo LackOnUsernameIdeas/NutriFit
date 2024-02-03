@@ -81,14 +81,6 @@ const routes = [
     hideInSidebar: true
   },
   {
-    name: "За контакт",
-    layout: "/admin",
-    path: "/contact",
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    component: Contact,
-    hideInSidebar: false
-  },
-  {
     name: "Вход",
     layout: "/auth",
     path: "/sign-in",
