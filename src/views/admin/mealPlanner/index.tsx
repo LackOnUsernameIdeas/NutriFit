@@ -418,6 +418,7 @@ export default function WeightStats() {
     });
   }
 
+  console.log("tableData: ", tableData);
   React.useEffect(() => {
     // Check if both clickedValueCalories and clickedValueNutrients are set
     if (
@@ -733,246 +734,270 @@ export default function WeightStats() {
                 </Link>
               </Alert>
               {activityLevel && (
-                <FadeInWrapper>
-                  <FadeInWrapper>
-                    <Card p="20px" flexDirection="column" w="100%" mb="20px">
-                      <Card alignItems="center">
-                        <Text
-                          color={textColor}
-                          fontSize="2xl"
-                          ms="24px"
-                          fontWeight="700"
-                        >
-                          Изберете желаната от вас цел и съответните калории,
-                          които трябва да приемате на ден според желания
-                          резултат:
-                        </Text>
-                        <CalorieRequirements
-                          calorieRequirements={dailyCaloryRequirements}
-                          selectedActivityLevel={activityLevel}
-                          clickedValueCalories={clickedValueCalories}
-                          setClickedValueCalories={setClickedValueCalories}
-                          setSelectedGoal={setSelectedGoal}
-                          setUserData={setUserData}
-                        />
-                      </Card>
+                <Box>
+                  {macroNutrients.length > 0 ? (
+                    <FadeInWrapper>
                       <FadeInWrapper>
-                        {isDietTableDataReady &&
-                          clickedValueCalories !== null && (
-                            <>
-                              <Card>
-                                <Flex align="center">
-                                  <Menu
-                                    isOpen={isOpenDiet}
-                                    onClose={onCloseDiet}
-                                  >
-                                    <MenuButton
-                                      alignItems="center"
-                                      justifyContent="center"
-                                      bg={bgButton}
-                                      _hover={bgHover}
-                                      _focus={bgFocus}
-                                      _active={bgFocus}
-                                      w="30px"
-                                      h="30px"
-                                      lineHeight="50%"
-                                      onClick={onOpen}
-                                      borderRadius="10px"
-                                      order={1} // Set a higher order value
-                                    >
-                                      <Icon
-                                        as={MdOutlineInfo}
-                                        color={iconColor}
-                                        w="24px"
-                                        h="24px"
-                                      />
-                                    </MenuButton>
-                                    <MenuList
-                                      w="100%"
-                                      minW="unset"
-                                      ml={{ base: "2%", lg: 0 }}
-                                      mr={{ base: "2%", lg: 0 }}
-                                      maxW={{ base: "47%", lg: "80%" }}
-                                      border="transparent"
-                                      backdropFilter="blur(100px)"
-                                      bg={bgList}
-                                      borderRadius="20px"
-                                    >
-                                      <Box
-                                        transition="0.2s linear"
-                                        color={textColor}
-                                        borderRadius="8px"
-                                        maxW={{ base: "2xl", lg: "100%" }}
+                        <Card
+                          p="20px"
+                          flexDirection="column"
+                          w="100%"
+                          mb="20px"
+                        >
+                          <Card alignItems="center">
+                            <Text
+                              color={textColor}
+                              fontSize="2xl"
+                              ms="24px"
+                              fontWeight="700"
+                            >
+                              Изберете желаната от вас цел и съответните
+                              калории, които трябва да приемате на ден според
+                              желания резултат:
+                            </Text>
+                            <CalorieRequirements
+                              calorieRequirements={dailyCaloryRequirements}
+                              selectedActivityLevel={activityLevel}
+                              clickedValueCalories={clickedValueCalories}
+                              setClickedValueCalories={setClickedValueCalories}
+                              setSelectedGoal={setSelectedGoal}
+                              setUserData={setUserData}
+                            />
+                          </Card>
+                          <FadeInWrapper>
+                            {isDietTableDataReady &&
+                              clickedValueCalories !== null && (
+                                <>
+                                  <Card>
+                                    <Flex align="center">
+                                      <Menu
+                                        isOpen={isOpenDiet}
+                                        onClose={onCloseDiet}
                                       >
-                                        <AlertDialog
-                                          isOpen={isOpen}
-                                          leastDestructiveRef={cancelRef}
-                                          onClose={onClose}
+                                        <MenuButton
+                                          alignItems="center"
+                                          justifyContent="center"
+                                          bg={bgButton}
+                                          _hover={bgHover}
+                                          _focus={bgFocus}
+                                          _active={bgFocus}
+                                          w="30px"
+                                          h="30px"
+                                          lineHeight="50%"
+                                          onClick={onOpen}
+                                          borderRadius="10px"
+                                          order={1} // Set a higher order value
                                         >
-                                          <AlertDialogOverlay>
-                                            <AlertDialogContent
-                                              border="2px"
-                                              borderRadius="25px"
-                                              borderColor={borderColor}
+                                          <Icon
+                                            as={MdOutlineInfo}
+                                            color={iconColor}
+                                            w="24px"
+                                            h="24px"
+                                          />
+                                        </MenuButton>
+                                        <MenuList
+                                          w="100%"
+                                          minW="unset"
+                                          ml={{ base: "2%", lg: 0 }}
+                                          mr={{ base: "2%", lg: 0 }}
+                                          maxW={{ base: "47%", lg: "80%" }}
+                                          border="transparent"
+                                          backdropFilter="blur(100px)"
+                                          bg={bgList}
+                                          borderRadius="20px"
+                                        >
+                                          <Box
+                                            transition="0.2s linear"
+                                            color={textColor}
+                                            borderRadius="8px"
+                                            maxW={{ base: "2xl", lg: "100%" }}
+                                          >
+                                            <AlertDialog
+                                              isOpen={isOpen}
+                                              leastDestructiveRef={cancelRef}
+                                              onClose={onClose}
                                             >
-                                              <AlertDialogHeader
-                                                fontSize="lg"
-                                                fontWeight="bold"
-                                              >
-                                                Изберете тип диета по вашите{" "}
-                                                <br />
-                                                предпочитания.
-                                              </AlertDialogHeader>
+                                              <AlertDialogOverlay>
+                                                <AlertDialogContent
+                                                  border="2px"
+                                                  borderRadius="25px"
+                                                  borderColor={borderColor}
+                                                >
+                                                  <AlertDialogHeader
+                                                    fontSize="lg"
+                                                    fontWeight="bold"
+                                                  >
+                                                    Изберете тип диета по вашите{" "}
+                                                    <br />
+                                                    предпочитания.
+                                                  </AlertDialogHeader>
 
-                                              <AlertDialogCloseButton borderRadius="20px" />
+                                                  <AlertDialogCloseButton borderRadius="20px" />
 
-                                              <AlertDialogBody>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="1xl"
-                                                    fontWeight="400"
-                                                    mt="4px"
-                                                  >
-                                                    <b>Балансирана:</b>
-                                                    <br />
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="sm"
-                                                    fontWeight="200"
-                                                    mb="10px"
-                                                  >
-                                                    Балансирано разпределение на
-                                                    макронутриенти с умерени
-                                                    нива на протеини,
-                                                    въглехидрати и мазнини.
-                                                    Идеална за поддържане на
-                                                    здравето.
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="1xl"
-                                                    fontWeight="400"
-                                                    mt="4px"
-                                                  >
-                                                    <b>
-                                                      Ниско съдържание на
-                                                      мазнини:
-                                                    </b>
-                                                    <br />
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="sm"
-                                                    fontWeight="200"
-                                                    mb="10px"
-                                                  >
-                                                    Набляга на намаляване на
-                                                    приема на мазнини и
-                                                    поддържане на адекватни нива
-                                                    на протеини и въглехидрати.
-                                                    Подходящ за тези, които се
-                                                    стремят да намалят общия
-                                                    прием на калории и да
-                                                    контролират теглото си.
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="1xl"
-                                                    fontWeight="400"
-                                                    mt="4px"
-                                                  >
-                                                    <b>
-                                                      Ниско съдържание на
-                                                      въглехидрати:
-                                                    </b>
-                                                    <br />
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="sm"
-                                                    fontWeight="400"
-                                                    mb="10px"
-                                                  >
-                                                    Фокусира се върху
-                                                    минимизиране на приема на
-                                                    въглехидрати, като
-                                                    същевременно осигурява
-                                                    достатъчно протеини и
-                                                    здравословни мазнини.
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="1xl"
-                                                    fontWeight="400"
-                                                    mt="4px"
-                                                  >
-                                                    <b>
-                                                      Високо съдържание на
-                                                      протеин:
-                                                    </b>
-                                                    <br />
-                                                  </Text>
-                                                </Flex>
-                                                <Flex align="center">
-                                                  <Text
-                                                    fontSize="sm"
-                                                    fontWeight="400"
-                                                  >
-                                                    Дава приоритет на по-висок
-                                                    прием на протеин с умерени
-                                                    нива на въглехидрати и
-                                                    мазнини. Идеална за тези,
-                                                    които искат да подпомогнат
-                                                    развитието на мускулите,
-                                                    особено при силови
-                                                    тренировки или фитнес
-                                                    програми.
-                                                  </Text>
-                                                </Flex>
-                                              </AlertDialogBody>
-                                              <AlertDialogFooter></AlertDialogFooter>
-                                            </AlertDialogContent>
-                                          </AlertDialogOverlay>
-                                        </AlertDialog>
-                                      </Box>
-                                    </MenuList>
-                                  </Menu>
-                                </Flex>
-                              </Card>
-                              <DietTable
-                                tableName="Изберете тип диета:"
-                                tableData={tableData}
-                                columnsData={[
-                                  { name: "name", label: "Тип диета" },
-                                  { name: "protein", label: "Протеин (гр.)" },
-                                  { name: "fat", label: "Мазнини (гр.)" },
-                                  { name: "carbs", label: "Въглехидрати (гр.)" }
-                                ]}
-                                setState={setClickedValueNutrients}
-                                clickedValueProtein={
-                                  clickedValueNutrients.protein
-                                }
-                              />
-                            </>
-                          )}
+                                                  <AlertDialogBody>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="1xl"
+                                                        fontWeight="400"
+                                                        mt="4px"
+                                                      >
+                                                        <b>Балансирана:</b>
+                                                        <br />
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="sm"
+                                                        fontWeight="200"
+                                                        mb="10px"
+                                                      >
+                                                        Балансирано
+                                                        разпределение на
+                                                        макронутриенти с умерени
+                                                        нива на протеини,
+                                                        въглехидрати и мазнини.
+                                                        Идеална за поддържане на
+                                                        здравето.
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="1xl"
+                                                        fontWeight="400"
+                                                        mt="4px"
+                                                      >
+                                                        <b>
+                                                          Ниско съдържание на
+                                                          мазнини:
+                                                        </b>
+                                                        <br />
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="sm"
+                                                        fontWeight="200"
+                                                        mb="10px"
+                                                      >
+                                                        Набляга на намаляване на
+                                                        приема на мазнини и
+                                                        поддържане на адекватни
+                                                        нива на протеини и
+                                                        въглехидрати. Подходящ
+                                                        за тези, които се
+                                                        стремят да намалят общия
+                                                        прием на калории и да
+                                                        контролират теглото си.
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="1xl"
+                                                        fontWeight="400"
+                                                        mt="4px"
+                                                      >
+                                                        <b>
+                                                          Ниско съдържание на
+                                                          въглехидрати:
+                                                        </b>
+                                                        <br />
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="sm"
+                                                        fontWeight="400"
+                                                        mb="10px"
+                                                      >
+                                                        Фокусира се върху
+                                                        минимизиране на приема
+                                                        на въглехидрати, като
+                                                        същевременно осигурява
+                                                        достатъчно протеини и
+                                                        здравословни мазнини.
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="1xl"
+                                                        fontWeight="400"
+                                                        mt="4px"
+                                                      >
+                                                        <b>
+                                                          Високо съдържание на
+                                                          протеин:
+                                                        </b>
+                                                        <br />
+                                                      </Text>
+                                                    </Flex>
+                                                    <Flex align="center">
+                                                      <Text
+                                                        fontSize="sm"
+                                                        fontWeight="400"
+                                                      >
+                                                        Дава приоритет на
+                                                        по-висок прием на
+                                                        протеин с умерени нива
+                                                        на въглехидрати и
+                                                        мазнини. Идеална за
+                                                        тези, които искат да
+                                                        подпомогнат развитието
+                                                        на мускулите, особено
+                                                        при силови тренировки
+                                                        или фитнес програми.
+                                                      </Text>
+                                                    </Flex>
+                                                  </AlertDialogBody>
+                                                  <AlertDialogFooter></AlertDialogFooter>
+                                                </AlertDialogContent>
+                                              </AlertDialogOverlay>
+                                            </AlertDialog>
+                                          </Box>
+                                        </MenuList>
+                                      </Menu>
+                                    </Flex>
+                                  </Card>
+                                  <DietTable
+                                    tableName="Изберете тип диета:"
+                                    tableData={tableData}
+                                    columnsData={[
+                                      { name: "name", label: "Тип диета" },
+                                      {
+                                        name: "protein",
+                                        label: "Протеин (гр.)"
+                                      },
+                                      { name: "fat", label: "Мазнини (гр.)" },
+                                      {
+                                        name: "carbs",
+                                        label: "Въглехидрати (гр.)"
+                                      }
+                                    ]}
+                                    setState={setClickedValueNutrients}
+                                    clickedValueProtein={
+                                      clickedValueNutrients.protein
+                                    }
+                                  />
+                                </>
+                              )}
+                          </FadeInWrapper>
+                        </Card>
                       </FadeInWrapper>
-                    </Card>
-                  </FadeInWrapper>
-                  {clickedValueNutrients.protein !== null && (
-                    <MealPlanner
-                      chosenCalories={clickedValueCalories}
-                      chosenNutrients={clickedValueNutrients}
-                    />
+                      {clickedValueNutrients.protein !== null && (
+                        <MealPlanner
+                          chosenCalories={clickedValueCalories}
+                          chosenNutrients={clickedValueNutrients}
+                        />
+                      )}
+                    </FadeInWrapper>
+                  ) : (
+                    <Box>
+                      <Loading />
+                      <br />
+                    </Box>
                   )}
-                </FadeInWrapper>
+                </Box>
               )}
+
               <SimpleGrid
                 columns={{ base: 1, md: 2, xl: 2 }}
                 gap="20px"
