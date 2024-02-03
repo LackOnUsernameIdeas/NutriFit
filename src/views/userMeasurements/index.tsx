@@ -371,6 +371,7 @@ const UserMeasurements = () => {
         );
         await generateStats();
         setIsGenerateStatsCalled(true);
+        history.push("/admin/default");
 
         // Save additional user data to the server
         const response = await fetch(
@@ -390,7 +391,6 @@ const UserMeasurements = () => {
 
           // Data processed successfully
           setIsFilledOut(true);
-          history.push("/admin/default");
         } else {
           // Handle server error
           console.error("Server error:", response.statusText);
