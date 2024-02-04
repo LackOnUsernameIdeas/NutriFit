@@ -15,6 +15,7 @@ import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
+import MealPlannerr from "views/admin/mealPlannerr";
 import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
 
@@ -47,7 +48,17 @@ const routes = [
     icon: (
       <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
     ),
-    component: MealPlanner
+    component: MealPlanner,
+    hideInSidebar: true
+  },
+  {
+    name: "Хранителен Планn",
+    layout: "/admin",
+    path: "/mealplann",
+    icon: (
+      <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
+    ),
+    component: MealPlannerr
   },
   {
     name: "За контакт",
