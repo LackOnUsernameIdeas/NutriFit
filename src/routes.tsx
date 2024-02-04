@@ -42,6 +42,15 @@ const routes = [
     component: WeightStats
   },
   {
+    name: "Хранителен Планn",
+    layout: "/admin",
+    path: "/mealplann",
+    icon: (
+      <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
+    ),
+    component: MealPlannerr
+  },
+  {
     name: "Хранителен План",
     layout: "/admin",
     path: "/mealplan",
@@ -50,15 +59,6 @@ const routes = [
     ),
     component: MealPlanner,
     hideInSidebar: true
-  },
-  {
-    name: "Хранителен Планn",
-    layout: "/admin",
-    path: "/mealplann",
-    icon: (
-      <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
-    ),
-    component: MealPlannerr
   },
   {
     name: "За контакт",
