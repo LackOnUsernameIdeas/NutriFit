@@ -188,6 +188,7 @@ export default function MealPlanner(props: {
                             handleIncrement={handleIncrement}
                             handleDecrement={handleDecrement}
                           /> */}
+                          <h1>Generated Meal Plan!</h1>
                         </SimpleGrid>
                       </Flex>
                     ) : (
