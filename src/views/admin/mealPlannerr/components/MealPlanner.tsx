@@ -170,15 +170,37 @@ export default function MealPlanner(props: {
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
-                    <Text
-                      textAlign="center"
-                      fontSize="4xl"
-                      fontStyle="italic"
-                      mt="20px"
-                      transition="0.25s ease-in-out"
-                    >
-                      Не намерихме хранителен план за вас :( Опитайте отново.
-                    </Text>
+                    {mealPlan.lunch !== null && mealPlan.dinner !== null ? (
+                      <Flex justify="center" w="100%" mb="5px">
+                        <SimpleGrid
+                          columns={{ base: 1, md: 1, xl: 1 }}
+                          gap="20px"
+                        >
+                          {/* <MealPlanDetails
+                            customServings={customServings}
+                            suggestedMaxServings={suggestedMaxServings}
+                            mealPlan={mealPlan}
+                            calories={calories}
+                            protein={protein}
+                            carbs={carbs}
+                            fat={fat}
+                            weight={weightPerServing}
+                            handleIncrement={handleIncrement}
+                            handleDecrement={handleDecrement}
+                          /> */}
+                        </SimpleGrid>
+                      </Flex>
+                    ) : (
+                      <Text
+                        textAlign="center"
+                        fontSize="4xl"
+                        fontStyle="italic"
+                        mt="20px"
+                        transition="0.25s ease-in-out"
+                      >
+                        Не намерихме хранителен план за вас :( Опитайте отново.
+                      </Text>
+                    )}
                   </>
                 )}
               </Box>

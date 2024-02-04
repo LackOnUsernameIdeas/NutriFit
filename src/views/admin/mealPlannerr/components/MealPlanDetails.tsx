@@ -1,5 +1,4 @@
 import React from "react";
-import { CustomServingInput } from "./CustomServingInput";
 import {
   MealPlan,
   NutrientState,
@@ -87,26 +86,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       pt="2px"
                       w="100%"
                       mt="5px"
-                    >
-                      <CustomServingInput
-                        mealType={mealType}
-                        value={
-                          (customServings as any)[mealType] !== 0
-                            ? (customServings as any)[mealType]
-                            : (suggestedMaxServings as any)[mealType]
-                        }
-                        onIncrement={() =>
-                          handleIncrement(
-                            mealType as keyof typeof customServings
-                          )
-                        }
-                        onDecrement={() =>
-                          handleDecrement(
-                            mealType as keyof typeof customServings
-                          )
-                        }
-                      />
-                    </Flex>
+                    ></Flex>
                   }
                   image={(mealPlan as any)[mealType].photo}
                   currentbid={
