@@ -252,7 +252,7 @@ export default function UserReports() {
                     h="50"
                     mb="24px"
                   >
-                    Влизане
+                    Изпратете съобщение
                   </Button>
                 </FormControl>
               </Flex>
