@@ -152,7 +152,7 @@ export default function MealPlanner(props: {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                "Bearer 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"
+                "Bearer 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"
             },
             body: JSON.stringify({
               "model": "dall-e-2",
