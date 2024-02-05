@@ -89,7 +89,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -101,8 +101,7 @@ export default function MealPlanner(props: {
               },
               {
                 role: "user",
-                content:
-                  "Generate me a meal plan for the day with 3 meals based on the following nutrients limits without straying too far away from the provided limits: `calories: 1778.50, protein: 116.47, fat: 34.88, carbohydrates: 154.73`. If possible use recipes that are usual for the Bulgarian cuisine but try to give different recipes from the previous request. Don't round the values as you like and use the actual and exact nutrient values. Put the nutrients values and the quantity in grams in ratio with the nutrients after each meal in this format: `totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}`. Put the summed values for the day in this format: `totals: {calories: number,protein: number,fat: number,carbohydrates: number}`. Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]) and the ingredients of the meals as well(with structure: ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian. Export in JSON exactly like this: `{'breakfast':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}},'lunch':{'likebreakfast'},'dinner':{'likebreakfast'},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}` WITHOUT ADDING `json` keyword with backticks!!! Don't translate the properties, only the values."
+                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits without straying too far away from the provided limits: 'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'. If possible use recipes that are usual for the Bulgarian cuisine but try to give different recipes from the previous request. Don't round the values as you like and use the actual and exact nutrient values. Put the nutrients values and the quantity in grams in ratio with the nutrients after each meal in this format: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. Put the summed values for the day in this format: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]) and the ingredients of the meals as well(with structure: ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian. Export in JSON exactly like this: '{'breakfast':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}},'lunch':{'likebreakfast'},'dinner':{'likebreakfast'},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}' WITHOUT ADDING 'json' keyword with backticks!!! Don't translate the properties, only the values.`
               }
             ]
           })
@@ -141,26 +140,14 @@ export default function MealPlanner(props: {
       for (const mealKey of Object.keys(filteredArr)) {
         const meal = (filteredArr as any)[mealKey];
 
-        console.log("meal: ", meal)
-        console.log("meal name: ", meal.name)
+        console.log("meal: ", meal);
+        console.log("meal name: ", meal.name);
 
         // Now make a request to the "images/generations" endpoint for each meal's name
         const imageResponse = await fetch(
-          "https://api.openai.com/v1/images/generations",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization":
-                "Bearer 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"
-            },
-            body: JSON.stringify({
-              "model": "dall-e-2",
-              "prompt": `${meal.name}`,
-              "n": 1,
-              "size": "1024x1024"
-            })
-          }
+          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+            meal.name
+          )}&searchType=image&siteSearch=facebook.com&siteSearchFilter=e`
         );
 
         if (!imageResponse.ok) {
@@ -170,14 +157,15 @@ export default function MealPlanner(props: {
         const imageResponseData = await imageResponse.json();
         console.log(
           `Image Generation Response for ${meal.name}: `,
-          imageResponseData
+          imageResponseData.items[0].link
         );
-        (mealPlanImagesData as any)[mealKey] = imageResponseData;
+        (mealPlanImagesData as any)[mealKey] = imageResponseData.items[0].link;
       }
+
+      console.log("mealPlanImagesData:", mealPlanImagesData);
 
       setMealPlanImages(mealPlanImagesData);
 
-      console.log("mealPlanImages:", mealPlanImages);
       setMealPlan({
         breakfast: data.breakfast,
         lunch: data.lunch,
