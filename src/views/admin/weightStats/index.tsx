@@ -68,7 +68,7 @@ export default function WeightStats() {
   const fontWeight = useColorModeValue("550", "100");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("black", "white");
-  const iconColor = useColorModeValue("brand.500", "white");
+  const infoBoxIconColor = useColorModeValue("black", "white");
   const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
   const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -764,7 +764,7 @@ export default function WeightStats() {
                   >
                     <Icon
                       as={MdOutlineInfo}
-                      color={iconColor}
+                      color={infoBoxIconColor}
                       w="24px"
                       h="24px"
                     />
@@ -1063,7 +1063,7 @@ export default function WeightStats() {
                   >
                     <Icon
                       as={MdOutlineInfo}
-                      color={iconColor}
+                      color={infoBoxIconColor}
                       w="24px"
                       h="24px"
                     />
@@ -1281,14 +1281,14 @@ export default function WeightStats() {
               </SimpleGrid>
             </Card>
             <Card
-          onClick={handleDropdownToggle}
-          cursor="pointer"
-          zIndex="1"
-          position="relative"
-          _hover={bgDropHover}
-          _focus={bgDropFocus}
-          mb={renderDropdown ? "0px" : "20px"}
-        >
+              onClick={handleDropdownToggle}
+              cursor="pointer"
+              zIndex="1"
+              position="relative"
+              _hover={bgDropHover}
+              _focus={bgDropFocus}
+              mb={renderDropdown ? "0px" : "20px"}
+            >
               <Flex justify="space-between" alignItems="center">
                 <Text fontSize="2xl">
                   Статистики за вашето телесно изменение:{" "}

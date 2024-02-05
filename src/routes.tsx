@@ -42,9 +42,9 @@ const routes = [
     component: WeightStats
   },
   {
-    name: "Хранителен Планn",
+    name: "Хранителен План",
     layout: "/admin",
-    path: "/mealplann",
+    path: "/mealplan",
     icon: (
       <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
     ),
@@ -53,7 +53,7 @@ const routes = [
   {
     name: "Хранителен План",
     layout: "/admin",
-    path: "/mealplan",
+    path: "/mealplann",
     icon: (
       <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
     ),
