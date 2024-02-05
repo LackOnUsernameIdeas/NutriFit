@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 
 // Chakra imports
-import { Box, SimpleGrid, Text, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  SimpleGrid,
+  Text,
+  Flex,
+  useColorModeValue
+} from "@chakra-ui/react";
 
 import Loading from "views/admin/weightStats/components/Loading";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -31,6 +37,11 @@ export default function MealPlanner(props: {
   };
 }) {
   const { chosenCalories, chosenNutrients } = props;
+
+  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
+  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
+  const gradientNutri = useColorModeValue(gradientLight, gradientDark);
+  const gradientFit = useColorModeValue(gradientDark, gradientLight);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -186,23 +197,63 @@ export default function MealPlanner(props: {
   // });
   // console.log("filteredArr: ", filteredArr);
   console.log("totals: ", mealPlan.totals);
+
+  interface LinearGradientTextProps {
+    text: any;
+    gradient: string;
+    fontSize?: string;
+    fontFamily?: string;
+    mr?: string;
+  }
+
+  const LinearGradientText: React.FC<LinearGradientTextProps> = ({
+    text,
+    gradient,
+    fontSize,
+    fontFamily,
+    mr
+  }) => (
+    <Text
+      as="span"
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      fontWeight="bold"
+      mr={mr}
+      style={{
+        backgroundImage: gradient,
+        WebkitBackgroundClip: "text",
+        color: "transparent"
+      }}
+    >
+      {text}
+    </Text>
+  );
+
   return (
     <FadeInWrapper>
       <Box mb="20px">
         <Card>
           <Card>
             <Flex justify="center" w="100%" mb="5px">
-              <Text fontSize="5xl" fontStyle="italic">
-                Създайте хранителен план с NutriFit!
+              <Text fontSize="5xl" mr="2">
+                Създайте хранителен план с{" "}
               </Text>
+              <LinearGradientText
+                text={<b>Nutri</b>}
+                gradient={gradientNutri}
+                fontSize="5xl"
+                fontFamily="DM Sans"
+              />
+              <LinearGradientText
+                text={<b>Fit</b>}
+                gradient={gradientFit}
+                fontFamily="Leckerli One"
+                fontSize="5xl"
+                mr="1px"
+              />
+              <Text fontSize="5xl">:</Text>
             </Flex>
             <HSeparator />
-            <Flex justify="center" mt="1%" pt="10px">
-              <Text fontSize="3xl">
-                Моля попълнете редовете с предпочитаните от вас лимити, след
-                което вашият план ще бъде създаден.
-              </Text>
-            </Flex>
           </Card>
           <Card>
             {isSubmitted ? (
@@ -244,7 +295,6 @@ export default function MealPlanner(props: {
                       <Text
                         textAlign="center"
                         fontSize="4xl"
-                        fontStyle="italic"
                         mt="20px"
                         transition="0.25s ease-in-out"
                       >
