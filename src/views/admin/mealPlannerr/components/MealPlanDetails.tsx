@@ -8,11 +8,19 @@ import Card from "components/card/Card";
 
 interface MealPlanDetailsProps {
   mealPlan: MealPlan;
+  mealPlanImages: {
+    breakfast: string;
+    lunch: string;
+    dinner: string;
+  };
 }
 
 const bulgarianMealType: string[] = ["Закуска", "Обяд", "Вечеря"];
 
-const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ mealPlan }) => {
+const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
+  mealPlan,
+  mealPlanImages
+}) => {
   console.log("unfiltered Array: ", mealPlan);
 
   const filteredArr = Object.fromEntries(
@@ -62,7 +70,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({ mealPlan }) => {
                         mt="5px"
                       ></Flex>
                     }
-                    // image={meal?.photo}
+                    image={(mealPlanImages as any)[mealType].data[0].url}
                     currentbid={
                       <Box>
                         <Flex

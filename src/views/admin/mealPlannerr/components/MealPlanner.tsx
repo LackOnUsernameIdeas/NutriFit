@@ -48,6 +48,15 @@ export default function MealPlanner(props: {
     lunch: null,
     dinner: null
   });
+  const [mealPlanImages, setMealPlanImages] = useState<{
+    breakfast: string;
+    lunch: string;
+    dinner: string;
+  }>({
+    breakfast: null,
+    lunch: null,
+    dinner: null
+  });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -80,7 +89,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -114,8 +123,61 @@ export default function MealPlanner(props: {
 
       console.log("CHATGPT: ", data);
 
-      // setSuggestedMaxServings(data.totals);
+      const filteredArr = Object.fromEntries(
+        Object.entries(data).filter(([key]) => key !== "totals")
+      );
 
+      const mealPlanImagesData: {
+        breakfast: string;
+        lunch: string;
+        dinner: string;
+      } = {
+        breakfast: null,
+        lunch: null,
+        dinner: null
+      };
+
+      // Iterate over each meal and make a separate image generation request
+      for (const mealKey of Object.keys(filteredArr)) {
+        const meal = (filteredArr as any)[mealKey];
+
+        console.log("meal: ", meal)
+        console.log("meal name: ", meal.name)
+
+        // Now make a request to the "images/generations" endpoint for each meal's name
+        const imageResponse = await fetch(
+          "https://api.openai.com/v1/images/generations",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                "Bearer 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"
+            },
+            body: JSON.stringify({
+              "model": "dall-e-2",
+              "prompt": `${meal.name}`,
+              "n": 1,
+              "size": "1024x1024"
+            })
+          }
+        );
+
+        if (!imageResponse.ok) {
+          throw new Error("Failed to generate image");
+        }
+
+        const imageResponseData = await imageResponse.json();
+        console.log(
+          `Image Generation Response for ${meal.name}: `,
+          imageResponseData
+        );
+        (mealPlanImagesData as any)[mealKey] = imageResponseData;
+      }
+
+      setMealPlanImages(mealPlanImagesData);
+
+      console.log("mealPlanImages:", mealPlanImages);
       setMealPlan({
         breakfast: data.breakfast,
         lunch: data.lunch,
@@ -183,7 +245,10 @@ export default function MealPlanner(props: {
                           columns={{ base: 1, md: 1, xl: 1 }}
                           gap="20px"
                         >
-                          <MealPlanDetails mealPlan={mealPlan} />
+                          <MealPlanDetails
+                            mealPlan={mealPlan}
+                            mealPlanImages={mealPlanImages}
+                          />
                           <h1>Generated Meal Plan!</h1>
                         </SimpleGrid>
                       </Flex>
