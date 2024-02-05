@@ -120,8 +120,14 @@ export default function UserReports() {
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const fontWeight = useColorModeValue("500", "100");
-  const bgHover = useColorModeValue("secondaryGray.200", "secondaryGray.900");
-  const bgFocus = { bg: "brand.200" };
+  const bgHover = useColorModeValue(
+    { bg: "secondaryGray.300" },
+    { bg: "whiteAlpha.50" }
+  );
+  const bgFocus = useColorModeValue(
+    { bg: "secondaryGray.200" },
+    { bg: "whiteAlpha.100" }
+  );
   const redirectWidgetsSlidePosition = useBreakpointValue({
     base: -805,
     sm: -805,
@@ -341,8 +347,10 @@ export default function UserReports() {
         <Card
           onClick={handleDropdownToggle}
           cursor="pointer"
-          zIndex="99999999"
+          zIndex="1"
           position="relative"
+          _hover={bgHover}
+          _focus={bgFocus}
         >
           <Flex justify="space-between" alignItems="center">
             <Text fontSize="2xl">Средни статистики за ВСИЧКИ потребители:</Text>
