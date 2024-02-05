@@ -89,7 +89,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -147,7 +147,7 @@ export default function MealPlanner(props: {
         const imageResponse = await fetch(
           `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
             meal.name
-          )}&searchType=image`
+          )}&searchType=image&siteSearch=facebook.com&siteSearchFilter=e`
         );
 
         if (!imageResponse.ok) {
