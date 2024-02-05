@@ -86,7 +86,7 @@ export default function Default(props: {
             boxShadow: `0 0 0 2px ${bgFocus}`
           }
         }
-        borderWidth={hasBorder ? "2px" : "0"}
+        borderWidth={hasBorder ? "3px" : "0"}
         borderColor={borderColor ? litUpBorderColor : defaultBorderColor}
       >
         <Flex

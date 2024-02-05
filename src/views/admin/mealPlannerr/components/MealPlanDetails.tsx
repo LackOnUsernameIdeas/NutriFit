@@ -70,7 +70,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         mt="5px"
                       ></Flex>
                     }
-                    image={(mealPlanImages as any)[mealType].data[0].url}
+                    image={(mealPlanImages as any)[mealType]}
                     currentbid={
                       <Box>
                         <Flex

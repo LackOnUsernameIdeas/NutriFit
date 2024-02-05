@@ -73,7 +73,7 @@ export default function WeightStats() {
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const textColor = useColorModeValue("black", "white");
-  const iconColor = useColorModeValue("brand.500", "white");
+  const infoBoxIconColor = useColorModeValue("black", "white");
   const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
   const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -761,7 +761,7 @@ export default function WeightStats() {
                   >
                     <Icon
                       as={MdOutlineInfo}
-                      color={iconColor}
+                      color={infoBoxIconColor}
                       w="24px"
                       h="24px"
                     />
@@ -1061,7 +1061,7 @@ export default function WeightStats() {
                   >
                     <Icon
                       as={MdOutlineInfo}
-                      color={iconColor}
+                      color={infoBoxIconColor}
                       w="24px"
                       h="24px"
                     />

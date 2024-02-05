@@ -36,7 +36,7 @@ import { HSeparator } from "components/separator/Separator";
 const columnHelper = createColumnHelper();
 // const columns = columnsDataCheck;
 export default function ColumnTable(props: {
-  tableName: string;
+  tableName?: string;
   tableData: any;
   columnsData: { name: string; label: string }[];
   backgroundColor?: string;
@@ -63,8 +63,8 @@ export default function ColumnTable(props: {
   const bgList = useColorModeValue("white", "whiteAlpha.100");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const litUpBorderColor = useColorModeValue(
-    "2px solid rgba(145, 132, 246, 0.8)",
-    "2px solid rgba(96, 77, 235, 0.8)"
+    "3px solid rgba(145, 132, 246, 0.8)",
+    "3px solid rgba(96, 77, 235, 0.8)"
   );
   const bgSelected = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
   const bgHover = useColorModeValue(
@@ -128,23 +128,25 @@ export default function ColumnTable(props: {
       px="0px"
       overflowX={{ sm: "scroll", lg: "hidden" }}
     >
-      <Flex
-        justify="space-between"
-        align="start"
-        px={{ base: "0px", "2xl": "10px" }}
-        pt="5px"
-        w="100%"
-      >
-        <Text
-          color={textColor}
-          fontSize="22px"
-          mb="4px"
-          fontWeight="700"
-          lineHeight="100%"
+      {tableName && (
+        <Flex
+          justify="space-between"
+          align="start"
+          px={{ base: "0px", "2xl": "10px" }}
+          pt="5px"
+          w="100%"
         >
-          {tableName}
-        </Text>
-      </Flex>
+          <Text
+            color={textColor}
+            fontSize="22px"
+            mb="4px"
+            fontWeight="700"
+            lineHeight="100%"
+          >
+            {tableName}
+          </Text>
+        </Flex>
+      )}
       <Box>
         <Table variant="simple" color="gray.500" mt="12px">
           <Thead>
@@ -212,7 +214,6 @@ export default function ColumnTable(props: {
                     h="80px"
                     _hover={bgHover}
                     _focus={bgHover}
-                    borderWidth="1px"
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
