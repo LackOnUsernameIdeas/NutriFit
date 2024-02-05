@@ -118,8 +118,10 @@ export default function UserReports() {
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradientNutri = useColorModeValue(gradientLight, gradientDark);
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const fontWeight = useColorModeValue("500", "100");
+  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
+  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.50" }
@@ -349,8 +351,7 @@ export default function UserReports() {
           cursor="pointer"
           zIndex="1"
           position="relative"
-          _hover={bgHover}
-          _focus={bgFocus}
+          bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
         >
           <Flex justify="space-between" alignItems="center">
             <Text fontSize="2xl">Средни статистики за ВСИЧКИ потребители:</Text>

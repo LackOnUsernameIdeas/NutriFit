@@ -66,7 +66,12 @@ export default function WeightStats() {
     colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   const brandColor = useColorModeValue("brand.500", "white");
   const fontWeight = useColorModeValue("550", "100");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
+  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
+  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
+  const gradient = useColorModeValue(gradientLight, gradientDark);
+  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
+  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const textColor = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("brand.500", "white");
   const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
@@ -78,14 +83,6 @@ export default function WeightStats() {
   );
   const bgFocus = useColorModeValue(
     { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.100" }
-  );
-  const bgDropHover = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.50" }
-  );
-  const bgDropFocus = useColorModeValue(
-    { bg: "secondaryGray.200" },
     { bg: "whiteAlpha.100" }
   );
   const cancelRefPerfectWeightAlert = React.useRef();
@@ -995,13 +992,14 @@ export default function WeightStats() {
                       <IconBox
                         w="56px"
                         h="56px"
-                        bg={boxBg}
+                        bg={gradient}
+                        transition="background-image 0.5s ease-in-out"
                         icon={
                           <Icon
                             w="32px"
                             h="32px"
                             as={GiWeightScale}
-                            color={brandColor}
+                            color="white"
                           />
                         }
                       />
@@ -1148,13 +1146,14 @@ export default function WeightStats() {
                     <IconBox
                       w="56px"
                       h="56px"
-                      bg={boxBg}
+                      bg={gradient}
+                      transition="background-image 0.5s ease-in-out"
                       icon={
                         <Icon
                           w="32px"
                           h="32px"
                           as={GiWeightLiftingUp}
-                          color={brandColor}
+                          color="white"
                         />
                       }
                     />
@@ -1167,13 +1166,14 @@ export default function WeightStats() {
                     <IconBox
                       w="56px"
                       h="56px"
-                      bg={boxBg}
+                      bg={gradient}
+                      transition="background-image 0.5s ease-in-out"
                       icon={
                         <Icon
                           w="32px"
                           h="32px"
                           as={GiWeightLiftingUp}
-                          color={brandColor}
+                          color="white"
                         />
                       }
                     />
@@ -1229,13 +1229,14 @@ export default function WeightStats() {
                         <IconBox
                           w="56px"
                           h="56px"
-                          bg={boxBg}
+                          bg={gradient}
+                          transition="background-image 0.5s ease-in-out"
                           icon={
                             <Icon
                               w="32px"
                               h="32px"
                               as={GiWeightScale}
-                              color={brandColor}
+                              color="white"
                             />
                           }
                         />
@@ -1281,14 +1282,14 @@ export default function WeightStats() {
               </SimpleGrid>
             </Card>
             <Card
-          onClick={handleDropdownToggle}
-          cursor="pointer"
-          zIndex="1"
-          position="relative"
-          _hover={bgDropHover}
-          _focus={bgDropFocus}
-          mb={renderDropdown ? "0px" : "20px"}
-        >
+              onClick={handleDropdownToggle}
+              cursor="pointer"
+              zIndex="1"
+              position="relative"
+              bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+              transition="background-image 0.5s ease-in-out"
+              mb={renderDropdown ? "0px" : "20px"}
+            >
               <Flex justify="space-between" alignItems="center">
                 <Text fontSize="2xl">
                   Статистики за вашето телесно изменение:{" "}
