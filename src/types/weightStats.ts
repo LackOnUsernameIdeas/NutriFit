@@ -41,6 +41,23 @@ export type UserData = {
   waist: number;
   hip: number;
   goal?: Goal;
+  bmi?: number | undefined;
+  bodyFat?: number | undefined;
+  bodyFatMass?: number | undefined;
+  leanBodyMass?: number | undefined;
+  differenceFromPerfectWeight?: number | undefined;
+  [key: string]: number | string;
+};
+
+export type AllUsersPreferences = {
+  date: string;
+  calories: number;
+  nutrients: {
+    protein: number;
+    fat: number;
+    carbs: number;
+    name: string;
+  };
 };
 
 export type WeightDifference = {
@@ -147,6 +164,12 @@ export type MealPlan = {
   breakfast: Recipe | null;
   lunch: Recipe | null;
   dinner: Recipe | null;
+  totals?: {
+    calories: number;
+    protein: number;
+    fat: number;
+    carbohydrates: number;
+  };
 };
 
 export type WeightPerServing = {

@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 // Chakra imports
 import { Box, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 
-import Loading from "../components/Loading";
-
+import Loading from "views/admin/weightStats/components/Loading";
+import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import { HSeparator } from "components/separator/Separator";
 import {
   UserPreferencesForMealPlan,
@@ -219,84 +219,92 @@ export default function MealPlanner(props: {
   };
 
   return (
-    <Box mb="20px">
-      <Card>
+    <FadeInWrapper>
+      <Box mb="20px">
         <Card>
-          <Flex justify="center" w="100%" mb="5px">
-            <Text fontSize="5xl" fontStyle="italic">
-              Създайте хранителен план с NutriFit!
-            </Text>
-          </Flex>
-          <HSeparator />
-          <Flex justify="center" mt="1%" pt="10px">
-            <Text fontSize="3xl">
-              Моля попълнете редовете с предпочитаните от вас лимити, след което
-              вашият план ще бъде създаден.
-            </Text>
-          </Flex>
-        </Card>
-        <Card>
-          {isSubmitted ? (
-            <Box>
-              {isLoading ? (
-                <>
-                  <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
-                    <UserPreferencesForMealPlanForm
-                      userPreferences={userPreferences}
-                      handleInputChange={handleInputChange}
-                      generatePlan={generatePlan}
-                    />
-                  </SimpleGrid>
-                  <Loading />
-                </>
-              ) : (
-                <>
-                  <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
-                    <UserPreferencesForMealPlanForm
-                      userPreferences={userPreferences}
-                      handleInputChange={handleInputChange}
-                      generatePlan={generatePlan}
-                    />
-                  </SimpleGrid>
-                  {mealPlan.lunch !== null && mealPlan.dinner !== null ? (
-                    <Flex justify="center" w="100%" mb="5px">
-                      <SimpleGrid
-                        columns={{ base: 1, md: 1, xl: 1 }}
-                        gap="20px"
+          <Card>
+            <Flex justify="center" w="100%" mb="5px">
+              <Text fontSize="5xl" fontStyle="italic">
+                Създайте хранителен план с NutriFit!
+              </Text>
+            </Flex>
+            <HSeparator />
+            <Flex justify="center" mt="1%" pt="10px">
+              <Text fontSize="3xl">
+                Моля попълнете редовете с предпочитаните от вас лимити, след
+                което вашият план ще бъде създаден.
+              </Text>
+            </Flex>
+          </Card>
+          <Card>
+            {isSubmitted ? (
+              <Box>
+                {isLoading ? (
+                  <>
+                    <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+                      <UserPreferencesForMealPlanForm
+                        userPreferences={userPreferences}
+                        handleInputChange={handleInputChange}
+                        generatePlan={generatePlan}
+                      />
+                    </SimpleGrid>
+                    <Loading />
+                  </>
+                ) : (
+                  <>
+                    <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+                      <UserPreferencesForMealPlanForm
+                        userPreferences={userPreferences}
+                        handleInputChange={handleInputChange}
+                        generatePlan={generatePlan}
+                      />
+                    </SimpleGrid>
+                    {mealPlan.lunch !== null && mealPlan.dinner !== null ? (
+                      <Flex justify="center" w="100%" mb="5px">
+                        <SimpleGrid
+                          columns={{ base: 1, md: 1, xl: 1 }}
+                          gap="20px"
+                        >
+                          <MealPlanDetails
+                            customServings={customServings}
+                            suggestedMaxServings={suggestedMaxServings}
+                            mealPlan={mealPlan}
+                            calories={calories}
+                            protein={protein}
+                            carbs={carbs}
+                            fat={fat}
+                            weight={weightPerServing}
+                            handleIncrement={handleIncrement}
+                            handleDecrement={handleDecrement}
+                          />
+                        </SimpleGrid>
+                      </Flex>
+                    ) : (
+                      <Text
+                        textAlign="center"
+                        fontSize="4xl"
+                        fontStyle="italic"
+                        mt="20px"
+                        transition="0.25s ease-in-out"
                       >
-                        <MealPlanDetails
-                          customServings={customServings}
-                          suggestedMaxServings={suggestedMaxServings}
-                          mealPlan={mealPlan}
-                          calories={calories}
-                          protein={protein}
-                          carbs={carbs}
-                          fat={fat}
-                          weight={weightPerServing}
-                          handleIncrement={handleIncrement}
-                          handleDecrement={handleDecrement}
-                        />
-                      </SimpleGrid>
-                    </Flex>
-                  ) : (
-                    <Text fontSize="5xl" fontStyle="italic">
-                      Няма намерен план :(
-                    </Text>
-                  )}
-                </>
-              )}
-            </Box>
-          ) : (
-            <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
-              <UserPreferencesForMealPlanForm
-                userPreferences={userPreferences}
-                handleInputChange={handleInputChange}
-                generatePlan={generatePlan}
-              />
-            </SimpleGrid>
-          )}
+                        Не намерихме хранителен план за вас :( Опитайте отново.
+                      </Text>
+                    )}
+                  </>
+                )}
+              </Box>
+            ) : (
+              <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+                <UserPreferencesForMealPlanForm
+                  userPreferences={userPreferences}
+                  handleInputChange={handleInputChange}
+                  generatePlan={generatePlan}
+                />
+              </SimpleGrid>
+            )}
+          </Card>
         </Card>
-      </Card>
-    </Box>
+      </Box>
+    </FadeInWrapper>
   );
 }

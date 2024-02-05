@@ -1,11 +1,20 @@
 import {
   BMIInfo,
   BodyMass,
-  UserData,
+  WeightDifference,
   DailyCaloryRequirements,
   MacroNutrientsData,
   Goal
 } from "../../../types/weightStats";
+
+import {
+  saveBMI,
+  savePerfectWeight,
+  saveBodyMass,
+  saveDailyCaloryRequirements,
+  saveMacroNutrients
+} from "../../../database/setWeightStatsData";
+import { getAuth } from "firebase/auth";
 
 const headers = {
   "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
@@ -28,32 +37,33 @@ function translateBMIHealthToBulgarian(englishHealth: string) {
   return (bulgarianTranslations as any)[englishHealth] || englishHealth;
 }
 
+const sendBeaconWithData = (url: string, data: any) => {
+  navigator.sendBeacon(url, JSON.stringify(data));
+};
+
 export const fetchBMIData = async (
   age: number,
   height: number,
-  weight: number,
-  setBMIIndex: React.Dispatch<React.SetStateAction<BMIInfo>>
+  weight: number
 ) => {
   try {
-    fetch(
-      `https://fitness-calculator.p.rapidapi.com/bmi?age=21&weight=${weight}&height=${height}`,
-      {
-        method: "GET",
-        headers: headers
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const BMIInfo: BMIInfo = {
-          bmi: data.data.bmi,
-          health: translateBMIHealthToBulgarian(data.data.health),
-          healthy_bmi_range: "18.5 - 25"
-        };
-        setBMIIndex(BMIInfo);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    const url = `https://fitness-calculator.p.rapidapi.com/bmi?age=21&weight=${weight}&height=${height}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      keepalive: true
+    });
+
+    const data = await response.json();
+    const BMIInfo: BMIInfo = {
+      bmi: data.data.bmi,
+      health: translateBMIHealthToBulgarian(data.data.health),
+      healthy_bmi_range: "18.5 - 25"
+    };
+
+    const uid = getAuth().currentUser.uid;
+    saveBMI(uid, BMIInfo.bmi, BMIInfo.health, BMIInfo.healthy_bmi_range);
+    sendBeaconWithData(`/saveBMI/${uid}`, BMIInfo);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -67,24 +77,31 @@ export const fetchBMIData = async (
 
 export const fetchPerfectWeightData = async (
   height: number,
-  setPerfectWeight: React.Dispatch<React.SetStateAction<number>>
+  gender: string,
+  weight: number
 ) => {
   try {
-    fetch(
-      `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${"male"}&height=${height}`,
-      {
-        method: "GET",
-        headers: headers
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const bodyMassInfo: number = data.data.Devine;
-        setPerfectWeight(bodyMassInfo);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    const url = `https://fitness-calculator.p.rapidapi.com/idealweight?gender=${gender}&height=${height}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      keepalive: true
+    });
+
+    const data = await response.json();
+    const perfectWeight: number = data.data.Devine;
+    const diff = perfectWeight - weight;
+    const differenceFromPerfectWeight: WeightDifference = {
+      difference: Math.abs(diff),
+      isUnderOrAbove: weight > perfectWeight ? "above" : "under"
+    };
+
+    const uid = getAuth().currentUser.uid;
+    savePerfectWeight(uid, perfectWeight, differenceFromPerfectWeight);
+    sendBeaconWithData(`/savePerfectWeight/${uid}`, {
+      perfectWeight,
+      differenceFromPerfectWeight
+    });
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -98,34 +115,36 @@ export const fetchPerfectWeightData = async (
 
 export const fetchBodyFatAndLeanMassData = async (
   age: number,
+  gender: string,
   height: number,
   weight: number,
   neck: number,
   waist: number,
-  hip: number,
-  setBodyFatMassAndLeanMass: React.Dispatch<React.SetStateAction<BodyMass>>
+  hip: number
 ) => {
   try {
-    fetch(
-      `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`,
-      {
-        method: "GET",
-        headers: headers
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const bodyMassInfo: BodyMass = {
-          "Body Fat (U.S. Navy Method)":
-            data.data["Body Fat (U.S. Navy Method)"],
-          "Body Fat Mass": data.data["Body Fat Mass"],
-          "Lean Body Mass": data.data["Lean Body Mass"]
-        };
-        setBodyFatMassAndLeanMass(bodyMassInfo);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    const url = `https://fitness-calculator.p.rapidapi.com/bodyfat?age=${age}&gender=${gender}&weight=${weight}&height=${height}&neck=${neck}&waist=${waist}&hip=${hip}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: headers,
+      keepalive: true
+    });
+
+    const data = await response.json();
+    const bodyMassInfo: BodyMass = {
+      "Body Fat (U.S. Navy Method)": data.data["Body Fat (U.S. Navy Method)"],
+      "Body Fat Mass": data.data["Body Fat Mass"],
+      "Lean Body Mass": data.data["Lean Body Mass"]
+    };
+
+    const uid = getAuth().currentUser.uid;
+    saveBodyMass(
+      uid,
+      bodyMassInfo["Body Fat (U.S. Navy Method)"],
+      bodyMassInfo["Body Fat Mass"],
+      bodyMassInfo["Lean Body Mass"]
+    );
+    sendBeaconWithData(`/saveBodyMass/${uid}`, bodyMassInfo);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -139,28 +158,26 @@ export const fetchBodyFatAndLeanMassData = async (
 
 export const fetchCaloriesForActivityLevels = async (
   age: number,
+  gender: string,
   height: number,
-  weight: number,
-  setDailyCaloryRequirements: React.Dispatch<
-    React.SetStateAction<DailyCaloryRequirements[]>
-  >
+  weight: number
 ) => {
   try {
     const requests = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${"male"}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
+      const url = `https://fitness-calculator.p.rapidapi.com/dailycalorie?age=${age}&gender=${gender}&weight=${weight}&height=${height}&activitylevel=level_${i}`;
 
       requests.push(
         fetch(url, {
           method: "GET",
-          headers: headers
+          headers: headers,
+          keepalive: true
         })
       );
     }
 
     const responses = await Promise.all(requests);
-
     const data = await Promise.all(responses.map((res) => res.json()));
 
     const dailyCaloryRequirementsData = data.map(
@@ -203,7 +220,12 @@ export const fetchCaloriesForActivityLevels = async (
       }
     );
 
-    setDailyCaloryRequirements(dailyCaloryRequirementsData);
+    const uid = getAuth().currentUser.uid;
+    saveDailyCaloryRequirements(uid, dailyCaloryRequirementsData);
+    sendBeaconWithData(
+      `/saveDailyCalories/${uid}`,
+      dailyCaloryRequirementsData
+    );
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -217,57 +239,42 @@ export const fetchCaloriesForActivityLevels = async (
 
 export const fetchMacroNutrients = async (
   age: number,
+  gender: string,
   height: number,
   weight: number,
-  goal: Goal | "",
-  setTableData: React.Dispatch<React.SetStateAction<MacroNutrientsData[]>>
+  goals: Goal[] = [] // Allow passing an array of goals
 ) => {
   try {
     const requests = [];
+    const dataFromResponse = [];
 
     for (let i = 1; i <= 6; i++) {
-      const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${"male"}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
+      const levelData = [];
+      for (const goal of goals) {
+        const url = `https://fitness-calculator.p.rapidapi.com/macrocalculator?age=${age}&gender=${gender}&activitylevel=${i}&goal=${goal}&weight=${weight}&height=${height}`;
 
-      requests.push(
-        fetch(url, {
+        const response = await fetch(url, {
           method: "GET",
-          headers: headers
-        })
-      );
+          headers: headers,
+          keepalive: true
+        });
+
+        const data = await response.json();
+        // Attach additional properties for goal and level
+        levelData.push({
+          goal,
+          ...data.data
+        });
+      }
+      dataFromResponse.push({
+        level: i,
+        goals: levelData
+      });
     }
 
-    const responses = await Promise.all(requests);
-
-    const data = await Promise.all(responses.map((res) => res.json()));
-
-    const tableData: MacroNutrientsData[] = data.map((item) => [
-      {
-        name: "Балансирана",
-        protein: item.data.balanced.protein.toFixed(2),
-        fat: item.data.balanced.fat.toFixed(2),
-        carbs: item.data.balanced.carbs.toFixed(2)
-      },
-      {
-        name: "Ниско съдържание на мазнини",
-        protein: item.data.lowfat.protein.toFixed(2),
-        fat: item.data.lowfat.fat.toFixed(2),
-        carbs: item.data.lowfat.carbs.toFixed(2)
-      },
-      {
-        name: "Ниско съдържание на въглехидрати",
-        protein: item.data.lowcarbs.protein.toFixed(2),
-        fat: item.data.lowcarbs.fat.toFixed(2),
-        carbs: item.data.lowcarbs.carbs.toFixed(2)
-      },
-      {
-        name: "Високо съдържание на Протеин",
-        protein: item.data.highprotein.protein.toFixed(2),
-        fat: item.data.highprotein.fat.toFixed(2),
-        carbs: item.data.highprotein.carbs.toFixed(2)
-      }
-    ]);
-
-    setTableData(tableData);
+    const uid = getAuth().currentUser.uid;
+    saveMacroNutrients(uid, dataFromResponse);
+    sendBeaconWithData(`/saveMacroNutrients/${uid}`, dataFromResponse);
   } catch (err: any) {
     console.error(err.message);
   }

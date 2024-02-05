@@ -36,7 +36,7 @@ import { HSeparator } from "components/separator/Separator";
 const columnHelper = createColumnHelper();
 // const columns = columnsDataCheck;
 export default function ColumnTable(props: {
-  tableName: string;
+  tableName?: string;
   tableData: any;
   columnsData: { name: string; label: string }[];
   backgroundColor?: string;
@@ -62,8 +62,13 @@ export default function ColumnTable(props: {
   const iconColor = useColorModeValue("brand.500", "white");
   const bgList = useColorModeValue("white", "whiteAlpha.100");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const litUpBorderColor = useColorModeValue(
+    "3px solid rgba(145, 132, 246, 0.8)",
+    "3px solid rgba(96, 77, 235, 0.8)"
+  );
+  const bgSelected = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
   const bgHover = useColorModeValue(
-    { bg: "secondaryGray.400" },
+    { bg: "secondaryGray.200" },
     { bg: "whiteAlpha.50" }
   );
   const bgFocus = useColorModeValue(
@@ -123,23 +128,25 @@ export default function ColumnTable(props: {
       px="0px"
       overflowX={{ sm: "scroll", lg: "hidden" }}
     >
-      <Flex
-        justify="space-between"
-        align="start"
-        px={{ base: "0px", "2xl": "10px" }}
-        pt="5px"
-        w="100%"
-      >
-        <Text
-          color={textColor}
-          fontSize="22px"
-          mb="4px"
-          fontWeight="700"
-          lineHeight="100%"
+      {tableName && (
+        <Flex
+          justify="space-between"
+          align="start"
+          px={{ base: "0px", "2xl": "10px" }}
+          pt="5px"
+          w="100%"
         >
-          {tableName}
-        </Text>
-      </Flex>
+          <Text
+            color={textColor}
+            fontSize="22px"
+            mb="4px"
+            fontWeight="700"
+            lineHeight="100%"
+          >
+            {tableName}
+          </Text>
+        </Flex>
+      )}
       <Box>
         <Table variant="simple" color="gray.500" mt="12px">
           <Thead>
@@ -190,9 +197,7 @@ export default function ColumnTable(props: {
                     ).protein
                   : -1; // Adjust this based on your data structure
                 const rowBackgroundColor =
-                  proteinValue === clickedValueProtein
-                    ? "rgba(0, 0, 0, 0.3)"
-                    : undefined;
+                  proteinValue === clickedValueProtein ? bgSelected : undefined;
                 const isLitUp =
                   proteinValue === clickedValueProtein ? true : false;
                 return (
@@ -208,8 +213,7 @@ export default function ColumnTable(props: {
                     backgroundColor={rowBackgroundColor}
                     h="80px"
                     _hover={bgHover}
-                    _focus={bgFocus}
-                    borderWidth="2px"
+                    _focus={bgHover}
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
@@ -218,13 +222,23 @@ export default function ColumnTable(props: {
                           fontSize={{ sm: "14px" }}
                           minW={{ sm: "150px", md: "200px", lg: "auto" }}
                           style={{
-                            borderTop: isLitUp
-                              ? "2px solid rgba(75, 15, 229, 0.8)"
-                              : "1px solid",
-                            borderBottom: isLitUp
-                              ? "2px solid rgba(75, 15, 229, 0.8)"
-                              : "1px solid",
-                            borderColor: borderColor
+                            borderTop: isLitUp && litUpBorderColor,
+                            borderBottom: isLitUp && litUpBorderColor,
+                            borderColor: borderColor,
+                            borderLeft:
+                              (cell.id == "0_name" ||
+                                cell.id == "1_name" ||
+                                cell.id == "2_name" ||
+                                cell.id == "3_name") &&
+                              isLitUp &&
+                              litUpBorderColor,
+                            borderRight:
+                              (cell.id == "0_carbs" ||
+                                cell.id == "1_carbs" ||
+                                cell.id == "2_carbs" ||
+                                cell.id == "3_carbs") &&
+                              isLitUp &&
+                              litUpBorderColor
                           }}
                         >
                           {flexRender(

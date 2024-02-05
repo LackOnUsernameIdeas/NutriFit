@@ -21,57 +21,46 @@
 
 */
 
-import React, { useState, useEffect } from "react";
-import { NavLink, useHistory } from "react-router-dom";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserSessionPersistence,
-  onAuthStateChanged,
-  User
-} from "firebase/auth";
+import React, { useState, useRef, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { saveAdditionalUserData } from "database/setAdditionalUserData";
+import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 // Chakra imports
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormLabel,
   Heading,
-  Icon,
   Input,
-  InputGroup,
-  InputRightElement,
   Text,
   useColorModeValue
 } from "@chakra-ui/react";
+
+import MeasurementsAlertDialog from "./components/MeasurementsAlertDialog";
 // Custom components
 import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/measurements/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
-import { FcGoogle } from "react-icons/fc";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { RiEyeCloseLine } from "react-icons/ri";
-import Cookies from "js-cookie";
-
-// Помощни функции за извличане на данни
+import Loading from "views/admin/weightStats/components/Loading";
 import {
+  BMIInfo,
+  BodyMass,
+  UserData,
+  Goal,
+  WeightDifference
+} from "../../types/weightStats";
+import {
+  fetchBMIData,
+  fetchPerfectWeightData,
+  fetchBodyFatAndLeanMassData,
   fetchCaloriesForActivityLevels,
   fetchMacroNutrients
 } from "./utils/fetchFunctions";
-
-import {
-  UserData,
-  BodyMass,
-  DailyCaloryRequirements,
-  MacroNutrientsData
-} from "../../types/weightStats";
-
 interface UserMeasurements {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -92,22 +81,16 @@ const userDataPropertiesTranslated = [
 const UserMeasurements = () => {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
-  const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
-  const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const handleRememberMeChange = async () => {
-    setRememberMe(!rememberMe); // Toggle the rememberMe state
-  };
-
   const [isFilledOut, setIsFilledOut] = useState(false);
-
+  const [userDataForToday, setUserDataForToday] = useState(null);
+  const [userDataLastSavedDate, setUserDataLastSavedDate] = useState(null);
+  const [isTodaysDataFetched, setIsTodaysDataFetched] =
+    useState<boolean>(false);
+  const isMounted = useRef(true);
+  const [user, setUser] = useState(null);
   // State за въведени потребителски данни
   const [userData, setUserData] = useState<UserData>({
     height: 0,
@@ -119,58 +102,19 @@ const UserMeasurements = () => {
     goal: "maintain"
   });
 
-  const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<
-    DailyCaloryRequirements[]
-  >(
-    Array.from({ length: 6 }, (_, index) => ({
-      level: index + 1,
-      BMR: 0,
-      goals: {
-        "maintain weight": 0,
-        "Mild weight loss": { "loss weight": "0", calory: 0 },
-        "Weight loss": { "loss weight": "0", calory: 0 },
-        "Extreme weight loss": { "loss weight": "0", calory: 0 },
-        "Mild weight gain": { "gain weight": "0", calory: 0 },
-        "Weight gain": { "gain weight": "0", calory: 0 },
-        "Extreme weight gain": { "gain weight": "0", calory: 0 }
-      }
-    }))
-  );
-
-  const [tableData, setTableData] = useState<MacroNutrientsData[]>(
-    Array.from({ length: 6 }, (_) => [
-      { name: "Балансирана", protein: 0, fat: 0, carbs: 0 },
-      { name: "Ниско съдържание на мазнини", protein: 0, fat: 0, carbs: 0 },
-      {
-        name: "Ниско съдържание на въглехидрати",
-        protein: 0,
-        fat: 0,
-        carbs: 0
-      },
-      { name: "Високо съдържание на протеин", protein: 0, fat: 0, carbs: 0 }
-    ])
-  );
-
-  // State за избрани стойности
-  const [clickedValueNutrients, setClickedValueNutrients] = useState({
-    name: "",
-    protein: null,
-    fat: null,
-    carbs: null
+  const [userDataForReq, setUserDataForReq] = useState<UserData>({
+    gender: "male" || "female",
+    height: 0,
+    age: 0,
+    weight: 0,
+    neck: 0,
+    waist: 0,
+    hip: 0,
+    goal: "maintain"
   });
-
-  const [clickedValueCalories, setClickedValueCalories] = useState<
-    number | null
-  >(null);
-
-  // State за избрано ниво на натовареност
-  const [activityLevel, setActivityLevel] = useState<number>(1);
 
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
-
-  // Submission state
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,39 +130,165 @@ const UserMeasurements = () => {
 
   console.log(userData);
 
-  const handleRadioChange = (key: string, radioValue: string) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      [key]: radioValue
-    }));
-  };
-
-  // Функция за генериране на статистики
-  function generateStats() {
-    fetchCaloriesForActivityLevels(
-      userData["age"],
-      userData["height"],
-      userData["weight"],
-      setDailyCaloryRequirements
-    );
-    fetchMacroNutrients(
-      userData["age"],
-      userData["height"],
-      userData["weight"],
-      userData["goal"],
-      setTableData
-    );
-
-    setIsSubmitted(true);
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }
-
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
+  // States за запазване на извличените данни
+  const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
+    bmi: null,
+    health: "",
+    healthy_bmi_range: "18.5 - 25"
+  });
+  const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
+    useState<BodyMass>({
+      "Body Fat (U.S. Navy Method)": 0,
+      "Body Fat Mass": 0,
+      "Lean Body Mass": 0
+    });
+  const [userDataForCharts, setUserDataForCharts] = useState([
+    {
+      date: "",
+      height: 0,
+      weight: 0,
+      bmi: 0,
+      bodyFat: 0,
+      bodyFatMass: 0,
+      leanBodyMass: 0,
+      differenceFromPerfectWeight: 0
+    }
+  ]);
+  userDataForCharts.sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
+  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
+    useState<WeightDifference>({
+      difference: 0,
+      isUnderOrAbove: ""
+    });
+
+  const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
+    useState<boolean>(false);
+
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+
+      if (user) {
+        try {
+          const timestampKey = new Date().toISOString().slice(0, 10);
+
+          const additionalData = await fetchAdditionalUserData(user.uid);
+          setUserDataForReq({
+            gender: additionalData.gender,
+            goal: additionalData.goal,
+            age: additionalData[timestampKey].age,
+            height: additionalData[timestampKey].height,
+            waist: additionalData[timestampKey].waist,
+            neck: additionalData[timestampKey].neck,
+            hip: additionalData[timestampKey].hip,
+            weight: additionalData[timestampKey].weight
+          } as any);
+
+          console.log(additionalData, "additionalData");
+          const userChartData = [];
+
+          for (const key in additionalData) {
+            if (
+              key !== "gender" &&
+              key !== "goal" &&
+              typeof additionalData[key] === "object"
+            ) {
+              const dateData = additionalData[key];
+              userChartData.push({
+                date: key,
+                height: dateData ? dateData.height : 0,
+                weight: dateData ? dateData.weight : 0,
+                bmi: dateData.BMI ? dateData.BMI.bmi : 0,
+                bodyFat: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFat
+                  : 0,
+                bodyFatMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.bodyFatMass
+                  : 0,
+                leanBodyMass: dateData.BodyMassData
+                  ? dateData.BodyMassData.leanBodyMass
+                  : 0,
+                differenceFromPerfectWeight: dateData.PerfectWeightData
+                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                      .difference
+                  : 0
+              });
+            }
+          }
+
+          setUserDataForCharts(userChartData);
+          console.log(
+            "ID: ",
+            user.uid,
+            "Additional user data:",
+            additionalData
+          );
+          console.log("userChartData:", userChartData);
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
+
+  const goalsToFetch: Goal[] = [
+    "maintain",
+    "mildlose",
+    "weightlose",
+    "extremelose",
+    "mildgain",
+    "weightgain",
+    "extremegain"
+  ];
+  // Функция за генериране на статистики
+  async function generateStats() {
+    console.log(
+      userData["age"],
+      userData["height"],
+      userData["weight"],
+      "before"
+    );
+    setIsLoading(true);
+    await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
+    await fetchPerfectWeightData(
+      userData["height"],
+      userDataForReq["gender"],
+      userData["weight"]
+    );
+    await fetchBodyFatAndLeanMassData(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"],
+      userData["neck"],
+      userData["waist"],
+      userData["hip"]
+    );
+    await fetchCaloriesForActivityLevels(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"]
+    );
+    await fetchMacroNutrients(
+      userData["age"],
+      userDataForReq["gender"],
+      userData["height"],
+      userData["weight"],
+      goalsToFetch
+    );
+    setIsLoading(false);
+  }
 
   React.useEffect(() => {
     // Зарежда последно запазените данни от Local Storage
@@ -284,10 +354,12 @@ const UserMeasurements = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Ако датата е валидна я записва в базата и изпраща потребителят на главната страница
+
     if (isUserDataValid()) {
       try {
         const uid = getAuth().currentUser.uid;
+
+        // Save additional user data
         await saveAdditionalUserData(
           uid,
           userData.height,
@@ -296,177 +368,274 @@ const UserMeasurements = () => {
           userData.neck,
           userData.waist,
           userData.hip
-        ).then(() => {
+        );
+        await generateStats();
+        setIsGenerateStatsCalled(true);
+        history.push("/admin/default");
+
+        // Save additional user data to the server
+        const response = await fetch(
+          "https://nutri-api.noit.eu/processUserData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(userData)
+          }
+        );
+        if (response.ok) {
+          // Log the response data to the console
+          const responseData = await response.json();
+          console.log("Server response:", responseData);
+
+          // Data processed successfully
           setIsFilledOut(true);
-          history.push("/admin/default");
-        });
+        } else {
+          // Handle server error
+          console.error("Server error:", response.statusText);
+          setError("Failed to process data on the server.");
+        }
       } catch (error) {
         console.error("Error saving additional user data:", error);
       }
     }
   };
 
-  useEffect(() => {
-    if (isFilledOut) {
-      // Set a cookie named 'userFilledOut' with value 'true' and expiration time of 1 day
-      Cookies.set("userFilledOut", "true", { expires: 1 });
-      console.log("Cookieee");
-    }
-  }, [isFilledOut]);
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (isMounted.current) {
+        setUser(user);
+      }
 
-  const setCookieAtEndOfDay = (cookieName: string, cookieValue: string) => {
-    // Calculate time until the end of the day
-    const now = new Date().getTime();
-    const endOfDay = new Date().setUTCHours(23, 59, 59, 999); // Set to the start of the next day
-    const timeUntilEndOfDay = endOfDay - now;
+      if (user) {
+        try {
+          setIsLoading(true);
 
-    // Set the cookie with the calculated expiration time
-    Cookies.set(cookieName, cookieValue, {
-      expires: new Date(now + timeUntilEndOfDay)
+          const additionalData = await fetchAdditionalUserData(user.uid);
+
+          // Extract date keys from additionalData
+          const dateKeys = Object.keys(additionalData).filter((key) =>
+            /^\d{4}-\d{2}-\d{2}$/.test(key)
+          );
+
+          // Sort date keys in descending order
+          dateKeys.sort(
+            (a, b) => new Date(b).getTime() - new Date(a).getTime()
+          );
+
+          // Find the first date before today
+          const today = new Date().toISOString().slice(0, 10);
+          const lastSavedDate = dateKeys.find((date) => date < today);
+          const rawUserDataForToday = additionalData[today];
+          const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
+
+          if (isMounted.current) {
+            setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+            setUserDataForToday(rawUserDataForToday);
+            setIsTodaysDataFetched(true);
+          }
+
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 1000);
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
     });
-  };
 
+    return () => {
+      isMounted.current = false;
+      unsubscribe();
+    };
+  }, []);
+
+  const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
+  const [updateWithNewData, setUpdateWithNewData] = useState<boolean>(false);
   useEffect(() => {
-    if (isFilledOut) {
-      // Set a cookie named 'userFilledOut' with value 'true' and expiration at the end of the current day
-      setCookieAtEndOfDay("userFilledOut", "true");
-    }
-  }, [isFilledOut]);
+    if (userDataLastSavedDate) {
+      const commonKeys = Object.keys(userData).filter((key) =>
+        Object.keys(userDataLastSavedDate).includes(key)
+      );
 
+      const areDataEqual = commonKeys.every(
+        (key) => userData[key] === userDataLastSavedDate[key]
+      );
+
+      setUpdateWithNewData(!areDataEqual);
+
+      const differentFields = commonKeys.filter(
+        (key) => userData[key] !== userDataLastSavedDate[key]
+      );
+
+      setHighlightedFields(differentFields);
+    } else {
+      setUpdateWithNewData(false);
+    }
+  }, [userData, userDataLastSavedDate]);
+
+  React.useEffect(() => {
+    const diff = perfectWeight - userData.weight;
+    setDifferenceFromPerfectWeight({
+      difference: Math.abs(diff),
+      isUnderOrAbove: userData.weight > perfectWeight ? "above" : "under"
+    });
+  }, [perfectWeight, userData]);
+
+  React.useEffect(() => {
+    // Check if numeric values in userData are different from 0 and not null
+    const areValuesValid = Object.values(userDataForReq).every(
+      (value) => value !== 0
+    );
+
+    if (areValuesValid) {
+      generateStats();
+      setIsGenerateStatsCalled(true);
+    }
+  }, [userDataForReq]);
   return (
-    <DefaultAuth illustrationBackground={illustration} image={illustration}>
-      <Flex
-        maxW={{ base: "100%", md: "max-content" }}
-        w="100%"
-        mx={{ base: "auto", lg: "0px" }}
-        me="auto"
-        h="100%"
-        alignItems="start"
-        justifyContent="center"
-        mb={{ base: "30px", md: "60px" }}
-        px={{ base: "25px", md: "0px" }}
-        mt={{ base: "40px", md: "5%" }}
-        flexDirection="column"
-      >
-        <Box me="auto">
-          <Heading color={textColor} fontSize="36px" mb="10px">
-            Напишете вашите данни:
-          </Heading>
-          <Text
-            mb="10px"
-            ms="4px"
-            color={textColorSecondary}
-            fontWeight="400"
-            fontSize="md"
-            style={{ whiteSpace: "pre-line" }}
-          >
-            Напишете вашите данни и ние ще направим калкулации, за{"\u00a0"}
-            <br /> да определим
-          </Text>
+    <Box>
+      {isLoading || !isTodaysDataFetched ? (
+        <Box mt="45vh">
+          <Loading />
         </Box>
-        <Flex
-          zIndex="2"
-          direction="column"
-          w={{ base: "100%", md: "420px" }}
-          maxW="100%"
-          background="transparent"
-          borderRadius="15px"
-          mx={{ base: "auto", lg: "unset" }}
-          me="auto"
-          mb={{ base: "20px", md: "auto" }}
-        >
-          <Flex align="center" mb="25px">
-            <HSeparator />
-          </Flex>
-          <FormControl>
-            {Object.entries(userData).map(([key, value], index) => (
-              <Box key={key} mb="10px">
-                {key !== "gender" && key !== "goal" && (
-                  <FormLabel
-                    display="flex"
-                    ms="4px"
-                    fontSize="sm"
-                    fontWeight="500"
-                    color={textColor}
-                    mb="4px"
-                  >
-                    {userDataPropertiesTranslated[index]
-                      .charAt(0)
-                      .toUpperCase() +
-                      userDataPropertiesTranslated[index].slice(1)}
-                    {key === "age" && (
-                      <Text color={brandStars} ml="1">
-                        *
+      ) : (
+        <DefaultAuth illustrationBackground={illustration} image={illustration}>
+          <Flex
+            maxW={{ base: "100%", md: "max-content" }}
+            w="100%"
+            mx={{ base: "auto", lg: "0px" }}
+            me="auto"
+            h="100%"
+            alignItems="start"
+            justifyContent="center"
+            mb={{ base: "30px", md: "60px" }}
+            px={{ base: "25px", md: "0px" }}
+            mt={{ base: "40px", md: "5%" }}
+            flexDirection="column"
+          >
+            <Box me="auto">
+              <Heading color={textColor} fontSize="36px" mb="10px">
+                Напишете вашите данни:
+              </Heading>
+              <Text
+                mb="10px"
+                ms="4px"
+                color={textColorSecondary}
+                fontWeight="400"
+                fontSize="md"
+                style={{ whiteSpace: "pre-line" }}
+              >
+                Напишете вашите данни и ние ще направим калкулации, за{"\u00a0"}
+                <br /> да определим
+              </Text>
+            </Box>
+            <Flex
+              zIndex="2"
+              direction="column"
+              w={{ base: "100%", md: "420px" }}
+              maxW="100%"
+              background="transparent"
+              borderRadius="15px"
+              mx={{ base: "auto", lg: "unset" }}
+              me="auto"
+              mb={{ base: "20px", md: "auto" }}
+            >
+              <Flex align="center" mb="25px">
+                <HSeparator />
+              </Flex>
+              <FormControl>
+                {Object.entries(userData).map(([key, value], index) => (
+                  <Box key={key} mb="10px">
+                    {key !== "gender" && key !== "goal" && (
+                      <FormLabel
+                        display="flex"
+                        ms="4px"
+                        fontSize="sm"
+                        fontWeight="500"
+                        color={textColor}
+                        mb="4px"
+                      >
+                        {userDataPropertiesTranslated[index]
+                          .charAt(0)
+                          .toUpperCase() +
+                          userDataPropertiesTranslated[index].slice(1)}
+                        {key === "age" && (
+                          <Text color={brandStars} ml="1">
+                            *
+                          </Text>
+                        )}
+                      </FormLabel>
+                    )}
+                    {key !== "gender" &&
+                      key !== "goal" &&
+                      (typeof value === "number" ? (
+                        value !== 0 ? (
+                          <Input
+                            isRequired={key === "age"}
+                            color={textColor}
+                            focusBorderColor="#7551ff"
+                            type="number"
+                            name={key}
+                            value={value || ""}
+                            variant="auth"
+                            placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
+                            _placeholder={{ opacity: 1, color: "gray.500" }}
+                            onChange={(e) => handleInputChangeWithMemory(e)}
+                            fontSize="sm"
+                            fontWeight="500"
+                            size="lg"
+                            borderColor={
+                              highlightedFields.includes(key)
+                                ? "green.500"
+                                : undefined
+                            }
+                          />
+                        ) : (
+                          <Input
+                            isRequired={key === "age"}
+                            color={textColor}
+                            focusBorderColor="#7551ff"
+                            type="number"
+                            name={key}
+                            value={""}
+                            variant="auth"
+                            placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
+                            _placeholder={{ opacity: 1, color: "gray.500" }}
+                            onChange={(e) => handleInputChangeWithMemory(e)}
+                            fontSize="sm"
+                            fontWeight="500"
+                            size="lg"
+                          />
+                        )
+                      ) : (
+                        <></>
+                      ))}
+                    {validationErrors[key] && (
+                      <Text color="red" fontSize="sm">
+                        {validationErrors[key]}
                       </Text>
                     )}
-                  </FormLabel>
-                )}
-                {key !== "gender" &&
-                  key !== "goal" &&
-                  (typeof value === "number" ? (
-                    value !== 0 ? (
-                      <Input
-                        isRequired={key === "age"}
-                        color={textColor}
-                        focusBorderColor="#7551ff"
-                        type="number"
-                        name={key}
-                        value={value || ""}
-                        variant="auth"
-                        placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
-                        _placeholder={{ opacity: 1, color: "gray.500" }}
-                        onChange={(e) => handleInputChangeWithMemory(e)}
-                        fontSize="sm"
-                        fontWeight="500"
-                        size="lg"
-                      />
-                    ) : (
-                      <Input
-                        isRequired={key === "age"}
-                        color={textColor}
-                        focusBorderColor="#7551ff"
-                        type="number"
-                        name={key}
-                        value={""}
-                        variant="auth"
-                        placeholder={`Въведете ${userDataPropertiesTranslated[index]}`}
-                        _placeholder={{ opacity: 1, color: "gray.500" }}
-                        onChange={(e) => handleInputChangeWithMemory(e)}
-                        fontSize="sm"
-                        fontWeight="500"
-                        size="lg"
-                      />
-                    )
-                  ) : (
-                    <></>
-                  ))}
-                {validationErrors[key] && (
-                  <Text color="red" fontSize="sm">
-                    {validationErrors[key]}
+                  </Box>
+                ))}
+                <MeasurementsAlertDialog
+                  handleSubmit={handleSubmit}
+                  userData={userData}
+                  checkUpdate={updateWithNewData}
+                />
+                {error && (
+                  <Text color="red" fontSize="sm" mb="8px">
+                    {error}
                   </Text>
                 )}
-              </Box>
-            ))}
-            <Button
-              onClick={handleSubmit}
-              fontSize="sm"
-              variant="brand"
-              fontWeight="500"
-              w="100%"
-              h="50"
-              mb="24px"
-            >
-              Изпрати
-            </Button>
-            {error && (
-              <Text color="red" fontSize="sm" mb="8px">
-                {error}
-              </Text>
-            )}
-          </FormControl>
-        </Flex>
-      </Flex>
-    </DefaultAuth>
+              </FormControl>
+            </Flex>
+          </Flex>
+        </DefaultAuth>
+      )}
+    </Box>
   );
 };
 

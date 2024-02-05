@@ -28,6 +28,7 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserSessionPersistence,
+  browserLocalPersistence,
   onAuthStateChanged,
   User
 } from "firebase/auth";
@@ -56,6 +57,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import Cookies from "js-cookie";
+import { uid } from "chart.js/dist/helpers/helpers.core";
 
 function SignIn() {
   const textColor = useColorModeValue("navy.700", "white");
@@ -63,6 +65,7 @@ function SignIn() {
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
   const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
+
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   const [email, setEmail] = useState("");
@@ -73,20 +76,22 @@ function SignIn() {
   const handleRememberMeChange = async () => {
     setRememberMe(!rememberMe); // Toggle the rememberMe state
   };
+
+  console.log("rememberMe", rememberMe);
   const handleSignIn = async () => {
     try {
       const auth = getAuth();
-      await setPersistence(auth, browserSessionPersistence);
+      const firebasePersistence = rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence;
+      await setPersistence(auth, firebasePersistence);
       await signInWithEmailAndPassword(auth, email, password);
+      const uid = auth.currentUser.uid;
+      if (rememberMe) {
+        Cookies.set(btoa(uid), "REM", { expires: 999 });
+      }
       setError("");
       history.push("/measurements/userData");
-      if (rememberMe) {
-        // Set cookie with user UID only when "Remember Me" is checked
-        Cookies.set("remember", "remember", { expires: 5 }); // Set cookie to expire in 5 days
-      } else {
-        // If "Remember Me" is not checked, remove any existing "uid" cookie
-        Cookies.remove("remember");
-      }
     } catch (error) {
       if (error instanceof Error) {
         switch (error.message) {
@@ -249,6 +254,7 @@ function SignIn() {
               onClick={handleSignIn}
               fontSize="sm"
               variant="brand"
+              _hover={{ bg: "secondaryGray.900" }}
               fontWeight="500"
               w="100%"
               h="50"

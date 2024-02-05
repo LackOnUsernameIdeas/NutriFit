@@ -7,8 +7,8 @@ import Sidebar from "components/sidebar/Sidebar";
 import { SidebarContext } from "contexts/SidebarContext";
 import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
+import FadeInWrapper from "../../components/wrapper/FadeInWrapper";
 import routes from "routes";
-
 // Custom Chakra theme
 export default function Dashboard(props: { [x: string]: any }) {
   const { ...rest } = props;
@@ -107,14 +107,10 @@ export default function Dashboard(props: { [x: string]: any }) {
           </Portal>
 
           {getRoute() ? (
-            <Box
-              mx="auto"
-              p={{ base: "20px", md: "30px" }}
-              pe="20px"
-              minH="100vh"
-              pt="50px"
-            >
-              <Switch>{getRoutes(routes)}</Switch>
+            <Box mx="auto" p={{ base: "20px", md: "30px" }} pe="20px" pt="50px">
+              <Box minH="70vh">
+                <Switch>{getRoutes(routes)}</Switch>
+              </Box>
               <Footer />
             </Box>
           ) : null}

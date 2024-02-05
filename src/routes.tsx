@@ -7,6 +7,7 @@ import {
   MdOutlineShoppingCart
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
+import { FiHelpCircle } from "react-icons/fi";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -14,7 +15,9 @@ import NFTMarketplace from "views/admin/marketplace";
 import DataTables from "views/admin/dataTables";
 import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
+import MealPlannerr from "views/admin/mealPlannerr";
 import UserMeasurements from "views/userMeasurements";
+import Contact from "views/admin/contact";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -45,7 +48,25 @@ const routes = [
     icon: (
       <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
     ),
-    component: MealPlanner
+    component: MealPlannerr
+  },
+  {
+    name: "Хранителен План",
+    layout: "/admin",
+    path: "/mealplann",
+    icon: (
+      <Icon as={BiSolidBowlHot} width="20px" height="20px" color="inherit" />
+    ),
+    component: MealPlanner,
+    hideInSidebar: true
+  },
+  {
+    name: "За контакт",
+    layout: "/admin",
+    path: "/contact",
+    icon: <Icon as={FiHelpCircle} width="20px" height="20px" color="inherit" />,
+    component: Contact,
+    hideInSidebar: false
   },
   {
     name: "NFT Marketplace",
@@ -80,7 +101,7 @@ const routes = [
     hideInSidebar: true
   },
   {
-    name: "Вход",
+    name: "Регистрация",
     layout: "/auth",
     path: "/sign-up",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
@@ -88,7 +109,7 @@ const routes = [
     hideInSidebar: true
   },
   {
-    name: "Вход",
+    name: "Забравена парола",
     layout: "/auth",
     path: "/forgot-password",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,

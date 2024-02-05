@@ -17,10 +17,13 @@ export default function Default(props: {
   endContent?: JSX.Element;
   name?: string;
   growth?: string | number;
+  decrease?: string | number;
+  subtext?: string;
   value: string | number;
   tooltipLabel?: string;
   onClick?: () => void;
   backgroundColor?: string;
+  loading?: boolean;
   hasBorder?: boolean;
   borderColor?: boolean;
   hasHoverAndFocus?: boolean;
@@ -30,10 +33,13 @@ export default function Default(props: {
     endContent,
     name,
     growth,
+    decrease,
+    subtext,
     value,
     tooltipLabel,
     onClick,
     backgroundColor,
+    loading = false,
     hasHoverAndFocus = false,
     hasBorder = false,
     borderColor = false
@@ -42,12 +48,27 @@ export default function Default(props: {
   const bgHover = useColorModeValue("secondaryGray.400", "whiteAlpha.50");
   const bgFocus = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const defaultBorderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+  const litUpBorderColor = useColorModeValue(
+    "rgba(145, 132, 246, 0.8)",
+    "rgba(96, 77, 235, 0.8)"
+  );
+  const fontWeight = useColorModeValue("550", "550");
   const [isSelected, setIsSelected] = useState(false);
   const handleSelect = () => {
     setIsSelected(!isSelected);
   };
+  const fadeInOutStyle = {
+    opacity: loading ? 0 : 1,
+    transition: "opacity 0.5s ease-in-out"
+  };
   return (
-    <Tooltip label={tooltipLabel} placement="top" hasArrow openDelay={200}>
+    <Tooltip
+      label={tooltipLabel}
+      placement="top"
+      hasArrow
+      openDelay={200}
+      borderRadius="10px"
+    >
       <Card
         py="15px"
         onClick={() => {
@@ -57,20 +78,16 @@ export default function Default(props: {
         backgroundColor={backgroundColor}
         _hover={
           hasHoverAndFocus && {
-            backgroundColor: isSelected ? "hoverColorSelected" : bgHover
+            backgroundColor: bgHover
           }
         }
         _focus={
           hasHoverAndFocus && {
-            boxShadow: `0 0 0 2px ${
-              isSelected ? "focusColorSelected" : bgFocus
-            }`
+            boxShadow: `0 0 0 2px ${bgFocus}`
           }
         }
-        borderWidth={hasBorder ? "1px" : "0"}
-        borderColor={
-          borderColor ? "rgba(75, 15, 229, 0.8)" : defaultBorderColor
-        }
+        borderWidth={hasBorder ? "3px" : "0"}
+        borderColor={borderColor ? litUpBorderColor : defaultBorderColor}
       >
         <Flex
           my="auto"
@@ -83,6 +100,7 @@ export default function Default(props: {
             <StatLabel
               lineHeight="100%"
               color={textColor}
+              fontWeight={fontWeight}
               fontSize={{
                 base: "sm"
               }}
@@ -94,6 +112,7 @@ export default function Default(props: {
               fontSize={{
                 base: "2xl"
               }}
+              style={fadeInOutStyle}
             >
               {value}
             </StatNumber>
@@ -103,7 +122,16 @@ export default function Default(props: {
                   {growth}
                 </Text>
                 <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
-                  since last month
+                  {subtext ? subtext : ""}
+                </Text>
+              </Flex>
+            ) : decrease ? (
+              <Flex align="center">
+                <Text color="red.500" fontSize="xs" fontWeight="700" me="5px">
+                  {decrease}
+                </Text>
+                <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
+                  {subtext ? subtext : ""}
                 </Text>
               </Flex>
             ) : null}

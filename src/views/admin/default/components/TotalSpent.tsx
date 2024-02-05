@@ -11,7 +11,7 @@ import {
   Flex,
   Icon,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 
 // Custom components
@@ -24,9 +24,7 @@ import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 import { RiArrowUpSFill } from "react-icons/ri";
 
 // Assets for charts
-import {
-  lineChartOptions
-} from "variables/chartjs";
+import { lineChartOptions } from "variables/chartjs";
 
 export default function TotalSpent(props: { [x: string]: any }) {
   const { ...rest } = props;
@@ -34,15 +32,14 @@ export default function TotalSpent(props: { [x: string]: any }) {
   const [books, setBooks] = useState<NewBookType[]>([]);
 
   useEffect(
-    () => (
+    () =>
       onSnapshot(booksCollection, (snapshot: QuerySnapshot<DocumentData>) => {
         setBooks(
           snapshot.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
           })
         );
-      })
-    ),
+      }),
     []
   );
 
@@ -103,11 +100,19 @@ export default function TotalSpent(props: { [x: string]: any }) {
           </Text>
         </Flex>
       </Flex>
-      <Card alignItems="center" flexDirection="column" h="100%" w="100%" minH={{ sm: '100px', md: '300px', lg: 'auto' }} minW={{ sm: '150px', md: '200px', lg: 'auto' }}>
-        <LineChart 
-          lineChartLabels={titles} 
-          lineChartData={ranks} 
-          lineChartOptions={lineChartOptions} 
+      <Card
+        alignItems="center"
+        flexDirection="column"
+        h="100%"
+        w="100%"
+        minH={{ sm: "100px", md: "300px", lg: "auto" }}
+        minW={{ sm: "150px", md: "200px", lg: "auto" }}
+      >
+        <LineChart
+          lineChartLabels={titles}
+          lineChartData={ranks}
+          lineChartOptions={lineChartOptions}
+          lineChartLabelName="sth"
         />
       </Card>
     </Card>

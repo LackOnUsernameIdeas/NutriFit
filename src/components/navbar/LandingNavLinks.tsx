@@ -10,6 +10,7 @@ import {
   Box,
   Avatar
 } from "@chakra-ui/react";
+
 import { SidebarResponsive } from "components/sidebar/Sidebar";
 import PropTypes from "prop-types";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
@@ -18,6 +19,7 @@ import letterLogo from "assets/img/layout/letterLogo.png";
 export default function LandingLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
+  let bgButton = "linear-gradient(135deg, #868CFF 0%, #4318FF 100%)";
   const navbarIcon = useColorModeValue("gray.400", "white");
   let menuBg = useColorModeValue("white", "navy.800");
   const shadow = useColorModeValue(
@@ -27,7 +29,8 @@ export default function LandingLinks(props: { secondary: boolean }) {
 
   return (
     <Flex
-      w={{ sm: "100%", md: "auto" }}
+      ml={{ sm: "70%", md: "0" }}
+      w={{ sm: "34%", md: "auto" }}
       alignItems="center"
       flexDirection="row"
       bg={menuBg}
@@ -36,43 +39,25 @@ export default function LandingLinks(props: { secondary: boolean }) {
       borderRadius="30px"
       boxShadow={shadow}
     >
-      <Box ml={{ base: "10px", lg: "0", md: "0" }}>
-        <SidebarResponsive routes={routes} />
-      </Box>
       <Button
-        variant="no-hover"
-        bg="transparent"
-        p="0px"
-        minW="unset"
-        minH="unset"
-        h="18px"
-        w="max-content"
-        ml={{ base: "20px", lg: "0", md: "0" }}
+        bg={bgButton}
+        variant="no-effects"
+        border="1px solid"
+        borderColor="#6A53FF"
+        borderRadius="50px"
         onClick={toggleColorMode}
+        display="flex"
+        p="0px"
+        alignItems="center"
+        justifyContent="center"
       >
         <Icon
-          me="10px"
-          h="18px"
-          w="18px"
-          color={navbarIcon}
+          h="24px"
+          w="24px"
+          color="white"
           as={colorMode === "light" ? IoMdMoon : IoMdSunny}
         />
       </Button>
-      <Menu>
-        <MenuButton p="0px">
-          <Avatar
-            _hover={{ cursor: "pointer" }}
-            color="white"
-            src={letterLogo}
-            name="test test"
-            bg="#11047A"
-            size="sm"
-            w="40px"
-            h="40px"
-            ml={{ base: "20px", lg: "0", md: "0" }}
-          />
-        </MenuButton>
-      </Menu>
     </Flex>
   );
   // return (
