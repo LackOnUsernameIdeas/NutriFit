@@ -45,6 +45,7 @@ export default function MealPlanner(props: {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [requestFailed, setRequestFailed] = useState(false);
 
   const [userPreferences, setUserPreferences] =
     useState<UserPreferencesForMealPlan>({
@@ -90,9 +91,6 @@ export default function MealPlanner(props: {
     try {
       setIsSubmitted(true);
       setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -120,6 +118,8 @@ export default function MealPlanner(props: {
       );
 
       if (!response.ok) {
+        setRequestFailed(true);
+        setIsLoading(false);
         throw new Error("Failed to generate meal plan");
       }
 
@@ -162,6 +162,8 @@ export default function MealPlanner(props: {
         );
 
         if (!imageResponse.ok) {
+          setRequestFailed(true);
+          setIsLoading(false);
           throw new Error("Failed to generate image");
         }
 
@@ -278,7 +280,8 @@ export default function MealPlanner(props: {
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
-                    {mealPlan.lunch !== null && mealPlan.dinner !== null ? (
+                    {(mealPlan.lunch !== null && mealPlan.dinner !== null) ||
+                    requestFailed == false ? (
                       <Flex justify="center" w="100%" mb="5px">
                         <SimpleGrid
                           columns={{ base: 1, md: 1, xl: 1 }}
