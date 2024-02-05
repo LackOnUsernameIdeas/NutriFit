@@ -18,7 +18,7 @@ import { useState } from "react";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 
 export default function RecipeWidget(props: {
-  image: string;
+  image?: string;
   name: any;
   author: any;
   currentbid: any;

@@ -164,6 +164,12 @@ export type MealPlan = {
   breakfast: Recipe | null;
   lunch: Recipe | null;
   dinner: Recipe | null;
+  totals?: {
+    calories: number;
+    protein: number;
+    fat: number;
+    carbohydrates: number;
+  };
 };
 
 export type WeightPerServing = {

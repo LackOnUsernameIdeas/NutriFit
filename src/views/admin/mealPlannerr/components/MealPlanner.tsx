@@ -18,6 +18,7 @@ import {
 import { generateMealPlan } from "../utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "../utils/calculateNutrientForMealPlan";
 import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
+import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
 
 export default function MealPlanner(props: {
@@ -79,7 +80,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -118,7 +119,8 @@ export default function MealPlanner(props: {
       setMealPlan({
         breakfast: data.breakfast,
         lunch: data.lunch,
-        dinner: data.dinner
+        dinner: data.dinner,
+        totals: data.totals
       });
 
       setIsLoading(false);
@@ -129,6 +131,11 @@ export default function MealPlanner(props: {
 
   console.log("mealPlan: ", mealPlan);
 
+  // const filteredArr = Object.keys(mealPlan).map((mealType: any, index) => {
+  //   console.log((mealPlan as any)[mealType]?.name, index);
+  // });
+  // console.log("filteredArr: ", filteredArr);
+  console.log("totals: ", mealPlan.totals);
   return (
     <FadeInWrapper>
       <Box mb="20px">
@@ -176,18 +183,7 @@ export default function MealPlanner(props: {
                           columns={{ base: 1, md: 1, xl: 1 }}
                           gap="20px"
                         >
-                          {/* <MealPlanDetails
-                            customServings={customServings}
-                            suggestedMaxServings={suggestedMaxServings}
-                            mealPlan={mealPlan}
-                            calories={calories}
-                            protein={protein}
-                            carbs={carbs}
-                            fat={fat}
-                            weight={weightPerServing}
-                            handleIncrement={handleIncrement}
-                            handleDecrement={handleDecrement}
-                          /> */}
+                          <MealPlanDetails mealPlan={mealPlan} />
                           <h1>Generated Meal Plan!</h1>
                         </SimpleGrid>
                       </Flex>
