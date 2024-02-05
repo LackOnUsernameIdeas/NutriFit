@@ -33,7 +33,6 @@ export default function LandingNavbar(props: {
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   const isMobile = useBreakpointValue({ base: true, md: false });
-  let mainText = useColorModeValue("navy.700", "white");
   let secondaryText = useColorModeValue("gray.700", "white");
   let navbarPosition = "fixed" as const;
   let navbarFilter = "none";
@@ -104,7 +103,7 @@ export default function LandingNavbar(props: {
       >
         <Box mb={{ sm: "8px", md: "0px" }} lineHeight="1">
           <Text
-            color={mainText}
+            color="white"
             bg="inherit"
             borderRadius="inherit"
             fontFamily="DM Sans"
@@ -117,7 +116,7 @@ export default function LandingNavbar(props: {
             Nutri
           </Text>{" "}
           <Text
-            color={mainText}
+            color="white"
             bg="inherit"
             borderRadius="inherit"
             fontFamily="Leckerli One"

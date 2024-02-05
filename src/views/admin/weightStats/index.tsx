@@ -80,6 +80,14 @@ export default function WeightStats() {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+  const bgDropHover = useColorModeValue(
+    { bg: "secondaryGray.300" },
+    { bg: "whiteAlpha.50" }
+  );
+  const bgDropFocus = useColorModeValue(
+    { bg: "secondaryGray.200" },
+    { bg: "whiteAlpha.100" }
+  );
   const cancelRefPerfectWeightAlert = React.useRef();
   const cancelRefStatus = React.useRef();
   const cancelRefBMIAlert = React.useRef();
@@ -219,10 +227,10 @@ export default function WeightStats() {
     xl: -80
   });
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(true);
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
+    React.useState(false);
+  const [renderDropdown, setRenderDropdown] = React.useState(false);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
@@ -230,9 +238,7 @@ export default function WeightStats() {
 
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${
-      dropdownVisible ? -50 : dropdownWidgetsSlidePosition
-    }px)`,
+    transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -1275,12 +1281,14 @@ export default function WeightStats() {
               </SimpleGrid>
             </Card>
             <Card
-              onClick={handleDropdownToggle}
-              cursor="pointer"
-              zIndex="1"
-              position="relative"
-              mb={renderDropdown ? "0px" : "20px"}
-            >
+          onClick={handleDropdownToggle}
+          cursor="pointer"
+          zIndex="1"
+          position="relative"
+          _hover={bgDropHover}
+          _focus={bgDropFocus}
+          mb={renderDropdown ? "0px" : "20px"}
+        >
               <Flex justify="space-between" alignItems="center">
                 <Text fontSize="2xl">
                   Статистики за вашето телесно изменение:{" "}
