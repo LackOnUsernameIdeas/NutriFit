@@ -78,7 +78,9 @@ export default function WeightStats() {
   const brandColor = useColorModeValue("brand.500", "white");
   const fontWeight = useColorModeValue("550", "100");
   const tipFontWeight = useColorModeValue("500", "100");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
+  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
+  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const textColor = useColorModeValue("black", "white");
   const infoBoxIconColor = useColorModeValue("black", "white");
   const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
@@ -612,8 +614,7 @@ export default function WeightStats() {
                     cursor="pointer"
                     zIndex="1"
                     position="relative"
-                    _hover={bgDropHover}
-                    _focus={bgDropFocus}
+                    bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
                   >
                     <Flex justify="space-between" alignItems="center">
                       <Text fontSize="2xl">

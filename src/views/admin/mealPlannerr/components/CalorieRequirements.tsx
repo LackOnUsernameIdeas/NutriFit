@@ -30,6 +30,9 @@ export default function CalorieRequirements(props: {
   const bgHover = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.400", "whiteAlpha.100");
+  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
+  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
+  const gradient = useColorModeValue(gradientLight, gradientDark);
   const {
     clickedValueCalories,
     setClickedValueCalories,
@@ -57,13 +60,14 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
                 icon={
                   <Icon
                     w="32px"
                     h="32px"
                     as={MdLocalFireDepartment}
-                    color={brandColor}
+                    color="white"
                   />
                 }
               />
@@ -77,13 +81,14 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
                 icon={
                   <Icon
                     w="32px"
                     h="32px"
                     as={TbActivityHeartbeat}
-                    color={brandColor}
+                    color="white"
                   />
                 }
               />
@@ -132,10 +137,9 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={FaAngleDown} color={brandColor} />
-                }
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
+                icon={<Icon w="32px" h="32px" as={FaAngleDown} color="white" />}
               />
             }
             tooltipLabel={`За да отслабнете с ${
@@ -184,13 +188,14 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
                 icon={
                   <Icon
                     w="32px"
                     h="32px"
                     as={FaAngleDoubleDown}
-                    color={brandColor}
+                    color="white"
                   />
                 }
               />
@@ -244,10 +249,9 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={FaGripLines} color={brandColor} />
-                }
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
+                icon={<Icon w="32px" h="32px" as={FaGripLines} color="white" />}
               />
             }
             tooltipLabel={`За да поддържате теглото си, трябва да приемате приблизително ${selectedLevelData.goals[
@@ -287,13 +291,14 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
                 icon={
                   <Icon
                     w="32px"
                     h="32px"
                     as={TbActivityHeartbeat}
-                    color={brandColor}
+                    color="white"
                   />
                 }
               />
@@ -342,10 +347,9 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={FaAngleUp} color={brandColor} />
-                }
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
+                icon={<Icon w="32px" h="32px" as={FaAngleUp} color="white" />}
               />
             }
             tooltipLabel={`За да качите ${
@@ -394,14 +398,10 @@ export default function CalorieRequirements(props: {
               <IconBox
                 w="56px"
                 h="56px"
-                bg={boxBg}
+                bg={gradient}
+                transition="background-image 0.5s ease-in-out"
                 icon={
-                  <Icon
-                    w="32px"
-                    h="32px"
-                    as={FaAngleDoubleUp}
-                    color={brandColor}
-                  />
+                  <Icon w="32px" h="32px" as={FaAngleDoubleUp} color="white" />
                 }
               />
             }
