@@ -398,7 +398,7 @@ export default function UserReports() {
                 }
                 name="Тегло"
                 value={
-                  averageWeight !== null ? `${averageWeight.toFixed(1)}kg` : "0"
+                  averageWeight !== null ? `${averageWeight.toFixed(2)}kg` : "0"
                 }
                 loading={loading}
               />
@@ -416,7 +416,7 @@ export default function UserReports() {
                 name="Калории"
                 value={
                   averageCalories !== null
-                    ? `${averageCalories.toFixed(1)}`
+                    ? `${averageCalories.toFixed(2)}`
                     : "0"
                 }
                 loading={loading}
@@ -434,7 +434,7 @@ export default function UserReports() {
                 }
                 name="Протеин"
                 value={
-                  averageProtein !== null ? `${averageProtein.toFixed(1)}` : "0"
+                  averageProtein !== null ? `${averageProtein.toFixed(2)}` : "0"
                 }
                 loading={loading}
               />
@@ -451,7 +451,7 @@ export default function UserReports() {
                 }
                 name="Въглехидрати"
                 value={
-                  averageCarbs !== null ? `${averageCarbs.toFixed(1)}` : "0"
+                  averageCarbs !== null ? `${averageCarbs.toFixed(2)}` : "0"
                 }
                 loading={loading}
               />
@@ -467,7 +467,7 @@ export default function UserReports() {
                   />
                 }
                 name="Мазнини"
-                value={averageFat !== null ? `${averageFat.toFixed(1)}` : "0"}
+                value={averageFat !== null ? `${averageFat.toFixed(2)}` : "0"}
                 loading={loading}
               />
               <MiniStatistics
@@ -489,7 +489,7 @@ export default function UserReports() {
                 name="Тел. Мазнини"
                 value={
                   averageBodyFatPercentage !== null
-                    ? `${averageBodyFatPercentage.toFixed(1)}%`
+                    ? `${averageBodyFatPercentage.toFixed(2)}%`
                     : "0"
                 }
                 loading={loading}

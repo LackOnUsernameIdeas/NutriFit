@@ -609,7 +609,7 @@ export default function WeightStats() {
                   >
                     <Flex justify="space-between" alignItems="center">
                       <Text fontSize="2xl">
-                        Статистики за вашите средно приети нутриенти и тяхното
+                        Статистики за ВАШИТЕ средно приети нутриенти и тяхното
                         изменение:{" "}
                       </Text>
                       <Icon
