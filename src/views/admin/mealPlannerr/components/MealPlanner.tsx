@@ -291,7 +291,6 @@ export default function MealPlanner(props: {
                             mealPlan={mealPlan}
                             mealPlanImages={mealPlanImages}
                           />
-                          <h1>Generated Meal Plan!</h1>
                         </SimpleGrid>
                       </Flex>
                     ) : (
