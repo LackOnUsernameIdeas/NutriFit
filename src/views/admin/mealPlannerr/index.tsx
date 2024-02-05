@@ -46,7 +46,7 @@ import DietTable from "views/admin/dataTables/components/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "views/admin/weightStats/components/Loading";
 import MiniStatistics from "components/card/MiniStatistics";
-import { MdLocalFireDepartment } from "react-icons/md";
+import { FaFireAlt } from "react-icons/fa";
 import IconBox from "components/icons/IconBox";
 import MealPlanner from "./components/MealPlanner";
 import { HSeparator } from "components/separator/Separator";
@@ -95,6 +95,14 @@ export default function WeightStats() {
   const bgFocus = useColorModeValue(
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
+  );
+  const bgDropHover = useColorModeValue(
+    { bg: "secondaryGray.300" },
+    { bg: "secondaryGray.100" }
+  );
+  const bgDropFocus = useColorModeValue(
+    { bg: "secondaryGray.200" },
+    { bg: "secondaryGray.900" }
   );
 
   // State за разкриване на информация за менюто с информация
@@ -303,10 +311,10 @@ export default function WeightStats() {
     xl: -810
   });
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(true);
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
+    React.useState(false);
+  const [renderDropdown, setRenderDropdown] = React.useState(false);
   //const [combinedSlidePosition, setCombinedSlidePosition] = React.useState<number>(0);
 
   const handleDropdownToggle = () => {
@@ -315,9 +323,7 @@ export default function WeightStats() {
 
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${
-      dropdownVisible ? -50 : dropdownWidgetsSlidePosition
-    }px)`,
+    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -606,6 +612,8 @@ export default function WeightStats() {
                     cursor="pointer"
                     zIndex="1"
                     position="relative"
+                    _hover={bgDropHover}
+                    _focus={bgDropFocus}
                   >
                     <Flex justify="space-between" alignItems="center">
                       <Text fontSize="2xl">
@@ -637,13 +645,13 @@ export default function WeightStats() {
                               <IconBox
                                 w="56px"
                                 h="56px"
-                                bg={boxBg}
+                                bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
                                 icon={
                                   <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdLocalFireDepartment}
-                                    color={brandColor}
+                                    as={FaFireAlt}
+                                    color="white"
                                   />
                                 }
                               />
@@ -666,13 +674,13 @@ export default function WeightStats() {
                               <IconBox
                                 w="56px"
                                 h="56px"
-                                bg={boxBg}
+                                bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
                                 icon={
                                   <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdLocalFireDepartment}
-                                    color={brandColor}
+                                    as={FaFireAlt}
+                                    color="white"
                                   />
                                 }
                               />
@@ -695,13 +703,13 @@ export default function WeightStats() {
                               <IconBox
                                 w="56px"
                                 h="56px"
-                                bg={boxBg}
+                                bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
                                 icon={
                                   <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdLocalFireDepartment}
-                                    color={brandColor}
+                                    as={FaFireAlt}
+                                    color="white"
                                   />
                                 }
                               />
@@ -724,13 +732,13 @@ export default function WeightStats() {
                               <IconBox
                                 w="56px"
                                 h="56px"
-                                bg={boxBg}
+                                bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
                                 icon={
                                   <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdLocalFireDepartment}
-                                    color={brandColor}
+                                    as={FaFireAlt}
+                                    color="white"
                                   />
                                 }
                               />
