@@ -89,7 +89,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -146,21 +146,7 @@ export default function MealPlanner(props: {
 
         // Now make a request to the "images/generations" endpoint for each meal's name
         const imageResponse = await fetch(
-          "https://api.openai.com/v1/images/generations",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization":
-                "Bearer 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"
-            },
-            body: JSON.stringify({
-              "model": "dall-e-2",
-              "prompt": `${meal.name}`,
-              "n": 1,
-              "size": "1024x1024"
-            })
-          }
+          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(meal.name)}&searchType=image`
         );
 
         if (!imageResponse.ok) {
@@ -170,14 +156,15 @@ export default function MealPlanner(props: {
         const imageResponseData = await imageResponse.json();
         console.log(
           `Image Generation Response for ${meal.name}: `,
-          imageResponseData
+          imageResponseData.items[0].link
         );
-        (mealPlanImagesData as any)[mealKey] = imageResponseData;
+        (mealPlanImagesData as any)[mealKey] = imageResponseData.items[0].link;
       }
+
+      console.log("mealPlanImagesData:", mealPlanImagesData);
 
       setMealPlanImages(mealPlanImagesData);
 
-      console.log("mealPlanImages:", mealPlanImages);
       setMealPlan({
         breakfast: data.breakfast,
         lunch: data.lunch,
