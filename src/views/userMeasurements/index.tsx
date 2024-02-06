@@ -272,20 +272,23 @@ const UserMeasurements = () => {
       userData["hip"]
     );
     history.push("/admin/default");
-    await fetchCaloriesForActivityLevels(
+    setIsLoading(false);
+  }
+
+  async function fetchCaloriesAndMacroNutrients() {
+    fetchCaloriesForActivityLevels(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
       userData["weight"]
     );
-    await fetchMacroNutrients(
+    fetchMacroNutrients(
       userData["age"],
       userDataForReq["gender"],
       userData["height"],
       userData["weight"],
       goalsToFetch
     );
-    setIsLoading(false);
   }
 
   React.useEffect(() => {
@@ -368,6 +371,8 @@ const UserMeasurements = () => {
           userData.hip
         );
         await generateStats();
+        history.push("/admin/default");
+        await fetchCaloriesAndMacroNutrients();
         // Save additional user data to the server
         const response = await fetch(
           "https://nutri-api.noit.eu/processUserData",

@@ -1281,145 +1281,155 @@ export default function WeightStats() {
                 )}
               </SimpleGrid>
             </Card>
-            <Card
-              onClick={handleDropdownToggle}
-              cursor="pointer"
-              zIndex="1"
-              position="relative"
-              bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-              transition="background-image 0.5s ease-in-out"
-              mb={renderDropdown ? "0px" : "20px"}
-            >
-              <Flex justify="space-between" alignItems="center">
-                <Text fontSize="2xl">
-                  Статистики за вашето телесно изменение:{" "}
-                </Text>
-                <Icon
-                  as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                  boxSize={6}
-                  color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                />
-              </Flex>
-            </Card>
-            {renderDropdown && (
-              <animated.div
-                style={{ ...slideAnimationDrop, position: "relative" }}
-              >
+            {lineChartForBMI.length > 1 && (
+              <Box>
                 <Card
-                  bg={boxBg}
-                  minH={{ base: "800px", md: "300px", xl: "180px" }}
+                  onClick={handleDropdownToggle}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+                  transition="background-image 0.5s ease-in-out"
+                  mb={renderDropdown ? "0px" : "20px"}
                 >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, xl: 2 }}
-                    gap="20px"
-                    mt="50px"
+                  <Flex justify="space-between" alignItems="center">
+                    <Text fontSize="2xl">
+                      Статистики за вашето телесно изменение:{" "}
+                    </Text>
+                    <Icon
+                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdown && (
+                  <animated.div
+                    style={{ ...slideAnimationDrop, position: "relative" }}
                   >
                     <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "100px", md: "300px", lg: "auto" }}
+                      bg={boxBg}
+                      minH={{ base: "800px", md: "300px", xl: "180px" }}
                     >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForKilogramsData}
-                        lineChartOptions={lineChartOptions}
-                        lineChartLabelName="Изменение на тегло(кг)"
-                      />
+                      <SimpleGrid
+                        columns={{ base: 1, md: 2, xl: 2 }}
+                        gap="20px"
+                        mt="50px"
+                      >
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "100px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForKilogramsData}
+                            lineChartOptions={lineChartOptions}
+                            lineChartLabelName="Изменение на тегло(кг)"
+                          />
+                        </Card>
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForBMI}
+                            lineChartOptions={lineChartOptions}
+                            lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
+                          />
+                        </Card>
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForBodyFatData}
+                            lineChartOptions={lineChartOptions}
+                            lineChartLabelName="Изменение на % телесни мазнини"
+                          />
+                        </Card>
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForBodyFatMassData}
+                            lineChartOptions={lineChartOptions}
+                            lineChartLabelName="Изменение на мастна телесна маса"
+                          />
+                        </Card>
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForLeanBodyMassData}
+                            lineChartOptions={lineChartOptions}
+                            lineChartLabelName="Изменение на чиста телесна маса"
+                          />
+                        </Card>
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={
+                              lineChartForDifferenceFromPerfectWeightData
+                            }
+                            lineChartOptions={lineChartOptions}
+                            lineChartLabelName={`Изменение в килограми ${
+                              differenceFromPerfectWeight.isUnderOrAbove ==
+                              "above"
+                                ? "над"
+                                : "под"
+                            } нормата`}
+                          />
+                        </Card>
+                      </SimpleGrid>
                     </Card>
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForBMI}
-                        lineChartOptions={lineChartOptions}
-                        lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
-                      />
-                    </Card>
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForBodyFatData}
-                        lineChartOptions={lineChartOptions}
-                        lineChartLabelName="Изменение на % телесни мазнини"
-                      />
-                    </Card>
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForBodyFatMassData}
-                        lineChartOptions={lineChartOptions}
-                        lineChartLabelName="Изменение на мастна телесна маса"
-                      />
-                    </Card>
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForLeanBodyMassData}
-                        lineChartOptions={lineChartOptions}
-                        lineChartLabelName="Изменение на чиста телесна маса"
-                      />
-                    </Card>
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={
-                          lineChartForDifferenceFromPerfectWeightData
-                        }
-                        lineChartOptions={lineChartOptions}
-                        lineChartLabelName={`Изменение в килограми ${
-                          differenceFromPerfectWeight.isUnderOrAbove == "above"
-                            ? "над"
-                            : "под"
-                        } нормата`}
-                      />
-                    </Card>
-                  </SimpleGrid>
-                </Card>
-              </animated.div>
+                  </animated.div>
+                )}
+              </Box>
             )}
+            <Card mb="20px">
+              Тези стойности са приблизителни и може да е необходимо преценка от
+              диетолог или здравен специалист, за да се адаптират към
+              индивидуалните ти нужди.
+            </Card>
           </Box>
         )}
       </Box>
