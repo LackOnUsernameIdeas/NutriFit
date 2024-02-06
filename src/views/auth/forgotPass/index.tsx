@@ -152,6 +152,8 @@ function ForgotPass() {
             />
             <Button
               onClick={handleForgotPass}
+              color="white"
+              bgColor="#5D4BD7"
               fontSize="sm"
               variant="brand"
               fontWeight="500"

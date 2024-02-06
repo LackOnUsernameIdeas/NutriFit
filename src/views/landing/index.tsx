@@ -149,8 +149,8 @@ export default function UserReports() {
             >
               <Link href="/#/auth/sign-in">
                 <Button
-                  className="glowing-button"
                   color="white"
+                  bgColor="#5D4BD7"
                   variant="brand"
                   _hover={{ bg: "secondaryGray.900" }}
                   borderRadius="8px"

@@ -222,8 +222,6 @@ export default function UserReports() {
           firestore,
           "additionalUserData"
         );
-        const usersCollectionSnapshot = await getDocs(usersDataCollectionRef);
-        const numberOfUsers = usersCollectionSnapshot.size;
         let totalCalories = 0;
         let totalProtein = 0;
         let totalCarbs = 0;
@@ -236,9 +234,9 @@ export default function UserReports() {
         const unsubscribe = onSnapshot(
           usersDataCollectionRef,
           (querySnapshot) => {
+            const numberOfUsers = querySnapshot.size;
             querySnapshot.forEach((userDoc) => {
               const userData = userDoc.data() as DocumentData;
-
               // Filter out non-timestamped objects
               const timestampedObjects = Object.entries(userData)
                 .filter(

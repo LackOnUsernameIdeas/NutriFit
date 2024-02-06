@@ -252,6 +252,8 @@ function SignIn() {
             </Flex>
             <Button
               onClick={handleSignIn}
+              color="white"
+              bgColor="#5D4BD7"
               fontSize="sm"
               variant="brand"
               _hover={{ bg: "secondaryGray.900" }}
