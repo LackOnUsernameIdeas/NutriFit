@@ -67,6 +67,12 @@ import {
   getAverageBodyFatPercentageOfAllUsers
 } from "database/getMeanUsersData";
 
+// Types
+import {
+  GenderStatistics,
+  GenderAverageStats
+} from "../../../types/weightStats";
+
 interface LinearGradientTextProps {
   text: any;
   gradient: string;
@@ -156,6 +162,26 @@ export default function UserReports() {
   const [averageFat, setAverageFat] = React.useState<number | null>(null);
   const [averageBodyFatPercentage, setAverageBodyFatPercentage] =
     React.useState<number | null>(null);
+  const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
+    male: {
+      totalUsers: 0,
+      averageCalories: 0,
+      averageProtein: 0,
+      averageCarbs: 0,
+      averageFat: 0,
+      averageWeight: 0,
+      averageBodyFatPercentage: 0
+    },
+    female: {
+      totalUsers: 0,
+      averageCalories: 0,
+      averageProtein: 0,
+      averageCarbs: 0,
+      averageFat: 0,
+      averageWeight: 0,
+      averageBodyFatPercentage: 0
+    }
+  });
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(true);
@@ -222,29 +248,46 @@ export default function UserReports() {
           firestore,
           "additionalUserData"
         );
-        let totalCalories = 0;
-        let totalProtein = 0;
-        let totalCarbs = 0;
-        let totalFat = 0;
-        let totalWeight = 0;
-        let totalBodyFatPercentage = 0;
-        let divider = 0;
+        let totalCaloriesMale = 0;
+        let totalProteinMale = 0;
+        let totalCarbsMale = 0;
+        let totalFatMale = 0;
+        let totalWeightMale = 0;
+        let totalBodyFatPercentageMale = 0;
+
+        let totalCaloriesFemale = 0;
+        let totalProteinFemale = 0;
+        let totalCarbsFemale = 0;
+        let totalFatFemale = 0;
+        let totalWeightFemale = 0;
+        let totalBodyFatPercentageFemale = 0;
 
         // Subscribe to real-time updates using onSnapshot
         const unsubscribe = onSnapshot(
           usersDataCollectionRef,
           (querySnapshot) => {
-            const numberOfUsers = querySnapshot.size;
+            let malesCount = 0;
+            let femalesCount = 0;
+
+            let malesWithData = 0;
+            let femalesWithData = 0;
+
+            let malesWithNutrients = 0;
+            let femalesWithNutrients = 0;
+
             querySnapshot.forEach((userDoc) => {
               const userData = userDoc.data() as DocumentData;
-              // Filter out non-timestamped objects
+
+              const gender = userData.gender; // Retrieve gender directly from userData
+
+              if (gender === "male") {
+                malesCount++;
+              } else if (gender === "female") {
+                femalesCount++;
+              }
+
               const timestampedObjects = Object.entries(userData)
-                .filter(
-                  ([key, value]) =>
-                    typeof value === "object" &&
-                    value.Preferences &&
-                    value.Preferences.hasOwnProperty("calories")
-                )
+                .filter(([key, value]) => typeof value === "object")
                 .map(([key, value]) => {
                   return { key, ...value };
                 });
@@ -257,42 +300,188 @@ export default function UserReports() {
                 }
               );
 
+              let latestTimestampData = undefined;
+              for (const obj of orderedTimestampObjects) {
+                if (obj.weight && obj.BodyMassData) {
+                  latestTimestampData = obj;
+                }
+              }
+
+              if (gender === "male" && latestTimestampData !== undefined) {
+                malesWithData++;
+              } else if (
+                gender === "female" &&
+                latestTimestampData !== undefined
+              ) {
+                femalesWithData++;
+              }
+
+              let latestTimestampDataWithNutrients = undefined;
+              for (const obj of orderedTimestampObjects) {
+                if (obj.Preferences) {
+                  latestTimestampDataWithNutrients = obj;
+                }
+              }
+
+              if (
+                gender === "male" &&
+                latestTimestampDataWithNutrients !== undefined
+              ) {
+                malesWithNutrients++;
+              } else if (
+                gender === "female" &&
+                latestTimestampDataWithNutrients !== undefined
+              ) {
+                femalesWithNutrients++;
+              }
+            });
+            console.log("males: ", malesCount, "females: ", femalesCount);
+
+            querySnapshot.forEach((userDoc) => {
+              const userData = userDoc.data() as DocumentData;
+
+              const gender = userData.gender; // Retrieve gender directly from userData
+
+              // Filter out non-timestamped objects
+              const timestampedObjects = Object.entries(userData)
+                .filter(([key, value]) => typeof value === "object")
+                .map(([key, value]) => {
+                  return { key, ...value };
+                });
+
+              const orderedTimestampObjects = [...timestampedObjects].sort(
+                (a, b) => {
+                  const keyA = a.key;
+                  const keyB = b.key;
+                  return new Date(keyB).getTime() - new Date(keyA).getTime();
+                }
+              );
+
+              console.log("orderedTimestampObjects: ", orderedTimestampObjects);
               // Find the latest timestamped object
+
               const latestTimestampData = orderedTimestampObjects[0];
+              let latestTimestampDataForNutrients;
+              for (const obj of orderedTimestampObjects) {
+                if (obj.Preferences) {
+                  latestTimestampDataForNutrients = obj;
+                  break;
+                }
+              }
 
               // Check if the timestamped object has a weight field
-              if (
-                typeof latestTimestampData?.Preferences?.calories === "number"
-              ) {
-                totalCalories += latestTimestampData.Preferences.calories;
-                totalProtein +=
-                  latestTimestampData.Preferences.nutrients.protein;
-                totalCarbs += latestTimestampData.Preferences.nutrients.carbs;
-                totalFat += latestTimestampData.Preferences.nutrients.fat;
-                totalWeight += latestTimestampData.weight;
-                totalBodyFatPercentage +=
-                  latestTimestampData.BodyMassData.bodyFat;
-                divider++;
+              if (latestTimestampData || latestTimestampDataForNutrients) {
+                if (gender === "male") {
+                  if (latestTimestampDataForNutrients?.Preferences?.calories) {
+                    totalCaloriesMale +=
+                      latestTimestampDataForNutrients.Preferences.calories;
+                    totalProteinMale +=
+                      latestTimestampDataForNutrients.Preferences.nutrients
+                        .protein;
+                    totalCarbsMale +=
+                      latestTimestampDataForNutrients.Preferences.nutrients
+                        .carbs;
+                    totalFatMale +=
+                      latestTimestampDataForNutrients.Preferences.nutrients.fat;
+                  }
+                  totalWeightMale += latestTimestampData.weight;
+                  totalBodyFatPercentageMale +=
+                    latestTimestampData.BodyMassData.bodyFat;
+                } else if (gender === "female") {
+                  if (latestTimestampDataForNutrients?.Preferences?.calories) {
+                    totalCaloriesFemale +=
+                      latestTimestampDataForNutrients.Preferences.calories;
+                    totalProteinFemale +=
+                      latestTimestampDataForNutrients.Preferences.nutrients
+                        .protein;
+                    totalCarbsFemale +=
+                      latestTimestampDataForNutrients.Preferences.nutrients
+                        .carbs;
+                    totalFatFemale +=
+                      latestTimestampDataForNutrients.Preferences.nutrients.fat;
+                  }
+                  totalWeightFemale += latestTimestampData.weight;
+                  totalBodyFatPercentageFemale +=
+                    latestTimestampData.BodyMassData.bodyFat;
+                }
               }
             });
 
-            // Calculate the average weight
-            const meanCalories = divider > 0 ? totalCalories / divider : 0;
-            const meanProtein = divider > 0 ? totalProtein / divider : 0;
-            const meanCarbs = divider > 0 ? totalCarbs / divider : 0;
-            const meanFat = divider > 0 ? totalFat / divider : 0;
-            const meanWeight = divider > 0 ? totalWeight / divider : 0;
-            const meanBodyFatPercentage =
-              divider > 0 ? totalBodyFatPercentage / divider : 0;
+            // Calculate the average statistics for male users
+            const meanCaloriesMale =
+              malesWithNutrients > 0
+                ? totalCaloriesMale / malesWithNutrients
+                : 0;
+            const meanProteinMale =
+              malesWithNutrients > 0
+                ? totalProteinMale / malesWithNutrients
+                : 0;
+            const meanCarbsMale =
+              malesWithNutrients > 0 ? totalCarbsMale / malesWithNutrients : 0;
+            const meanFatMale =
+              malesWithNutrients > 0 ? totalFatMale / malesWithNutrients : 0;
+            const meanWeightMale =
+              malesWithData > 0 ? totalWeightMale / malesWithData : 0;
+            const meanBodyFatPercentageMale =
+              malesWithData > 0
+                ? totalBodyFatPercentageMale / malesWithData
+                : 0;
 
-            // Update state with calculated averages
-            setTotalUsers(numberOfUsers);
-            setAverageCalories(meanCalories);
-            setAverageProtein(meanProtein);
-            setAverageCarbs(meanCarbs);
-            setAverageFat(meanFat);
-            setAverageWeight(meanWeight);
-            setAverageBodyFatPercentage(meanBodyFatPercentage);
+            // Calculate the average statistics for female users
+            const meanCaloriesFemale =
+              femalesWithNutrients > 0
+                ? totalCaloriesFemale / femalesWithNutrients
+                : 0;
+            const meanProteinFemale =
+              femalesWithNutrients > 0
+                ? totalProteinFemale / femalesWithNutrients
+                : 0;
+            const meanCarbsFemale =
+              femalesWithNutrients > 0
+                ? totalCarbsFemale / femalesWithNutrients
+                : 0;
+            const meanFatFemale =
+              femalesWithNutrients > 0
+                ? totalFatFemale / femalesWithNutrients
+                : 0;
+            const meanWeightFemale =
+              femalesWithData > 0 ? totalWeightFemale / femalesWithData : 0;
+            const meanBodyFatPercentageFemale =
+              femalesWithData > 0
+                ? totalBodyFatPercentageFemale / femalesWithData
+                : 0;
+
+            console.log(
+              "totalCaloriesFemale: ",
+              totalCaloriesFemale,
+              "totalProteinFemale: ",
+              totalProteinFemale,
+              "totalCarbsFemale: ",
+              totalCarbsFemale,
+              "totalFatFemale: ",
+              totalFatFemale
+            );
+            // Update state with calculated averages for both genders
+            setAverageStats({
+              male: {
+                totalUsers: malesCount,
+                averageCalories: meanCaloriesMale,
+                averageProtein: meanProteinMale,
+                averageCarbs: meanCarbsMale,
+                averageFat: meanFatMale,
+                averageWeight: meanWeightMale,
+                averageBodyFatPercentage: meanBodyFatPercentageMale
+              },
+              female: {
+                totalUsers: femalesCount,
+                averageCalories: meanCaloriesFemale,
+                averageProtein: meanProteinFemale,
+                averageCarbs: meanCarbsFemale,
+                averageFat: meanFatFemale,
+                averageWeight: meanWeightFemale,
+                averageBodyFatPercentage: meanBodyFatPercentageFemale
+              }
+            });
             setLoading(false);
           }
         );
@@ -367,6 +556,7 @@ export default function UserReports() {
               gap="20px"
               mt="50px"
             >
+              <Text fontSize="2xl">Средни статистики за ВСИЧКИ МЪЖЕ:</Text>
               <MiniStatistics
                 startContent={
                   <IconBox
@@ -384,7 +574,11 @@ export default function UserReports() {
                   />
                 }
                 name="Потребители"
-                value={totalUsers !== null ? totalUsers.toString() : "0"}
+                value={
+                  averageStats.male.totalUsers !== null
+                    ? averageStats.male.totalUsers.toString()
+                    : "0"
+                }
                 loading={loading}
               />
               <MiniStatistics
@@ -405,7 +599,9 @@ export default function UserReports() {
                 }
                 name="Тегло"
                 value={
-                  averageWeight !== null ? `${averageWeight.toFixed(2)}kg` : "0"
+                  averageStats.male.averageWeight !== null
+                    ? `${averageStats.male.averageWeight.toFixed(2)}kg`
+                    : "0"
                 }
                 loading={loading}
               />
@@ -422,8 +618,8 @@ export default function UserReports() {
                 }
                 name="Калории"
                 value={
-                  averageCalories !== null
-                    ? `${averageCalories.toFixed(2)}`
+                  averageStats.male.averageCalories !== null
+                    ? `${averageStats.male.averageCalories.toFixed(2)}`
                     : "0"
                 }
                 loading={loading}
@@ -441,7 +637,9 @@ export default function UserReports() {
                 }
                 name="Протеин"
                 value={
-                  averageProtein !== null ? `${averageProtein.toFixed(2)}` : "0"
+                  averageStats.male.averageProtein !== null
+                    ? `${averageStats.male.averageProtein.toFixed(2)}`
+                    : "0"
                 }
                 loading={loading}
               />
@@ -458,7 +656,9 @@ export default function UserReports() {
                 }
                 name="Въглехидрати"
                 value={
-                  averageCarbs !== null ? `${averageCarbs.toFixed(2)}` : "0"
+                  averageStats.male.averageCarbs !== null
+                    ? `${averageStats.male.averageCarbs.toFixed(2)}`
+                    : "0"
                 }
                 loading={loading}
               />
@@ -474,7 +674,11 @@ export default function UserReports() {
                   />
                 }
                 name="Мазнини"
-                value={averageFat !== null ? `${averageFat.toFixed(2)}` : "0"}
+                value={
+                  averageStats.male.averageFat !== null
+                    ? `${averageStats.male.averageFat.toFixed(2)}`
+                    : "0"
+                }
                 loading={loading}
               />
               <MiniStatistics
@@ -495,8 +699,167 @@ export default function UserReports() {
                 }
                 name="Тел. Мазнини"
                 value={
-                  averageBodyFatPercentage !== null
-                    ? `${averageBodyFatPercentage.toFixed(2)}%`
+                  averageStats.male.averageBodyFatPercentage !== null
+                    ? `${averageStats.male.averageBodyFatPercentage.toFixed(
+                        2
+                      )}%`
+                    : "0"
+                }
+                loading={loading}
+              />
+            </SimpleGrid>
+            <SimpleGrid
+              columns={{ base: 1, md: 4, lg: 4, "2xl": 7 }}
+              gap="20px"
+              mt="50px"
+            >
+              <Text fontSize="2xl">Средни статистики за ВСИЧКИ ЖЕНИ:</Text>
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon
+                        w="32px"
+                        h="32px"
+                        as={BsPersonFillUp}
+                        color="white"
+                      />
+                    }
+                  />
+                }
+                name="Потребители"
+                value={
+                  averageStats.female.totalUsers !== null
+                    ? averageStats.female.totalUsers.toString()
+                    : "0"
+                }
+                loading={loading}
+              />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon
+                        w="32px"
+                        h="32px"
+                        as={GiWeightScale}
+                        color="white"
+                      />
+                    }
+                  />
+                }
+                name="Тегло"
+                value={
+                  averageStats.female.averageWeight !== null
+                    ? `${averageStats.female.averageWeight.toFixed(2)}kg`
+                    : "0"
+                }
+                loading={loading}
+              />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon w="28px" h="28px" as={FaFireAlt} color="white" />
+                    }
+                  />
+                }
+                name="Калории"
+                value={
+                  averageStats.female.averageCalories !== null
+                    ? `${averageStats.female.averageCalories.toFixed(2)}`
+                    : "0"
+                }
+                loading={loading}
+              />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
+                    }
+                  />
+                }
+                name="Протеин"
+                value={
+                  averageStats.female.averageProtein !== null
+                    ? `${averageStats.female.averageProtein.toFixed(2)}`
+                    : "0"
+                }
+                loading={loading}
+              />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
+                    }
+                  />
+                }
+                name="Въглехидрати"
+                value={
+                  averageStats.female.averageCarbs !== null
+                    ? `${averageStats.female.averageCarbs.toFixed(2)}`
+                    : "0"
+                }
+                loading={loading}
+              />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
+                    }
+                  />
+                }
+                name="Мазнини"
+                value={
+                  averageStats.female.averageFat !== null
+                    ? `${averageStats.female.averageFat.toFixed(2)}`
+                    : "0"
+                }
+                loading={loading}
+              />
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    icon={
+                      <Icon
+                        w="32px"
+                        h="32px"
+                        as={RiWaterPercentFill}
+                        color="white"
+                      />
+                    }
+                  />
+                }
+                name="Тел. Мазнини"
+                value={
+                  averageStats.female.averageBodyFatPercentage !== null
+                    ? `${averageStats.female.averageBodyFatPercentage.toFixed(
+                        2
+                      )}%`
                     : "0"
                 }
                 loading={loading}

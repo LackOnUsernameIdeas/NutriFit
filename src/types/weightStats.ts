@@ -246,3 +246,18 @@ export type CustomServings = {
   lunch: number;
   dinner: number;
 };
+
+export type GenderStatistics = {
+  totalUsers: number;
+  averageCalories: number;
+  averageProtein: number;
+  averageCarbs: number;
+  averageFat: number;
+  averageWeight: number;
+  averageBodyFatPercentage: number;
+};
+
+export type GenderAverageStats = {
+  male: GenderStatistics;
+  female: GenderStatistics;
+};
