@@ -102,7 +102,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -162,7 +162,7 @@ export default function MealPlanner(props: {
         const imageResponse = await fetch(
           `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
             meal.name
-          )}&searchType=image&siteSearch=facebook.com&siteSearchFilter=e`
+          )}&searchType=image`
         );
 
         if (!imageResponse.ok) {
@@ -203,7 +203,7 @@ export default function MealPlanner(props: {
   };
 
   console.log("mealPlan: ", mealPlan);
-
+  console.log("mealPlanImages: ", mealPlanImages);
   // const filteredArr = Object.keys(mealPlan).map((mealType: any, index) => {
   //   console.log((mealPlan as any)[mealType]?.name, index);
   // });

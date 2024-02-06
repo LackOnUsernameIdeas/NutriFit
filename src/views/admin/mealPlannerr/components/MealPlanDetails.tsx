@@ -1,6 +1,6 @@
 import React from "react";
 import { MealPlan, NutrientState } from "../../../../types/weightStats";
-import { Box, Text, Flex, SimpleGrid, Tooltip } from "@chakra-ui/react";
+import { Box, Text, Flex, SimpleGrid, Tooltip, Link } from "@chakra-ui/react";
 import { HSeparator } from "components/separator/Separator";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import RecipeWidget from "components/card/NFT";
@@ -43,95 +43,100 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
               console.log("meal:", mealType, meal);
               return (
                 <Box key={mealType}>
-                  <RecipeWidget
-                    name={
-                      <Flex justify="center" w="100%" overflow="hidden">
-                        <Tooltip label={meal?.name} borderRadius="10px">
-                          <Text
-                            fontSize="2xl"
-                            whiteSpace="nowrap"
-                            maxW="360px"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                          >
-                            {bulgarianMealType[index]}:{" "}
-                            {meal?.name || "Няма рецепта"}
-                          </Text>
-                        </Tooltip>
-                      </Flex>
-                    }
-                    author={
-                      <Flex
-                        direction="column"
-                        justify="center"
-                        align="center"
-                        pt="2px"
-                        w="100%"
-                        mt="5px"
-                      ></Flex>
-                    }
-                    image={(mealPlanImages as any)[mealType]}
-                    currentbid={
-                      <Box>
-                        <Flex
-                          direction={{ base: "column", md: "row" }}
-                          justify="center"
-                          pt="5px"
-                          w="100%"
-                          mb="2%"
-                          mt="2%"
-                        >
-                          <SimpleGrid
-                            columns={{ base: 2, md: 2, lg: 2 }}
-                            gap="10px"
-                          >
+                  <Link
+                    href={(mealPlanImages as any)[mealType]}
+                    target="_blank"
+                  >
+                    <RecipeWidget
+                      name={
+                        <Flex justify="center" w="100%" overflow="hidden">
+                          <Tooltip label={meal?.name} borderRadius="10px">
                             <Text
-                              textStyle="italic"
-                              fontSize={{ base: "sm", md: "md", lg: "lg" }}
-                              mb={{ base: "2%", md: 0, lg: "3%" }}
-                              fontStyle="italic"
+                              fontSize="2xl"
+                              whiteSpace="nowrap"
+                              maxW="360px"
+                              overflow="hidden"
+                              textOverflow="ellipsis"
                             >
-                              Грамаж:{" "}
-                              {`${meal?.totals.grams.toFixed(2)} g` || "N/A"}
+                              {bulgarianMealType[index]}:{" "}
+                              {meal?.name || "Няма рецепта"}
                             </Text>
-                            <Text
-                              textStyle="italic"
-                              fontSize={{ base: "sm", md: "md", lg: "lg" }}
-                              mb={{ base: "2%", md: 0, lg: "3%" }}
-                              fontStyle="italic"
-                            >
-                              Въглехидрати:{" "}
-                              {meal?.totals.carbohydrates.toFixed(2) || "N/A"}
-                            </Text>
-                            <Text
-                              textStyle="italic"
-                              fontSize={{ base: "sm", md: "md", lg: "lg" }}
-                              fontStyle="italic"
-                            >
-                              Протеин:{" "}
-                              {meal?.totals.protein.toFixed(2) || "N/A"}
-                            </Text>
-                            <Text
-                              textStyle="italic"
-                              fontSize={{ base: "sm", md: "md", lg: "lg" }}
-                              mb={{ base: "2%", md: 0, lg: "3%" }}
-                              fontStyle="italic"
-                            >
-                              Мазнини: {meal?.totals.fat.toFixed(2) || "N/A"}
-                            </Text>
-                            <Text
-                              textStyle="italic"
-                              fontSize={{ base: "sm", md: "md", lg: "lg" }}
-                              fontStyle="italic"
-                            >
-                              Калории:{" "}
-                              {meal?.totals.calories.toFixed(2) || "N/A"}
-                            </Text>
-                          </SimpleGrid>
+                          </Tooltip>
                         </Flex>
-                      </Box>
-                    }
-                  />
+                      }
+                      author={
+                        <Flex
+                          direction="column"
+                          justify="center"
+                          align="center"
+                          pt="2px"
+                          w="100%"
+                          mt="5px"
+                        ></Flex>
+                      }
+                      image={(mealPlanImages as any)[mealType]}
+                      currentbid={
+                        <Box>
+                          <Flex
+                            direction={{ base: "column", md: "row" }}
+                            justify="center"
+                            pt="5px"
+                            w="100%"
+                            mb="2%"
+                            mt="2%"
+                          >
+                            <SimpleGrid
+                              columns={{ base: 2, md: 2, lg: 2 }}
+                              gap="10px"
+                            >
+                              <Text
+                                textStyle="italic"
+                                fontSize={{ base: "sm", md: "md", lg: "lg" }}
+                                mb={{ base: "2%", md: 0, lg: "3%" }}
+                                fontStyle="italic"
+                              >
+                                Грамаж:{" "}
+                                {`${meal?.totals.grams.toFixed(2)} g` || "N/A"}
+                              </Text>
+                              <Text
+                                textStyle="italic"
+                                fontSize={{ base: "sm", md: "md", lg: "lg" }}
+                                mb={{ base: "2%", md: 0, lg: "3%" }}
+                                fontStyle="italic"
+                              >
+                                Въглехидрати:{" "}
+                                {meal?.totals.carbohydrates.toFixed(2) || "N/A"}
+                              </Text>
+                              <Text
+                                textStyle="italic"
+                                fontSize={{ base: "sm", md: "md", lg: "lg" }}
+                                fontStyle="italic"
+                              >
+                                Протеин:{" "}
+                                {meal?.totals.protein.toFixed(2) || "N/A"}
+                              </Text>
+                              <Text
+                                textStyle="italic"
+                                fontSize={{ base: "sm", md: "md", lg: "lg" }}
+                                mb={{ base: "2%", md: 0, lg: "3%" }}
+                                fontStyle="italic"
+                              >
+                                Мазнини: {meal?.totals.fat.toFixed(2) || "N/A"}
+                              </Text>
+                              <Text
+                                textStyle="italic"
+                                fontSize={{ base: "sm", md: "md", lg: "lg" }}
+                                fontStyle="italic"
+                              >
+                                Калории:{" "}
+                                {meal?.totals.calories.toFixed(2) || "N/A"}
+                              </Text>
+                            </SimpleGrid>
+                          </Flex>
+                        </Box>
+                      }
+                    />
+                  </Link>
                 </Box>
               );
             })}

@@ -256,13 +256,20 @@ export default function WeightStats() {
   const saveUserPreferencesAndIntakes = () => {
     const uid = getAuth().currentUser.uid;
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
-    saveIntakes(
-      uid,
-      userIntakes.Calories,
-      userIntakes.Protein,
-      userIntakes.Fat,
-      userIntakes.Carbohydrates
-    );
+    if (
+      (userIntakes.Calories !== 0,
+      userIntakes.Protein !== 0,
+      userIntakes.Fat !== 0,
+      userIntakes.Carbohydrates !== 0)
+    ) {
+      saveIntakes(
+        uid,
+        userIntakes.Calories,
+        userIntakes.Protein,
+        userIntakes.Fat,
+        userIntakes.Carbohydrates
+      );
+    }
   };
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
