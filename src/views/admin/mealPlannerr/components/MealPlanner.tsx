@@ -19,7 +19,8 @@ import {
   Nutrient,
   NutrientState,
   SuggestedMaxServings,
-  CustomServings
+  CustomServings,
+  UserIntakes
 } from "../../../../types/weightStats";
 import { generateMealPlan } from "../utils/generateMealPlan";
 import { calculateNutrientForMealPlan } from "../utils/calculateNutrientForMealPlan";
@@ -35,8 +36,11 @@ export default function MealPlanner(props: {
     fat: number;
     carbs: number;
   };
+  userIntakes: UserIntakes;
+  setUserIntakes?: React.Dispatch<React.SetStateAction<UserIntakes>>;
 }) {
-  const { chosenCalories, chosenNutrients } = props;
+  const { chosenCalories, chosenNutrients, userIntakes, setUserIntakes } =
+    props;
 
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
@@ -98,7 +102,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -186,6 +190,12 @@ export default function MealPlanner(props: {
         totals: data.totals
       });
 
+      setUserIntakes({
+        Calories: data.totals.calories,
+        Protein: data.totals.protein,
+        Fat: data.totals.fat,
+        Carbohydrates: data.totals.carbohydrates
+      });
       setIsLoading(false);
     } catch (error) {
       console.error("Error generating meal plan:", error);

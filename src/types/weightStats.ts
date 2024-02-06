@@ -49,6 +49,13 @@ export type UserData = {
   [key: string]: number | string;
 };
 
+export type UserIntakes = {
+  Calories: number;
+  Protein: number;
+  Fat: number;
+  Carbohydrates: number;
+};
+
 export type AllUsersPreferences = {
   date: string;
   calories: number;

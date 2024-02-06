@@ -53,6 +53,7 @@ import { HSeparator } from "components/separator/Separator";
 // Types
 import {
   UserData,
+  UserIntakes,
   AllUsersPreferences,
   DailyCaloryRequirements,
   MacroNutrientsData
@@ -60,7 +61,10 @@ import {
 import { onSnapshot, doc, getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
-import { savePreferences } from "../../../database/setWeightStatsData";
+import {
+  savePreferences,
+  saveIntakes
+} from "../../../database/setWeightStatsData";
 import { table } from "console";
 
 import { lineChartOptions } from "variables/chartjs";
@@ -152,6 +156,13 @@ export default function WeightStats() {
     number | null
   >(null);
 
+  const [userIntakes, setUserIntakes] = useState<UserIntakes>({
+    Calories: 0,
+    Protein: 0,
+    Fat: 0,
+    Carbohydrates: 0
+  });
+
   const [selectedGoal, setSelectedGoal] = useState("");
 
   // State за избрано ниво на натовареност
@@ -242,9 +253,16 @@ export default function WeightStats() {
     }, 1000);
   }
 
-  const saveUserPreferences = () => {
+  const saveUserPreferencesAndIntakes = () => {
     const uid = getAuth().currentUser.uid;
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
+    saveIntakes(
+      uid,
+      userIntakes.Calories,
+      userIntakes.Protein,
+      userIntakes.Fat,
+      userIntakes.Carbohydrates
+    );
   };
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
@@ -499,10 +517,11 @@ export default function WeightStats() {
       clickedValueCalories !== null &&
       clickedValueNutrients.protein !== null
     ) {
-      // Call the saveUserPreferences function
-      saveUserPreferences();
+      saveUserPreferencesAndIntakes();
     }
   }, [clickedValueCalories, clickedValueNutrients]);
+
+  console.log("userIntakes: ", userIntakes);
   return (
     <FadeInWrapper>
       <Box
@@ -1303,6 +1322,8 @@ export default function WeightStats() {
                           <MealPlanner
                             chosenCalories={clickedValueCalories}
                             chosenNutrients={clickedValueNutrients}
+                            userIntakes={userIntakes}
+                            setUserIntakes={setUserIntakes}
                           />
                         )}
                       </FadeInWrapper>
