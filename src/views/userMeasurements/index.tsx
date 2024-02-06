@@ -167,9 +167,6 @@ const UserMeasurements = () => {
       isUnderOrAbove: ""
     });
 
-  const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
-    useState<boolean>(false);
-
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -274,6 +271,7 @@ const UserMeasurements = () => {
       userData["waist"],
       userData["hip"]
     );
+    history.push("/admin/default");
     await fetchCaloriesForActivityLevels(
       userData["age"],
       userDataForReq["gender"],
@@ -370,9 +368,6 @@ const UserMeasurements = () => {
           userData.hip
         );
         await generateStats();
-        setIsGenerateStatsCalled(true);
-        history.push("/admin/default");
-
         // Save additional user data to the server
         const response = await fetch(
           "https://nutri-api.noit.eu/processUserData",
@@ -492,7 +487,6 @@ const UserMeasurements = () => {
 
     if (areValuesValid) {
       generateStats();
-      setIsGenerateStatsCalled(true);
     }
   }, [userDataForReq]);
   return (
