@@ -25,6 +25,7 @@ import {
   Avatar,
   Button,
   Box,
+  Center,
   Flex,
   FormLabel,
   Icon,
@@ -47,6 +48,7 @@ import { FaFireAlt, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { GiWeightScale } from "react-icons/gi";
 import { BsPersonFillUp } from "react-icons/bs";
 import { RiWaterPercentFill } from "react-icons/ri";
+import { MdOutlineMale, MdOutlineFemale } from "react-icons/md";
 import {
   getFirestore,
   collection,
@@ -543,111 +545,92 @@ export default function UserReports() {
         {renderDropdown && (
           <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
             <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "180px" }}>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                gap="60px"
-                mt="50px"
-                mb="20px"
-              >
-                <Card>
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}>
-                    <Text
-                      fontSize="4xl"
-                      fontWeight="medium"
-                      ml="4"
-                      mr="10"
-                      mt="10px"
+              <Center mt="50px">
+                <Flex justify="center" alignItems="center">
+                  <Card size="500px">
+                    <SimpleGrid
+                      columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
+                      gap="20px"
                     >
-                      Всички потребители:
-                    </Text>
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={BsPersonFillUp}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Общо"
-                      value={
-                        averageStats.male.totalUsers !== null
-                          ? (
-                              averageStats.male.totalUsers +
-                              averageStats.male.totalUsers
-                            ).toString()
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                  </SimpleGrid>
-                </Card>
-                <Card>
-                  <SimpleGrid
-                    columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
-                    gap="4"
-                  >
-                    <Text fontSize="4xl" fontWeight="medium" ml="4" mt="10px">
-                      По пол:
-                    </Text>
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={BsPersonFillUp}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Мъже"
-                      value={
-                        averageStats.male.totalUsers !== null
-                          ? averageStats.male.totalUsers.toString()
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={BsPersonFillUp}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Жени"
-                      value={
-                        averageStats.female.totalUsers !== null
-                          ? averageStats.female.totalUsers.toString()
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                  </SimpleGrid>
-                </Card>
-              </SimpleGrid>
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={BsPersonFillUp}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Общо"
+                        value={
+                          averageStats.male.totalUsers !== null
+                            ? (
+                                averageStats.male.totalUsers +
+                                averageStats.male.totalUsers
+                              ).toString()
+                            : "0"
+                        }
+                        loading={loading}
+                      />
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={MdOutlineMale}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Мъже"
+                        value={
+                          averageStats.male.totalUsers !== null
+                            ? averageStats.male.totalUsers.toString()
+                            : "0"
+                        }
+                        loading={loading}
+                      />
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={MdOutlineFemale}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Жени"
+                        value={
+                          averageStats.female.totalUsers !== null
+                            ? averageStats.female.totalUsers.toString()
+                            : "0"
+                        }
+                        loading={loading}
+                      />
+                    </SimpleGrid>
+                  </Card>
+                </Flex>
+              </Center>
               <SimpleGrid
                 columns={{ base: 2, md: 2, lg: 2, "2xl": 2 }}
                 gap="100px"
@@ -657,9 +640,16 @@ export default function UserReports() {
               >
                 <Box mx="20px">
                   <Card mb="20px">
-                    <Text fontSize="3xl" fontWeight="medium">
-                      Средни статистики за ВСИЧКИ МЪЖЕ:
-                    </Text>
+                    <Flex>
+                      <Text
+                        fontSize="3xl"
+                        fontWeight="medium"
+                        textAlign="center"
+                      >
+                        за ВСИЧКИ МЪЖЕ
+                      </Text>
+                      <Icon w="40px" h="40px" as={MdOutlineMale} color="blue" />
+                    </Flex>
                   </Card>
 
                   <SimpleGrid
@@ -816,9 +806,17 @@ export default function UserReports() {
                 </Box>
                 <Box mx="20px">
                   <Card mb="20px">
-                    <Text fontSize="3xl" fontWeight="400">
-                      Средни статистики за ВСИЧКИ ЖЕНИ:
-                    </Text>
+                    <Flex>
+                      <Text fontSize="3xl" fontWeight="400" textAlign="center">
+                        за ВСИЧКИ ЖЕНИ
+                      </Text>
+                      <Icon
+                        w="40px"
+                        h="40px"
+                        as={MdOutlineFemale}
+                        color="pink"
+                      />
+                    </Flex>
                   </Card>
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}

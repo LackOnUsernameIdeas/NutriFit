@@ -19,7 +19,6 @@ const NewLineChart: React.FC<ChartProps> = ({
   lineChartLabelName2
 }) => {
   const chartInstance = useRef<Chart | null>(null);
-
   useEffect(() => {
     if (chartInstance.current) {
       // Destroy the existing chart if it exists
