@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import Chart from "chart.js/auto"; // Import Chart.js
+import Chart from "chart.js/auto";
 
 type ChartProps = {
   chartData: any[];
@@ -25,7 +25,6 @@ const ColumnChart: React.FC<ChartProps> = ({
     if (chartRef.current) {
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
-        // Destroy the existing chart if it exists
         if (chartInstance.current) {
           chartInstance.current.destroy();
         }
@@ -61,7 +60,7 @@ const ColumnChart: React.FC<ChartProps> = ({
     };
   }, [chartData, chartOptions]);
 
-  return <canvas ref={chartRef} style={{ width: "100%", height: "100%" }} />;
+  return <canvas ref={chartRef} style={{ width: "100%" }} />;
 };
 
 export default ColumnChart;

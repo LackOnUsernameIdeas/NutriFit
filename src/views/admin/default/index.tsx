@@ -74,7 +74,8 @@ import {
 } from "../../../types/weightStats";
 
 import BarChart from "components/charts/BarChart";
-import { barChartOptions } from "variables/chartjs";
+import LineChart from "components/charts/NewLineChart";
+import { barChartOptions, lineChartOptions } from "variables/chartjs";
 
 interface LinearGradientTextProps {
   text: any;
@@ -143,8 +144,8 @@ export default function UserReports() {
     base: -805,
     sm: -805,
     md: -480,
-    lg: -280,
-    xl: -180
+    lg: 0,
+    xl: 0
   });
   const dropdownWidgetsSlidePosition = useBreakpointValue({
     sm: -200,
@@ -205,18 +206,18 @@ export default function UserReports() {
   ];
 
   const chartLabels = [
-    "Average Calories",
-    "Average Protein",
-    "Average Carbs",
-    "Average Fat",
-    "Average Weight",
-    "Average Body Fat Percentage"
+    "Средни калории",
+    "Среден протеин",
+    "Средни въглехидрати",
+    "Средни мазнини",
+    "Средно тегло",
+    "Среден % телесни мазнини"
   ];
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(true);
-
+  const [renderDropdown, setRenderDropdown] = React.useState(true);
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
@@ -246,14 +247,15 @@ export default function UserReports() {
     const handleDropdownVisibilityChange = async () => {
       if (dropdownVisible) {
         setMiniStatisticsVisible(true);
+        setRenderDropdown(true);
       } else {
+        setMiniStatisticsVisible(false);
         await new Promise<void>((resolve) =>
           setTimeout(() => {
             resolve();
-          }, 5)
+            setRenderDropdown(false);
+          }, 150)
         );
-
-        setMiniStatisticsVisible(false);
       }
     };
 
@@ -279,6 +281,9 @@ export default function UserReports() {
           firestore,
           "additionalUserData"
         );
+
+        const querySnapshot = await getDocs(usersDataCollectionRef);
+
         let totalCaloriesMale = 0;
         let totalProteinMale = 0;
         let totalCarbsMale = 0;
@@ -293,234 +298,189 @@ export default function UserReports() {
         let totalWeightFemale = 0;
         let totalBodyFatPercentageFemale = 0;
 
-        // Subscribe to real-time updates using onSnapshot
-        const unsubscribe = onSnapshot(
-          usersDataCollectionRef,
-          (querySnapshot) => {
-            let malesCount = 0;
-            let femalesCount = 0;
+        let malesCount = 0;
+        let femalesCount = 0;
 
-            let malesWithData = 0;
-            let femalesWithData = 0;
+        let malesWithData = 0;
+        let femalesWithData = 0;
 
-            let malesWithNutrients = 0;
-            let femalesWithNutrients = 0;
+        let malesWithNutrients = 0;
+        let femalesWithNutrients = 0;
 
-            querySnapshot.forEach((userDoc) => {
-              const userData = userDoc.data() as DocumentData;
+        querySnapshot.forEach((userDoc) => {
+          const userData = userDoc.data();
 
-              const gender = userData.gender; // Retrieve gender directly from userData
+          const gender = userData.gender; // Retrieve gender directly from userData
 
-              if (gender === "male") {
-                malesCount++;
-              } else if (gender === "female") {
-                femalesCount++;
-              }
-
-              const timestampedObjects = Object.entries(userData)
-                .filter(([key, value]) => typeof value === "object")
-                .map(([key, value]) => {
-                  return { key, ...value };
-                });
-
-              const orderedTimestampObjects = [...timestampedObjects].sort(
-                (a, b) => {
-                  const keyA = a.key;
-                  const keyB = b.key;
-                  return new Date(keyB).getTime() - new Date(keyA).getTime();
-                }
-              );
-
-              let latestTimestampData = undefined;
-              for (const obj of orderedTimestampObjects) {
-                if (obj.weight && obj.BodyMassData) {
-                  latestTimestampData = obj;
-                }
-              }
-
-              if (gender === "male" && latestTimestampData !== undefined) {
-                malesWithData++;
-              } else if (
-                gender === "female" &&
-                latestTimestampData !== undefined
-              ) {
-                femalesWithData++;
-              }
-
-              let latestTimestampDataWithNutrients = undefined;
-              for (const obj of orderedTimestampObjects) {
-                if (obj.Preferences) {
-                  latestTimestampDataWithNutrients = obj;
-                }
-              }
-
-              if (
-                gender === "male" &&
-                latestTimestampDataWithNutrients !== undefined
-              ) {
-                malesWithNutrients++;
-              } else if (
-                gender === "female" &&
-                latestTimestampDataWithNutrients !== undefined
-              ) {
-                femalesWithNutrients++;
-              }
-            });
-            console.log("males: ", malesCount, "females: ", femalesCount);
-
-            querySnapshot.forEach((userDoc) => {
-              const userData = userDoc.data() as DocumentData;
-
-              const gender = userData.gender; // Retrieve gender directly from userData
-
-              // Filter out non-timestamped objects
-              const timestampedObjects = Object.entries(userData)
-                .filter(([key, value]) => typeof value === "object")
-                .map(([key, value]) => {
-                  return { key, ...value };
-                });
-
-              const orderedTimestampObjects = [...timestampedObjects].sort(
-                (a, b) => {
-                  const keyA = a.key;
-                  const keyB = b.key;
-                  return new Date(keyB).getTime() - new Date(keyA).getTime();
-                }
-              );
-
-              console.log("orderedTimestampObjects: ", orderedTimestampObjects);
-              // Find the latest timestamped object
-
-              const latestTimestampData = orderedTimestampObjects[0];
-              let latestTimestampDataForNutrients;
-              for (const obj of orderedTimestampObjects) {
-                if (obj.Preferences) {
-                  latestTimestampDataForNutrients = obj;
-                  break;
-                }
-              }
-
-              // Check if the timestamped object has a weight field
-              if (latestTimestampData || latestTimestampDataForNutrients) {
-                if (gender === "male") {
-                  if (latestTimestampDataForNutrients?.Preferences?.calories) {
-                    totalCaloriesMale +=
-                      latestTimestampDataForNutrients.Preferences.calories;
-                    totalProteinMale +=
-                      latestTimestampDataForNutrients.Preferences.nutrients
-                        .protein;
-                    totalCarbsMale +=
-                      latestTimestampDataForNutrients.Preferences.nutrients
-                        .carbs;
-                    totalFatMale +=
-                      latestTimestampDataForNutrients.Preferences.nutrients.fat;
-                  }
-                  totalWeightMale += latestTimestampData.weight;
-                  totalBodyFatPercentageMale +=
-                    latestTimestampData.BodyMassData.bodyFat;
-                } else if (gender === "female") {
-                  if (latestTimestampDataForNutrients?.Preferences?.calories) {
-                    totalCaloriesFemale +=
-                      latestTimestampDataForNutrients.Preferences.calories;
-                    totalProteinFemale +=
-                      latestTimestampDataForNutrients.Preferences.nutrients
-                        .protein;
-                    totalCarbsFemale +=
-                      latestTimestampDataForNutrients.Preferences.nutrients
-                        .carbs;
-                    totalFatFemale +=
-                      latestTimestampDataForNutrients.Preferences.nutrients.fat;
-                  }
-                  totalWeightFemale += latestTimestampData.weight;
-                  totalBodyFatPercentageFemale +=
-                    latestTimestampData.BodyMassData.bodyFat;
-                }
-              }
-            });
-
-            // Calculate the average statistics for male users
-            const meanCaloriesMale =
-              malesWithNutrients > 0
-                ? totalCaloriesMale / malesWithNutrients
-                : 0;
-            const meanProteinMale =
-              malesWithNutrients > 0
-                ? totalProteinMale / malesWithNutrients
-                : 0;
-            const meanCarbsMale =
-              malesWithNutrients > 0 ? totalCarbsMale / malesWithNutrients : 0;
-            const meanFatMale =
-              malesWithNutrients > 0 ? totalFatMale / malesWithNutrients : 0;
-            const meanWeightMale =
-              malesWithData > 0 ? totalWeightMale / malesWithData : 0;
-            const meanBodyFatPercentageMale =
-              malesWithData > 0
-                ? totalBodyFatPercentageMale / malesWithData
-                : 0;
-
-            // Calculate the average statistics for female users
-            const meanCaloriesFemale =
-              femalesWithNutrients > 0
-                ? totalCaloriesFemale / femalesWithNutrients
-                : 0;
-            const meanProteinFemale =
-              femalesWithNutrients > 0
-                ? totalProteinFemale / femalesWithNutrients
-                : 0;
-            const meanCarbsFemale =
-              femalesWithNutrients > 0
-                ? totalCarbsFemale / femalesWithNutrients
-                : 0;
-            const meanFatFemale =
-              femalesWithNutrients > 0
-                ? totalFatFemale / femalesWithNutrients
-                : 0;
-            const meanWeightFemale =
-              femalesWithData > 0 ? totalWeightFemale / femalesWithData : 0;
-            const meanBodyFatPercentageFemale =
-              femalesWithData > 0
-                ? totalBodyFatPercentageFemale / femalesWithData
-                : 0;
-
-            console.log(
-              "totalCaloriesFemale: ",
-              totalCaloriesFemale,
-              "totalProteinFemale: ",
-              totalProteinFemale,
-              "totalCarbsFemale: ",
-              totalCarbsFemale,
-              "totalFatFemale: ",
-              totalFatFemale
-            );
-            // Update state with calculated averages for both genders
-            setAverageStats({
-              male: {
-                totalUsers: malesCount,
-                averageCalories: meanCaloriesMale,
-                averageProtein: meanProteinMale,
-                averageCarbs: meanCarbsMale,
-                averageFat: meanFatMale,
-                averageWeight: meanWeightMale,
-                averageBodyFatPercentage: meanBodyFatPercentageMale
-              },
-              female: {
-                totalUsers: femalesCount,
-                averageCalories: meanCaloriesFemale,
-                averageProtein: meanProteinFemale,
-                averageCarbs: meanCarbsFemale,
-                averageFat: meanFatFemale,
-                averageWeight: meanWeightFemale,
-                averageBodyFatPercentage: meanBodyFatPercentageFemale
-              }
-            });
-            setLoading(false);
+          if (gender === "male") {
+            malesCount++;
+          } else if (gender === "female") {
+            femalesCount++;
           }
-        );
 
-        // Cleanup the subscription when the component unmounts
-        return () => {
-          unsubscribe();
-        };
+          const timestampedObjects = Object.entries(userData)
+            .filter(([key, value]) => typeof value === "object")
+            .map(([key, value]) => {
+              return { key, ...value };
+            });
+
+          const orderedTimestampObjects = [...timestampedObjects].sort(
+            (a, b) => {
+              const keyA = a.key;
+              const keyB = b.key;
+              return new Date(keyB).getTime() - new Date(keyA).getTime();
+            }
+          );
+
+          let latestTimestampData = undefined;
+          for (const obj of orderedTimestampObjects) {
+            if (obj.weight && obj.BodyMassData) {
+              latestTimestampData = obj;
+              break; // Stop loop once found
+            }
+          }
+
+          if (gender === "male" && latestTimestampData !== undefined) {
+            malesWithData++;
+          } else if (gender === "female" && latestTimestampData !== undefined) {
+            femalesWithData++;
+          }
+
+          let latestTimestampDataWithNutrients = undefined;
+          for (const obj of orderedTimestampObjects) {
+            if (obj.Preferences) {
+              latestTimestampDataWithNutrients = obj;
+              break; // Stop loop once found
+            }
+          }
+
+          if (
+            gender === "male" &&
+            latestTimestampDataWithNutrients !== undefined
+          ) {
+            malesWithNutrients++;
+          } else if (
+            gender === "female" &&
+            latestTimestampDataWithNutrients !== undefined
+          ) {
+            femalesWithNutrients++;
+          }
+
+          console.log("males: ", malesCount, "females: ", femalesCount);
+
+          console.log("orderedTimestampObjects: ", orderedTimestampObjects);
+          // Find the latest timestamped object
+
+          let latestTimestampDataForNutrients;
+          for (const obj of orderedTimestampObjects) {
+            if (obj.Preferences) {
+              latestTimestampDataForNutrients = obj;
+              break; // Stop loop once found
+            }
+          }
+
+          // Check if the timestamped object has a weight field
+          if (latestTimestampData || latestTimestampDataForNutrients) {
+            if (gender === "male") {
+              if (latestTimestampDataForNutrients?.Preferences?.calories) {
+                totalCaloriesMale +=
+                  latestTimestampDataForNutrients.Preferences.calories;
+                totalProteinMale +=
+                  latestTimestampDataForNutrients.Preferences.nutrients.protein;
+                totalCarbsMale +=
+                  latestTimestampDataForNutrients.Preferences.nutrients.carbs;
+                totalFatMale +=
+                  latestTimestampDataForNutrients.Preferences.nutrients.fat;
+              }
+              totalWeightMale += latestTimestampData.weight;
+              totalBodyFatPercentageMale +=
+                latestTimestampData.BodyMassData.bodyFat;
+            } else if (gender === "female") {
+              if (latestTimestampDataForNutrients?.Preferences?.calories) {
+                totalCaloriesFemale +=
+                  latestTimestampDataForNutrients.Preferences.calories;
+                totalProteinFemale +=
+                  latestTimestampDataForNutrients.Preferences.nutrients.protein;
+                totalCarbsFemale +=
+                  latestTimestampDataForNutrients.Preferences.nutrients.carbs;
+                totalFatFemale +=
+                  latestTimestampDataForNutrients.Preferences.nutrients.fat;
+              }
+              totalWeightFemale += latestTimestampData.weight;
+              totalBodyFatPercentageFemale +=
+                latestTimestampData.BodyMassData.bodyFat;
+            }
+          }
+        });
+
+        // Calculate the average statistics for male users
+        const meanCaloriesMale =
+          malesWithNutrients > 0 ? totalCaloriesMale / malesWithNutrients : 0;
+        const meanProteinMale =
+          malesWithNutrients > 0 ? totalProteinMale / malesWithNutrients : 0;
+        const meanCarbsMale =
+          malesWithNutrients > 0 ? totalCarbsMale / malesWithNutrients : 0;
+        const meanFatMale =
+          malesWithNutrients > 0 ? totalFatMale / malesWithNutrients : 0;
+        const meanWeightMale =
+          malesWithData > 0 ? totalWeightMale / malesWithData : 0;
+        const meanBodyFatPercentageMale =
+          malesWithData > 0 ? totalBodyFatPercentageMale / malesWithData : 0;
+
+        // Calculate the average statistics for female users
+        const meanCaloriesFemale =
+          femalesWithNutrients > 0
+            ? totalCaloriesFemale / femalesWithNutrients
+            : 0;
+        const meanProteinFemale =
+          femalesWithNutrients > 0
+            ? totalProteinFemale / femalesWithNutrients
+            : 0;
+        const meanCarbsFemale =
+          femalesWithNutrients > 0
+            ? totalCarbsFemale / femalesWithNutrients
+            : 0;
+        const meanFatFemale =
+          femalesWithNutrients > 0 ? totalFatFemale / femalesWithNutrients : 0;
+        const meanWeightFemale =
+          femalesWithData > 0 ? totalWeightFemale / femalesWithData : 0;
+        const meanBodyFatPercentageFemale =
+          femalesWithData > 0
+            ? totalBodyFatPercentageFemale / femalesWithData
+            : 0;
+
+        console.log(
+          "totalCaloriesFemale: ",
+          totalCaloriesFemale,
+          "totalProteinFemale: ",
+          totalProteinFemale,
+          "totalCarbsFemale: ",
+          totalCarbsFemale,
+          "totalFatFemale: ",
+          totalFatFemale
+        );
+        // Update state with calculated averages for both genders
+        setAverageStats({
+          male: {
+            totalUsers: malesCount,
+            averageCalories: meanCaloriesMale,
+            averageProtein: meanProteinMale,
+            averageCarbs: meanCarbsMale,
+            averageFat: meanFatMale,
+            averageWeight: meanWeightMale,
+            averageBodyFatPercentage: meanBodyFatPercentageMale
+          },
+          female: {
+            totalUsers: femalesCount,
+            averageCalories: meanCaloriesFemale,
+            averageProtein: meanProteinFemale,
+            averageCarbs: meanCarbsFemale,
+            averageFat: meanFatFemale,
+            averageWeight: meanWeightFemale,
+            averageBodyFatPercentage: meanBodyFatPercentageFemale
+          }
+        });
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching additional user data:", error);
       }
@@ -532,7 +492,7 @@ export default function UserReports() {
   return (
     <FadeInWrapper>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="100px" mb="20px">
           <Card>
             <Flex justify="left" alignItems="center">
               <Text fontSize="5xl" mr="2">
@@ -580,348 +540,480 @@ export default function UserReports() {
             />
           </Flex>
         </Card>
-        <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
-          <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "180px" }}>
-            <SimpleGrid
-              columns={{ base: 1, md: 4, lg: 4, "2xl": 7 }}
-              gap="20px"
-              mt="50px"
-            >
-              <Text fontSize="2xl">Средни статистики за ВСИЧКИ МЪЖЕ:</Text>
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={BsPersonFillUp}
-                        color="white"
-                      />
-                    }
+        {renderDropdown && (
+          <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
+            <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "180px" }}>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                gap="60px"
+                mt="50px"
+                mb="20px"
+              >
+                <Card>
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}>
+                    <Text
+                      fontSize="4xl"
+                      fontWeight="medium"
+                      ml="4"
+                      mr="10"
+                      mt="10px"
+                    >
+                      Всички потребители:
+                    </Text>
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={BsPersonFillUp}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Общо"
+                      value={
+                        averageStats.male.totalUsers !== null
+                          ? (
+                              averageStats.male.totalUsers +
+                              averageStats.male.totalUsers
+                            ).toString()
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Card>
+                <Card>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
+                    gap="4"
+                  >
+                    <Text fontSize="4xl" fontWeight="medium" ml="4" mt="10px">
+                      По пол:
+                    </Text>
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={BsPersonFillUp}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мъже"
+                      value={
+                        averageStats.male.totalUsers !== null
+                          ? averageStats.male.totalUsers.toString()
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={BsPersonFillUp}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Жени"
+                      value={
+                        averageStats.female.totalUsers !== null
+                          ? averageStats.female.totalUsers.toString()
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 2, md: 2, lg: 2, "2xl": 2 }}
+                gap="100px"
+                mt="10px"
+                mb="10px"
+                m="20px"
+              >
+                <Box mx="20px">
+                  <Card mb="20px">
+                    <Text fontSize="3xl" fontWeight="medium">
+                      Средни статистики за ВСИЧКИ МЪЖЕ:
+                    </Text>
+                  </Card>
+
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                    gap="20px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тегло"
+                      value={
+                        averageStats.male.averageWeight !== null
+                          ? `${averageStats.male.averageWeight.toFixed(2)}kg`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="28px"
+                              h="28px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={
+                        averageStats.male.averageCalories !== null
+                          ? `${averageStats.male.averageCalories.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={
+                        averageStats.male.averageProtein !== null
+                          ? `${averageStats.male.averageProtein.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={
+                        averageStats.male.averageCarbs !== null
+                          ? `${averageStats.male.averageCarbs.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={
+                        averageStats.male.averageFat !== null
+                          ? `${averageStats.male.averageFat.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={RiWaterPercentFill}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тел. Мазнини"
+                      value={
+                        averageStats.male.averageBodyFatPercentage !== null
+                          ? `${averageStats.male.averageBodyFatPercentage.toFixed(
+                              2
+                            )}%`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Box>
+                <Box mx="20px">
+                  <Card mb="20px">
+                    <Text fontSize="3xl" fontWeight="400">
+                      Средни статистики за ВСИЧКИ ЖЕНИ:
+                    </Text>
+                  </Card>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                    gap="20px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тегло"
+                      value={
+                        averageStats.female.averageWeight !== null
+                          ? `${averageStats.female.averageWeight.toFixed(2)}kg`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="28px"
+                              h="28px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={
+                        averageStats.female.averageCalories !== null
+                          ? `${averageStats.female.averageCalories.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={
+                        averageStats.female.averageProtein !== null
+                          ? `${averageStats.female.averageProtein.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={
+                        averageStats.female.averageCarbs !== null
+                          ? `${averageStats.female.averageCarbs.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={
+                        averageStats.female.averageFat !== null
+                          ? `${averageStats.female.averageFat.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={RiWaterPercentFill}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тел. Мазнини"
+                      value={
+                        averageStats.female.averageBodyFatPercentage !== null
+                          ? `${averageStats.female.averageBodyFatPercentage.toFixed(
+                              2
+                            )}%`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Box>
+              </SimpleGrid>
+              <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  minH={{ sm: "150px", md: "300px", lg: "300px" }}
+                  minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
+                  maxH="400px"
+                  mt="30px"
+                >
+                  {/* BarChart component with adjusted width */}
+                  <LineChart
+                    lineChartData={maleChartData}
+                    lineChartData2={femaleChartData}
+                    lineChartOptions={lineChartOptions}
+                    lineChartLabels={chartLabels}
+                    lineChartLabelName={"Средни статистики за мъже"}
+                    lineChartLabelName2={"Средни статистики за жени"}
                   />
-                }
-                name="Потребители"
-                value={
-                  averageStats.male.totalUsers !== null
-                    ? averageStats.male.totalUsers.toString()
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={GiWeightScale}
-                        color="white"
-                      />
-                    }
+                </Card>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  minH={{ sm: "150px", md: "300px", lg: "300px" }}
+                  minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
+                  maxH="400px"
+                  mt="30px"
+                >
+                  <BarChart
+                    chartData={maleChartData}
+                    chartData2={femaleChartData}
+                    chartOptions={barChartOptions}
+                    chartLabels={chartLabels}
+                    chartLabelName={"Средни статистики за мъже"}
+                    chartLabelName2={"Средни статистики за жени"}
                   />
-                }
-                name="Тегло"
-                value={
-                  averageStats.male.averageWeight !== null
-                    ? `${averageStats.male.averageWeight.toFixed(2)}kg`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="28px" h="28px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Калории"
-                value={
-                  averageStats.male.averageCalories !== null
-                    ? `${averageStats.male.averageCalories.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Протеин"
-                value={
-                  averageStats.male.averageProtein !== null
-                    ? `${averageStats.male.averageProtein.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Въглехидрати"
-                value={
-                  averageStats.male.averageCarbs !== null
-                    ? `${averageStats.male.averageCarbs.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Мазнини"
-                value={
-                  averageStats.male.averageFat !== null
-                    ? `${averageStats.male.averageFat.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={RiWaterPercentFill}
-                        color="white"
-                      />
-                    }
-                  />
-                }
-                name="Тел. Мазнини"
-                value={
-                  averageStats.male.averageBodyFatPercentage !== null
-                    ? `${averageStats.male.averageBodyFatPercentage.toFixed(
-                        2
-                      )}%`
-                    : "0"
-                }
-                loading={loading}
-              />
-            </SimpleGrid>
-            <SimpleGrid
-              columns={{ base: 1, md: 4, lg: 4, "2xl": 7 }}
-              gap="20px"
-              mt="50px"
-            >
-              <Text fontSize="2xl">Средни статистики за ВСИЧКИ ЖЕНИ:</Text>
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={BsPersonFillUp}
-                        color="white"
-                      />
-                    }
-                  />
-                }
-                name="Потребители"
-                value={
-                  averageStats.female.totalUsers !== null
-                    ? averageStats.female.totalUsers.toString()
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={GiWeightScale}
-                        color="white"
-                      />
-                    }
-                  />
-                }
-                name="Тегло"
-                value={
-                  averageStats.female.averageWeight !== null
-                    ? `${averageStats.female.averageWeight.toFixed(2)}kg`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="28px" h="28px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Калории"
-                value={
-                  averageStats.female.averageCalories !== null
-                    ? `${averageStats.female.averageCalories.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Протеин"
-                value={
-                  averageStats.female.averageProtein !== null
-                    ? `${averageStats.female.averageProtein.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Въглехидрати"
-                value={
-                  averageStats.female.averageCarbs !== null
-                    ? `${averageStats.female.averageCarbs.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon w="32px" h="32px" as={FaFireAlt} color="white" />
-                    }
-                  />
-                }
-                name="Мазнини"
-                value={
-                  averageStats.female.averageFat !== null
-                    ? `${averageStats.female.averageFat.toFixed(2)}`
-                    : "0"
-                }
-                loading={loading}
-              />
-              <MiniStatistics
-                startContent={
-                  <IconBox
-                    w="56px"
-                    h="56px"
-                    bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    icon={
-                      <Icon
-                        w="32px"
-                        h="32px"
-                        as={RiWaterPercentFill}
-                        color="white"
-                      />
-                    }
-                  />
-                }
-                name="Тел. Мазнини"
-                value={
-                  averageStats.female.averageBodyFatPercentage !== null
-                    ? `${averageStats.female.averageBodyFatPercentage.toFixed(
-                        2
-                      )}%`
-                    : "0"
-                }
-                loading={loading}
-              />
-            </SimpleGrid>
-          </Card>
-        </animated.div>
-        <animated.div style={{ ...slideAnimation, position: "relative" }}>
-          <SimpleGrid
-            columns={{ base: 1, md: 10, lg: 10, "2xl": 3 }}
-            gap="20px"
-            mt="50px"
-          >
-            <Card
-              alignItems="center"
-              flexDirection="column"
-              w="100%"
-              h="100%"
-              minH={{ sm: "150px", md: "300px", lg: "auto" }}
-              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-            >
-              <BarChart
-                chartData={maleChartData}
-                chartData2={femaleChartData}
-                chartOptions={barChartOptions}
-                chartLabels={chartLabels}
-                chartLabelName={"Средни статистики за мъже"}
-                chartLabelName2={"Средни статистики за жени"}
-              />
+                </Card>
+              </SimpleGrid>
             </Card>
-          </SimpleGrid>
+          </animated.div>
+        )}
+        <animated.div style={{ ...slideAnimation, position: "relative" }}>
           <Card
             minH="225px"
             backgroundImage={`url(${backgroundImage})`}
@@ -929,7 +1021,6 @@ export default function UserReports() {
             backgroundSize="cover"
             backgroundPosition="center"
             transition="background-image 0.5s ease-in-out"
-            mb="20px"
             mt="20px"
           >
             <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px">
