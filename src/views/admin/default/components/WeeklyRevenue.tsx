@@ -5,7 +5,7 @@ import {
   Flex,
   Icon,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
 // Custom components
@@ -13,7 +13,7 @@ import BarChart from "components/charts/BarChart";
 import React from "react";
 import {
   barChartDataConsumption,
-  barChartOptionsConsumption,
+  barChartOptionsConsumption
 } from "variables/chartjs";
 import { MdBarChart } from "react-icons/md";
 
@@ -62,12 +62,21 @@ export default function WeeklyRevenue(props: { [x: string]: any }) {
           </Button>
         </Flex>
       </Flex>
-      <Card alignItems="center" flexDirection="column" w="100%" h="100%" minH={{ sm: '100px', md: '300px', lg: 'auto' }} minW={{ sm: '150px', md: '200px', lg: 'auto' }}>
+      <Card
+        alignItems="center"
+        flexDirection="column"
+        w="100%"
+        h="100%"
+        minH={{ sm: "100px", md: "300px", lg: "auto" }}
+        minW={{ sm: "150px", md: "200px", lg: "auto" }}
+      >
         <BarChart
           chartData={barChartDataConsumption}
           chartOptions={barChartOptionsConsumption}
+          chartLabels={["babati", "dqdoti", "strinkati"]}
+          chartLabelName={"Chart Data"}
         />
-      </Card>  
+      </Card>
     </Card>
   );
 }

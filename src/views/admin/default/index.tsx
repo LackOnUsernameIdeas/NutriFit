@@ -73,6 +73,9 @@ import {
   GenderAverageStats
 } from "../../../types/weightStats";
 
+import BarChart from "components/charts/BarChart";
+import { barChartOptions } from "variables/chartjs";
+
 interface LinearGradientTextProps {
   text: any;
   gradient: string;
@@ -182,6 +185,34 @@ export default function UserReports() {
       averageBodyFatPercentage: 0
     }
   });
+
+  const maleChartData = [
+    averageStats.male.averageCalories,
+    averageStats.male.averageProtein,
+    averageStats.male.averageCarbs,
+    averageStats.male.averageFat,
+    averageStats.male.averageWeight,
+    averageStats.male.averageBodyFatPercentage
+  ];
+
+  const femaleChartData = [
+    averageStats.female.averageCalories,
+    averageStats.female.averageProtein,
+    averageStats.female.averageCarbs,
+    averageStats.female.averageFat,
+    averageStats.female.averageWeight,
+    averageStats.female.averageBodyFatPercentage
+  ];
+
+  const chartLabels = [
+    "Average Calories",
+    "Average Protein",
+    "Average Carbs",
+    "Average Fat",
+    "Average Weight",
+    "Average Body Fat Percentage"
+  ];
+
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(true);
@@ -868,6 +899,29 @@ export default function UserReports() {
           </Card>
         </animated.div>
         <animated.div style={{ ...slideAnimation, position: "relative" }}>
+          <SimpleGrid
+            columns={{ base: 1, md: 10, lg: 10, "2xl": 3 }}
+            gap="20px"
+            mt="50px"
+          >
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              w="100%"
+              h="100%"
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+            >
+              <BarChart
+                chartData={maleChartData}
+                chartData2={femaleChartData}
+                chartOptions={barChartOptions}
+                chartLabels={chartLabels}
+                chartLabelName={"Средни статистики за мъже"}
+                chartLabelName2={"Средни статистики за жени"}
+              />
+            </Card>
+          </SimpleGrid>
           <Card
             minH="225px"
             backgroundImage={`url(${backgroundImage})`}

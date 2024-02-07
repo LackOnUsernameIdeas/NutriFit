@@ -4,10 +4,7 @@ import BarChart from "components/charts/BarChart";
 
 // Custom components
 import Card from "components/card/Card";
-import {
-  barChartDataDailyTraffic,
-  barChartOptionsDailyTraffic,
-} from "variables/chartjs";
+import { barChartDataDailyTraffic, barChartOptions } from "variables/chartjs";
 
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
@@ -19,7 +16,13 @@ export default function DailyTraffic(props: { [x: string]: any }) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   return (
     <Card alignItems="center" flexDirection="column" w="100%" {...rest}>
-      <Flex justify="space-between" align="start" px={{ base: "0px", "2xl": "10px" }} pt="5px" w="100%">
+      <Flex
+        justify="space-between"
+        align="start"
+        px={{ base: "0px", "2xl": "10px" }}
+        pt="5px"
+        w="100%"
+      >
         <Flex flexDirection="column" align="start" me="20px">
           <Flex w="100%">
             <Text
@@ -57,17 +60,27 @@ export default function DailyTraffic(props: { [x: string]: any }) {
           </Text>
         </Flex>
       </Flex>
-      <Card alignItems="center" flexDirection="column" w="100%" h="100%" minH={{ sm: '150px', md: '300px', lg: 'auto' }} minW={{ sm: '150px', md: '200px', lg: 'auto' }}>
+      <Card
+        alignItems="center"
+        flexDirection="column"
+        w="100%"
+        h="100%"
+        minH={{ sm: "150px", md: "300px", lg: "auto" }}
+        minW={{ sm: "150px", md: "200px", lg: "auto" }}
+      >
         <BarChart
           chartData={barChartDataDailyTraffic}
-          chartOptions={barChartOptionsDailyTraffic}
+          chartOptions={barChartOptions}
+          chartLabels={["babati", "dqdoti", "strinkati"]}
+          chartLabelName={"Chart Data"}
         />
       </Card>
     </Card>
   );
 }
 
-{/* <Card alignItems="center" flexDirection="column" w="100%" {...rest}>
+{
+  /* <Card alignItems="center" flexDirection="column" w="100%" {...rest}>
       <Flex justify="space-between" align="start" px="10px" pt="5px" w="100%">
         <Flex flexDirection="column" align="start" me="20px">
           <Flex w="100%">
@@ -113,4 +126,5 @@ export default function DailyTraffic(props: { [x: string]: any }) {
       </Box>
     </Card>
   );
-} */}
+} */
+}

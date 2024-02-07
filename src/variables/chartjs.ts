@@ -7,7 +7,7 @@ export const barChartDataDailyTraffic = [
   }
 ];
 
-export const barChartOptionsDailyTraffic: any = {
+export const barChartOptions: any = {
   chart: {
     toolbar: {
       show: false
