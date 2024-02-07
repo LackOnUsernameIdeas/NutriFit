@@ -15,7 +15,7 @@ import { HSeparator } from "components/separator/Separator";
 import {
   UserPreferencesForMealPlan,
   WeightPerServing,
-  MealPlan,
+  MealPlan2,
   Nutrient,
   NutrientState,
   SuggestedMaxServings,
@@ -59,15 +59,27 @@ export default function MealPlanner(props: {
       Carbohydrates: 0
     });
 
-  const [mealPlan, setMealPlan] = useState<MealPlan>({
+  const [mealPlan, setMealPlan] = useState<MealPlan2>({
     breakfast: null,
     lunch: null,
     dinner: null
   });
   const [mealPlanImages, setMealPlanImages] = useState<{
-    breakfast: string;
-    lunch: string;
-    dinner: string;
+    breakfast: {
+      appetizer: string;
+      main: string;
+      dessert: string;
+    };
+    lunch: {
+      appetizer: string;
+      main: string;
+      dessert: string;
+    };
+    dinner: {
+      appetizer: string;
+      main: string;
+      dessert: string;
+    };
   }>({
     breakfast: null,
     lunch: null,
@@ -102,7 +114,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -114,7 +126,7 @@ export default function MealPlanner(props: {
               },
               {
                 role: "user",
-                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits without straying too far away from the provided limits: 'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'. If possible use recipes that are usual for the Bulgarian cuisine but try to give different recipes from the previous request. Don't round the values as you like and use the actual and exact nutrient values. Put the nutrients values and the quantity in grams in ratio with the nutrients after each meal in this format: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. Put the summed values for the day in this format: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]) and the ingredients of the meals as well(with structure: ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian. Export in JSON exactly like this: '{'breakfast':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}},'lunch':{'likebreakfast'},'dinner':{'likebreakfast'},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}' WITHOUT ADDING 'json' keyword with backticks!!! Don't translate the properties, only the values.`
+                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits WITHOUT CROSSING the provided limits: 'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'. If possible use recipes that are usual for the Bulgarian cuisine but try to give DIFFERENT recipes from the previous request. Don't round the values as you like and use the EXACT and THE ACTUAL nutrient values. Provide appetizer, main course, and dessert for each meal. Add small things to be eaten with the main food, like a slice of bread for the soups and etc. Please, provide different foods and don't repeat yourself. Give actual and eatable foods. Give approximately NORMAL quantities for an avarage person so that the users don't think it's too much or too less. Also, put the grams and the nutrient values IN RATIO WITH EACH OTHER. After each food, provide the information in this format: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. Put the summed values for the day in this format: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]), the ingredients of the meals as well(with structure: ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian. Export in JSON EXACTLY like this: '{breakfast':{'appetizer':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}},'main':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}},'dessert':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},'lunch':{'likebreakfast'},'dinner':{'likebreakfast'},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}' WITHOUT ADDING 'json' keyword with backticks!!! Don't translate the properties, only the values.`
               }
             ]
           })
@@ -142,41 +154,87 @@ export default function MealPlanner(props: {
       );
 
       const mealPlanImagesData: {
-        breakfast: string;
-        lunch: string;
-        dinner: string;
+        breakfast: {
+          appetizer: string;
+          main: string;
+          dessert: string;
+        };
+        lunch: {
+          appetizer: string;
+          main: string;
+          dessert: string;
+        };
+        dinner: {
+          appetizer: string;
+          main: string;
+          dessert: string;
+        };
       } = {
-        breakfast: null,
-        lunch: null,
-        dinner: null
+        breakfast: {
+          appetizer: "",
+          main: "",
+          dessert: ""
+        },
+        lunch: {
+          appetizer: "",
+          main: "",
+          dessert: ""
+        },
+        dinner: {
+          appetizer: "",
+          main: "",
+          dessert: ""
+        }
       };
 
       // Iterate over each meal and make a separate image generation request
       for (const mealKey of Object.keys(filteredArr)) {
-        const meal = (filteredArr as any)[mealKey];
+        const mealAppetizer = (filteredArr as any)[mealKey].appetizer;
+        const mealMain = (filteredArr as any)[mealKey].main;
+        const mealDessert = (filteredArr as any)[mealKey].dessert;
 
-        console.log("meal: ", meal);
-        console.log("meal name: ", meal.name);
+        // console.log("meal: ", meal);
+        // console.log("meal name: ", meal.name);
 
         // Now make a request to the "images/generations" endpoint for each meal's name
-        const imageResponse = await fetch(
+        const imageAppetizer = await fetch(
           `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
-            meal.name
+            mealAppetizer.name
           )}&searchType=image`
         );
 
-        if (!imageResponse.ok) {
+        const imageMain = await fetch(
+          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+            mealMain.name
+          )}&searchType=image`
+        );
+
+        const imageDessert = await fetch(
+          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+            mealDessert.name
+          )}&searchType=image`
+        );
+
+        if (!imageAppetizer.ok || !imageMain.ok || !imageDessert.ok) {
           setRequestFailed(true);
           setIsLoading(false);
           throw new Error("Failed to generate image");
         }
 
-        const imageResponseData = await imageResponse.json();
-        console.log(
-          `Image Generation Response for ${meal.name}: `,
-          imageResponseData.items[0].link
-        );
-        (mealPlanImagesData as any)[mealKey] = imageResponseData.items[0].link;
+        const imageAppetizerResponseData = await imageAppetizer.json();
+        const imageMainResponseData = await imageMain.json();
+        const imageDessertResponseData = await imageDessert.json();
+
+        // console.log(
+        //   `Image Generation Response for ${mealAppetizer.name}: `,
+        //   imageAppetizerResponseData.items[0].link
+        // );
+        (mealPlanImagesData as any)[mealKey].appetizer =
+          imageAppetizerResponseData.items[0].link;
+        (mealPlanImagesData as any)[mealKey].main =
+          imageMainResponseData.items[0].link;
+        (mealPlanImagesData as any)[mealKey].dessert =
+          imageDessertResponseData.items[0].link;
       }
 
       console.log("mealPlanImagesData:", mealPlanImagesData);

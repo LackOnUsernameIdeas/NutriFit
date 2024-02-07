@@ -179,6 +179,30 @@ export type MealPlan = {
   };
 };
 
+export type MealPlan2 = {
+  breakfast: {
+    appetizer: any;
+    main: any;
+    dessert: any;
+  } | null;
+  lunch: {
+    appetizer: any;
+    main: any;
+    dessert: any;
+  } | null;
+  dinner: {
+    appetizer: any;
+    main: any;
+    dessert: any;
+  } | null;
+  totals?: {
+    calories: number;
+    protein: number;
+    fat: number;
+    carbohydrates: number;
+  };
+};
+
 export type WeightPerServing = {
   breakfast: {
     amount: number;
