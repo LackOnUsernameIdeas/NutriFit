@@ -423,28 +423,30 @@ export default function WeightStats() {
 
               setAllUsersPreferences(orderedTimestampObjects);
 
-              setUserData({
-                gender: additionalData.gender,
-                goal: additionalData.goal,
-                age: userDataTimestamp.age,
-                height: userDataTimestamp.height,
-                waist: userDataTimestamp.waist,
-                neck: userDataTimestamp.neck,
-                hip: userDataTimestamp.hip,
-                weight: userDataTimestamp.weight
-              } as UserData);
+              if (userDataTimestamp?.age) {
+                setUserData({
+                  gender: additionalData.gender,
+                  goal: additionalData.goal,
+                  age: userDataTimestamp.age,
+                  height: userDataTimestamp.height,
+                  waist: userDataTimestamp.waist,
+                  neck: userDataTimestamp.neck,
+                  hip: userDataTimestamp.hip,
+                  weight: userDataTimestamp.weight
+                } as UserData);
 
-              setDailyCaloryRequirements(
-                userDataTimestamp.dailyCaloryRequirements
-              );
+                setDailyCaloryRequirements(
+                  userDataTimestamp.dailyCaloryRequirements
+                );
 
-              const macroNutrientsData = Array.isArray(
-                userDataTimestamp.macroNutrientsData
-              )
-                ? userDataTimestamp.macroNutrientsData
-                : [];
+                const macroNutrientsData = Array.isArray(
+                  userDataTimestamp.macroNutrientsData
+                )
+                  ? userDataTimestamp.macroNutrientsData
+                  : [];
 
-              setMacroNutrients(macroNutrientsData);
+                setMacroNutrients(macroNutrientsData);
+              }
             }
           });
 
