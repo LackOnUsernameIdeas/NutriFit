@@ -50,7 +50,7 @@ export const lineChartOptions: any = {
         // Custom styling for legend labels
         color: "white", // Change legend label color to red
         font: {
-          size: 12, // Adjust font size
+          size: 13, // Adjust font size
           weight: 550 // Make font bold
         }
       }
@@ -68,7 +68,8 @@ export const lineChartOptions: any = {
 const LineChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
-  lineChartLabelName
+  lineChartLabelName,
+  textColor
 }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
@@ -79,6 +80,43 @@ const LineChart: React.FC<ChartProps> = ({
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
+
+      const customOptions = {
+        ...lineChartOptions,
+        scales: {
+          x: {
+            ...lineChartOptions.scales.x,
+            ticks: {
+              ...lineChartOptions.scales.x.ticks,
+              color: textColor
+            }
+          },
+          y: {
+            ...lineChartOptions.scales.y,
+            ticks: {
+              ...lineChartOptions.scales.y.ticks,
+              color: textColor
+            }
+          }
+        },
+        plugins: {
+          ...lineChartOptions.plugins,
+          legend: {
+            ...lineChartOptions.plugins?.legend,
+            labels: {
+              ...lineChartOptions.plugins?.legend?.labels,
+              color: textColor
+            }
+          },
+          tooltip: {
+            ...lineChartOptions.plugins?.tooltip,
+            bodyFont: {
+              ...lineChartOptions.plugins?.tooltip?.bodyFont,
+              color: textColor
+            }
+          }
+        }
+      };
 
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
@@ -96,7 +134,7 @@ const LineChart: React.FC<ChartProps> = ({
               }
             ]
           },
-          options: lineChartOptions
+          options: customOptions
         });
       }
     }

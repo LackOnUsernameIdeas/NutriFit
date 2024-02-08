@@ -50,7 +50,7 @@ export const barChartOptions: any = {
         // Custom styling for legend labels
         color: "white", // Change legend label color to red
         font: {
-          size: 12, // Adjust font size
+          size: 13, // Adjust font size
           weight: 550 // Make font bold
         }
       }

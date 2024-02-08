@@ -78,7 +78,7 @@ export default function WeightStats() {
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
-  const brandColor = useColorModeValue("brand.500", "white");
+  const chartsColor = useColorModeValue("brand.500", "white");
   const fontWeight = useColorModeValue("550", "100");
   const tipFontWeight = useColorModeValue("500", "100");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
@@ -803,6 +803,7 @@ export default function WeightStats() {
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForCalories}
                               lineChartLabelName="Изменение на калории(kcal)"
+                              textColor={chartsColor}
                             />
                           </Card>
                           <Card
@@ -818,6 +819,7 @@ export default function WeightStats() {
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForProtein}
                               lineChartLabelName="Изменение на протеин(g)"
+                              textColor={chartsColor}
                             />
                           </Card>
                           <Card
@@ -833,6 +835,7 @@ export default function WeightStats() {
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForFat}
                               lineChartLabelName="Изменение на мазнини(g)"
+                              textColor={chartsColor}
                             />
                           </Card>
                           <Card
@@ -848,6 +851,7 @@ export default function WeightStats() {
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForCarbs}
                               lineChartLabelName="Изменение на въглехидрати(g)"
+                              textColor={chartsColor}
                             />
                           </Card>
                         </SimpleGrid>
