@@ -177,16 +177,18 @@ const UserMeasurements = () => {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
           const additionalData = await fetchAdditionalUserData(user.uid);
-          setUserDataForReq({
-            gender: additionalData.gender,
-            goal: additionalData.goal,
-            age: additionalData[timestampKey].age,
-            height: additionalData[timestampKey].height,
-            waist: additionalData[timestampKey].waist,
-            neck: additionalData[timestampKey].neck,
-            hip: additionalData[timestampKey].hip,
-            weight: additionalData[timestampKey].weight
-          } as any);
+          if (additionalData[timestampKey]?.age) {
+            setUserDataForReq({
+              gender: additionalData.gender || 0,
+              goal: additionalData.goal || 0,
+              age: additionalData[timestampKey].age || 0,
+              height: additionalData[timestampKey].height || 0,
+              waist: additionalData[timestampKey].waist || 0,
+              neck: additionalData[timestampKey].neck || 0,
+              hip: additionalData[timestampKey].hip || 0,
+              weight: additionalData[timestampKey].weight || 0
+            } as any);
+          }
 
           console.log(additionalData, "additionalData");
           const userChartData = [];
