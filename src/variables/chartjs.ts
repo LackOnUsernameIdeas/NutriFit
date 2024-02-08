@@ -445,13 +445,16 @@ export const lineChartOptionsTotalSpent: any = {
 
 export const lineChartOptions: object = {
   maintainAspectRatio: false,
-  aspectRatio: 5, // You can adjust the aspectRatio as needed
+  aspectRatio: 5,
   scales: {
     x: {},
     y: {
-      type: "linear",
-      display: true,
-      position: "left"
+      ticks: {
+        beginAtZero: false,
+        suggestedMin: 57,
+        suggestedMax: 63,
+        padding: 10
+      }
     }
   },
   responsive: true,
@@ -463,5 +466,49 @@ export const lineChartOptions: object = {
     // 	display: true,
     // 	text: 'Chart.js Line Chart'
     // }
+  },
+};
+
+export const newLineChartOptions = {
+  layout: {
+    padding: 10
+  },
+  responsive: true,
+  legend: {
+    display: true
+  },
+  scales: {
+    xAxes: [
+      {
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          padding: 10,
+          autoSkip: false,
+          maxRotation: 15,
+          minRotation: 15
+        }
+      }
+    ],
+    yAxes: [
+      {
+        scaleLabel: {
+          display: true,
+          labelString: "Weight in KG",
+          padding: 10
+        },
+        gridLines: {
+          display: true,
+          color: "rgba(80, 102, 120, 0.25)"
+        },
+        ticks: {
+          beginAtZero: false,
+          max: 63,
+          min: 57,
+          padding: 10
+        }
+      }
+    ]
   }
 };

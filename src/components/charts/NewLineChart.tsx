@@ -40,15 +40,15 @@ const NewLineChart: React.FC<ChartProps> = ({
           {
             label: lineChartLabelName,
             data: lineChartData,
+            borderColor: "#3d25f8",
             backgroundColor: "#3d25f8",
-            fill: true,
             tension: 0.3
           },
           {
             label: lineChartLabelName2,
             data: lineChartData2,
+            borderColor: "#6e5cfa",
             backgroundColor: "#6e5cfa",
-            fill: true,
             tension: 0.3
           }
         ]
