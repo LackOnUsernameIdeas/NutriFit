@@ -155,13 +155,6 @@ export default function UserReports() {
     lg: -80,
     xl: -80
   });
-  const redirectWidgetsSlidePositionStats = useBreakpointValue({
-    base: -805,
-    sm: -805,
-    md: -480,
-    lg: 0,
-    xl: 0
-  });
   const dropdownWidgetsSlidePositionStats = useBreakpointValue({
     sm: -200,
     md: -80,
@@ -229,48 +222,51 @@ export default function UserReports() {
     "Среден % телесни мазнини"
   ];
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(true);
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
+    React.useState(false);
+  const [renderDropdown, setRenderDropdown] = React.useState(false);
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
-  const [dropdownVisibleStats, setDropdownVisibleStats] = React.useState(true);
-  const [miniStatisticsVisibleStats, setMiniStatisticsVisibleStats] =
+  const [dropdownVisibleMale, setDropdownVisibleMale] = React.useState(true);
+  const [miniStatisticsVisibleMale, setMiniStatisticsVisibleMale] =
     React.useState(true);
-  const [renderDropdownStats, setRenderDropdownStats] = React.useState(true);
-  const handleDropdownToggleStats = () => {
-    setDropdownVisibleStats(!dropdownVisibleStats);
+  const [renderDropdownMale, setRenderDropdownMale] = React.useState(true);
+  const handleDropdownToggleMale = () => {
+    setDropdownVisibleMale(!dropdownVisibleMale);
+  };
+  const [dropdownVisibleFemale, setDropdownVisibleFemale] =
+    React.useState(true);
+  const [miniStatisticsVisibleFemale, setMiniStatisticsVisibleFemale] =
+    React.useState(true);
+  const [renderDropdownFemale, setRenderDropdownFemale] = React.useState(true);
+  const handleDropdownToggleFemale = () => {
+    setDropdownVisibleFemale(!dropdownVisibleFemale);
   };
 
-  const slideAnimationDropStats = useSpring({
-    opacity: miniStatisticsVisibleStats ? 1 : 0,
-    transform: `translateY(${
-      dropdownVisibleStats ? -50 : dropdownWidgetsSlidePositionStats
-    }px)`,
+  const slideAnimationDropFemale = useSpring({
+    opacity: miniStatisticsVisibleFemale ? 1 : 0,
+    transform: `translateY(${dropdownVisibleFemale ? -50 : -80}px)`,
     config: {
-      tension: dropdownVisibleStats ? 170 : 200,
-      friction: dropdownVisibleStats ? 12 : 20
+      tension: dropdownVisibleFemale ? 170 : 200,
+      friction: dropdownVisibleFemale ? 12 : 20
     }
   });
 
-  const slideAnimationStats = useSpring({
-    transform: `translateY(${
-      dropdownVisibleStats ? -50 : redirectWidgetsSlidePositionStats
-    }px)`,
+  const slideAnimationDropMale = useSpring({
+    opacity: miniStatisticsVisibleMale ? 1 : 0,
+    transform: `translateY(${dropdownVisibleMale ? -50 : -80}px)`,
     config: {
-      tension: dropdownVisibleStats ? 170 : 200,
-      friction: dropdownVisibleStats ? 12 : 20
+      tension: dropdownVisibleMale ? 170 : 200,
+      friction: dropdownVisibleMale ? 12 : 20
     }
   });
 
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${
-      dropdownVisible ? -50 : dropdownWidgetsSlidePosition
-    }px)`,
+    transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -278,9 +274,7 @@ export default function UserReports() {
   });
 
   const slideAnimation = useSpring({
-    transform: `translateY(${
-      dropdownVisible ? -50 : redirectWidgetsSlidePosition
-    }px)`,
+    transform: `translateY(${dropdownVisible ? -50 : 0}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -307,23 +301,42 @@ export default function UserReports() {
   }, [dropdownVisible]);
 
   React.useEffect(() => {
-    const handleDropdownVisibilityChangeStats = async () => {
-      if (dropdownVisibleStats) {
-        setMiniStatisticsVisibleStats(true);
-        setRenderDropdownStats(true);
+    const handleDropdownVisibilityChangeMale = async () => {
+      if (dropdownVisibleMale) {
+        setMiniStatisticsVisibleMale(true);
+        setRenderDropdownMale(true);
       } else {
-        setMiniStatisticsVisibleStats(false);
+        setMiniStatisticsVisibleMale(false);
         await new Promise<void>((resolve) =>
           setTimeout(() => {
             resolve();
-            setRenderDropdownStats(false);
+            setRenderDropdownMale(false);
           }, 150)
         );
       }
     };
 
-    handleDropdownVisibilityChangeStats();
-  }, [dropdownVisibleStats]);
+    handleDropdownVisibilityChangeMale();
+  }, [dropdownVisibleMale]);
+
+  React.useEffect(() => {
+    const handleDropdownVisibilityChangeFemale = async () => {
+      if (dropdownVisibleFemale) {
+        setMiniStatisticsVisibleFemale(true);
+        setRenderDropdownFemale(true);
+      } else {
+        setMiniStatisticsVisibleFemale(false);
+        await new Promise<void>((resolve) =>
+          setTimeout(() => {
+            resolve();
+            setRenderDropdownFemale(false);
+          }, 150)
+        );
+      }
+    };
+
+    handleDropdownVisibilityChangeFemale();
+  }, [dropdownVisibleFemale]);
 
   React.useEffect(() => {
     // Fetch the total number of users when the component mounts
@@ -587,32 +600,431 @@ export default function UserReports() {
             </Flex>
           </Card>
         </SimpleGrid>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }} gap="20px">
+          <Box>
+            <Card
+              onClick={handleDropdownToggleMale}
+              cursor="pointer"
+              zIndex="1"
+              position="relative"
+              bg={dropdownVisibleMale ? dropdownActiveBoxBg : dropdownBoxBg}
+              mb="20px"
+            >
+              <Flex justify="space-between" alignItems="center">
+                <Box>
+                  <Flex alignItems="center" justifyContent="center">
+                    <Text
+                      fontSize="2xl"
+                      fontWeight="medium"
+                      textAlign="center"
+                      color={dropdownVisibleMale && "#715ffa"}
+                    >
+                      Средни статистики за МЪЖЕ
+                    </Text>
+                    <Icon
+                      w="30px"
+                      h="30px"
+                      as={MdOutlineMale}
+                      color={dropdownVisibleMale ? "#715ffa" : "blue"}
+                    />
+                  </Flex>
+                </Box>
+                <Icon
+                  as={dropdownVisibleMale ? FaAngleUp : FaAngleDown}
+                  boxSize={6}
+                  color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                />
+              </Flex>
+            </Card>
+            {renderDropdownMale && (
+              <animated.div
+                style={{ ...slideAnimationDropMale, position: "relative" }}
+              >
+                <Card
+                  bg={boxBg}
+                  minH={{ base: "800px", md: "300px", xl: "180px" }}
+                >
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                    gap="20px"
+                    mt="30px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тегло"
+                      value={
+                        averageStats.male.averageWeight !== null
+                          ? `${averageStats.male.averageWeight.toFixed(2)}kg`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="28px"
+                              h="28px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={
+                        averageStats.male.averageCalories !== null
+                          ? `${averageStats.male.averageCalories.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={
+                        averageStats.male.averageProtein !== null
+                          ? `${averageStats.male.averageProtein.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={
+                        averageStats.male.averageCarbs !== null
+                          ? `${averageStats.male.averageCarbs.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={
+                        averageStats.male.averageFat !== null
+                          ? `${averageStats.male.averageFat.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={RiWaterPercentFill}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тел. Мазнини"
+                      value={
+                        averageStats.male.averageBodyFatPercentage !== null
+                          ? `${averageStats.male.averageBodyFatPercentage.toFixed(
+                              2
+                            )}%`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Card>
+              </animated.div>
+            )}
+          </Box>
+          <Box>
+            <Card
+              onClick={handleDropdownToggleFemale}
+              cursor="pointer"
+              zIndex="1"
+              position="relative"
+              bg={dropdownVisibleFemale ? dropdownActiveBoxBg : dropdownBoxBg}
+              mb="20px"
+            >
+              <Flex justify="space-between" alignItems="center">
+                <Box>
+                  <Flex alignItems="center" justifyContent="center">
+                    <Text
+                      fontSize="2xl"
+                      fontWeight="medium"
+                      textAlign="center"
+                      color={dropdownVisibleFemale && "#715ffa"}
+                    >
+                      Средни статистики за ЖЕНИ
+                    </Text>
+                    <Icon
+                      w="30px"
+                      h="30px"
+                      as={MdOutlineFemale}
+                      color={dropdownVisibleFemale ? "#715ffa" : "pink"}
+                    />
+                  </Flex>
+                </Box>
+                <Icon
+                  as={dropdownVisibleFemale ? FaAngleUp : FaAngleDown}
+                  boxSize={6}
+                  color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                />
+              </Flex>
+            </Card>
+            {renderDropdownFemale && (
+              <animated.div
+                style={{ ...slideAnimationDropFemale, position: "relative" }}
+              >
+                <Card
+                  bg={boxBg}
+                  minH={{ base: "800px", md: "300px", xl: "180px" }}
+                >
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                    mt="30px"
+                    gap="20px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тегло"
+                      value={
+                        averageStats.female.averageWeight !== null
+                          ? `${averageStats.female.averageWeight.toFixed(2)}kg`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="28px"
+                              h="28px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={
+                        averageStats.female.averageCalories !== null
+                          ? `${averageStats.female.averageCalories.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={
+                        averageStats.female.averageProtein !== null
+                          ? `${averageStats.female.averageProtein.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={
+                        averageStats.female.averageCarbs !== null
+                          ? `${averageStats.female.averageCarbs.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={
+                        averageStats.female.averageFat !== null
+                          ? `${averageStats.female.averageFat.toFixed(2)}`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={RiWaterPercentFill}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Тел. Мазнини"
+                      value={
+                        averageStats.female.averageBodyFatPercentage !== null
+                          ? `${averageStats.female.averageBodyFatPercentage.toFixed(
+                              2
+                            )}%`
+                          : "0"
+                      }
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Card>
+              </animated.div>
+            )}
+          </Box>
+        </SimpleGrid>
         <Card
-          onClick={handleDropdownToggleStats}
+          onClick={handleDropdownToggle}
           cursor="pointer"
           zIndex="1"
           position="relative"
-          bg={dropdownVisibleStats ? dropdownActiveBoxBg : dropdownBoxBg}
-          mb="20px"
+          bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
         >
           <Flex justify="space-between" alignItems="center">
-            <Text fontSize="2xl">за всички</Text>
+            <Text fontSize="2xl" color={dropdownVisible && "#715ffa"}>
+              Средни статистики за ВСИЧКИ потребители:
+            </Text>
             <Icon
-              as={dropdownVisibleStats ? FaAngleUp : FaAngleDown}
+              as={dropdownVisible ? FaAngleUp : FaAngleDown}
               boxSize={6}
               color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
             />
           </Flex>
         </Card>
-        {renderDropdownStats && (
-          <animated.div
-            style={{ ...slideAnimationDropStats, position: "relative" }}
-          >
+        {renderDropdown && (
+          <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
             <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "180px" }}>
               <SimpleGrid
                 columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
                 gap="20px"
-                mt="30px"
+                mt="50px"
               >
                 <MiniStatistics
                   startContent={
@@ -726,360 +1138,6 @@ export default function UserReports() {
                     chartLabelName2={"Средни статистики за жени"}
                   />
                 </Card>
-              </SimpleGrid>
-            </Card>
-          </animated.div>
-        )}
-        <Card
-          onClick={handleDropdownToggle}
-          cursor="pointer"
-          zIndex="1"
-          position="relative"
-          bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-        >
-          <Flex justify="space-between" alignItems="center">
-            <Text fontSize="2xl">Средни статистики за ВСИЧКИ потребители:</Text>
-            <Icon
-              as={dropdownVisible ? FaAngleUp : FaAngleDown}
-              boxSize={6}
-              color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-            />
-          </Flex>
-        </Card>
-        {renderDropdown && (
-          <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
-            <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "180px" }}>
-              <SimpleGrid
-                columns={{ base: 2, md: 2, lg: 2, "2xl": 2 }}
-                gap="45%"
-                mx="15%"
-                mt="50px"
-                mb="20px"
-              >
-                <Card>
-                  <Flex alignItems="center" justifyContent="center">
-                    <Text fontSize="3xl" fontWeight="medium" textAlign="center">
-                      МЪЖЕ
-                    </Text>
-                    <Icon w="40px" h="40px" as={MdOutlineMale} color="blue" />
-                  </Flex>
-                </Card>
-                <Card>
-                  <Flex alignItems="center" justifyContent="center">
-                    <Text fontSize="3xl" fontWeight="medium" textAlign="center">
-                      ЖЕНИ
-                    </Text>
-                    <Icon w="40px" h="40px" as={MdOutlineFemale} color="pink" />
-                  </Flex>
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 2, md: 2, lg: 2, "2xl": 2 }}
-                gap="150px"
-                mx="50px"
-              >
-                <SimpleGrid
-                  columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                  gap="20px"
-                >
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={GiWeightScale}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Тегло"
-                    value={
-                      averageStats.male.averageWeight !== null
-                        ? `${averageStats.male.averageWeight.toFixed(2)}kg`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="28px"
-                            h="28px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Калории"
-                    value={
-                      averageStats.male.averageCalories !== null
-                        ? `${averageStats.male.averageCalories.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Протеин"
-                    value={
-                      averageStats.male.averageProtein !== null
-                        ? `${averageStats.male.averageProtein.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Въглехидрати"
-                    value={
-                      averageStats.male.averageCarbs !== null
-                        ? `${averageStats.male.averageCarbs.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Мазнини"
-                    value={
-                      averageStats.male.averageFat !== null
-                        ? `${averageStats.male.averageFat.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={RiWaterPercentFill}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Тел. Мазнини"
-                    value={
-                      averageStats.male.averageBodyFatPercentage !== null
-                        ? `${averageStats.male.averageBodyFatPercentage.toFixed(
-                            2
-                          )}%`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                </SimpleGrid>
-                <SimpleGrid
-                  columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                  gap="20px"
-                >
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={GiWeightScale}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Тегло"
-                    value={
-                      averageStats.female.averageWeight !== null
-                        ? `${averageStats.female.averageWeight.toFixed(2)}kg`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="28px"
-                            h="28px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Калории"
-                    value={
-                      averageStats.female.averageCalories !== null
-                        ? `${averageStats.female.averageCalories.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Протеин"
-                    value={
-                      averageStats.female.averageProtein !== null
-                        ? `${averageStats.female.averageProtein.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Въглехидрати"
-                    value={
-                      averageStats.female.averageCarbs !== null
-                        ? `${averageStats.female.averageCarbs.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={FaFireAlt}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Мазнини"
-                    value={
-                      averageStats.female.averageFat !== null
-                        ? `${averageStats.female.averageFat.toFixed(2)}`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={RiWaterPercentFill}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Тел. Мазнини"
-                    value={
-                      averageStats.female.averageBodyFatPercentage !== null
-                        ? `${averageStats.female.averageBodyFatPercentage.toFixed(
-                            2
-                          )}%`
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                </SimpleGrid>
               </SimpleGrid>
             </Card>
           </animated.div>
