@@ -75,8 +75,8 @@ import {
   GenderAverageStats
 } from "../../../types/weightStats";
 
-import { ColumnAvaragesChart } from "components/charts/BarChart";
-import { LineAvaragesChart } from "components/charts/LineChart";
+import { ColumnAvaragesChart } from "components/charts/BarCharts";
+import { LineAvaragesChart } from "components/charts/LineCharts";
 import { barChartOptions, lineChartOptions } from "variables/chartjs";
 
 interface LinearGradientTextProps {
