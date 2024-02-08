@@ -51,7 +51,7 @@ import {
 } from "../../../types/weightStats";
 
 import { lineChartOptions } from "variables/chartjs";
-import LineChart from "components/charts/LineChart";
+import { LineChart } from "components/charts/LineChart";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { onSnapshot, doc, getFirestore } from "firebase/firestore";

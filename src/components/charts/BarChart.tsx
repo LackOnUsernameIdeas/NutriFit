@@ -14,6 +14,52 @@ const ColumnChart: React.FC<ChartProps> = ({
   chartData,
   chartOptions,
   chartLabels,
+  chartLabelName
+}) => {
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const chartInstance = useRef<Chart>();
+
+  useEffect(() => {
+    if (chartRef.current) {
+      const ctx = chartRef.current.getContext("2d");
+      if (ctx) {
+        if (chartInstance.current) {
+          chartInstance.current.destroy();
+        }
+        chartInstance.current = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: chartLabels,
+            datasets: [
+              {
+                label: chartLabelName,
+                data: chartData,
+                backgroundColor: "#472ffb",
+                borderColor: "rgba(67,24,255,1)",
+                borderWidth: 1
+              }
+            ]
+          },
+          options: chartOptions
+        });
+      }
+    }
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+  }, [chartData, chartOptions]);
+
+  return <canvas ref={chartRef} style={{ width: "100%" }} />;
+};
+
+export { ColumnChart };
+
+const ColumnAvaragesChart: React.FC<ChartProps> = ({
+  chartData,
+  chartOptions,
+  chartLabels,
   chartLabelName,
   chartData2,
   chartLabelName2
@@ -63,4 +109,4 @@ const ColumnChart: React.FC<ChartProps> = ({
   return <canvas ref={chartRef} style={{ width: "100%" }} />;
 };
 
-export default ColumnChart;
+export { ColumnAvaragesChart };

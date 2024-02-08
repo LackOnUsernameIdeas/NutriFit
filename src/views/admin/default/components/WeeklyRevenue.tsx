@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
 // Custom components
-import BarChart from "components/charts/BarChart";
+import { ColumnChart } from "components/charts/BarChart";
 import React from "react";
 import {
   barChartDataConsumption,
@@ -70,7 +70,7 @@ export default function WeeklyRevenue(props: { [x: string]: any }) {
         minH={{ sm: "100px", md: "300px", lg: "auto" }}
         minW={{ sm: "150px", md: "200px", lg: "auto" }}
       >
-        <BarChart
+        <ColumnChart
           chartData={barChartDataConsumption}
           chartOptions={barChartOptionsConsumption}
           chartLabels={["babati", "dqdoti", "strinkati"]}

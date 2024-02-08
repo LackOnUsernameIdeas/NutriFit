@@ -2,7 +2,7 @@
 import { Box, Flex, Select, Text, useColorModeValue } from "@chakra-ui/react";
 import Card from "components/card/Card";
 // Custom components
-import BarChart from "components/charts/BarChart";
+import { ColumnChart } from "components/charts/BarChart";
 import {
   barChartDataUserActivity,
   barChartOptionsUserActivity
@@ -40,7 +40,7 @@ export default function UserActivity(props: { [x: string]: any }) {
       </Flex>
 
       <Box h="240px" mt="auto">
-        <BarChart
+        <ColumnChart
           chartData={barChartDataUserActivity}
           chartOptions={barChartOptionsUserActivity}
           chartLabels={["babati", "dqdoti", "strinkati"]}

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto"; // Import Chart.js
 
 type ChartProps = {
@@ -14,9 +15,7 @@ const LineChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
   lineChartOptions,
-  lineChartLabelName,
-  lineChartData2,
-  lineChartLabelName2
+  lineChartLabelName
 }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
@@ -41,13 +40,6 @@ const LineChart: React.FC<ChartProps> = ({
                 backgroundColor: "#3d25f8",
                 borderColor: "rgba(67,24,255,1)",
                 borderWidth: 1
-              },
-              {
-                label: lineChartLabelName2,
-                data: lineChartData2,
-                backgroundColor: "#6e5cfa",
-                borderColor: "rgba(67,24,255,1)",
-                borderWidth: 1
               }
             ]
           },
@@ -66,4 +58,54 @@ const LineChart: React.FC<ChartProps> = ({
   return <canvas ref={chartRef} style={{ width: "100%" }} />;
 };
 
-export default LineChart;
+export { LineChart };
+
+const LineAvaragesChart: React.FC<ChartProps> = ({
+  lineChartData,
+  lineChartLabels,
+  lineChartOptions,
+  lineChartLabelName,
+  lineChartData2,
+  lineChartLabelName2
+}) => {
+  const chartInstance = useRef<Chart | null>(null);
+  useEffect(() => {
+    if (chartInstance.current) {
+      // Destroy the existing chart if it exists
+      chartInstance.current.destroy();
+    }
+
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+  }, [lineChartData, lineChartLabels, lineChartOptions]);
+
+  return (
+    <Line
+      data={{
+        labels: lineChartLabels,
+        datasets: [
+          {
+            label: lineChartLabelName,
+            data: lineChartData,
+            borderColor: "#3d25f8",
+            backgroundColor: "#3d25f8",
+            tension: 0.3
+          },
+          {
+            label: lineChartLabelName2,
+            data: lineChartData2,
+            borderColor: "#6e5cfa",
+            backgroundColor: "#6e5cfa",
+            tension: 0.3
+          }
+        ]
+      }}
+      options={lineChartOptions}
+    />
+  );
+};
+
+export { LineAvaragesChart };

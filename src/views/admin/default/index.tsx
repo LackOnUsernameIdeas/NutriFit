@@ -75,8 +75,8 @@ import {
   GenderAverageStats
 } from "../../../types/weightStats";
 
-import BarChart from "components/charts/BarChart";
-import LineChart from "components/charts/NewLineChart";
+import { ColumnAvaragesChart } from "components/charts/BarChart";
+import { LineAvaragesChart } from "components/charts/LineChart";
 import { barChartOptions, lineChartOptions } from "variables/chartjs";
 
 interface LinearGradientTextProps {
@@ -1112,7 +1112,7 @@ export default function UserReports() {
                   mt="40px"
                 >
                   {/* BarChart component with adjusted width */}
-                  <LineChart
+                  <LineAvaragesChart
                     lineChartData={maleChartData}
                     lineChartData2={femaleChartData}
                     lineChartOptions={lineChartOptions}
@@ -1129,7 +1129,7 @@ export default function UserReports() {
                   maxH="400px"
                   mt="30px"
                 >
-                  <BarChart
+                  <ColumnAvaragesChart
                     chartData={maleChartData}
                     chartData2={femaleChartData}
                     chartOptions={barChartOptions}

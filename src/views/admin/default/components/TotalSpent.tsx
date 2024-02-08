@@ -16,7 +16,7 @@ import {
 
 // Custom components
 import Card from "components/card/Card";
-import LineChart from "components/charts/LineChart";
+import { LineChart } from "components/charts/LineChart";
 
 // Icons imports
 import { IoCheckmarkCircle } from "react-icons/io5";

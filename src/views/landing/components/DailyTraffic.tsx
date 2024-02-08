@@ -1,6 +1,6 @@
 // Chakra imports
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
-import BarChart from "components/charts/BarChart";
+import { ColumnChart } from "components/charts/BarChart";
 
 // Custom components
 import Card from "components/card/Card";
@@ -68,7 +68,7 @@ export default function DailyTraffic(props: { [x: string]: any }) {
         minH={{ sm: "150px", md: "300px", lg: "auto" }}
         minW={{ sm: "150px", md: "200px", lg: "auto" }}
       >
-        <BarChart
+        <ColumnChart
           chartData={barChartDataDailyTraffic}
           chartOptions={barChartOptions}
           chartLabels={["babati", "dqdoti", "strinkati"]}

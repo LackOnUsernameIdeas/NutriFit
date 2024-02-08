@@ -64,7 +64,7 @@ import { savePreferences } from "../../../database/setWeightStatsData";
 import { table } from "console";
 
 import { lineChartOptions } from "variables/chartjs";
-import LineChart from "components/charts/LineChart";
+import { LineChart } from "components/charts/LineChart";
 
 // Главен компонент
 export default function WeightStats() {
