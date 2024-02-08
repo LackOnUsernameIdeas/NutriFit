@@ -568,7 +568,7 @@ export default function UserReports() {
                             }
                           />
                         }
-                        name="Общо"
+                        name="Потребители"
                         value={
                           averageStats.male.totalUsers !== null
                             ? (
@@ -639,16 +639,23 @@ export default function UserReports() {
                 m="20px"
               >
                 <Box mx="20px">
-                  <Card mb="20px">
+                  <Card mb="20px" alignItems="center">
                     <Flex>
                       <Text
                         fontSize="3xl"
                         fontWeight="medium"
                         textAlign="center"
                       >
-                        за ВСИЧКИ МЪЖЕ
+                        ЗА ВСИЧКИ МЪЖЕ
                       </Text>
                       <Icon w="40px" h="40px" as={MdOutlineMale} color="blue" />
+                      <Text
+                        fontSize="3xl"
+                        fontWeight="medium"
+                        textAlign="center"
+                      >
+                        :
+                      </Text>
                     </Flex>
                   </Card>
 
@@ -805,10 +812,10 @@ export default function UserReports() {
                   </SimpleGrid>
                 </Box>
                 <Box mx="20px">
-                  <Card mb="20px">
+                  <Card mb="20px" alignItems="center">
                     <Flex>
                       <Text fontSize="3xl" fontWeight="400" textAlign="center">
-                        за ВСИЧКИ ЖЕНИ
+                        ЗА ВСИЧКИ ЖЕНИ
                       </Text>
                       <Icon
                         w="40px"
@@ -816,6 +823,13 @@ export default function UserReports() {
                         as={MdOutlineFemale}
                         color="pink"
                       />
+                      <Text
+                        fontSize="3xl"
+                        fontWeight="medium"
+                        textAlign="center"
+                      >
+                        :
+                      </Text>
                     </Flex>
                   </Card>
                   <SimpleGrid
