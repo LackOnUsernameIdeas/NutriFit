@@ -271,6 +271,15 @@ export default function UserReports() {
       friction: dropdownVisible ? 12 : 20
     }
   });
+  const slideAnimationStats = useSpring({
+    transform: `translateY(${
+      dropdownVisibleMale || dropdownVisibleFemale ? -50 : 0
+    }px)`,
+    config: {
+      tension: dropdownVisibleMale || dropdownVisibleFemale ? 170 : 200,
+      friction: dropdownVisibleMale || dropdownVisibleFemale ? 12 : 20
+    }
+  });
 
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? -50 : 0}px)`,
@@ -599,7 +608,12 @@ export default function UserReports() {
             </Flex>
           </Card>
         </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }} gap="20px">
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+          gap="20px"
+          margin="0"
+          padding="0"
+        >
           <Box>
             <Card
               onClick={handleDropdownToggleMale}
@@ -607,7 +621,6 @@ export default function UserReports() {
               zIndex="1"
               position="relative"
               bg={dropdownVisibleMale ? dropdownActiveBoxBg : dropdownBoxBg}
-              mb="20px"
             >
               <Flex justify="space-between" alignItems="center">
                 <Box>
@@ -646,7 +659,7 @@ export default function UserReports() {
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
                     gap="20px"
-                    mt="30px"
+                    mt="50px"
                   >
                     <MiniStatistics
                       startContent={
@@ -806,7 +819,6 @@ export default function UserReports() {
               zIndex="1"
               position="relative"
               bg={dropdownVisibleFemale ? dropdownActiveBoxBg : dropdownBoxBg}
-              mb="20px"
             >
               <Flex justify="space-between" alignItems="center">
                 <Box>
@@ -844,7 +856,7 @@ export default function UserReports() {
                 >
                   <SimpleGrid
                     columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                    mt="30px"
+                    mt="50px"
                     gap="20px"
                   >
                     <MiniStatistics
@@ -1000,6 +1012,7 @@ export default function UserReports() {
           </Box>
         </SimpleGrid>
         <Card
+          mt="20px"
           onClick={handleDropdownToggle}
           cursor="pointer"
           zIndex="1"
