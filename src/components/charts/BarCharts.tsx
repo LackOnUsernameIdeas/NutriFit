@@ -4,15 +4,69 @@ import Chart from "chart.js/auto";
 type ChartProps = {
   chartData: any[];
   chartData2?: any[];
-  chartOptions: any;
+  chartOptions?: any;
   chartLabels: string[];
   chartLabelName: string;
   chartLabelName2?: string;
+  textColor?: string;
+};
+
+export const barChartOptions: any = {
+  maintainAspectRatio: false,
+  aspectRatio: 5,
+  scales: {
+    x: {
+      ticks: {
+        beginAtZero: false,
+        suggestedMin: 57,
+        suggestedMax: 63,
+        padding: 10,
+        color: "white", // Change tick color to blue
+        font: {
+          size: 13, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
+    },
+    y: {
+      ticks: {
+        beginAtZero: false,
+        suggestedMin: 57,
+        suggestedMax: 63,
+        padding: 10,
+        color: "white", // Change tick color to blue
+        font: {
+          size: 13, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
+    }
+  },
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+      labels: {
+        // Custom styling for legend labels
+        color: "white", // Change legend label color to red
+        font: {
+          size: 12, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
+    },
+    tooltip: {
+      // Custom styling for tooltip
+      bodyFont: {
+        size: 13, // Adjust font size
+        weight: 550 // Make font bold
+      }
+    }
+  }
 };
 
 const ColumnChart: React.FC<ChartProps> = ({
   chartData,
-  chartOptions,
   chartLabels,
   chartLabelName
 }) => {
@@ -40,7 +94,7 @@ const ColumnChart: React.FC<ChartProps> = ({
               }
             ]
           },
-          options: chartOptions
+          options: barChartOptions
         });
       }
     }
@@ -49,7 +103,7 @@ const ColumnChart: React.FC<ChartProps> = ({
         chartInstance.current.destroy();
       }
     };
-  }, [chartData, chartOptions]);
+  }, [chartData, barChartOptions]);
 
   return <canvas ref={chartRef} style={{ width: "100%" }} />;
 };
@@ -58,14 +112,51 @@ export { ColumnChart };
 
 const ColumnAvaragesChart: React.FC<ChartProps> = ({
   chartData,
-  chartOptions,
   chartLabels,
   chartLabelName,
   chartData2,
-  chartLabelName2
+  chartLabelName2,
+  textColor
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart>();
+
+  const customOptions = {
+    ...barChartOptions,
+    scales: {
+      x: {
+        ...barChartOptions.scales.x,
+        ticks: {
+          ...barChartOptions.scales.x.ticks,
+          color: textColor
+        }
+      },
+      y: {
+        ...barChartOptions.scales.y,
+        ticks: {
+          ...barChartOptions.scales.y.ticks,
+          color: textColor
+        }
+      }
+    },
+    plugins: {
+      ...barChartOptions.plugins,
+      legend: {
+        ...barChartOptions.plugins?.legend,
+        labels: {
+          ...barChartOptions.plugins?.legend?.labels,
+          color: textColor
+        }
+      },
+      tooltip: {
+        ...barChartOptions.plugins?.tooltip,
+        bodyFont: {
+          ...barChartOptions.plugins?.tooltip?.bodyFont,
+          color: textColor
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (chartRef.current) {
@@ -95,16 +186,17 @@ const ColumnAvaragesChart: React.FC<ChartProps> = ({
               }
             ]
           },
-          options: chartOptions
+          options: customOptions
         });
       }
     }
+
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();
       }
     };
-  }, [chartData, chartOptions]);
+  }, [chartData, barChartOptions]);
 
   return <canvas ref={chartRef} style={{ width: "100%" }} />;
 };

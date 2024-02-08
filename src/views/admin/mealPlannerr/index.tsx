@@ -67,7 +67,6 @@ import {
 } from "../../../database/setWeightStatsData";
 import { table } from "console";
 
-import { lineChartOptions } from "variables/chartjs";
 import { LineChart } from "components/charts/LineCharts";
 
 // Главен компонент
@@ -803,7 +802,6 @@ export default function WeightStats() {
                             <LineChart
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForCalories}
-                              lineChartOptions={lineChartOptions}
                               lineChartLabelName="Изменение на калории(kcal)"
                             />
                           </Card>
@@ -819,7 +817,6 @@ export default function WeightStats() {
                             <LineChart
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForProtein}
-                              lineChartOptions={lineChartOptions}
                               lineChartLabelName="Изменение на протеин(g)"
                             />
                           </Card>
@@ -835,7 +832,6 @@ export default function WeightStats() {
                             <LineChart
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForFat}
-                              lineChartOptions={lineChartOptions}
                               lineChartLabelName="Изменение на мазнини(g)"
                             />
                           </Card>
@@ -851,7 +847,6 @@ export default function WeightStats() {
                             <LineChart
                               lineChartLabels={lineChartLabels}
                               lineChartData={lineChartForCarbs}
-                              lineChartOptions={lineChartOptions}
                               lineChartLabelName="Изменение на въглехидрати(g)"
                             />
                           </Card>

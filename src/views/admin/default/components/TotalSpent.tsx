@@ -23,9 +23,6 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 import { RiArrowUpSFill } from "react-icons/ri";
 
-// Assets for charts
-import { lineChartOptions } from "variables/chartjs";
-
 export default function TotalSpent(props: { [x: string]: any }) {
   const { ...rest } = props;
 
@@ -111,7 +108,6 @@ export default function TotalSpent(props: { [x: string]: any }) {
         <LineChart
           lineChartLabels={titles}
           lineChartData={ranks}
-          lineChartOptions={lineChartOptions}
           lineChartLabelName="sth"
         />
       </Card>

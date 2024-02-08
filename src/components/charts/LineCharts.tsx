@@ -5,16 +5,69 @@ import Chart from "chart.js/auto"; // Import Chart.js
 type ChartProps = {
   lineChartData: number[];
   lineChartData2?: number[];
-  lineChartOptions: object;
   lineChartLabels: string[];
   lineChartLabelName: string;
   lineChartLabelName2?: string;
+  textColor?: string;
+};
+
+export const lineChartOptions: any = {
+  maintainAspectRatio: false,
+  aspectRatio: 5,
+  scales: {
+    x: {
+      ticks: {
+        beginAtZero: false,
+        suggestedMin: 57,
+        suggestedMax: 63,
+        padding: 10,
+        color: "white", // Change tick color to blue
+        font: {
+          size: 13, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
+    },
+    y: {
+      ticks: {
+        beginAtZero: false,
+        suggestedMin: 57,
+        suggestedMax: 63,
+        padding: 10,
+        color: "white", // Change tick color to blue
+        font: {
+          size: 13, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
+    }
+  },
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+      labels: {
+        // Custom styling for legend labels
+        color: "white", // Change legend label color to red
+        font: {
+          size: 12, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
+    },
+    tooltip: {
+      // Custom styling for tooltip
+      bodyFont: {
+        size: 13, // Adjust font size
+        weight: 550 // Make font bold
+      }
+    }
+  }
 };
 
 const LineChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
-  lineChartOptions,
   lineChartLabelName
 }) => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
@@ -63,10 +116,10 @@ export { LineChart };
 const LineAvaragesChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
-  lineChartOptions,
   lineChartLabelName,
   lineChartData2,
-  lineChartLabelName2
+  lineChartLabelName2,
+  textColor
 }) => {
   const chartInstance = useRef<Chart | null>(null);
   useEffect(() => {
@@ -81,6 +134,43 @@ const LineAvaragesChart: React.FC<ChartProps> = ({
       }
     };
   }, [lineChartData, lineChartLabels, lineChartOptions]);
+
+  const customOptions = {
+    ...lineChartOptions,
+    scales: {
+      x: {
+        ...lineChartOptions.scales.x,
+        ticks: {
+          ...lineChartOptions.scales.x.ticks,
+          color: textColor
+        }
+      },
+      y: {
+        ...lineChartOptions.scales.y,
+        ticks: {
+          ...lineChartOptions.scales.y.ticks,
+          color: textColor
+        }
+      }
+    },
+    plugins: {
+      ...lineChartOptions.plugins,
+      legend: {
+        ...lineChartOptions.plugins?.legend,
+        labels: {
+          ...lineChartOptions.plugins?.legend?.labels,
+          color: textColor
+        }
+      },
+      tooltip: {
+        ...lineChartOptions.plugins?.tooltip,
+        bodyFont: {
+          ...lineChartOptions.plugins?.tooltip?.bodyFont,
+          color: textColor
+        }
+      }
+    }
+  };
 
   return (
     <Line
@@ -103,7 +193,7 @@ const LineAvaragesChart: React.FC<ChartProps> = ({
           }
         ]
       }}
-      options={lineChartOptions}
+      options={customOptions}
     />
   );
 };

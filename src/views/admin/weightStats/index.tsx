@@ -50,7 +50,6 @@ import {
   WeightDifference
 } from "../../../types/weightStats";
 
-import { lineChartOptions } from "variables/chartjs";
 import { LineChart } from "components/charts/LineCharts";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -1332,7 +1331,6 @@ export default function WeightStats() {
                       <LineChart
                         lineChartLabels={lineChartLabels}
                         lineChartData={lineChartForKilogramsData}
-                        lineChartOptions={lineChartOptions}
                         lineChartLabelName="Изменение на тегло(кг)"
                       />
                     </Card>
@@ -1348,7 +1346,6 @@ export default function WeightStats() {
                       <LineChart
                         lineChartLabels={lineChartLabels}
                         lineChartData={lineChartForBMI}
-                        lineChartOptions={lineChartOptions}
                         lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
                       />
                     </Card>
@@ -1364,7 +1361,6 @@ export default function WeightStats() {
                       <LineChart
                         lineChartLabels={lineChartLabels}
                         lineChartData={lineChartForBodyFatData}
-                        lineChartOptions={lineChartOptions}
                         lineChartLabelName="Изменение на % телесни мазнини"
                       />
                     </Card>
@@ -1380,7 +1376,6 @@ export default function WeightStats() {
                       <LineChart
                         lineChartLabels={lineChartLabels}
                         lineChartData={lineChartForBodyFatMassData}
-                        lineChartOptions={lineChartOptions}
                         lineChartLabelName="Изменение на мастна телесна маса"
                       />
                     </Card>
@@ -1396,7 +1391,6 @@ export default function WeightStats() {
                       <LineChart
                         lineChartLabels={lineChartLabels}
                         lineChartData={lineChartForLeanBodyMassData}
-                        lineChartOptions={lineChartOptions}
                         lineChartLabelName="Изменение на чиста телесна маса"
                       />
                     </Card>
@@ -1414,7 +1408,6 @@ export default function WeightStats() {
                         lineChartData={
                           lineChartForDifferenceFromPerfectWeightData
                         }
-                        lineChartOptions={lineChartOptions}
                         lineChartLabelName={`Изменение в килограми ${
                           differenceFromPerfectWeight.isUnderOrAbove == "above"
                             ? "над"

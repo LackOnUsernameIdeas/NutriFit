@@ -77,7 +77,6 @@ import {
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
-import { barChartOptions, lineChartOptions } from "variables/chartjs";
 
 interface LinearGradientTextProps {
   text: any;
@@ -125,7 +124,7 @@ export default function UserReports() {
   const { colorMode } = useColorMode();
   const backgroundImage =
     colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
-  const brandColor = useColorModeValue("brand.500", "white");
+  const chartsColor = useColorModeValue("brand.500", "white");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradientNutri = useColorModeValue(gradientLight, gradientDark);
@@ -214,12 +213,12 @@ export default function UserReports() {
   ];
 
   const chartLabels = [
-    "Средни калории",
-    "Среден протеин",
-    "Средни въглехидрати",
-    "Средни мазнини",
-    "Средно тегло",
-    "Среден % телесни мазнини"
+    "Калории",
+    "Протеин",
+    "Въглехидрати",
+    "Мазнини",
+    "Тегло",
+    "% телесни мазнини"
   ];
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
@@ -1115,10 +1114,10 @@ export default function UserReports() {
                   <LineAvaragesChart
                     lineChartData={maleChartData}
                     lineChartData2={femaleChartData}
-                    lineChartOptions={lineChartOptions}
                     lineChartLabels={chartLabels}
-                    lineChartLabelName={"Средни статистики за мъже"}
-                    lineChartLabelName2={"Средни статистики за жени"}
+                    lineChartLabelName={"Мъже"}
+                    lineChartLabelName2={"Жени"}
+                    textColor={chartsColor}
                   />
                 </Card>
                 <Card
@@ -1132,10 +1131,10 @@ export default function UserReports() {
                   <ColumnAvaragesChart
                     chartData={maleChartData}
                     chartData2={femaleChartData}
-                    chartOptions={barChartOptions}
                     chartLabels={chartLabels}
-                    chartLabelName={"Средни статистики за мъже"}
-                    chartLabelName2={"Средни статистики за жени"}
+                    chartLabelName={"Мъже"}
+                    chartLabelName2={"Жени"}
+                    textColor={chartsColor}
                   />
                 </Card>
               </SimpleGrid>
