@@ -94,7 +94,15 @@ export const lineChartOptions: any = {
   responsive: true,
   plugins: {
     legend: {
-      display: false
+      position: "top",
+      labels: {
+        // Custom styling for legend labels
+        color: "white", // Change legend label color to red
+        font: {
+          size: 16, // Adjust font size
+          weight: 550 // Make font bold
+        }
+      }
     },
     tooltip: {
       // Custom styling for tooltip

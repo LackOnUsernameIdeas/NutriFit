@@ -40,7 +40,10 @@ const LineChart: React.FC<ChartProps> = ({
             ticks: {
               ...lineChartOptions.scales.x.ticks,
               color: textColor,
-              weight: fontWeight
+              font: {
+                ...lineChartOptions.scales.x.ticks.font,
+                weight: fontWeight
+              }
             }
           },
           y: {
@@ -48,12 +51,16 @@ const LineChart: React.FC<ChartProps> = ({
             ticks: {
               ...lineChartOptions.scales.y.ticks,
               color: textColor,
-              weight: fontWeight
+              font: {
+                ...lineChartOptions.scales.y.ticks.font,
+                weight: fontWeight
+              }
             }
           }
         },
         plugins: {
           ...lineChartOptions.plugins,
+          legend: null,
           tooltip: {
             ...lineChartOptions.plugins?.tooltip,
             bodyFont: {
@@ -107,7 +114,10 @@ const LineAvaragesChart: React.FC<ChartProps> = ({
   lineChartLabelName2,
   textColor
 }) => {
+  const { colorMode } = useColorMode();
   const chartInstance = useRef<Chart | null>(null);
+  const fontWeight = colorMode === "light" ? 550 : 0;
+
   useEffect(() => {
     if (chartInstance.current) {
       // Destroy the existing chart if it exists
@@ -128,14 +138,22 @@ const LineAvaragesChart: React.FC<ChartProps> = ({
         ...lineChartOptions.scales.x,
         ticks: {
           ...lineChartOptions.scales.x.ticks,
-          color: textColor
+          color: textColor,
+          font: {
+            ...lineChartOptions.scales.x.ticks.font,
+            weight: fontWeight
+          }
         }
       },
       y: {
         ...lineChartOptions.scales.y,
         ticks: {
           ...lineChartOptions.scales.y.ticks,
-          color: textColor
+          color: textColor,
+          font: {
+            ...lineChartOptions.scales.y.ticks.font,
+            weight: fontWeight
+          }
         }
       }
     },
@@ -145,14 +163,19 @@ const LineAvaragesChart: React.FC<ChartProps> = ({
         ...lineChartOptions.plugins?.legend,
         labels: {
           ...lineChartOptions.plugins?.legend?.labels,
-          color: textColor
+          color: textColor,
+          font: {
+            ...lineChartOptions.plugins?.legend?.labels.font,
+            weight: fontWeight
+          }
         }
       },
       tooltip: {
         ...lineChartOptions.plugins?.tooltip,
         bodyFont: {
           ...lineChartOptions.plugins?.tooltip?.bodyFont,
-          color: textColor
+          color: textColor,
+          weight: fontWeight
         }
       }
     }

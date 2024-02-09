@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { barChartOptions } from "../../variables/chartjs";
+import { useColorMode } from "@chakra-ui/react";
 
 type ChartProps = {
   chartData: any[];
@@ -67,6 +68,8 @@ const ColumnAvaragesChart: React.FC<ChartProps> = ({
 }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart>();
+  const { colorMode } = useColorMode();
+  const fontWeight = colorMode === "light" ? 550 : 0;
 
   const customOptions = {
     ...barChartOptions,
@@ -75,14 +78,22 @@ const ColumnAvaragesChart: React.FC<ChartProps> = ({
         ...barChartOptions.scales.x,
         ticks: {
           ...barChartOptions.scales.x.ticks,
-          color: textColor
+          color: textColor,
+          font: {
+            ...barChartOptions.scales.x.ticks.font,
+            weight: fontWeight
+          }
         }
       },
       y: {
         ...barChartOptions.scales.y,
         ticks: {
           ...barChartOptions.scales.y.ticks,
-          color: textColor
+          color: textColor,
+          font: {
+            ...barChartOptions.scales.y.ticks.font,
+            weight: fontWeight
+          }
         }
       }
     },
@@ -92,14 +103,19 @@ const ColumnAvaragesChart: React.FC<ChartProps> = ({
         ...barChartOptions.plugins?.legend,
         labels: {
           ...barChartOptions.plugins?.legend?.labels,
-          color: textColor
+          color: textColor,
+          font: {
+            ...barChartOptions.plugins?.legend?.labels.font,
+            weight: fontWeight
+          }
         }
       },
       tooltip: {
         ...barChartOptions.plugins?.tooltip,
         bodyFont: {
           ...barChartOptions.plugins?.tooltip?.bodyFont,
-          color: textColor
+          color: textColor,
+          weight: fontWeight
         }
       }
     }

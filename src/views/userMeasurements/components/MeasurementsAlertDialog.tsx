@@ -97,6 +97,7 @@ function MeasurementsAlertDialog(props: {
       <Button
         onClick={handleOpen}
         fontSize="sm"
+        bgColor="#5D4BD7"
         variant="brand"
         fontWeight="500"
         w="100%"
@@ -149,6 +150,7 @@ function MeasurementsAlertDialog(props: {
                 ml={3}
                 fontSize="sm"
                 variant="brand"
+                bgColor="#5D4BD7"
                 fontWeight="500"
                 w="100%"
                 h="50"

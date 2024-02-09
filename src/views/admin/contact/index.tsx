@@ -246,6 +246,7 @@ export default function UserReports() {
                     // onClick={handleSignIn}
                     fontSize="sm"
                     variant="brand"
+                    bgColor="#5D4BD7"
                     _hover={{ bg: "secondaryGray.900" }}
                     fontWeight="500"
                     w="100%"
