@@ -82,7 +82,7 @@ const LineChart: React.FC<ChartProps> = ({
               {
                 label: lineChartLabelName,
                 data: lineChartData,
-                backgroundColor: "#3d25f8",
+                backgroundColor: color,
                 borderColor: color,
                 borderWidth: 4,
                 tension: 0.3

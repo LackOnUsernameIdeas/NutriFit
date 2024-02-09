@@ -644,9 +644,26 @@ export default function WeightStats() {
                     bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
                   >
                     <Flex justify="space-between" alignItems="center">
-                      <Text fontSize="2xl" color={dropdownVisible && "#715ffa"}>
-                        Статистики за ВАШИТЕ средно приети нутриенти и тяхното
-                        изменение:{" "}
+                      <Text
+                        fontSize="2xl"
+                        style={
+                          dropdownVisible
+                            ? {
+                                backgroundImage: gradient,
+                                WebkitBackgroundClip: "text",
+                                color: "transparent"
+                              }
+                            : {}
+                        }
+                      >
+                        {dropdownVisible ? (
+                          <b>
+                            Статистики за ВАШИТЕ средно приети нутриенти и
+                            тяхното изменение:
+                          </b>
+                        ) : (
+                          "Статистики за ВАШИТЕ средно приети нутриенти и тяхното изменение:"
+                        )}
                       </Text>
                       <Icon
                         as={dropdownVisible ? FaAngleUp : FaAngleDown}
@@ -826,7 +843,7 @@ export default function WeightStats() {
                               lineChartData={lineChartForCalories}
                               lineChartLabelName="Изменение на калории(kcal)"
                               textColor={chartsColor}
-                              color="#715ffa"
+                              color="rgba(67,24,255,1)"
                             />
                           </Card>
                           <Card
@@ -849,7 +866,7 @@ export default function WeightStats() {
                           <Card
                             fontSize="3xl"
                             maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px" // Add padding to the card
+                            p="20px"
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
@@ -860,7 +877,7 @@ export default function WeightStats() {
                           <Card
                             fontSize="3xl"
                             maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px" // Add padding to the card
+                            p="20px"
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
@@ -882,7 +899,7 @@ export default function WeightStats() {
                               lineChartData={lineChartForFat}
                               lineChartLabelName="Изменение на мазнини(g)"
                               textColor={chartsColor}
-                              color="rgba(67,24,255,1)"
+                              color="#a194ff"
                             />
                           </Card>
                           <Card
@@ -899,7 +916,7 @@ export default function WeightStats() {
                               lineChartData={lineChartForCarbs}
                               lineChartLabelName="Изменение на въглехидрати(g)"
                               textColor={chartsColor}
-                              color="#715ffa"
+                              color="#a194ff"
                             />
                           </Card>
                         </SimpleGrid>

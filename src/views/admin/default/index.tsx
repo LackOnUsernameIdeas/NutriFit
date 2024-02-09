@@ -127,7 +127,7 @@ export default function UserReports() {
   const chartsColor = useColorModeValue("brand.500", "white");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
-  const gradientNutri = useColorModeValue(gradientLight, gradientDark);
+  const gradient = useColorModeValue(gradientLight, gradientDark);
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const fontWeight = useColorModeValue("500", "100");
@@ -584,7 +584,7 @@ export default function UserReports() {
               </Text>
               <LinearGradientText
                 text={<b>Nutri</b>}
-                gradient={gradientNutri}
+                gradient={gradient}
                 fontSize="5xl"
                 fontFamily="DM Sans"
               />
@@ -629,11 +629,20 @@ export default function UserReports() {
                       fontSize="2xl"
                       fontWeight="medium"
                       textAlign="center"
-                      color={dropdownVisibleMale && "blue"}
+                      color={dropdownVisibleMale && "#513bff"}
                     >
-                      Средни статистики за МЪЖЕ
+                      {dropdownVisibleMale ? (
+                        <b>Средни статистики за МЪЖЕ</b>
+                      ) : (
+                        "Средни статистики за МЪЖЕ"
+                      )}
                     </Text>
-                    <Icon w="30px" h="30px" as={MdOutlineMale} color="blue" />
+                    <Icon
+                      w="30px"
+                      h="30px"
+                      as={MdOutlineMale}
+                      color="#513bff"
+                    />
                   </Flex>
                 </Box>
                 <Icon
@@ -822,15 +831,19 @@ export default function UserReports() {
                       fontSize="2xl"
                       fontWeight="medium"
                       textAlign="center"
-                      color={dropdownVisibleFemale && "#fc6ff3"}
+                      color={dropdownVisibleFemale && "#8170ff"}
                     >
-                      Средни статистики за ЖЕНИ
+                      {dropdownVisibleFemale ? (
+                        <b>Средни статистики за ЖЕНИ</b>
+                      ) : (
+                        "Средни статистики за ЖЕНИ"
+                      )}
                     </Text>
                     <Icon
                       w="30px"
                       h="30px"
                       as={MdOutlineFemale}
-                      color="#fc6ff3"
+                      color="#8170ff"
                     />
                   </Flex>
                 </Box>
@@ -1015,8 +1028,23 @@ export default function UserReports() {
           bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
         >
           <Flex justify="space-between" alignItems="center">
-            <Text fontSize="2xl" color={dropdownVisible && "#715ffa"}>
-              Средни статистики за ВСИЧКИ потребители:
+            <Text
+              fontSize="2xl"
+              style={
+                dropdownVisible
+                  ? {
+                      backgroundImage: gradient,
+                      WebkitBackgroundClip: "text",
+                      color: "transparent"
+                    }
+                  : {}
+              }
+            >
+              {dropdownVisible ? (
+                <b>Средни статистики за ВСИЧКИ потребители:</b>
+              ) : (
+                "Средни статистики за ВСИЧКИ потребители:"
+              )}
             </Text>
             <Icon
               as={dropdownVisible ? FaAngleUp : FaAngleDown}
@@ -1166,7 +1194,7 @@ export default function UserReports() {
                   <Flex pt="5px" w="100%">
                     <LinearGradientText
                       text={<b>Калкулации за теглото ви ↪</b>}
-                      gradient={gradientNutri}
+                      gradient={gradient}
                       fontSize="xl"
                       mr="2"
                     />
@@ -1184,7 +1212,7 @@ export default function UserReports() {
                   <Flex pt="5px" w="100%">
                     <LinearGradientText
                       text={<b>Хранителен план ↪</b>}
-                      gradient={gradientNutri}
+                      gradient={gradient}
                       fontSize="xl"
                       mr="2"
                     />
@@ -1203,7 +1231,7 @@ export default function UserReports() {
                   <Flex pt="5px" w="100%">
                     <LinearGradientText
                       text={<b>Пример ↪</b>}
-                      gradient={gradientNutri}
+                      gradient={gradient}
                       fontSize="xl"
                       mr="2"
                     />
@@ -1222,7 +1250,7 @@ export default function UserReports() {
                   <Flex pt="5px" w="100%">
                     <LinearGradientText
                       text={<b>Пример ↪</b>}
-                      gradient={gradientNutri}
+                      gradient={gradient}
                       fontSize="xl"
                       mr="2"
                     />

@@ -1296,8 +1296,23 @@ export default function WeightStats() {
               mb={renderDropdown ? "0px" : "20px"}
             >
               <Flex justify="space-between" alignItems="center">
-                <Text fontSize="2xl" color={dropdownVisible && "#715ffa"}>
-                  Статистики за вашето телесно изменение:{" "}
+                <Text
+                  fontSize="2xl"
+                  style={
+                    dropdownVisible
+                      ? {
+                          backgroundImage: gradient,
+                          WebkitBackgroundClip: "text",
+                          color: "transparent"
+                        }
+                      : {}
+                  }
+                >
+                  {dropdownVisible ? (
+                    <b>Средни статистики за ВСИЧКИ потребители:</b>
+                  ) : (
+                    "Средни статистики за ВСИЧКИ потребители:"
+                  )}
                 </Text>
                 <Icon
                   as={dropdownVisible ? FaAngleUp : FaAngleDown}
@@ -1372,7 +1387,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForBMI}
                         lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
                         textColor={chartsColor}
-                        color="#8677fc"
+                        color="rgba(67,24,255,1)"
                       />
                     </Card>
                     <Card
@@ -1411,7 +1426,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForBodyFatData}
                         lineChartLabelName="Изменение на % телесни мазнини"
                         textColor={chartsColor}
-                        color="#8677fc"
+                        color="#7c6bff"
                       />
                     </Card>
                     <Card
@@ -1428,7 +1443,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForBodyFatMassData}
                         lineChartLabelName="Изменение на мастна телесна маса"
                         textColor={chartsColor}
-                        color="rgba(67,24,255,1)"
+                        color="#7c6bff"
                       />
                     </Card>
                     <Card
@@ -1468,7 +1483,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForLeanBodyMassData}
                         lineChartLabelName="Изменение на чиста телесна маса"
                         textColor={chartsColor}
-                        color="rgba(67,24,255,1)"
+                        color="#a194ff"
                       />
                     </Card>
                     <Card
@@ -1491,7 +1506,7 @@ export default function WeightStats() {
                             : "под"
                         } нормата`}
                         textColor={chartsColor}
-                        color="#8677fc"
+                        color="#a194ff"
                       />
                     </Card>
                   </SimpleGrid>
