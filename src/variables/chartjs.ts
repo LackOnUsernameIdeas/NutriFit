@@ -1,3 +1,10 @@
+import { useColorMode } from "@chakra-ui/react";
+
+//Shit for distinguishing between light shit and dark shit
+export const useCustomColorMode = () => {
+  const { colorMode } = useColorMode();
+  return colorMode === "light" ? 550 : 100; // Adjust font weight based on color mode
+};
 //Main shit
 export const barChartOptions: any = {
   maintainAspectRatio: false,
@@ -87,15 +94,7 @@ export const lineChartOptions: any = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top",
-      labels: {
-        // Custom styling for legend labels
-        color: "white", // Change legend label color to red
-        font: {
-          size: 16, // Adjust font size
-          weight: 550 // Make font bold
-        }
-      }
+      display: false
     },
     tooltip: {
       // Custom styling for tooltip

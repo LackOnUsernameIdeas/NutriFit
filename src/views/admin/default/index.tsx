@@ -629,16 +629,11 @@ export default function UserReports() {
                       fontSize="2xl"
                       fontWeight="medium"
                       textAlign="center"
-                      color={dropdownVisibleMale && "#715ffa"}
+                      color={dropdownVisibleMale && "blue"}
                     >
                       Средни статистики за МЪЖЕ
                     </Text>
-                    <Icon
-                      w="30px"
-                      h="30px"
-                      as={MdOutlineMale}
-                      color={dropdownVisibleMale ? "#715ffa" : "blue"}
-                    />
+                    <Icon w="30px" h="30px" as={MdOutlineMale} color="blue" />
                   </Flex>
                 </Box>
                 <Icon
@@ -827,7 +822,7 @@ export default function UserReports() {
                       fontSize="2xl"
                       fontWeight="medium"
                       textAlign="center"
-                      color={dropdownVisibleFemale && "#715ffa"}
+                      color={dropdownVisibleFemale && "#fc6ff3"}
                     >
                       Средни статистики за ЖЕНИ
                     </Text>
@@ -835,7 +830,7 @@ export default function UserReports() {
                       w="30px"
                       h="30px"
                       as={MdOutlineFemale}
-                      color={dropdownVisibleFemale ? "#715ffa" : "pink"}
+                      color="#fc6ff3"
                     />
                   </Flex>
                 </Box>
@@ -1139,7 +1134,7 @@ export default function UserReports() {
                   minH={{ sm: "150px", md: "300px", lg: "300px" }}
                   minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
                   maxH="400px"
-                  mt="30px"
+                  mt="40px"
                 >
                   <ColumnAvaragesChart
                     chartData={maleChartData}

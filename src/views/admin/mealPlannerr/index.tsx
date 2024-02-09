@@ -644,7 +644,7 @@ export default function WeightStats() {
                     bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
                   >
                     <Flex justify="space-between" alignItems="center">
-                      <Text fontSize="2xl">
+                      <Text fontSize="2xl" color={dropdownVisible && "#715ffa"}>
                         Статистики за ВАШИТЕ средно приети нутриенти и тяхното
                         изменение:{" "}
                       </Text>
@@ -791,6 +791,28 @@ export default function WeightStats() {
                           mt="20px"
                         >
                           <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px" // Add padding to the card
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашите приети калории
+                          </Card>
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px" // Add padding to the card
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашият приет протеин
+                          </Card>
+                          <Card
                             alignItems="center"
                             flexDirection="column"
                             h="100%"
@@ -804,6 +826,7 @@ export default function WeightStats() {
                               lineChartData={lineChartForCalories}
                               lineChartLabelName="Изменение на калории(kcal)"
                               textColor={chartsColor}
+                              color="#715ffa"
                             />
                           </Card>
                           <Card
@@ -820,7 +843,30 @@ export default function WeightStats() {
                               lineChartData={lineChartForProtein}
                               lineChartLabelName="Изменение на протеин(g)"
                               textColor={chartsColor}
+                              color="rgba(67,24,255,1)"
                             />
+                          </Card>
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px" // Add padding to the card
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашите приети мазнини
+                          </Card>
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px" // Add padding to the card
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашите приети въглехидрати
                           </Card>
                           <Card
                             alignItems="center"
@@ -836,6 +882,7 @@ export default function WeightStats() {
                               lineChartData={lineChartForFat}
                               lineChartLabelName="Изменение на мазнини(g)"
                               textColor={chartsColor}
+                              color="rgba(67,24,255,1)"
                             />
                           </Card>
                           <Card
@@ -852,6 +899,7 @@ export default function WeightStats() {
                               lineChartData={lineChartForCarbs}
                               lineChartLabelName="Изменение на въглехидрати(g)"
                               textColor={chartsColor}
+                              color="#715ffa"
                             />
                           </Card>
                         </SimpleGrid>

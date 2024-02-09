@@ -111,7 +111,7 @@ function MeasurementsAlertDialog(props: {
         onClose={handleClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent>
+          <AlertDialogContent borderRadius="25px">
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Потвърждение
             </AlertDialogHeader>

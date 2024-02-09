@@ -1296,7 +1296,7 @@ export default function WeightStats() {
               mb={renderDropdown ? "0px" : "20px"}
             >
               <Flex justify="space-between" alignItems="center">
-                <Text fontSize="2xl">
+                <Text fontSize="2xl" color={dropdownVisible && "#715ffa"}>
                   Статистики за вашето телесно изменение:{" "}
                 </Text>
                 <Icon
@@ -1320,6 +1320,28 @@ export default function WeightStats() {
                     mt="50px"
                   >
                     <Card
+                      fontSize="3xl"
+                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                      p="20px" // Add padding to the card
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection="column"
+                    >
+                      Вашето тегло
+                    </Card>
+                    <Card
+                      fontSize="3xl"
+                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                      p="20px" // Add padding to the card
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection="column"
+                    >
+                      Вашият Индекс на Телесна Маса
+                    </Card>
+                    <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
@@ -1333,6 +1355,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForKilogramsData}
                         lineChartLabelName="Изменение на тегло(кг)"
                         textColor={chartsColor}
+                        color="rgba(67,24,255,1)"
                       />
                     </Card>
                     <Card
@@ -1349,7 +1372,30 @@ export default function WeightStats() {
                         lineChartData={lineChartForBMI}
                         lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
                         textColor={chartsColor}
+                        color="#8677fc"
                       />
+                    </Card>
+                    <Card
+                      fontSize="3xl"
+                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                      p="20px" // Add padding to the card
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection="column"
+                    >
+                      Вашият % телесни мазнини
+                    </Card>
+                    <Card
+                      fontSize="3xl"
+                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                      p="20px" // Add padding to the card
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection="column"
+                    >
+                      Вашата мастна телесна маса
                     </Card>
                     <Card
                       alignItems="center"
@@ -1365,6 +1411,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForBodyFatData}
                         lineChartLabelName="Изменение на % телесни мазнини"
                         textColor={chartsColor}
+                        color="#8677fc"
                       />
                     </Card>
                     <Card
@@ -1381,7 +1428,31 @@ export default function WeightStats() {
                         lineChartData={lineChartForBodyFatMassData}
                         lineChartLabelName="Изменение на мастна телесна маса"
                         textColor={chartsColor}
+                        color="rgba(67,24,255,1)"
                       />
+                    </Card>
+                    <Card
+                      fontSize="3xl"
+                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                      p="20px" // Add padding to the card
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection="column"
+                    >
+                      Вашата чиста телесна маса
+                    </Card>
+                    <Card
+                      fontSize="3xl"
+                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                      p="20px" // Add padding to the card
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      flexDirection="column"
+                      fontWeight="500"
+                    >
+                      Килограмите ви под нормата
                     </Card>
                     <Card
                       alignItems="center"
@@ -1397,6 +1468,7 @@ export default function WeightStats() {
                         lineChartData={lineChartForLeanBodyMassData}
                         lineChartLabelName="Изменение на чиста телесна маса"
                         textColor={chartsColor}
+                        color="rgba(67,24,255,1)"
                       />
                     </Card>
                     <Card
@@ -1419,6 +1491,7 @@ export default function WeightStats() {
                             : "под"
                         } нормата`}
                         textColor={chartsColor}
+                        color="#8677fc"
                       />
                     </Card>
                   </SimpleGrid>

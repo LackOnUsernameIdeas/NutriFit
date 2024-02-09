@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto"; // Import Chart.js
-import { lineChartOptions } from "../../variables/chartjs";
+import { lineChartOptions, useCustomColorMode } from "../../variables/chartjs";
 
 type ChartProps = {
   lineChartData: number[];
@@ -10,14 +10,17 @@ type ChartProps = {
   lineChartLabelName: string;
   lineChartLabelName2?: string;
   textColor?: string;
+  color?: string;
 };
 
 const LineChart: React.FC<ChartProps> = ({
   lineChartData,
   lineChartLabels,
   lineChartLabelName,
-  textColor
+  textColor,
+  color
 }) => {
+  const fontWeight = useCustomColorMode();
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -35,31 +38,27 @@ const LineChart: React.FC<ChartProps> = ({
             ...lineChartOptions.scales.x,
             ticks: {
               ...lineChartOptions.scales.x.ticks,
-              color: textColor
+              color: textColor,
+              weight: fontWeight
             }
           },
           y: {
             ...lineChartOptions.scales.y,
             ticks: {
               ...lineChartOptions.scales.y.ticks,
-              color: textColor
+              color: textColor,
+              weight: fontWeight
             }
           }
         },
         plugins: {
           ...lineChartOptions.plugins,
-          legend: {
-            ...lineChartOptions.plugins?.legend,
-            labels: {
-              ...lineChartOptions.plugins?.legend?.labels,
-              color: textColor
-            }
-          },
           tooltip: {
             ...lineChartOptions.plugins?.tooltip,
             bodyFont: {
               ...lineChartOptions.plugins?.tooltip?.bodyFont,
-              color: textColor
+              color: textColor,
+              weight: fontWeight
             }
           }
         }
@@ -76,8 +75,9 @@ const LineChart: React.FC<ChartProps> = ({
                 label: lineChartLabelName,
                 data: lineChartData,
                 backgroundColor: "#3d25f8",
-                borderColor: "rgba(67,24,255,1)",
-                borderWidth: 1
+                borderColor: color,
+                borderWidth: 4,
+                tension: 0.3
               }
             ]
           },
