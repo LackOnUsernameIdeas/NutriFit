@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto"; // Import Chart.js
-import { lineChartOptions, useCustomColorMode } from "../../variables/chartjs";
+import { lineChartOptions } from "../../variables/chartjs";
+import { useColorMode } from "@chakra-ui/react";
 
 type ChartProps = {
   lineChartData: number[];
@@ -20,10 +21,10 @@ const LineChart: React.FC<ChartProps> = ({
   textColor,
   color
 }) => {
-  const fontWeight = useCustomColorMode();
+  const { colorMode } = useColorMode();
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
-
+  const fontWeight = colorMode === "light" ? 550 : 0;
   useEffect(() => {
     if (chartRef.current) {
       // Destroy the existing chart if it exists
