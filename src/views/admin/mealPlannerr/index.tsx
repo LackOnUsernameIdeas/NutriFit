@@ -655,6 +655,7 @@ export default function WeightStats() {
                               }
                             : {}
                         }
+                        userSelect="none"
                       >
                         {dropdownVisible ? (
                           <b>

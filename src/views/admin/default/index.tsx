@@ -630,6 +630,7 @@ export default function UserReports() {
                       fontWeight="medium"
                       textAlign="center"
                       color={dropdownVisibleMale && "#513bff"}
+                      userSelect="none"
                     >
                       {dropdownVisibleMale ? (
                         <b>Средни статистики за МЪЖЕ</b>
@@ -832,6 +833,7 @@ export default function UserReports() {
                       fontWeight="medium"
                       textAlign="center"
                       color={dropdownVisibleFemale && "#8170ff"}
+                      userSelect="none"
                     >
                       {dropdownVisibleFemale ? (
                         <b>Средни статистики за ЖЕНИ</b>
@@ -1039,6 +1041,7 @@ export default function UserReports() {
                     }
                   : {}
               }
+              userSelect="none"
             >
               {dropdownVisible ? (
                 <b>Средни статистики за ВСИЧКИ потребители:</b>

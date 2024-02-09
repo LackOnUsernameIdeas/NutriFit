@@ -1307,6 +1307,7 @@ export default function WeightStats() {
                         }
                       : {}
                   }
+                  userSelect="none"
                 >
                   {dropdownVisible ? (
                     <b>Статистики за вашето телесно изменение:</b>
