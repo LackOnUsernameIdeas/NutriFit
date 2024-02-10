@@ -25,7 +25,9 @@ import {
   Image,
   Heading,
   Stack,
-  StackDivider
+  StackDivider,
+  Alert,
+  AlertIcon
 } from "@chakra-ui/react";
 
 // React Icons
@@ -65,6 +67,7 @@ export default function WeightStats() {
     colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
   const chartsColor = useColorModeValue("brand.500", "white");
   const fontWeight = useColorModeValue("550", "100");
+  const tipFontWeight = useColorModeValue("500", "100");
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
@@ -1327,13 +1330,28 @@ export default function WeightStats() {
                 style={{ ...slideAnimationDrop, position: "relative" }}
               >
                 <Card
-                  bg={boxBg}
-                  minH={{ base: "800px", md: "300px", xl: "180px" }}
+                  onClick={handleDropdownToggle}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+                  transition="background-image 0.5s ease-in-out"
+                  mb={renderDropdown ? "0px" : "20px"}
                 >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, xl: 2 }}
-                    gap="20px"
-                    mt="50px"
+                  <Flex justify="space-between" alignItems="center">
+                    <Text fontSize="2xl">
+                      Статистики за вашето телесно изменение:{" "}
+                    </Text>
+                    <Icon
+                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdown && (
+                  <animated.div
+                    style={{ ...slideAnimationDrop, position: "relative" }}
                   >
                     <Card
                       fontSize="3xl"
@@ -1510,10 +1528,23 @@ export default function WeightStats() {
                         color="#a194ff"
                       />
                     </Card>
-                  </SimpleGrid>
-                </Card>
-              </animated.div>
+                  </animated.div>
+                )}
+              </Box>
             )}
+            <Alert
+              status="warning"
+              borderRadius="20px"
+              fontWeight={tipFontWeight}
+              p="20px"
+              w="100%"
+              mb="20px"
+            >
+              <AlertIcon />
+              Тези стойности са приблизителни и може да е необходимо преценка от
+              диетолог или здравен специалист, за да се адаптират към
+              индивидуалните ви нужди.
+            </Alert>
           </Box>
         )}
       </Box>

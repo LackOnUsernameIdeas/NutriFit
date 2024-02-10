@@ -1412,6 +1412,19 @@ export default function WeightStats() {
               </animated.div>
             </Box>
           )}
+          <Alert
+            status="warning"
+            borderRadius="20px"
+            fontWeight={tipFontWeight}
+            p="20px"
+            w="100%"
+            mb="20px"
+          >
+            <AlertIcon />
+            Тези стойности са приблизителни и може да е необходимо преценка от
+            диетолог или здравен специалист, за да се адаптират към
+            индивидуалните ви нужди.
+          </Alert>
         </Box>
       </Box>
     </FadeInWrapper>
