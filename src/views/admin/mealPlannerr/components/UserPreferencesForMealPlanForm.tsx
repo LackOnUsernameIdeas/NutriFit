@@ -17,7 +17,13 @@ interface UserPreferencesInputProps {
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   generatePlan: () => void;
 }
-const fieldName: string[] = ["калории", "протеин", "мазнини", "въглехидрати"];
+const fieldName: string[] = [
+  "калории",
+  "протеин",
+  "мазнини",
+  "въглехидрати",
+  "кухня"
+];
 
 const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   userPreferences,
@@ -74,61 +80,81 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         columns={{ base: 1, md: 2 }}
         gap={{ base: "10px", md: "20px" }}
       >
-        {Object.entries(userPreferences).map(([key, value], index) => (
-          <Box key={key}>
-            <Flex justify="center" pt="5px" w="100%" mt="5px">
-              <Text fontSize="2xl" mb="0px">
-                {fieldName[index].charAt(0).toUpperCase() +
-                  fieldName[index].slice(1)}
-                :
-              </Text>
-            </Flex>
-            <Flex>
-              {value !== 0 ? (
-                <Input
-                  variant="auth"
-                  color={textColor}
-                  focusBorderColor="#7551ff"
-                  fontSize={{ base: "sm", md: "md" }}
-                  ms={{ base: "0px", md: "0px" }}
-                  placeholder={"Въведете " + fieldName[index]}
-                  _placeholder={{ opacity: 1, color: "gray.500" }}
-                  value={value || ""}
-                  mt={{ base: "0", md: "1%", sm: "0" }}
-                  mb={{ base: "1%", md: "2%", sm: "4%" }}
-                  fontWeight="500"
-                  size="lg"
-                  type="number"
-                  name={key}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <Input
-                  variant="auth"
-                  color={textColor}
-                  focusBorderColor="#7551ff"
-                  fontSize={{ base: "sm", md: "md" }}
-                  ms={{ base: "0px", md: "0px" }}
-                  placeholder={"Въведете " + fieldName[index]}
-                  _placeholder={{ opacity: 1, color: "gray.500" }}
-                  value={""}
-                  mt={{ base: "0", md: "1%", sm: "0" }}
-                  mb={{ base: "1%", md: "2%", sm: "4%" }}
-                  fontWeight="500"
-                  size="lg"
-                  type="number"
-                  name={key}
-                  onChange={handleInputChange}
-                />
+        {Object.entries(userPreferences).map(([key, value], index) => {
+          return (
+            <Box key={key}>
+              <Flex justify="center" pt="5px" w="100%" mt="5px">
+                <Text fontSize="2xl" mb="0px">
+                  {fieldName[index].charAt(0).toUpperCase() +
+                    fieldName[index].slice(1)}
+                  :
+                </Text>
+              </Flex>
+              <Flex>
+                {value !== 0 && key !== "Cuisine" ? (
+                  <Input
+                    variant="auth"
+                    color={textColor}
+                    focusBorderColor="#7551ff"
+                    fontSize={{ base: "sm", md: "md" }}
+                    ms={{ base: "0px", md: "0px" }}
+                    placeholder={"Въведете " + fieldName[index]}
+                    _placeholder={{ opacity: 1, color: "gray.500" }}
+                    value={value || ""}
+                    mt={{ base: "0", md: "1%", sm: "0" }}
+                    mb={{ base: "1%", md: "2%", sm: "4%" }}
+                    fontWeight="500"
+                    size="lg"
+                    type="number"
+                    name={key}
+                    onChange={handleInputChange}
+                  />
+                ) : key == "Cuisine" ? (
+                  <Input
+                    variant="auth"
+                    color={textColor}
+                    focusBorderColor="#7551ff"
+                    fontSize={{ base: "sm", md: "md" }}
+                    ms={{ base: "0px", md: "0px" }}
+                    placeholder={"Въведете " + fieldName[index]}
+                    _placeholder={{ opacity: 1, color: "gray.500" }}
+                    value={value || ""}
+                    mt={{ base: "0", md: "1%", sm: "0" }}
+                    mb={{ base: "1%", md: "2%", sm: "4%" }}
+                    fontWeight="500"
+                    size="lg"
+                    type="text"
+                    name={key}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  <Input
+                    variant="auth"
+                    color={textColor}
+                    focusBorderColor="#7551ff"
+                    fontSize={{ base: "sm", md: "md" }}
+                    ms={{ base: "0px", md: "0px" }}
+                    placeholder={"Въведете " + fieldName[index]}
+                    _placeholder={{ opacity: 1, color: "gray.500" }}
+                    value={""}
+                    mt={{ base: "0", md: "1%", sm: "0" }}
+                    mb={{ base: "1%", md: "2%", sm: "4%" }}
+                    fontWeight="500"
+                    size="lg"
+                    type="number"
+                    name={key}
+                    onChange={handleInputChange}
+                  />
+                )}
+              </Flex>
+              {validationErrors[key] && (
+                <Text color="red" fontSize="sm">
+                  {validationErrors[key]}
+                </Text>
               )}
-            </Flex>
-            {validationErrors[key] && (
-              <Text color="red" fontSize="sm">
-                {validationErrors[key]}
-              </Text>
-            )}
-          </Box>
-        ))}
+            </Box>
+          );
+        })}
       </SimpleGrid>
       <Button
         onClick={handleSubmit}

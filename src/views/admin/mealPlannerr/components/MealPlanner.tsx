@@ -56,7 +56,8 @@ export default function MealPlanner(props: {
       Calories: 0,
       Protein: 0,
       Fat: 0,
-      Carbohydrates: 0
+      Carbohydrates: 0,
+      Cuisine: "Българска"
     });
 
   const [mealPlan, setMealPlan] = useState<MealPlan2>({
@@ -85,10 +86,17 @@ export default function MealPlanner(props: {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUserPreferences((prevPreferences) => ({
-      ...prevPreferences,
-      [name]: parseFloat(value)
-    }));
+    if (name !== "Cuisine") {
+      setUserPreferences((prevPreferences) => ({
+        ...prevPreferences,
+        [name]: parseFloat(value)
+      }));
+    } else {
+      setUserPreferences((prevPreferences) => ({
+        ...prevPreferences,
+        [name]: value
+      }));
+    }
   };
 
   useEffect(() => {
@@ -96,10 +104,12 @@ export default function MealPlanner(props: {
       Calories: chosenCalories,
       Protein: chosenNutrients.protein,
       Fat: chosenNutrients.fat,
-      Carbohydrates: chosenNutrients.carbs
+      Carbohydrates: chosenNutrients.carbs,
+      Cuisine: userPreferences.Cuisine
     });
   }, [chosenCalories, chosenNutrients]);
 
+  console.log(userPreferences);
   const generatePlan = async () => {
     try {
       setIsSubmitted(true);
@@ -111,21 +121,20 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
             messages: [
               {
                 role: "system",
-                content:
-                  "You are an experienced chef specializing in Bulgarian cuisine. Focus on creating a diverse and delicious meal plan for the day. Be creative with the recipes and provide clear instructions. Pay attention to the nutrient limits mentioned by the user and ensure the accuracy of the quantities. Export in JSON EXACTLY LIKE I will provide without adding `json` keyword with backticks."
+                content: `You are an experienced chef specializing in a cuisine that is called '${userPreferences.Cuisine}' in Bulgarian. Focus on creating a diverse and delicious meal plan for the day. Be creative with the recipes and provide clear instructions. Pay attention to the nutrient limits mentioned by the user and ensure the accuracy of the quantities. Export in JSON EXACTLY LIKE I will provide without adding 'json' keyword with backticks.`
               },
               {
                 role: "user",
                 content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits WITHOUT CROSSING the provided limits: 
                 'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'. 
-                If possible use recipes that are usual for the Bulgarian cuisine but try to give DIFFERENT recipes from the previous request. 
+                If possible use recipes that are usual for the cuisine that is called '${userPreferences.Cuisine}' in Bulgarian but try to give DIFFERENT recipes from the previous request. 
                 Don't round the values as you like and use the EXACT and THE ACTUAL nutrient values. Provide main course for breakfast. Provide appetizer, main course, and dessert for lunch.
                 Provide main course and dessert for dinner. 
                 Add small things to be eaten with the main food, like a slice of bread for the soups and etc. Please, provide different foods and don't repeat yourself. 

@@ -40,7 +40,8 @@ export default function MealPlanner(props: {
       Calories: 0,
       Protein: 0,
       Fat: 0,
-      Carbohydrates: 0
+      Carbohydrates: 0,
+      Cuisine: "Bulgarian"
     });
 
   const [mealPlan, setMealPlan] = useState<MealPlan>({
@@ -148,7 +149,8 @@ export default function MealPlanner(props: {
       Calories: chosenCalories,
       Protein: chosenNutrients.protein,
       Fat: chosenNutrients.fat,
-      Carbohydrates: chosenNutrients.carbs
+      Carbohydrates: chosenNutrients.carbs,
+      Cuisine: "Bulgarian"
     });
   }, [chosenCalories, chosenNutrients]);
 
