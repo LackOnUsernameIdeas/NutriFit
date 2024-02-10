@@ -1114,22 +1114,6 @@ export default function WeightStats() {
                     </Flex>
                   </Box>
                 </Card>
-                <Alert
-                  status="info"
-                  borderRadius="20px"
-                  fontWeight={tipFontWeight}
-                  p="20px"
-                  w="100%"
-                  mb="20px"
-                >
-                  <AlertIcon />
-                  <Link href="/#/admin/weight">
-                    <b>Съвет:</b> Натиснете тук, за да видите състоянието на
-                    вашето тегло, дали трябва да сваляте или да качвате тегло и
-                    тогава се върнете в тази страница, за да прецените правилно
-                    каква цел да си поставите.
-                  </Link>
-                </Alert>
                 {activityLevel && (
                   <Box>
                     {macroNutrients.length > 0 ? (
@@ -1409,6 +1393,35 @@ export default function WeightStats() {
                     )}
                   </Box>
                 )}
+                <Alert
+                  status="info"
+                  borderRadius="20px"
+                  fontWeight={tipFontWeight}
+                  p="20px"
+                  w="100%"
+                  mb="20px"
+                >
+                  <AlertIcon />
+                  <Link href="/#/admin/weight">
+                    <b>Съвет:</b> Натиснете тук, за да видите състоянието на
+                    вашето тегло, дали трябва да сваляте или да качвате тегло и
+                    тогава се върнете в тази страница, за да прецените правилно
+                    каква цел да си поставите.
+                  </Link>
+                </Alert>
+                <Alert
+                  status="warning"
+                  borderRadius="20px"
+                  fontWeight={tipFontWeight}
+                  p="20px"
+                  w="100%"
+                  mb="20px"
+                >
+                  <AlertIcon />
+                  Тези стойности са приблизителни и може да е необходимо
+                  преценка от диетолог или здравен специалист, за да се
+                  адаптират към индивидуалните ви нужди.
+                </Alert>
               </animated.div>
             </Box>
           )}
