@@ -245,15 +245,23 @@ export default function MealPlanner(props: {
         //   `Image Generation Response for ${mealAppetizer.name}: `,
         //   imageAppetizerResponseData.items[0].link
         // );
-        if (imageAppetizerResponseData !== null) {
+        if (
+          imageAppetizerResponseData !== null &&
+          imageAppetizerResponseData?.items?.[0]?.link
+        ) {
           (mealPlanImagesData as any)[mealKey].appetizer =
             imageAppetizerResponseData.items[0].link;
         }
 
-        (mealPlanImagesData as any)[mealKey].main =
-          imageMainResponseData.items[0].link;
+        if (imageMainResponseData?.items?.[0]?.link) {
+          (mealPlanImagesData as any)[mealKey].main =
+            imageMainResponseData.items[0].link;
+        }
 
-        if (imageDessertResponseData !== null) {
+        if (
+          imageDessertResponseData !== null &&
+          imageDessertResponseData?.items?.[0]?.link
+        ) {
           (mealPlanImagesData as any)[mealKey].dessert =
             imageDessertResponseData.items[0].link;
         }
