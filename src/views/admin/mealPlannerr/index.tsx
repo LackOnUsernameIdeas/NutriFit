@@ -38,6 +38,7 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 import CardHeader from "components/card/Card";
 import CardBody from "components/card/Card";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
@@ -56,7 +57,7 @@ import {
   UserIntakes,
   AllUsersPreferences,
   DailyCaloryRequirements,
-  MacroNutrientsData
+  WeightDifference
 } from "../../../types/weightStats";
 import { onSnapshot, doc, getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -68,7 +69,7 @@ import {
 import { table } from "console";
 
 import { LineChart } from "components/charts/LineCharts";
-
+import { parseISO } from "date-fns";
 // Главен компонент
 export default function WeightStats() {
   // Color values
@@ -83,6 +84,7 @@ export default function WeightStats() {
   const tipFontWeight = useColorModeValue("500", "100");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
+  const TipBoxBg = useColorModeValue("#a7ddfc", "#395182");
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const textColor = useColorModeValue("black", "white");
   const infoBoxIconColor = useColorModeValue("black", "white");
@@ -203,6 +205,52 @@ export default function WeightStats() {
   allUsersPreferences.sort((a, b) =>
     a.date < b.date ? -1 : a.date > b.date ? 1 : 0
   );
+  const [allOrderedObjects, setAllOrderedObjects] = useState([
+    {
+      date: "",
+      height: 0,
+      weight: 0,
+      bmi: 0,
+      bodyFat: 0,
+      bodyFatMass: 0,
+      leanBodyMass: 0,
+      differenceFromPerfectWeight: 0
+    }
+  ]);
+  allOrderedObjects.sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
+  const [
+    differenceFromPerfectWeightChange,
+    setDifferenceFromPerfectWeightChange
+  ] = useState<number | null>(null);
+
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
+  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
+    useState<WeightDifference>({
+      difference: 0,
+      isUnderOrAbove: ""
+    });
+
+  function calculateRecommendedGoal() {
+    const difference = differenceFromPerfectWeight.difference;
+    const underOrAbove = differenceFromPerfectWeight.isUnderOrAbove;
+
+    let recommendedGoal;
+
+    if (Math.abs(difference) < 2) {
+      recommendedGoal = "Запазите";
+    } else if (underOrAbove === "under" && Math.abs(difference) >= 2) {
+      recommendedGoal = "Качвате";
+    } else if (underOrAbove === "above" && Math.abs(difference) >= 2) {
+      recommendedGoal = "Сваляте";
+    }
+
+    return recommendedGoal;
+  }
+  const [health, setHealth] = useState("");
+  const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
+
   const [showITM, setShowITM] = useState(false);
 
   // Function to toggle the display of raw data
@@ -251,6 +299,48 @@ export default function WeightStats() {
       setIsDietTableDataReady(true); // Set the state when data is ready
     }, 1000);
   }
+
+  const calculateChange = (sortedData: any[], property: string) => {
+    const latestValue = sortedData[0][property];
+    const previousValue = sortedData[1][property];
+    const change = latestValue - previousValue;
+    setUserDataLastSavedDate(sortedData[1].date);
+    return change;
+  };
+
+  const calculatePerfectWeightChange = () => {
+    // Create an object to store unique entries based on date
+    const uniqueEntries: { [date: string]: any } = {};
+    console.log("called");
+    allOrderedObjects.forEach((entry) => {
+      if (
+        entry.differenceFromPerfectWeight !== 0 &&
+        !uniqueEntries[entry.date]
+      ) {
+        uniqueEntries[entry.date] = {
+          differenceFromPerfectWeight: entry.differenceFromPerfectWeight
+        };
+      }
+    });
+
+    // Create an array of entries sorted by date
+    const sortedData = Object.entries(uniqueEntries)
+      .sort((a, b) => parseISO(b[0]).getTime() - parseISO(a[0]).getTime())
+      .map(([date, values]) => ({ date, ...values }));
+
+    if (sortedData.length >= 2) {
+      const differenceFromPerfectWeightChange = calculateChange(
+        sortedData,
+        "differenceFromPerfectWeight"
+      );
+      setDifferenceFromPerfectWeightChange(
+        Math.abs(differenceFromPerfectWeightChange)
+      );
+
+      console.log("the last two entries for BMI222222: ", sortedData);
+      console.log("Perfect Weight Change: ", differenceFromPerfectWeightChange);
+    }
+  };
 
   const saveUserPreferencesAndIntakes = () => {
     const uid = getAuth().currentUser.uid;
@@ -324,27 +414,22 @@ export default function WeightStats() {
   const lineChartForCarbs = allUsersPreferences.map(
     (entry) => entry.nutrients.carbs
   );
-  const dropdownWidgetsSlidePosition = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -70
-  });
-  const restSlidePosition = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -810
-  });
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);
   const [renderDropdown, setRenderDropdown] = React.useState(false);
-  //const [combinedSlidePosition, setCombinedSlidePosition] = React.useState<number>(0);
+  const [dropdownVisibleTip, setDropdownVisibleTip] = React.useState(false);
+  const [miniStatisticsVisibleTip, setMiniStatisticsVisibleTip] =
+    React.useState(false);
+  const [renderDropdownTip, setRenderDropdownTip] = React.useState(false);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleDropdownTipToggle = () => {
+    setDropdownVisibleTip(!dropdownVisibleTip);
   };
 
   const slideAnimationDrop = useSpring({
@@ -361,6 +446,23 @@ export default function WeightStats() {
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
+    }
+  });
+
+  const slideAnimationDropTip = useSpring({
+    opacity: miniStatisticsVisibleTip ? 1 : 0,
+    transform: `translateY(${dropdownVisibleTip ? -50 : -90}px)`,
+    config: {
+      tension: dropdownVisibleTip ? 170 : 200,
+      friction: dropdownVisibleTip ? 12 : 20
+    }
+  });
+
+  const slideAnimationTip = useSpring({
+    transform: `translateY(${dropdownVisibleTip ? -30 : 0}px)`,
+    config: {
+      tension: dropdownVisibleTip ? 170 : 200,
+      friction: dropdownVisibleTip ? 12 : 20
     }
   });
 
@@ -382,6 +484,29 @@ export default function WeightStats() {
 
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
+
+  React.useEffect(() => {
+    const handleRestSlideTipPositionChange = async () => {
+      if (dropdownVisibleTip) {
+        setMiniStatisticsVisibleTip(true);
+        setRenderDropdownTip(true);
+      } else {
+        setMiniStatisticsVisibleTip(false);
+        await new Promise<void>((resolve) =>
+          setTimeout(() => {
+            resolve();
+            setRenderDropdownTip(false);
+          }, 150)
+        );
+      }
+    };
+
+    handleRestSlideTipPositionChange();
+  }, [dropdownVisibleTip]);
+
+  React.useEffect(() => {
+    calculatePerfectWeightChange();
+  }, [perfectWeight]);
 
   React.useEffect(() => {
     const auth = getAuth();
@@ -419,7 +544,37 @@ export default function WeightStats() {
                   return new Date(keyB).getTime() - new Date(keyA).getTime();
                 }
               );
+              const orderedAllTimestampObjects = [];
 
+              for (const key in additionalData) {
+                if (
+                  key !== "gender" &&
+                  key !== "goal" &&
+                  typeof additionalData[key] === "object"
+                ) {
+                  const dateData = additionalData[key];
+                  orderedAllTimestampObjects.push({
+                    date: key,
+                    height: dateData.height,
+                    weight: dateData.weight,
+                    bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
+                    bodyFat: dateData.BodyMassData
+                      ? dateData.BodyMassData.bodyFat
+                      : undefined,
+                    bodyFatMass: dateData.BodyMassData
+                      ? dateData.BodyMassData.bodyFatMass
+                      : undefined,
+                    leanBodyMass: dateData.BodyMassData
+                      ? dateData.BodyMassData.leanBodyMass
+                      : undefined,
+                    differenceFromPerfectWeight: dateData.PerfectWeightData
+                      ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                          .difference
+                      : undefined
+                  });
+                }
+              }
+              setAllOrderedObjects(orderedAllTimestampObjects);
               setAllUsersPreferences(orderedTimestampObjects);
 
               if (userDataTimestamp?.age) {
@@ -433,11 +588,17 @@ export default function WeightStats() {
                   hip: userDataTimestamp.hip,
                   weight: userDataTimestamp.weight
                 } as UserData);
-
+                setPerfectWeight(
+                  userDataTimestamp.PerfectWeightData.perfectWeight
+                );
+                setDifferenceFromPerfectWeight(
+                  userDataTimestamp.PerfectWeightData
+                    .differenceFromPerfectWeight
+                );
+                setHealth(userDataTimestamp.BMI.health);
                 setDailyCaloryRequirements(
                   userDataTimestamp.dailyCaloryRequirements
                 );
-
                 const macroNutrientsData = Array.isArray(
                   userDataTimestamp.macroNutrientsData
                 )
@@ -1147,9 +1308,9 @@ export default function WeightStats() {
                                 setUserData={setUserData}
                               />
                             </Card>
-                            <FadeInWrapper>
-                              {isDietTableDataReady &&
-                                clickedValueCalories !== null && (
+                            {isDietTableDataReady &&
+                              clickedValueCalories !== null && (
+                                <FadeInWrapper>
                                   <>
                                     <Flex align="center" gap="1%">
                                       <Text
@@ -1372,8 +1533,8 @@ export default function WeightStats() {
                                       }
                                     />
                                   </>
-                                )}
-                            </FadeInWrapper>
+                                </FadeInWrapper>
+                              )}
                           </Card>
                         </FadeInWrapper>
                         {clickedValueNutrients.protein !== null && (
@@ -1400,28 +1561,169 @@ export default function WeightStats() {
                   p="20px"
                   w="100%"
                   mb="20px"
+                  bg={TipBoxBg}
+                  onClick={handleDropdownTipToggle}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
                 >
                   <AlertIcon />
-                  <Link href="/#/admin/weight">
-                    <b>Съвет:</b> Натиснете тук, за да видите състоянието на
-                    вашето тегло, дали трябва да сваляте или да качвате тегло и
-                    тогава се върнете в тази страница, за да прецените правилно
-                    каква цел да си поставите.
-                  </Link>
+                  <Flex justify="space-between" alignItems="center">
+                    <Text userSelect="none">
+                      <b>Съвет:</b> Натиснете тук, за да видите състоянието на
+                      вашето тегло, дали трябва да сваляте или да качвате тегло
+                      и тогава се върнете в тази страница, за да прецените
+                      правилно каква цел да си поставите.
+                    </Text>
+                    <Icon
+                      as={dropdownVisibleTip ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
                 </Alert>
-                <Alert
-                  status="warning"
-                  borderRadius="20px"
-                  fontWeight={tipFontWeight}
-                  p="20px"
-                  w="100%"
-                  mb="20px"
+                {renderDropdownTip && (
+                  <animated.div
+                    style={{ ...slideAnimationDropTip, position: "relative" }}
+                  >
+                    <Card
+                      bg={boxBg}
+                      minH={{ base: "800px", md: "300px", xl: "180px" }}
+                    >
+                      <SimpleGrid
+                        columns={{ base: 1, md: 2, lg: 4 }}
+                        gap="20px"
+                        mt="40px"
+                      >
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg={gradient}
+                              transition="background-image 0.5s ease-in-out"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={GiWeightLiftingUp}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Перфектно тегло"
+                          value={perfectWeight + " kg"}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg={gradient}
+                              transition="background-image 0.5s ease-in-out"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={GiWeightLiftingUp}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name={`Вие сте ${
+                            differenceFromPerfectWeight.isUnderOrAbove ==
+                            "above"
+                              ? "над"
+                              : "под"
+                          } нормата:`}
+                          value={
+                            Math.abs(
+                              differenceFromPerfectWeight.difference
+                            ).toFixed(2) + " kg"
+                          }
+                          growth={
+                            differenceFromPerfectWeightChange
+                              ? differenceFromPerfectWeightChange > 0
+                                ? `+${differenceFromPerfectWeightChange.toFixed(
+                                    2
+                                  )}`
+                                : null
+                              : null
+                          }
+                          decrease={
+                            differenceFromPerfectWeightChange
+                              ? differenceFromPerfectWeightChange < 0
+                                ? `${differenceFromPerfectWeightChange.toFixed(
+                                    2
+                                  )}`
+                                : null
+                              : null
+                          }
+                          subtext={`в сравнение с ${userDataLastSavedDate}`}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg={gradient}
+                              transition="background-image 0.5s ease-in-out"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={GiWeightScale}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Състояние"
+                          value={health}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg={gradient}
+                              transition="background-image 0.5s ease-in-out"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={GiWeightScale}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Препоръчително е да:"
+                          value={calculateRecommendedGoal()}
+                        />
+                      </SimpleGrid>
+                    </Card>
+                  </animated.div>
+                )}
+                <animated.div
+                  style={{ ...slideAnimationTip, position: "relative" }}
                 >
-                  <AlertIcon />
-                  Тези стойности са приблизителни и може да е необходимо
-                  преценка от диетолог или здравен специалист, за да се
-                  адаптират към индивидуалните ви нужди.
-                </Alert>
+                  <Alert
+                    status="warning"
+                    borderRadius="20px"
+                    fontWeight={tipFontWeight}
+                    p="20px"
+                    w="100%"
+                    mb="20px"
+                  >
+                    <AlertIcon />
+                    Тези стойности са приблизителни и може да е необходимо
+                    преценка от диетолог или здравен специалист, за да се
+                    адаптират към индивидуалните ви нужди.
+                  </Alert>
+                </animated.div>
               </animated.div>
             </Box>
           )}

@@ -273,7 +273,9 @@ const UserMeasurements = () => {
       userData["waist"],
       userData["hip"]
     );
-    history.push("/admin/default");
+    setTimeout(() => {
+      history.push("/admin/default");
+    }, 1000);
     await fetchCaloriesForActivityLevels(
       userData["age"],
       userDataForReq["gender"],
