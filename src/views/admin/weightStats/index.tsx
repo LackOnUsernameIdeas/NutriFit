@@ -463,9 +463,7 @@ export default function WeightStats() {
         sortedData,
         "differenceFromPerfectWeight"
       );
-      setDifferenceFromPerfectWeightChange(
-        Math.abs(differenceFromPerfectWeightChange)
-      );
+      setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
 
       console.log("the last two entries for BMI222222: ", sortedData);
       console.log(
