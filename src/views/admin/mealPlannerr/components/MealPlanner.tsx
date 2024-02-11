@@ -56,7 +56,9 @@ export default function MealPlanner(props: {
       Calories: 0,
       Protein: 0,
       Fat: 0,
-      Carbohydrates: 0
+      Carbohydrates: 0,
+      Cuisine: "Българска",
+      Exclude: ""
     });
 
   const [mealPlan, setMealPlan] = useState<MealPlan2>({
@@ -85,10 +87,17 @@ export default function MealPlanner(props: {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUserPreferences((prevPreferences) => ({
-      ...prevPreferences,
-      [name]: parseFloat(value)
-    }));
+    if (name !== "Cuisine" && name !== "Exclude") {
+      setUserPreferences((prevPreferences) => ({
+        ...prevPreferences,
+        [name]: parseFloat(value)
+      }));
+    } else {
+      setUserPreferences((prevPreferences) => ({
+        ...prevPreferences,
+        [name]: value
+      }));
+    }
   };
 
   useEffect(() => {
@@ -96,10 +105,13 @@ export default function MealPlanner(props: {
       Calories: chosenCalories,
       Protein: chosenNutrients.protein,
       Fat: chosenNutrients.fat,
-      Carbohydrates: chosenNutrients.carbs
+      Carbohydrates: chosenNutrients.carbs,
+      Cuisine: userPreferences.Cuisine,
+      Exclude: userPreferences.Exclude
     });
   }, [chosenCalories, chosenNutrients]);
 
+  console.log(userPreferences);
   const generatePlan = async () => {
     try {
       setIsSubmitted(true);
@@ -111,30 +123,32 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
             messages: [
               {
                 role: "system",
-                content:
-                  "You are an experienced chef specializing in Bulgarian cuisine. Focus on creating a diverse and delicious meal plan for the day. Be creative with the recipes and provide clear instructions. Pay attention to the nutrient limits mentioned by the user and ensure the accuracy of the quantities. Export in JSON EXACTLY LIKE I will provide without adding `json` keyword with backticks."
+                content: `You are an experienced chef specializing in the following cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. Focus on creating a diverse and delicious meal plan for the day. Be creative with the recipes and provide clear instructions. Pay attention to the nutrient limits mentioned by the user and ensure the accuracy of the quantities. Make sure you exclude the things that the user mentions. Export in JSON EXACTLY LIKE I will provide without adding 'json' keyword with backticks.`
               },
               {
                 role: "user",
-                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits WITHOUT CROSSING the provided limits: 
-                'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'. 
-                If possible use recipes that are usual for the Bulgarian cuisine but try to give DIFFERENT recipes from the previous request. 
+                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits: 
+                'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'.
+                DON'T GO OVER THE PROVIDED LIMITS AND GIVE THE MEALS IN A WAY THAT THE SUM OF THEIR NUTRIENTS WOULD BE APPROXIMATELY THE SAME AS THE LIMITS OF THE CALORIES, PROTEIN, FAT AND CARBOHYDRATES AND AT THE SAME TIME WOULDN'T BE TOO LESS OR TOO MUCH COMPARED TO THE SAME LIMITS!!! 
+                If possible use recipes that are usual for the cuisines that are called '${userPreferences.Cuisine}' in Bulgarian but try to give DIFFERENT recipes from the previous request. 
+                You MUST exclude: '${userPreferences.Exclude}' in the meals!!! Please, give foods that actually are edible and real, don't make up foods!!!
                 Don't round the values as you like and use the EXACT and THE ACTUAL nutrient values. Provide main course for breakfast. Provide appetizer, main course, and dessert for lunch.
                 Provide main course and dessert for dinner. 
                 Add small things to be eaten with the main food, like a slice of bread for the soups and etc. Please, provide different foods and don't repeat yourself. 
-                Give actual and eatable foods. Give approximately NORMAL quantities for an avarage person so that the users don't think it's too much or too less(up to 500 grams but don't give ONLY 500, give as much as you need but 500 is the limit). 
+                Give approximately NORMAL quantities for an avarage person - UP TO 500 GRAMS!!!! But don't give ONLY 500, give as much as you need BELOW 500!!!). 
                 Also, put the grams and the nutrient values IN RATIO WITH EACH OTHER. After each food, provide the information in this format: 
                 'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. Put the summed values for the day in this format: 
                 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. 
+                Again, give a meal plan that DOESN'T GIVE SUMMED NUTRIENTS THAT GO OVER THE USER LIMITS!!!
                 Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]), the ingredients of the meals as well(with structure: 
-                  ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian. Export in JSON EXACTLY like this: 
+                  ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian properly as you can. Export in JSON EXACTLY like this: 
                   '{breakfast':{'main':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},
                   'lunch':{'appetizer':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}},                 
                     'likebreakfast',
@@ -160,11 +174,12 @@ export default function MealPlanner(props: {
       console.log("responseData: ", responseData);
 
       // Process the data returned by OpenAI API
-      const data = JSON.parse(
-        responseData.choices[0].message.content
-          .replace(/\\n/g, "\n")
-          .replace(/\\"/g, '"')
-      );
+      const unescapedData = responseData.choices[0].message.content;
+      console.log("unescapedData: ", unescapedData);
+      const escapedData = decodeURIComponent(unescapedData);
+      console.log("escapedData: ", escapedData);
+      const data = JSON.parse(escapedData);
+      console.log("Parsed data: ", data);
 
       console.log("CHATGPT: ", data);
 
@@ -209,18 +224,20 @@ export default function MealPlanner(props: {
         // console.log("meal: ", meal);
         // console.log("meal name: ", meal.name);
 
+        //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
+        //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
         // Now make a request to the "images/generations" endpoint for each meal's name
         const imageAppetizer =
           mealKey === "lunch"
             ? await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
                   mealAppetizer.name
                 )}&searchType=image`
               )
             : null;
 
         const imageMain = await fetch(
-          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
             mealMain.name
           )}&searchType=image`
         );
@@ -228,7 +245,7 @@ export default function MealPlanner(props: {
         const imageDessert =
           mealKey === "lunch" || mealKey === "dinner"
             ? await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
                   mealDessert.name
                 )}&searchType=image`
               )
@@ -245,15 +262,23 @@ export default function MealPlanner(props: {
         //   `Image Generation Response for ${mealAppetizer.name}: `,
         //   imageAppetizerResponseData.items[0].link
         // );
-        if (imageAppetizerResponseData !== null) {
+        if (
+          imageAppetizerResponseData !== null &&
+          imageAppetizerResponseData?.items?.[0]?.link
+        ) {
           (mealPlanImagesData as any)[mealKey].appetizer =
             imageAppetizerResponseData.items[0].link;
         }
 
-        (mealPlanImagesData as any)[mealKey].main =
-          imageMainResponseData.items[0].link;
+        if (imageMainResponseData?.items?.[0]?.link) {
+          (mealPlanImagesData as any)[mealKey].main =
+            imageMainResponseData.items[0].link;
+        }
 
-        if (imageDessertResponseData !== null) {
+        if (
+          imageDessertResponseData !== null &&
+          imageDessertResponseData?.items?.[0]?.link
+        ) {
           (mealPlanImagesData as any)[mealKey].dessert =
             imageDessertResponseData.items[0].link;
         }

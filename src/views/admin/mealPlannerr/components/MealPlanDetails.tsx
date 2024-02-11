@@ -59,7 +59,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                   {appetizer !== "none" && (
                     <Box key="appetizer">
                       <Link
-                        href={(mealPlanImages as any)[mealType].appetizer}
+                        href={
+                          (mealPlanImages as any)[mealType].appetizer
+                            ? (mealPlanImages as any)[mealType].appetizer
+                            : ""
+                        }
                         target="_blank"
                       >
                         <RecipeWidget
@@ -92,7 +96,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               mt="5px"
                             ></Flex>
                           }
-                          image={(mealPlanImages as any)[mealType].appetizer}
+                          image={
+                            (mealPlanImages as any)[mealType].appetizer
+                              ? (mealPlanImages as any)[mealType].appetizer
+                              : ""
+                          }
                           currentbid={
                             <Box>
                               <Flex
@@ -186,7 +194,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                   )}
                   <Box key="main">
                     <Link
-                      href={(mealPlanImages as any)[mealType].main}
+                      href={
+                        (mealPlanImages as any)[mealType].main
+                          ? (mealPlanImages as any)[mealType].main
+                          : ""
+                      }
                       target="_blank"
                     >
                       <RecipeWidget
@@ -216,7 +228,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             mt="5px"
                           ></Flex>
                         }
-                        image={(mealPlanImages as any)[mealType].main}
+                        image={
+                          (mealPlanImages as any)[mealType].main
+                            ? (mealPlanImages as any)[mealType].main
+                            : ""
+                        }
                         currentbid={
                           <Box>
                             <Flex
@@ -286,7 +302,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                   {dessert !== "none" && (
                     <Box key="dessert">
                       <Link
-                        href={(mealPlanImages as any)[mealType].dessert}
+                        href={
+                          (mealPlanImages as any)[mealType].dessert
+                            ? (mealPlanImages as any)[mealType].dessert
+                            : ""
+                        }
                         target="_blank"
                       >
                         <RecipeWidget
@@ -319,7 +339,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               mt="5px"
                             ></Flex>
                           }
-                          image={(mealPlanImages as any)[mealType].dessert}
+                          image={
+                            (mealPlanImages as any)[mealType].dessert
+                              ? (mealPlanImages as any)[mealType].dessert
+                              : ""
+                          }
                           currentbid={
                             <Box>
                               <Flex

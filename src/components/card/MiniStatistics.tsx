@@ -118,7 +118,7 @@ export default function Default(props: {
             </StatNumber>
             {growth ? (
               <Flex align="center">
-                <Text color="green.500" fontSize="xs" fontWeight="700" me="5px">
+                <Text color="#705dfa" fontSize="xs" fontWeight="700" me="5px">
                   {growth}
                 </Text>
                 <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
@@ -127,7 +127,7 @@ export default function Default(props: {
               </Flex>
             ) : decrease ? (
               <Flex align="center">
-                <Text color="red.500" fontSize="xs" fontWeight="700" me="5px">
+                <Text color="#452efb" fontSize="xs" fontWeight="700" me="5px">
                   {decrease}
                 </Text>
                 <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
