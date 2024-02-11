@@ -158,6 +158,7 @@ export interface UserPreferencesForMealPlan {
   Fat: number;
   Carbohydrates: number;
   Cuisine: string;
+  Exclude: string;
 }
 
 export interface CustomServingInputProps {

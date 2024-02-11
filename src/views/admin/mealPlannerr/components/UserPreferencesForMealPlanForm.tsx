@@ -22,7 +22,8 @@ const fieldName: string[] = [
   "протеин",
   "мазнини",
   "въглехидрати",
-  "кухня"
+  "кухня",
+  "какво да не се включва"
 ];
 
 const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
@@ -91,7 +92,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 </Text>
               </Flex>
               <Flex>
-                {value !== 0 && key !== "Cuisine" ? (
+                {value !== 0 && typeof value !== "string" ? (
                   <Input
                     variant="auth"
                     color={textColor}
@@ -109,7 +110,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                     name={key}
                     onChange={handleInputChange}
                   />
-                ) : key == "Cuisine" ? (
+                ) : typeof value == "string" ? (
                   <Input
                     variant="auth"
                     color={textColor}
