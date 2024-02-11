@@ -1567,19 +1567,28 @@ export default function WeightStats() {
                   zIndex="1"
                   position="relative"
                 >
-                  <AlertIcon />
-                  <Flex justify="space-between" alignItems="center">
-                    <Text userSelect="none">
-                      <b>Съвет:</b> Натиснете тук, за да видите състоянието на
-                      вашето тегло, дали трябва да сваляте или да качвате тегло
-                      и тогава се върнете в тази страница, за да прецените
-                      правилно каква цел да си поставите.
-                    </Text>
-                    <Icon
-                      as={dropdownVisibleTip ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
+                  <Flex
+                    justify="space-between"
+                    alignItems="center"
+                    direction="row"
+                    w="100%" // Ensure Flex container takes up the full width
+                  >
+                    <Flex>
+                      <AlertIcon />
+                      <Text userSelect="none">
+                        <b>Съвет:</b> Натиснете тук, за да видите състоянието на
+                        вашето тегло, дали трябва да сваляте или да качвате
+                        тегло и тогава се върнете в тази страница, за да
+                        прецените правилно каква цел да си поставите.
+                      </Text>
+                    </Flex>
+                    <Flex alignItems="center">
+                      <Icon
+                        as={dropdownVisibleTip ? FaAngleUp : FaAngleDown}
+                        boxSize={6}
+                        color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                      />
+                    </Flex>
                   </Flex>
                 </Alert>
                 {renderDropdownTip && (
@@ -1701,7 +1710,7 @@ export default function WeightStats() {
                             />
                           }
                           name="Препоръчително е да:"
-                          value={calculateRecommendedGoal()}
+                          value={calculateRecommendedGoal() + " (кг.)"}
                         />
                       </SimpleGrid>
                     </Card>
