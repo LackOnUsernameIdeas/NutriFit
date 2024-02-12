@@ -126,7 +126,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Грамаж:{" "}
-                                    {`${appetizer?.totals.grams.toFixed(
+                                    {`${appetizer?.totals?.grams.toFixed(
                                       2
                                     )} g` || "N/A"}
                                   </Text>
@@ -141,7 +141,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Въглехидрати:{" "}
-                                    {appetizer?.totals.carbohydrates.toFixed(
+                                    {appetizer?.totals?.carbohydrates.toFixed(
                                       2
                                     ) || "N/A"}
                                   </Text>
@@ -155,7 +155,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Протеин:{" "}
-                                    {appetizer?.totals.protein.toFixed(2) ||
+                                    {appetizer?.totals?.protein.toFixed(2) ||
                                       "N/A"}
                                   </Text>
                                   <Text
@@ -169,7 +169,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Мазнини:{" "}
-                                    {appetizer?.totals.fat.toFixed(2) || "N/A"}
+                                    {appetizer?.totals?.fat.toFixed(2) || "N/A"}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -181,7 +181,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Калории:{" "}
-                                    {appetizer?.totals.calories.toFixed(2) ||
+                                    {appetizer?.totals?.calories.toFixed(2) ||
                                       "N/A"}
                                   </Text>
                                 </SimpleGrid>
