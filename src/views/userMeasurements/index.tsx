@@ -91,6 +91,7 @@ const UserMeasurements = () => {
     useState<boolean>(false);
   const isMounted = useRef(true);
   const [user, setUser] = useState(null);
+
   // State за въведени потребителски данни
   const [userData, setUserData] = useState<UserData>({
     height: 0,
@@ -102,33 +103,8 @@ const UserMeasurements = () => {
     goal: "maintain"
   });
 
-  const [userDataForReq, setUserDataForReq] = useState<UserData>({
-    gender: "male" || "female",
-    height: 0,
-    age: 0,
-    weight: 0,
-    neck: 0,
-    waist: 0,
-    hip: 0,
-    goal: "maintain"
-  });
-
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
-
-  // Event handler-и за реакция при промяна
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    const parsedValue = value.trim() === "" ? 0 : parseFloat(value);
-
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: parsedValue
-    }));
-  };
-
-  console.log(userData);
 
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
@@ -177,9 +153,9 @@ const UserMeasurements = () => {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
           const additionalData = await fetchAdditionalUserData(user.uid);
-          if (additionalData[timestampKey]?.age) {
-            setUserDataForReq({
-              gender: additionalData.gender || 0,
+          console.log("gender for state: ", additionalData.gender);
+          if (additionalData?.[timestampKey]?.age) {
+            setUserData({
               goal: additionalData.goal || 0,
               age: additionalData[timestampKey].age || 0,
               height: additionalData[timestampKey].height || 0,
@@ -189,7 +165,9 @@ const UserMeasurements = () => {
               weight: additionalData[timestampKey].weight || 0
             } as any);
           }
-
+          setUserData((prevData) => {
+            return { ...prevData, gender: additionalData.gender };
+          });
           console.log(additionalData, "additionalData");
           const userChartData = [];
 
@@ -240,6 +218,18 @@ const UserMeasurements = () => {
     return () => unsubscribe();
   }, []);
 
+  // Event handler-и за реакция при промяна
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    const parsedValue = value.trim() === "" ? 0 : parseFloat(value);
+
+    setUserData((prevData) => {
+      console.log("prevData:", prevData);
+      return { ...prevData, [name]: parsedValue };
+    });
+  };
+
   const goalsToFetch: Goal[] = [
     "maintain",
     "mildlose",
@@ -254,6 +244,7 @@ const UserMeasurements = () => {
     console.log(
       userData["age"],
       userData["height"],
+      userData["gender"],
       userData["weight"],
       "before"
     );
@@ -261,12 +252,12 @@ const UserMeasurements = () => {
     await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
     await fetchPerfectWeightData(
       userData["height"],
-      userDataForReq["gender"],
+      userData["gender"],
       userData["weight"]
     );
     await fetchBodyFatAndLeanMassData(
       userData["age"],
-      userDataForReq["gender"],
+      userData["gender"],
       userData["height"],
       userData["weight"],
       userData["neck"],
@@ -278,13 +269,13 @@ const UserMeasurements = () => {
     }, 1000);
     await fetchCaloriesForActivityLevels(
       userData["age"],
-      userDataForReq["gender"],
+      userData["gender"],
       userData["height"],
       userData["weight"]
     );
     await fetchMacroNutrients(
       userData["age"],
-      userDataForReq["gender"],
+      userData["gender"],
       userData["height"],
       userData["weight"],
       goalsToFetch
@@ -483,16 +474,16 @@ const UserMeasurements = () => {
     });
   }, [perfectWeight, userData]);
 
-  React.useEffect(() => {
-    // Check if numeric values in userData are different from 0 and not null
-    const areValuesValid = Object.values(userDataForReq).every(
-      (value) => value !== 0
-    );
+  // React.useEffect(() => {
+  //   // Check if numeric values in userData are different from 0 and not null
+  //   const areValuesValid = Object.values(userData).every(
+  //     (value) => value !== 0
+  //   );
 
-    if (areValuesValid) {
-      generateStats();
-    }
-  }, [userDataForReq]);
+  //   if (areValuesValid) {
+  //     generateStats();
+  //   }
+  // }, [userData]);
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
