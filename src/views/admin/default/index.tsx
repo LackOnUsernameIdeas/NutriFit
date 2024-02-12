@@ -1109,7 +1109,7 @@ export default function UserReports() {
                     averageStats.male.totalUsers !== null
                       ? (
                           averageStats.male.totalUsers +
-                          averageStats.male.totalUsers
+                          averageStats.female.totalUsers
                         ).toString()
                       : "0"
                   }

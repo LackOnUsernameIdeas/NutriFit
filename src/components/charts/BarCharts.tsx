@@ -143,8 +143,8 @@ const ColumnAvaragesChart: React.FC<ChartProps> = ({
               {
                 label: chartLabelName2,
                 data: chartData2,
-                backgroundColor: "#6e5cfa",
-                borderColor: "rgba(67,24,255,1)",
+                backgroundColor: "#a194ff",
+                borderColor: "#6e5cfa",
                 borderWidth: 1
               }
             ]

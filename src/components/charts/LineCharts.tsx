@@ -196,8 +196,8 @@ const LineAvaragesChart: React.FC<ChartProps> = ({
           {
             label: lineChartLabelName2,
             data: lineChartData2,
-            borderColor: "#6e5cfa",
-            backgroundColor: "#6e5cfa",
+            borderColor: "#a194ff",
+            backgroundColor: "#a194ff",
             tension: 0.3
           }
         ]
