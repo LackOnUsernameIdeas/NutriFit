@@ -125,7 +125,7 @@ export default function MealPlanner(props: {
             Authorization:
               "Bearer sk-Ja1Nh0rAuf46bcwBSDYLT3BlbkFJRgyok4zlqLLW16I8Ntmee"
           },
-          //Hosting: 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
+          //Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII (without the second I)
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
             messages: [
