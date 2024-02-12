@@ -123,9 +123,8 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer sk-Ja1Nh0rAuf46bcwBSDYLT3BlbkFJRgyok4zlqLLW16I8Ntmee"
+              "Bearer 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е"
           },
-          //Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII (without the second I)
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
             messages: [
@@ -135,30 +134,8 @@ export default function MealPlanner(props: {
               },
               {
                 role: "user",
-                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits: 
-                'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'.
-                THIS IS EXTREMELY IMPORTANT: DON'T GO OVER THE PROVIDED LIMITS AND GIVE THE MEALS IN A WAY THAT THE SUM OF THEIR NUTRIENTS WOULD BE APPROXIMATELY THE SAME AS THE LIMITS OF THE CALORIES, PROTEIN, FAT AND CARBOHYDRATES AND AT THE SAME TIME WOULDN'T BE TOO LESS OR TOO MUCH COMPARED TO THE SAME LIMITS!!! 
-                If possible use recipes that are usual for the cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. GIVE DIFFERENT RECIPES from the previous request everytime I send a new one, DON'T GIVE THE SAME FOODS EVERYTIME!
-                You MUST exclude: '${userPreferences.Exclude}' in the meals!!! Please, give foods that actually are edible and real, don't make up foods!!!
-                Don't round the values as you like and use the EXACT and THE ACTUAL nutrient values. Provide main course for breakfast. Provide appetizer, main course, and dessert for lunch.
-                Provide main course and dessert for dinner. 
-                Add small things to be eaten with the main food, like a slice of bread for the soups and etc. Please, provide different foods and don't repeat yourself. 
-                Give approximately NORMAL quantities for an avarage person - UP TO 500 GRAMS!!!! But don't give ONLY 500, give as much as you need BELOW 500!!!). 
-                Also, put the grams and the nutrient values IN RATIO WITH EACH OTHER. After each food, provide the information in this format: 
-                'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. Put the summed values for the day in this format: 
-                'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. 
-                Again, give a meal plan that DOESN'T GIVE SUMMED NUTRIENTS THAT GO OVER THE USER LIMITS!!!
-                Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]), the ingredients of the meals as well(with structure: 
-                  ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian properly as you can. Export in JSON EXACTLY like this: 
-                  '{breakfast':{'main':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},
-                  'lunch':{'appetizer':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}},                 
-                    'likebreakfast',
-                    'dessert':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}
-                  },
-                  'dinner':{'likebreakfast', 
-                  'dessert':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}
-                },'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}' WITHOUT ADDING 'json' keyword with backticks!!!
-                   Don't translate the properties, only the values. DON'T ADD COMMAS AFTER THE LAST ITEM IN THE INSTRUCTIONS ARRAY.`
+                content:
+                  "Създай ми дневно меню с ниско съдържание на мазнини, което да включва едно ястие за закуса, 3 за обяд (третото трябва да е десерт) и 2 за вечеря (второто да е десерт). Не повече, не по-малко. Менюто трябва ЗАДЪЛЖИТЕЛНО да включва  2500 калории, 162 протеини, 55 мазнини и 338 въглехидрати. Спазвай ВНИМАТЕЛНО стойностите, без да се отдалечаваш от тях въобще. Разликата между подадените стойности и тези които връщаш трябва да са ЕДНАКВИ. Подавай точен грамаж и нутриенти за закуска, обяд, вечеря и всички общо. Форматирай общата информацията за нутриентите по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА НУТРИЕНТИТЕ НА ЯСТИЯТА: `totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}`. Форматирай сумираните стойности по следният начин: `totals: {calories: number,protein: number,fat: number,carbohydrates: number}`. Форматирай информацията във JSON по следният начин, като не превеждащ имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК): '{breakfast':{'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},'lunch':{'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}},'likebreakfast','dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},'dinner':{'likebreakfast', 'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}'. Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 900 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. Името на ястието е ЗАДЪЛЖИТЕЛНО на български"
               }
             ]
           })
