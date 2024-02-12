@@ -227,28 +227,37 @@ export default function MealPlanner(props: {
         //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
         //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
         // Now make a request to the "images/generations" endpoint for each meal's name
-        const imageAppetizer =
-          mealKey === "lunch"
-            ? await fetch(
+        async function fetchImage(name: string): Promise<any> {
+          try {
+            let response = await fetch(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+                name
+              )}&searchType=image`
+            );
+            if (response.status === 429) {
+              let response = await fetch(
                 `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
-                  mealAppetizer.name
+                  name
                 )}&searchType=image`
-              )
-            : null;
+              );
+              return response;
+            } else {
+              return response;
+            }
+          } catch (error) {
+            console.error("Error fetching image:", error);
+            return null;
+          }
+        }
 
-        const imageMain = await fetch(
-          `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
-            mealMain.name
-          )}&searchType=image`
-        );
+        const imageAppetizer =
+          mealKey === "lunch" ? await fetchImage(mealAppetizer.name) : null;
+
+        const imageMain = await fetchImage(mealMain.name);
 
         const imageDessert =
           mealKey === "lunch" || mealKey === "dinner"
-            ? await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
-                  mealDessert.name
-                )}&searchType=image`
-              )
+            ? await fetchImage(mealDessert.name)
             : null;
 
         const imageAppetizerResponseData =
