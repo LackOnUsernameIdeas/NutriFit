@@ -123,7 +123,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer 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"
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo-0125",
@@ -136,8 +136,8 @@ export default function MealPlanner(props: {
                 role: "user",
                 content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits: 
                 'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'.
-                DON'T GO OVER THE PROVIDED LIMITS AND GIVE THE MEALS IN A WAY THAT THE SUM OF THEIR NUTRIENTS WOULD BE APPROXIMATELY THE SAME AS THE LIMITS OF THE CALORIES, PROTEIN, FAT AND CARBOHYDRATES AND AT THE SAME TIME WOULDN'T BE TOO LESS OR TOO MUCH COMPARED TO THE SAME LIMITS!!! 
-                If possible use recipes that are usual for the cuisines that are called '${userPreferences.Cuisine}' in Bulgarian but try to give DIFFERENT recipes from the previous request. 
+                THIS IS EXTREMELY IMPORTANT: DON'T GO OVER THE PROVIDED LIMITS AND GIVE THE MEALS IN A WAY THAT THE SUM OF THEIR NUTRIENTS WOULD BE APPROXIMATELY THE SAME AS THE LIMITS OF THE CALORIES, PROTEIN, FAT AND CARBOHYDRATES AND AT THE SAME TIME WOULDN'T BE TOO LESS OR TOO MUCH COMPARED TO THE SAME LIMITS!!! 
+                If possible use recipes that are usual for the cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. GIVE DIFFERENT RECIPES from the previous request everytime I send a new one!
                 You MUST exclude: '${userPreferences.Exclude}' in the meals!!! Please, give foods that actually are edible and real, don't make up foods!!!
                 Don't round the values as you like and use the EXACT and THE ACTUAL nutrient values. Provide main course for breakfast. Provide appetizer, main course, and dessert for lunch.
                 Provide main course and dessert for dinner. 
@@ -157,7 +157,7 @@ export default function MealPlanner(props: {
                   'dinner':{'likebreakfast', 
                   'dessert':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}
                 },'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}' WITHOUT ADDING 'json' keyword with backticks!!!
-                   Don't translate the properties, only the values.`
+                   Don't translate the properties, only the values. Also, in the instructions array, don't add commas at the end of the array.`
               }
             ]
           })
