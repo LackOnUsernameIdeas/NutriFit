@@ -125,12 +125,13 @@ export default function MealPlanner(props: {
             Authorization:
               "Bearer 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"
           },
+          // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII
           body: JSON.stringify({
             model: "gpt-3.5-turbo-16k-0613",
             messages: [
               {
                 role: "system",
-                content: `You are an experienced nutritionist that supervises the patients to eat an actual and edible food from the following cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. Focus on creating a diverse and delicious meal plan for the day that is complied with the limits for calories, protein, fat and carbohydrates so that the difference is NO MORE than 200 for the calories, 50 for the protein, 50 for carbohydrates and 30 for the fat. Pay attention to the limits that will be mentioned and ensure the accuracy of the quantities. Make sure you exclude the things that the user mentions. Export in JSON EXACTLY LIKE I will provide without adding 'json' keyword with backticks.`
+                content: `You are an experienced nutritionist that supervises the patients to eat an actual and edible food from the following cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. Focus on creating a diverse and delicious meal plan for the day that is complied with the limits for calories, protein, fat and carbohydrates so that the difference is NO MORE than 200 for the calories, 50 for the protein, 50 for carbohydrates and 30 for the fat. Pay attention to the limits that will be mentioned and ensure the accuracy of the quantities. Make sure you exclude the things that will be mentioned. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property without adding 'json' keyword with backticks.`
               },
               {
                 role: "user",
@@ -138,10 +139,12 @@ export default function MealPlanner(props: {
                 Не повече, не по-малко. Менюто трябва ЗАДЪЛЖИТЕЛНО да включва  ${userPreferences.Calories} калории, ${userPreferences.Protein} протеини, ${userPreferences.Fat} мазнини и ${userPreferences.Carbohydrates} въглехидрати като е допустимо сумата на калориите да се разминава до НАЙ-МНОГО, НЕ ПОВЕЧЕ ОТ 200, а тази на мазнините да се разминава до НАЙ-МНОГО, НЕ ПОВЕЧЕ ОТ 30. Недей да даваш твърде малко или твърде много калории, въглехидрати, протеин и мазнини в сравнение с лимитите, които предоставих в предното изречение. 
                 Разликата между подадените стойности и тези които връщаш трябва да са ЕДНАКВИ. 
                 Подавай точен грамаж и точни калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и всички общо. 
-                Подсигури реални рецепти, които да са адекватни за консумация, недей да оставяш празни места или да даваш абсурдни неща за ядене.
-                Имената на храните трябва да са адекватно написани.
+                Подсигури реални рецепти, които да са адекватни за консумация, недей да оставяш празни места или да даваш предмети вместо храни за ядене.
+                Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация.
+                Вмъкни в менюто всички останали изисквания, но стриктно избягвай да добавяш следните елементи в хранителнато меню: ${userPreferences.Exclude}.
+                Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни.
                 Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. 
-                Форматирай сумираните стойности по следният начин: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. 
+                Форматирай сумираните стойности по абсолютно същият начин: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. 
                 Форматирай ЦЯЛАТА информация в JSON по абсолютно същият начин, като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК): '{breakfast':{'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'lunch':{'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}},'likebreakfast','dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'dinner':{'likebreakfast', 'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}'. 
                 Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
                 Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
@@ -218,13 +221,13 @@ export default function MealPlanner(props: {
         async function fetchImage(name: string): Promise<any> {
           try {
             let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA&cx=10030740e88c842af&q=${encodeURIComponent(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDgjUTzwPIulEmJyTP1gNMz7GdihA9VRgs&cx=10030740e88c842af&q=${encodeURIComponent(
                 name
               )}&searchType=image`
             );
             if (response.status === 429) {
               let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA&cx=258e213112b4b4492&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDgjUTzwPIulEmJyTP1gNMz7GdihA9VRgs&cx=258e213112b4b4492&q=${encodeURIComponent(
                   name
                 )}&searchType=image`
               );
