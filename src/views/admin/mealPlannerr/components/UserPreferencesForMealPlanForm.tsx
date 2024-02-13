@@ -3,18 +3,26 @@ import React from "react";
 import {
   Input,
   Button,
+  CheckboxGroup,
+  Checkbox,
+  HStack,
   Text,
   Flex,
+  Icon,
   Box,
   SimpleGrid,
+  useBreakpointValue,
   useColorModeValue
 } from "@chakra-ui/react";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { UserPreferencesForMealPlan } from "../../../../types/weightStats";
+import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
 
 interface UserPreferencesInputProps {
   userPreferences: UserPreferencesForMealPlan;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   generatePlan: () => void;
 }
 const fieldName: string[] = [
@@ -29,14 +37,66 @@ const fieldName: string[] = [
 const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   userPreferences,
   handleInputChange,
+  handleCheckboxChange,
   generatePlan
 }) => {
   const textColor = useColorModeValue("#1a202c", "white");
   const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.100");
   const brandColor = useColorModeValue("brand.500", "white");
+  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
+  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
+  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
+  const gradient = useColorModeValue(gradientLight, gradientDark);
+  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
+  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
+
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
+  const [miniStatisticsVisible, setMiniStatisticsVisible] =
+    React.useState(false);
+  const [renderDropdown, setRenderDropdown] = React.useState(false);
+
+  const handleDropdownToggle = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const slideAnimationDrop = useSpring({
+    opacity: miniStatisticsVisible ? 1 : 0,
+    transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
+    config: {
+      tension: dropdownVisible ? 170 : 200,
+      friction: dropdownVisible ? 12 : 20
+    }
+  });
+
+  const slideAnimation = useSpring({
+    transform: `translateY(${dropdownVisible ? -50 : -20}px)`,
+    config: {
+      tension: dropdownVisible ? 170 : 200,
+      friction: dropdownVisible ? 12 : 20
+    }
+  });
+
+  React.useEffect(() => {
+    const handleRestSlidePositionChange = async () => {
+      if (dropdownVisible) {
+        setMiniStatisticsVisible(true);
+        setRenderDropdown(true);
+      } else {
+        setMiniStatisticsVisible(false);
+        await new Promise<void>((resolve) =>
+          setTimeout(() => {
+            resolve();
+            setRenderDropdown(false);
+          }, 150)
+        );
+      }
+    };
+
+    handleRestSlidePositionChange();
+  }, [dropdownVisible]);
 
   const isNutrientDataValid = () => {
     const errors: { [key: string]: string } = {};
@@ -156,17 +216,96 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             </Box>
           );
         })}
+        <Box>
+          <Card
+            onClick={handleDropdownToggle}
+            cursor="pointer"
+            zIndex="1"
+            position="relative"
+            bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+            transition="background-image 0.5s ease-in-out"
+            mb={renderDropdown ? "0px" : "20px"}
+          >
+            <Flex justify="space-between" alignItems="center">
+              <Text
+                fontSize="2xl"
+                style={
+                  dropdownVisible
+                    ? {
+                        backgroundImage: gradient,
+                        WebkitBackgroundClip: "text",
+                        color: "transparent"
+                      }
+                    : {}
+                }
+                userSelect="none"
+              >
+                {dropdownVisible ? (
+                  <b>Статистики за вашето телесно изменение:</b>
+                ) : (
+                  "Статистики за вашето телесно изменение:"
+                )}
+              </Text>
+              <Icon
+                as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                boxSize={6}
+                color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+              />
+            </Flex>
+          </Card>
+          {renderDropdown && (
+            <animated.div
+              style={{ ...slideAnimationDrop, position: "relative" }}
+            >
+              <Card
+                bg={boxBg}
+                minH={{ base: "800px", md: "300px", xl: "180px" }}
+              >
+                <SimpleGrid mt="50px">
+                  <HStack alignItems="start">
+                    <Checkbox
+                      isChecked={userPreferences.Cuisine === "Bulgarian"}
+                      onChange={handleCheckboxChange}
+                    >
+                      Bulgarian
+                    </Checkbox>
+                    <Checkbox
+                      isChecked={userPreferences.Cuisine === "Chinese"}
+                      onChange={handleCheckboxChange}
+                    >
+                      Chinese
+                    </Checkbox>
+                    <Checkbox
+                      isChecked={userPreferences.Cuisine === "Italian"}
+                      onChange={handleCheckboxChange}
+                    >
+                      Italian
+                    </Checkbox>
+                    <Checkbox
+                      isChecked={userPreferences.Cuisine === "French"}
+                      onChange={handleCheckboxChange}
+                    >
+                      French
+                    </Checkbox>
+                  </HStack>
+                </SimpleGrid>
+              </Card>
+            </animated.div>
+          )}
+        </Box>
       </SimpleGrid>
-      <Button
-        onClick={handleSubmit}
-        mt={{ base: "10%", lg: "5%" }}
-        mb={{ base: "15%", lg: "0%" }}
-        minH="15%"
-        backgroundColor={bgButton}
-        color={brandColor}
-      >
-        Създайте хранителен план
-      </Button>
+      <animated.div style={{ ...slideAnimation, position: "relative" }}>
+        <Button
+          onClick={handleSubmit}
+          mt={{ base: "10%", lg: "5%" }}
+          mb={{ base: "15%", lg: "0%" }}
+          minH="15%"
+          backgroundColor={bgButton}
+          color={brandColor}
+        >
+          Създайте хранителен план
+        </Button>
+      </animated.div>
     </Card>
   );
 };

@@ -99,7 +99,13 @@ export default function MealPlanner(props: {
       }));
     }
   };
-
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    setUserPreferences((prevState) => ({
+      ...prevState,
+      Cuisine: checked ? name : prevState.Cuisine
+    }));
+  };
   useEffect(() => {
     setUserPreferences({
       Calories: chosenCalories,
@@ -368,6 +374,7 @@ export default function MealPlanner(props: {
                       <UserPreferencesForMealPlanForm
                         userPreferences={userPreferences}
                         handleInputChange={handleInputChange}
+                        handleCheckboxChange={handleCheckboxChange}
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
@@ -379,6 +386,7 @@ export default function MealPlanner(props: {
                       <UserPreferencesForMealPlanForm
                         userPreferences={userPreferences}
                         handleInputChange={handleInputChange}
+                        handleCheckboxChange={handleCheckboxChange}
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
@@ -413,6 +421,7 @@ export default function MealPlanner(props: {
                 <UserPreferencesForMealPlanForm
                   userPreferences={userPreferences}
                   handleInputChange={handleInputChange}
+                  handleCheckboxChange={handleCheckboxChange}
                   generatePlan={generatePlan}
                 />
               </SimpleGrid>
