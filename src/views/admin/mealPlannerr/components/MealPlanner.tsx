@@ -123,42 +123,32 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             Authorization:
-              "Bearer sk-Ja1Nh0rAuf46bcwBSDYLT3BlbkFJRgyok4zlqLLW16I8Ntmee"
+              "Bearer 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"
           },
-          //Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII (without the second I)
+          // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII
           body: JSON.stringify({
-            model: "gpt-3.5-turbo-0125",
+            model: "gpt-3.5-turbo-16k-0613",
             messages: [
               {
                 role: "system",
-                content: `You are an experienced chef specializing in the following cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. Focus on creating a diverse and delicious meal plan for the day. Be creative with the recipes and provide clear instructions. Pay attention to the nutrient limits mentioned by the user and ensure the accuracy of the quantities. Make sure you exclude the things that the user mentions. Export in JSON EXACTLY LIKE I will provide without adding 'json' keyword with backticks.`
+                content: `You are an experienced nutritionist that supervises the patients to eat an actual and edible food from the following cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. Focus on creating a diverse and delicious meal plan for the day that is complied with the limits for calories, protein, fat and carbohydrates so that the difference is NO MORE than 200 for the calories, 50 for the protein, 50 for carbohydrates and 30 for the fat. Pay attention to the limits that will be mentioned and ensure the accuracy of the quantities. Make sure you exclude the things that will be mentioned. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property without adding 'json' keyword with backticks.`
               },
               {
                 role: "user",
-                content: `Generate me a meal plan for the day with 3 meals based on the following nutrients limits: 
-                'calories: ${userPreferences.Calories}, protein: ${userPreferences.Protein}, fat: ${userPreferences.Fat}, carbohydrates: ${userPreferences.Carbohydrates}'.
-                THIS IS EXTREMELY IMPORTANT: DON'T GO OVER THE PROVIDED LIMITS AND GIVE THE MEALS IN A WAY THAT THE SUM OF THEIR NUTRIENTS WOULD BE APPROXIMATELY THE SAME AS THE LIMITS OF THE CALORIES, PROTEIN, FAT AND CARBOHYDRATES AND AT THE SAME TIME WOULDN'T BE TOO LESS OR TOO MUCH COMPARED TO THE SAME LIMITS!!! 
-                If possible use recipes that are usual for the cuisines that are called '${userPreferences.Cuisine}' in Bulgarian. GIVE DIFFERENT RECIPES from the previous request everytime I send a new one, DON'T GIVE THE SAME FOODS EVERYTIME!
-                You MUST exclude: '${userPreferences.Exclude}' in the meals!!! Please, give foods that actually are edible and real, don't make up foods!!!
-                Don't round the values as you like and use the EXACT and THE ACTUAL nutrient values. Provide main course for breakfast. Provide appetizer, main course, and dessert for lunch.
-                Provide main course and dessert for dinner. 
-                Add small things to be eaten with the main food, like a slice of bread for the soups and etc. Please, provide different foods and don't repeat yourself. 
-                Give approximately NORMAL quantities for an avarage person - UP TO 500 GRAMS!!!! But don't give ONLY 500, give as much as you need BELOW 500!!!). 
-                Also, put the grams and the nutrient values IN RATIO WITH EACH OTHER. After each food, provide the information in this format: 
-                'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. Put the summed values for the day in this format: 
-                'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. 
-                Again, give a meal plan that DOESN'T GIVE SUMMED NUTRIENTS THAT GO OVER THE USER LIMITS!!!
-                Give instructions on how to prepare(with structure: ['1.Something', '2.Something', ...]), the ingredients of the meals as well(with structure: 
-                  ['1.Something', '2.Something', ...]). Translate the meals names, ingredients and instructions in Bulgarian properly as you can. Export in JSON EXACTLY like this: 
-                  '{breakfast':{'main':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}},
-                  'lunch':{'appetizer':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}},                 
-                    'likebreakfast',
-                    'dessert':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}
-                  },
-                  'dinner':{'likebreakfast', 
-                  'dessert':{'name':'string','ingredients':['string','string','string','string','string'],'instructions':['1.string','2.string','3.string','4.string'],'totals':{'calories':'number','protein':'number','fat':'number','carbohydrate':'number','grams':'number'}}
-                },'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}' WITHOUT ADDING 'json' keyword with backticks!!!
-                   Don't translate the properties, only the values. DON'T ADD COMMAS AFTER THE LAST ITEM IN THE INSTRUCTIONS ARRAY.`
+                content: `Създай ми дневно меню с ниско съдържание на мазнини, което да включва едно ястие за закуса, 3 за обяд (третото трябва да е десерт) и 2 за вечеря (второто да е десерт). 
+                Не повече, не по-малко. Менюто трябва ЗАДЪЛЖИТЕЛНО да включва  ${userPreferences.Calories} калории, ${userPreferences.Protein} протеини, ${userPreferences.Fat} мазнини и ${userPreferences.Carbohydrates} въглехидрати като е допустимо сумата на калориите да се разминава до НАЙ-МНОГО, НЕ ПОВЕЧЕ ОТ 200, а тази на мазнините да се разминава до НАЙ-МНОГО, НЕ ПОВЕЧЕ ОТ 30. Недей да даваш твърде малко или твърде много калории, въглехидрати, протеин и мазнини в сравнение с лимитите, които предоставих в предното изречение. 
+                Разликата между подадените стойности и тези които връщаш трябва да са ЕДНАКВИ. 
+                Подавай точен грамаж и точни калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и всички общо. 
+                Подсигури реални рецепти, които да са адекватни за консумация, недей да оставяш празни места или да даваш предмети вместо храни за ядене.
+                Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация.
+                Вмъкни в менюто всички останали изисквания, но стриктно избягвай да добавяш следните елементи в хранителнато меню: ${userPreferences.Exclude}.
+                Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни.
+                Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number,grams:number}'. 
+                Форматирай сумираните стойности по абсолютно същият начин: 'totals: {calories: number,protein: number,fat: number,carbohydrates: number}'. 
+                Форматирай ЦЯЛАТА информация в JSON по абсолютно същият начин, като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК): '{breakfast':{'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'lunch':{'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}},'likebreakfast','dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'dinner':{'likebreakfast', 'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}'. 
+                Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
+                Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
+                Името на ястието е ЗАДЪЛЖИТЕЛНО на български`
               }
             ]
           })
@@ -231,13 +221,13 @@ export default function MealPlanner(props: {
         async function fetchImage(name: string): Promise<any> {
           try {
             let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDgjUTzwPIulEmJyTP1gNMz7GdihA9VRgs&cx=10030740e88c842af&q=${encodeURIComponent(
                 name
               )}&searchType=image`
             );
             if (response.status === 429) {
               let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA&cx=258e213112b4b4492&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDgjUTzwPIulEmJyTP1gNMz7GdihA9VRgs&cx=258e213112b4b4492&q=${encodeURIComponent(
                   name
                 )}&searchType=image`
               );
