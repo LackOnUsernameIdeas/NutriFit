@@ -310,7 +310,7 @@ export default function WeightStats() {
                   bmi: additionalData[timestampKey].BMI
                     ? additionalData[timestampKey].BMI.bmi
                     : undefined,
-                  0: additionalData[timestampKey].BodyMassData
+                  bodyFat: additionalData[timestampKey].BodyMassData
                     ? additionalData[timestampKey].BodyMassData.bodyFat
                     : 0,
                   bodyFatMass: additionalData[timestampKey].BodyMassData
