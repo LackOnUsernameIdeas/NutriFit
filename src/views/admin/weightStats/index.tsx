@@ -310,20 +310,20 @@ export default function WeightStats() {
                   bmi: additionalData[timestampKey].BMI
                     ? additionalData[timestampKey].BMI.bmi
                     : undefined,
-                  bodyFat: additionalData[timestampKey].BodyMassData
+                  0: additionalData[timestampKey].BodyMassData
                     ? additionalData[timestampKey].BodyMassData.bodyFat
-                    : undefined,
+                    : 0,
                   bodyFatMass: additionalData[timestampKey].BodyMassData
                     ? additionalData[timestampKey].BodyMassData.bodyFatMass
-                    : undefined,
+                    : 0,
                   leanBodyMass: additionalData[timestampKey].BodyMassData
                     ? additionalData[timestampKey].BodyMassData.leanBodyMass
-                    : undefined,
+                    : 0,
                   differenceFromPerfectWeight: additionalData[timestampKey]
                     .PerfectWeightData
                     ? additionalData[timestampKey].PerfectWeightData
                         .differenceFromPerfectWeight.difference
-                    : undefined
+                    : 0
                 };
                 const bmiData: BMIInfo = {
                   bmi: additionalData[timestampKey].BMI.bmi,
@@ -340,11 +340,19 @@ export default function WeightStats() {
                     additionalData[timestampKey].BodyMassData.leanBodyMass
                 };
                 setPerfectWeight(
-                  additionalData[timestampKey].PerfectWeightData.perfectWeight
+                  additionalData[timestampKey].PerfectWeightData
+                    ? additionalData[timestampKey].PerfectWeightData
+                        .perfectWeight
+                    : 0
                 );
                 setDifferenceFromPerfectWeight(
                   additionalData[timestampKey].PerfectWeightData
-                    .differenceFromPerfectWeight
+                    ? additionalData[timestampKey].PerfectWeightData
+                        .differenceFromPerfectWeight
+                    : {
+                        difference: 0,
+                        isUnderOrAbove: ""
+                      }
                 );
                 setBMIIndex(bmiData);
                 setBodyFatMassAndLeanMass(bodyMass);
@@ -532,8 +540,7 @@ export default function WeightStats() {
     // Check if numeric values in userData are different from 0 and not null
     const areValuesValid =
       Object.values(userData).every((value) => value !== 0) &&
-      perfectWeight !== 0 &&
-      perfectWeight !== undefined;
+      perfectWeight !== 0;
 
     if (areValuesValid) {
       setIsGenerateStatsCalled(true);
@@ -637,8 +644,7 @@ export default function WeightStats() {
           <Box
             mt="37vh"
             minH="600px"
-            opacity={isLoading ? 1 : 0}
-            transition="opacity 0.5s ease-in-out"
+            opacity={isLoading || !isGenerateStatsCalled ? 1 : 0}
           >
             <Loading />
           </Box>
