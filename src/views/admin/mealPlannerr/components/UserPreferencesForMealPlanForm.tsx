@@ -72,7 +72,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   });
 
   const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? -50 : -20}px)`,
+    transform: `translateY(${dropdownVisible ? -10 : 0}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -224,7 +224,6 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             position="relative"
             bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
             transition="background-image 0.5s ease-in-out"
-            mb={renderDropdown ? "0px" : "20px"}
           >
             <Flex justify="space-between" alignItems="center">
               <Text
@@ -240,11 +239,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 }
                 userSelect="none"
               >
-                {dropdownVisible ? (
-                  <b>Статистики за вашето телесно изменение:</b>
-                ) : (
-                  "Статистики за вашето телесно изменение:"
-                )}
+                {dropdownVisible ? <b>Кухня:</b> : "Кухня:"}
               </Text>
               <Icon
                 as={dropdownVisible ? FaAngleUp : FaAngleDown}
@@ -259,35 +254,33 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             >
               <Card
                 bg={boxBg}
-                minH={{ base: "800px", md: "300px", xl: "180px" }}
+                minH={{ base: "800px", md: "300px", xl: "100px" }}
               >
-                <SimpleGrid mt="50px">
-                  <HStack alignItems="start">
-                    <Checkbox
-                      isChecked={userPreferences.Cuisine === "Bulgarian"}
-                      onChange={handleCheckboxChange}
-                    >
-                      Bulgarian
-                    </Checkbox>
-                    <Checkbox
-                      isChecked={userPreferences.Cuisine === "Chinese"}
-                      onChange={handleCheckboxChange}
-                    >
-                      Chinese
-                    </Checkbox>
-                    <Checkbox
-                      isChecked={userPreferences.Cuisine === "Italian"}
-                      onChange={handleCheckboxChange}
-                    >
-                      Italian
-                    </Checkbox>
-                    <Checkbox
-                      isChecked={userPreferences.Cuisine === "French"}
-                      onChange={handleCheckboxChange}
-                    >
-                      French
-                    </Checkbox>
-                  </HStack>
+                <SimpleGrid mt="50px" columns={{ base: 4, md: 4 }}>
+                  <Checkbox
+                    isChecked={userPreferences.Cuisine === "Вългарска"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Вългарска
+                  </Checkbox>
+                  <Checkbox
+                    isChecked={userPreferences.Cuisine === "Китайска"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Китайска
+                  </Checkbox>
+                  <Checkbox
+                    isChecked={userPreferences.Cuisine === "Италианска"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Италианска
+                  </Checkbox>
+                  <Checkbox
+                    isChecked={userPreferences.Cuisine === "Френска"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Френска
+                  </Checkbox>
                 </SimpleGrid>
               </Card>
             </animated.div>
@@ -298,8 +291,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         <Button
           onClick={handleSubmit}
           mt={{ base: "10%", lg: "5%" }}
-          mb={{ base: "15%", lg: "0%" }}
-          minH="15%"
+          minH="60px"
+          minW="100%"
           backgroundColor={bgButton}
           color={brandColor}
         >
