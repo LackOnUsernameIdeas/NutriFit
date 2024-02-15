@@ -26,6 +26,33 @@ interface MealPlanDetailsProps {
 
 const bulgarianMealType: string[] = ["Закуска", "Обяд", "Вечеря"];
 
+const calculateMealTotals = (mealPlan: MealPlan2) => {
+  // Initialize totals for the meal type
+  const totals = {
+    calories: 0,
+    protein: 0,
+    fat: 0,
+    carbohydrates: 0
+  };
+
+  // Iterate over each meal type
+  Object.entries(mealPlan).forEach(([mealType, meal]) => {
+    if (mealType !== "totals") {
+      // Iterate over each food item in the meal type
+      Object.values(meal).forEach((foodItem: any) => {
+        console.log("foodItem", foodItem);
+        // Add the nutrients of the food item to the totals for the day
+        totals.calories += foodItem.totals.calories;
+        totals.protein += foodItem.totals.protein;
+        totals.fat += foodItem.totals.fat;
+        totals.carbohydrates += foodItem.totals.carbohydrates;
+      });
+    }
+  });
+
+  return totals;
+};
+
 const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   mealPlan,
   mealPlanImages
@@ -37,6 +64,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   );
 
   console.log("filteredArr: ", filteredArr);
+
+  const calculatedTotals = calculateMealTotals(mealPlan);
+
+  console.log("calculatedTotals: ", calculatedTotals);
   return (
     <FadeInWrapper>
       <Card>
@@ -125,8 +156,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     mb={{ base: "2%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
-                                    Грамаж:{" "}
-                                    {`${appetizer?.totals.grams} g` || "N/A"}
+                                    Грамаж: {`${appetizer?.totals.grams} g`}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -139,7 +169,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Въглехидрати:{" "}
-                                    {appetizer?.totals.carbohydrates || "N/A"}
+                                    {appetizer?.totals.carbohydrates}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -150,8 +180,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     }}
                                     fontStyle="italic"
                                   >
-                                    Протеин:{" "}
-                                    {appetizer?.totals.protein || "N/A"}
+                                    Протеин: {appetizer?.totals.protein}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -163,7 +192,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     mb={{ base: "2%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
-                                    Мазнини: {appetizer?.totals.fat || "N/A"}
+                                    Мазнини: {appetizer?.totals.fat}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -174,8 +203,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     }}
                                     fontStyle="italic"
                                   >
-                                    Калории:{" "}
-                                    {appetizer?.totals.calories || "N/A"}
+                                    Калории: {appetizer?.totals.calories}
                                   </Text>
                                 </SimpleGrid>
                               </Flex>
@@ -246,7 +274,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   mb={{ base: "2%", md: 0, lg: "3%" }}
                                   fontStyle="italic"
                                 >
-                                  Грамаж: {`${main?.totals.grams} g` || "N/A"}
+                                  Грамаж: {`${main?.totals.grams} g`}
                                 </Text>
                                 <Text
                                   textStyle="italic"
@@ -254,15 +282,14 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   mb={{ base: "2%", md: 0, lg: "3%" }}
                                   fontStyle="italic"
                                 >
-                                  Въглехидрати:{" "}
-                                  {main?.totals.carbohydrates || "N/A"}
+                                  Въглехидрати: {main?.totals.carbohydrates}
                                 </Text>
                                 <Text
                                   textStyle="italic"
                                   fontSize={{ base: "sm", md: "md", lg: "lg" }}
                                   fontStyle="italic"
                                 >
-                                  Протеин: {main?.totals.protein || "N/A"}
+                                  Протеин: {main?.totals.protein}
                                 </Text>
                                 <Text
                                   textStyle="italic"
@@ -270,14 +297,14 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   mb={{ base: "2%", md: 0, lg: "3%" }}
                                   fontStyle="italic"
                                 >
-                                  Мазнини: {main?.totals.fat || "N/A"}
+                                  Мазнини: {main?.totals.fat}
                                 </Text>
                                 <Text
                                   textStyle="italic"
                                   fontSize={{ base: "sm", md: "md", lg: "lg" }}
                                   fontStyle="italic"
                                 >
-                                  Калории: {main?.totals.calories || "N/A"}
+                                  Калории: {main?.totals.calories}
                                 </Text>
                               </SimpleGrid>
                             </Flex>
@@ -355,8 +382,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     mb={{ base: "2%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
-                                    Грамаж:{" "}
-                                    {`${dessert?.totals.grams} g` || "N/A"}
+                                    Грамаж: {`${dessert?.totals.grams} g`}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -369,7 +395,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     fontStyle="italic"
                                   >
                                     Въглехидрати:{" "}
-                                    {dessert?.totals.carbohydrates || "N/A"}
+                                    {dessert?.totals.carbohydrates}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -380,7 +406,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     }}
                                     fontStyle="italic"
                                   >
-                                    Протеин: {dessert?.totals.protein || "N/A"}
+                                    Протеин: {dessert?.totals.protein}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -392,7 +418,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     mb={{ base: "2%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
-                                    Мазнини: {dessert?.totals.fat || "N/A"}
+                                    Мазнини: {dessert?.totals.fat}
                                   </Text>
                                   <Text
                                     textStyle="italic"
@@ -403,7 +429,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     }}
                                     fontStyle="italic"
                                   >
-                                    Калории: {dessert?.totals.calories || "N/A"}
+                                    Калории: {dessert?.totals.calories}
                                   </Text>
                                 </SimpleGrid>
                               </Flex>
@@ -426,16 +452,37 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
             alignItems="center"
           >
             <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-              Сумирани Калории: {mealPlan.totals.calories || "N/A"}
+              Сумирани Калории(според chatGPT): {mealPlan.totals.calories}
             </Text>
             <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-              Сумирани Протеин: {mealPlan.totals.protein || "N/A"}
+              Сумирани Протеин(според chatGPT): {mealPlan.totals.protein}
             </Text>
             <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-              Сумирани Въглехидрати: {mealPlan.totals.carbohydrates || "N/A"}
+              Сумирани Въглехидрати(според chatGPT):{" "}
+              {mealPlan.totals.carbohydrates}
             </Text>
             <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-              Сумирани Мазнини: {mealPlan.totals.fat || "N/A"}
+              Сумирани Мазнини(според chatGPT): {mealPlan.totals.fat}
+            </Text>
+          </SimpleGrid>
+        </Flex>
+        <Flex justify="center" pt="5px" w="100%" mt="20px">
+          <SimpleGrid
+            columns={{ base: 2, lg: 4 }}
+            spacing="3%"
+            alignItems="center"
+          >
+            <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
+              Сумирани Калории: {calculatedTotals.calories}
+            </Text>
+            <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
+              Сумирани Протеин: {calculatedTotals.protein}
+            </Text>
+            <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
+              Сумирани Въглехидрати: {calculatedTotals.carbohydrates}
+            </Text>
+            <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
+              Сумирани Мазнини: {calculatedTotals.fat}
             </Text>
           </SimpleGrid>
         </Flex>

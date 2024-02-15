@@ -148,9 +148,8 @@ export default function MealPlanner(props: {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            //sk-HGhmCQxQmKh5zU56Xb3CT3BlbkF(!!!MAHASH TOVA!!!)JGkfhmNn7l7HfF2xVp0cg"
-            Authorization:
-              "Bearer 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"
+            //sk-g6be3IoSEJiCmPM8T(!!!BEZ TOVA!!!)h0cT3BlbkFJ6YKvNY1XBFzDcTZdVKQR"
+            Authorization: "Bearer sk-egege"
           },
           body: JSON.stringify({
             model: "gpt-4-turbo-preview",
