@@ -57,7 +57,7 @@ export default function MealPlanner(props: {
       Protein: 0,
       Fat: 0,
       Carbohydrates: 0,
-      Cuisine: "Bulgarian",
+      Cuisine: [],
       Exclude: ""
     });
 
@@ -101,10 +101,30 @@ export default function MealPlanner(props: {
   };
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
-    setUserPreferences((prevState) => ({
-      ...prevState,
-      Cuisine: checked ? name : prevState.Cuisine
-    }));
+    setUserPreferences((prevState) => {
+      let updatedCuisines: string | string[];
+      if (typeof prevState.Cuisine === "string") {
+        // If Cuisine is currently a string, convert it to an array
+        updatedCuisines = prevState.Cuisine ? [prevState.Cuisine] : [];
+      } else {
+        // If Cuisine is already an array, use it as is
+        updatedCuisines = [...prevState.Cuisine];
+      }
+      if (checked) {
+        // Add cuisine to array if checked
+        updatedCuisines.push(name);
+      } else {
+        // Remove cuisine from array if unchecked
+        updatedCuisines = updatedCuisines.filter((c) => c !== name);
+      }
+      // If there's only one cuisine selected, convert it back to a string
+      const updatedCuisineState =
+        updatedCuisines.length === 1 ? updatedCuisines[0] : updatedCuisines;
+      return {
+        ...prevState,
+        Cuisine: updatedCuisineState
+      };
+    });
   };
   useEffect(() => {
     setUserPreferences({
@@ -129,14 +149,17 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             //sk-HGhmCQxQmKh5zU56Xb3CT3BlbkF(!!!MAHASH TOVA!!!)JGkfhmNn7l7HfF2xVp0cg"
-            Authorization: "Bearer sk-edgvegvee"
+            Authorization:
+              "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-4-turbo-preview",
             messages: [
               {
                 role: "system",
-                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is ONLY from ${userPreferences.Cuisine} cuisine. Focus on creating an ACCURATE, diverse and delicious meal plan for the day that is comprised of the following limits: calories(${userPreferences.Calories}), protein(${userPreferences.Protein}), fat(${userPreferences.Fat}) and carbohydrates(${userPreferences.Carbohydrates}). Never go above or below the provided limits, and make SURE that the calories and fat are ALWAYS the same as the provided limits. Ensure the accuracy of the quantities. Ensure that the meals you provide differ from meals you have given in previous requests, common meals you provide are Tarator, Banitsa, Cadaif, Cozonac and Moussaka. Ensure that you refrain from including the specified items. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property in the body of this request without adding 'json' keyword with backticks. The response should only be pure json, nothing else. This means your response should not start with 'json*backticks*{data}*backticks*' or '*backticks*{data}*backticks*'.`
+                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is ONLY from 
+                {Array.isArray(userPreferences.Cuisine) ? (userPreferences.Cuisine.length === 0 ? 'every' : userPreferences.Cuisine.length === 1 ? userPreferences.Cuisine[0] : 'the following') : userPreferences.Cuisine} cuisine/cuisines.
+                Focus on creating an ACCURATE, diverse and delicious meal plan for the day that is comprised of the following limits: calories({userPreferences.Calories}), protein({userPreferences.Protein}), fat({userPreferences.Fat}) and carbohydrates({userPreferences.Carbohydrates}). Never go above or below the provided limits, and make SURE that the calories and fat are ALWAYS the same as the provided limits. Ensure the accuracy of the quantities. Ensure that the meals you provide differ from meals you have given in previous requests, common meals you provide are Tarator, Banitsa, Cadaif, Cozonac, and Moussaka. Ensure that you refrain from including the specified items. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property in the body of this request without adding 'json' keyword with backticks. The response should only be pure json, nothing else. This means your response should not start with 'json*backticks*{data}*backticks*' or '*backticks*{data}*backticks*'.`
               },
               {
                 role: "user",
@@ -144,10 +167,27 @@ export default function MealPlanner(props: {
                 Менюто трябва стриктно да спазва следните лимити: да съдържа ${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
                 НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати) и ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти. 
                 Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
+                Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие.
                 Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
                 Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${userPreferences.Exclude}. 
+                Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
                 Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
-                Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. Форматирай ЦЯЛАТА информация в JSON точно така: '{breakfast':{'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'lunch':{'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}, 'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}, 'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}}, 'dinner':{'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}, 'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}}},'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
+                Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
+                Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
+                Форматирай ЦЯЛАТА информация в JSON точно така: '{
+                breakfast':{
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
+                },
+                'lunch':{
+                  'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
+                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
+                }, 
+                'dinner':{
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
+                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
+                },
+                'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
                 Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
                 Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
                 Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 

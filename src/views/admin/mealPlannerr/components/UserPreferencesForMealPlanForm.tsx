@@ -259,62 +259,29 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 minH={{ base: "800px", md: "300px", xl: "100px" }}
               >
                 <SimpleGrid mt="50px" columns={{ base: 4, md: 4 }}>
-                  <Checkbox
-                    name="Bulgarian"
-                    isChecked={userPreferences.Cuisine === "Bulgarian"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Българска
-                  </Checkbox>
-                  <Checkbox
-                    name="English"
-                    isChecked={userPreferences.Cuisine === "English"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Английска
-                  </Checkbox>
-                  <Checkbox
-                    name="Chinese"
-                    isChecked={userPreferences.Cuisine === "Chinese"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Китайска
-                  </Checkbox>
-                  <Checkbox
-                    name="Mexican"
-                    isChecked={userPreferences.Cuisine === "Mexican"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Мексиканска
-                  </Checkbox>
-                  <Checkbox
-                    name="Indian"
-                    isChecked={userPreferences.Cuisine === "Indian"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Индийска
-                  </Checkbox>
-                  <Checkbox
-                    name="Spanish"
-                    isChecked={userPreferences.Cuisine === "Spanish"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Испанска
-                  </Checkbox>
-                  <Checkbox
-                    name="Italian"
-                    isChecked={userPreferences.Cuisine === "Italian"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Италианска
-                  </Checkbox>
-                  <Checkbox
-                    name="French"
-                    isChecked={userPreferences.Cuisine === "French"}
-                    onChange={handleCheckboxChange}
-                  >
-                    Френска
-                  </Checkbox>
+                  {[
+                    "Bulgarian",
+                    "English",
+                    "Chinese",
+                    "Mexican",
+                    "Indian",
+                    "Spanish",
+                    "Italian",
+                    "French"
+                  ].map((cuisine) => (
+                    <Checkbox
+                      key={cuisine}
+                      name={cuisine}
+                      isChecked={
+                        Array.isArray(userPreferences.Cuisine)
+                          ? userPreferences.Cuisine.includes(cuisine)
+                          : userPreferences.Cuisine === cuisine
+                      }
+                      onChange={handleCheckboxChange}
+                    >
+                      {cuisine}
+                    </Checkbox>
+                  ))}
                 </SimpleGrid>
               </Card>
             </animated.div>
