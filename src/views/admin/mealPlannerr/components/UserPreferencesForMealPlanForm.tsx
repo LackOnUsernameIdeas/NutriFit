@@ -135,6 +135,27 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
     }
   };
 
+  const englishCuisines = [
+    "Bulgarian",
+    "English",
+    "Chinese",
+    "Mexican",
+    "Indian",
+    "Spanish",
+    "Italian",
+    "French"
+  ];
+
+  const bulgarianCuisines = [
+    "Българска",
+    "Английска",
+    "Китайска",
+    "Мексиканска",
+    "Индийска",
+    "Испанска",
+    "Италианска",
+    "Френска"
+  ];
   return (
     <Card>
       <SimpleGrid
@@ -259,16 +280,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 minH={{ base: "800px", md: "300px", xl: "100px" }}
               >
                 <SimpleGrid mt="50px" columns={{ base: 4, md: 4 }}>
-                  {[
-                    "Bulgarian",
-                    "English",
-                    "Chinese",
-                    "Mexican",
-                    "Indian",
-                    "Spanish",
-                    "Italian",
-                    "French"
-                  ].map((cuisine) => (
+                  {englishCuisines.map((cuisine, index) => (
                     <Checkbox
                       key={cuisine}
                       name={cuisine}
@@ -279,7 +291,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                       }
                       onChange={handleCheckboxChange}
                     >
-                      {cuisine}
+                      {bulgarianCuisines[index]}
                     </Checkbox>
                   ))}
                 </SimpleGrid>
