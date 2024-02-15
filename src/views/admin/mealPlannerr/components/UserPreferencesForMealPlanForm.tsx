@@ -138,83 +138,85 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   return (
     <Card>
       <SimpleGrid
-        columns={{ base: 1, md: 2 }}
+        columns={{ base: 1, md: 3 }}
         gap={{ base: "10px", md: "20px" }}
       >
         {Object.entries(userPreferences).map(([key, value], index) => {
-          return (
-            <Box key={key}>
-              <Flex justify="center" pt="5px" w="100%" mt="5px">
-                <Text fontSize="2xl" mb="0px">
-                  {fieldName[index].charAt(0).toUpperCase() +
-                    fieldName[index].slice(1)}
-                  :
-                </Text>
-              </Flex>
-              <Flex>
-                {value !== 0 && typeof value !== "string" ? (
-                  <Input
-                    variant="auth"
-                    color={textColor}
-                    focusBorderColor="#7551ff"
-                    fontSize={{ base: "sm", md: "md" }}
-                    ms={{ base: "0px", md: "0px" }}
-                    placeholder={"Въведете " + fieldName[index]}
-                    _placeholder={{ opacity: 1, color: "gray.500" }}
-                    value={value || ""}
-                    mt={{ base: "0", md: "1%", sm: "0" }}
-                    mb={{ base: "1%", md: "2%", sm: "4%" }}
-                    fontWeight="500"
-                    size="lg"
-                    type="number"
-                    name={key}
-                    onChange={handleInputChange}
-                  />
-                ) : typeof value == "string" ? (
-                  <Input
-                    variant="auth"
-                    color={textColor}
-                    focusBorderColor="#7551ff"
-                    fontSize={{ base: "sm", md: "md" }}
-                    ms={{ base: "0px", md: "0px" }}
-                    placeholder={"Въведете " + fieldName[index]}
-                    _placeholder={{ opacity: 1, color: "gray.500" }}
-                    value={value || ""}
-                    mt={{ base: "0", md: "1%", sm: "0" }}
-                    mb={{ base: "1%", md: "2%", sm: "4%" }}
-                    fontWeight="500"
-                    size="lg"
-                    type="text"
-                    name={key}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <Input
-                    variant="auth"
-                    color={textColor}
-                    focusBorderColor="#7551ff"
-                    fontSize={{ base: "sm", md: "md" }}
-                    ms={{ base: "0px", md: "0px" }}
-                    placeholder={"Въведете " + fieldName[index]}
-                    _placeholder={{ opacity: 1, color: "gray.500" }}
-                    value={""}
-                    mt={{ base: "0", md: "1%", sm: "0" }}
-                    mb={{ base: "1%", md: "2%", sm: "4%" }}
-                    fontWeight="500"
-                    size="lg"
-                    type="number"
-                    name={key}
-                    onChange={handleInputChange}
-                  />
+          if (key !== "Cuisine") {
+            return (
+              <Box key={key}>
+                <Flex justify="center" pt="5px" w="100%" mt="5px">
+                  <Text fontSize="2xl" mb="0px">
+                    {fieldName[index].charAt(0).toUpperCase() +
+                      fieldName[index].slice(1)}
+                    :
+                  </Text>
+                </Flex>
+                <Flex>
+                  {value !== 0 && typeof value !== "string" ? (
+                    <Input
+                      variant="auth"
+                      color={textColor}
+                      focusBorderColor="#7551ff"
+                      fontSize={{ base: "sm", md: "md" }}
+                      ms={{ base: "0px", md: "0px" }}
+                      placeholder={"Въведете " + fieldName[index]}
+                      _placeholder={{ opacity: 1, color: "gray.500" }}
+                      value={value || ""}
+                      mt={{ base: "0", md: "1%", sm: "0" }}
+                      mb={{ base: "1%", md: "2%", sm: "4%" }}
+                      fontWeight="500"
+                      size="lg"
+                      type="number"
+                      name={key}
+                      onChange={handleInputChange}
+                    />
+                  ) : typeof value == "string" ? (
+                    <Input
+                      variant="auth"
+                      color={textColor}
+                      focusBorderColor="#7551ff"
+                      fontSize={{ base: "sm", md: "md" }}
+                      ms={{ base: "0px", md: "0px" }}
+                      placeholder={"Въведете " + fieldName[index]}
+                      _placeholder={{ opacity: 1, color: "gray.500" }}
+                      value={value || ""}
+                      mt={{ base: "0", md: "1%", sm: "0" }}
+                      mb={{ base: "1%", md: "2%", sm: "4%" }}
+                      fontWeight="500"
+                      size="lg"
+                      type="text"
+                      name={key}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <Input
+                      variant="auth"
+                      color={textColor}
+                      focusBorderColor="#7551ff"
+                      fontSize={{ base: "sm", md: "md" }}
+                      ms={{ base: "0px", md: "0px" }}
+                      placeholder={"Въведете " + fieldName[index]}
+                      _placeholder={{ opacity: 1, color: "gray.500" }}
+                      value={""}
+                      mt={{ base: "0", md: "1%", sm: "0" }}
+                      mb={{ base: "1%", md: "2%", sm: "4%" }}
+                      fontWeight="500"
+                      size="lg"
+                      type="number"
+                      name={key}
+                      onChange={handleInputChange}
+                    />
+                  )}
+                </Flex>
+                {validationErrors[key] && (
+                  <Text color="red" fontSize="sm">
+                    {validationErrors[key]}
+                  </Text>
                 )}
-              </Flex>
-              {validationErrors[key] && (
-                <Text color="red" fontSize="sm">
-                  {validationErrors[key]}
-                </Text>
-              )}
-            </Box>
-          );
+              </Box>
+            );
+          }
         })}
         <Box>
           <Card
@@ -258,25 +260,57 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
               >
                 <SimpleGrid mt="50px" columns={{ base: 4, md: 4 }}>
                   <Checkbox
-                    isChecked={userPreferences.Cuisine === "Вългарска"}
+                    name="Bulgarian"
+                    isChecked={userPreferences.Cuisine === "Bulgarian"}
                     onChange={handleCheckboxChange}
                   >
-                    Вългарска
+                    Българска
                   </Checkbox>
                   <Checkbox
-                    isChecked={userPreferences.Cuisine === "Китайска"}
+                    name="English"
+                    isChecked={userPreferences.Cuisine === "English"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Английска
+                  </Checkbox>
+                  <Checkbox
+                    name="Chinese"
+                    isChecked={userPreferences.Cuisine === "Chinese"}
                     onChange={handleCheckboxChange}
                   >
                     Китайска
                   </Checkbox>
                   <Checkbox
-                    isChecked={userPreferences.Cuisine === "Италианска"}
+                    name="Mexican"
+                    isChecked={userPreferences.Cuisine === "Mexican"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Мексиканска
+                  </Checkbox>
+                  <Checkbox
+                    name="Indian"
+                    isChecked={userPreferences.Cuisine === "Indian"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Индийска
+                  </Checkbox>
+                  <Checkbox
+                    name="Spanish"
+                    isChecked={userPreferences.Cuisine === "Spanish"}
+                    onChange={handleCheckboxChange}
+                  >
+                    Испанска
+                  </Checkbox>
+                  <Checkbox
+                    name="Italian"
+                    isChecked={userPreferences.Cuisine === "Italian"}
                     onChange={handleCheckboxChange}
                   >
                     Италианска
                   </Checkbox>
                   <Checkbox
-                    isChecked={userPreferences.Cuisine === "Френска"}
+                    name="French"
+                    isChecked={userPreferences.Cuisine === "French"}
                     onChange={handleCheckboxChange}
                   >
                     Френска
