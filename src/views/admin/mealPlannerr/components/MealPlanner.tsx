@@ -263,7 +263,7 @@ export default function MealPlanner(props: {
         async function fetchImage(name: string): Promise<any> {
           try {
             let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBpwC_IdPQ2u-16x_9QwoqJDu-zMhuFKxs&cx=10030740e88c842af&q=${encodeURIComponent(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyB27VKeq5GAyeI0mNSZprT9nY0ttgkXnFI&cx=10030740e88c842af&q=${encodeURIComponent(
                 name
               )}&searchType=image`
             );
