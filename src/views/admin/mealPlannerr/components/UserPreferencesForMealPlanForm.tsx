@@ -218,7 +218,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             );
           }
         })}
-        <Box>
+        <Box mt="40px">
           <Card
             onClick={handleDropdownToggle}
             cursor="pointer"
@@ -229,7 +229,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
           >
             <Flex justify="space-between" alignItems="center">
               <Text
-                fontSize="2xl"
+                fontSize="xl"
                 style={
                   dropdownVisible
                     ? {
