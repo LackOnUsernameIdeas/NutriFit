@@ -239,7 +239,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             );
           }
         })}
-        <Box mt="40px">
+        <Box mt="20px">
           <Card
             onClick={handleDropdownToggle}
             cursor="pointer"
@@ -247,10 +247,11 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             position="relative"
             bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
             transition="background-image 0.5s ease-in-out"
+            style={{ height: "80px" }}
           >
-            <Flex justify="space-between" alignItems="center">
+            <Flex justify="space-between" alignItems="center" mt="3px">
               <Text
-                fontSize="xl"
+                fontSize="2xl"
                 style={
                   dropdownVisible
                     ? {
@@ -262,7 +263,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 }
                 userSelect="none"
               >
-                {dropdownVisible ? <b>Кухня:</b> : "Кухня:"}
+                {dropdownVisible ? <b>Изберете кухня:</b> : "Изберете кухня:"}
               </Text>
               <Icon
                 as={dropdownVisible ? FaAngleUp : FaAngleDown}
@@ -279,7 +280,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                 bg={boxBg}
                 minH={{ base: "800px", md: "300px", xl: "100px" }}
               >
-                <SimpleGrid mt="50px" columns={{ base: 4, md: 4 }}>
+                <SimpleGrid mt="50px" columns={{ base: 2, md: 3 }}>
                   {englishCuisines.map((cuisine, index) => (
                     <Checkbox
                       key={cuisine}
