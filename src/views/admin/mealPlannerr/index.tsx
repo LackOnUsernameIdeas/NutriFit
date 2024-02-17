@@ -1568,6 +1568,7 @@ export default function WeightStats() {
                           <MealPlanner
                             chosenCalories={clickedValueCalories}
                             chosenNutrients={clickedValueNutrients}
+                            // selectedGoal={selectedGoal}
                             userIntakes={userIntakes}
                             setUserIntakes={setUserIntakes}
                           />
