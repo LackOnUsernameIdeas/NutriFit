@@ -116,7 +116,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
           <IconButton
             aria-label="left"
             icon={<MdOutlineKeyboardArrowLeft />}
-            onClick={nextPage}
+            onClick={prevPage}
             disabled={currentPage === "breakfast"}
             fontSize="4xl"
             size="lg"
@@ -130,7 +130,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
           <IconButton
             aria-label="right"
             icon={<MdOutlineKeyboardArrowRight />}
-            onClick={prevPage}
+            onClick={nextPage}
             disabled={currentPage === "dinner"}
             fontSize="4xl"
             size="lg"
