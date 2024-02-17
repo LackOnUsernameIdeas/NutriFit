@@ -157,8 +157,16 @@ export default function MealPlanner(props: {
             messages: [
               {
                 role: "system",
-                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is ONLY from 
-                {Array.isArray(userPreferences.Cuisine) ? (userPreferences.Cuisine.length === 0 ? 'every' : userPreferences.Cuisine.length === 1 ? userPreferences.Cuisine[0] : 'the following') : userPreferences.Cuisine} cuisine/cuisines.
+                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is from 
+                ${
+                  Array.isArray(userPreferences.Cuisine)
+                    ? userPreferences.Cuisine.length === 0
+                      ? "every"
+                      : userPreferences.Cuisine.length === 1
+                      ? userPreferences.Cuisine[0]
+                      : "the following"
+                    : userPreferences.Cuisine
+                } cuisine/cuisines.
                 Focus on creating an ACCURATE, diverse and delicious meal plan for the day that is comprised of the following limits: calories({userPreferences.Calories}), protein({userPreferences.Protein}), fat({userPreferences.Fat}) and carbohydrates({userPreferences.Carbohydrates}). Never go above or below the provided limits, and make SURE that the calories and fat are ALWAYS the same as the provided limits. Ensure the accuracy of the quantities. Ensure that the meals you provide differ from meals you have given in previous requests, common meals you provide are Tarator, Banitsa, Cadaif, Cozonac, and Moussaka. Ensure that you refrain from including the specified items. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property in the body of this request without adding 'json' keyword with backticks. The response should only be pure json, nothing else. This means your response should not start with 'json*backticks*{data}*backticks*' or '*backticks*{data}*backticks*'.`
               },
               {
