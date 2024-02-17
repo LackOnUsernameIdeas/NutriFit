@@ -555,20 +555,20 @@ export default function WeightStats() {
                     date: key,
                     height: dateData.height,
                     weight: dateData.weight,
-                    bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
+                    bmi: dateData.BMI ? dateData.BMI.bmi : 0,
                     bodyFat: dateData.BodyMassData
                       ? dateData.BodyMassData.bodyFat
-                      : undefined,
+                      : 0,
                     bodyFatMass: dateData.BodyMassData
                       ? dateData.BodyMassData.bodyFatMass
-                      : undefined,
+                      : 0,
                     leanBodyMass: dateData.BodyMassData
                       ? dateData.BodyMassData.leanBodyMass
-                      : undefined,
+                      : 0,
                     differenceFromPerfectWeight: dateData.PerfectWeightData
                       ? dateData.PerfectWeightData.differenceFromPerfectWeight
                           .difference
-                      : undefined
+                      : 0
                   });
                 }
               }
@@ -587,11 +587,18 @@ export default function WeightStats() {
                   weight: userDataTimestamp.weight
                 } as UserData);
                 setPerfectWeight(
-                  userDataTimestamp.PerfectWeightData.perfectWeight
+                  userDataTimestamp.PerfectWeightData
+                    ? userDataTimestamp.PerfectWeightData.perfectWeight
+                    : 0
                 );
                 setDifferenceFromPerfectWeight(
                   userDataTimestamp.PerfectWeightData
-                    .differenceFromPerfectWeight
+                    ? userDataTimestamp.PerfectWeightData
+                        .differenceFromPerfectWeight
+                    : {
+                        difference: 0,
+                        isUnderOrAbove: ""
+                      }
                 );
                 setHealth(userDataTimestamp.BMI.health);
                 setDailyCaloryRequirements(
@@ -697,7 +704,11 @@ export default function WeightStats() {
       >
         <Box>
           {!isGenerateStatsForCaloriesCalled ? (
-            <Box mt="37vh" minH="600px" transition="0.25s ease-in-out">
+            <Box
+              mt="37vh"
+              minH="600px"
+              opacity={!isGenerateStatsForCaloriesCalled ? 1 : 0}
+            >
               <Loading />
             </Box>
           ) : (

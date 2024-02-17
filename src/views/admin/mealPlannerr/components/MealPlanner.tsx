@@ -151,6 +151,7 @@ export default function MealPlanner(props: {
             //sk-g6be3IoSEJiCmPM8T(!!!BEZ TOVA!!!)h0cT3BlbkFJ6YKvNY1XBFzDcTZdVKQR"
             Authorization: "Bearer sk-gegege"
           },
+          // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII(without the second I)
           body: JSON.stringify({
             model: "gpt-4-turbo-preview",
             messages: [
