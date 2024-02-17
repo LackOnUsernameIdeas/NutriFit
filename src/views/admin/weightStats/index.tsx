@@ -212,20 +212,6 @@ export default function WeightStats() {
 
   const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
 
-  const redirectWidgetsSlidePosition = useBreakpointValue({
-    base: -805,
-    sm: -805,
-    md: -480,
-    lg: -280,
-    xl: -180
-  });
-  const dropdownWidgetsSlidePosition = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -80
-  });
-
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);
@@ -245,9 +231,7 @@ export default function WeightStats() {
   });
 
   const slideAnimation = useSpring({
-    transform: `translateY(${
-      dropdownVisible ? -50 : redirectWidgetsSlidePosition
-    }px)`,
+    transform: `translateY(${dropdownVisible ? -30 : 0}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -1522,19 +1506,21 @@ export default function WeightStats() {
                 </Card>
               </animated.div>
             )}
-            <Alert
-              status="warning"
-              borderRadius="20px"
-              fontWeight={tipFontWeight}
-              p="20px"
-              w="100%"
-              mb="20px"
-            >
-              <AlertIcon />
-              Тези стойности са приблизителни и може да е необходимо преценка от
-              диетолог или здравен специалист, за да се адаптират към
-              индивидуалните ви нужди.
-            </Alert>
+            <animated.div style={{ ...slideAnimation, position: "relative" }}>
+              <Alert
+                status="warning"
+                borderRadius="20px"
+                fontWeight={tipFontWeight}
+                p="20px"
+                w="100%"
+                mb="20px"
+              >
+                <AlertIcon />
+                Тези стойности са приблизителни и може да е необходимо преценка
+                от диетолог или здравен специалист, за да се адаптират към
+                индивидуалните ви нужди.
+              </Alert>
+            </animated.div>
           </Box>
         )}
       </Box>

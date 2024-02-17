@@ -157,7 +157,7 @@ export interface UserPreferencesForMealPlan {
   Protein: number;
   Fat: number;
   Carbohydrates: number;
-  Cuisine: string;
+  Cuisine: string | string[];
   Exclude: string;
 }
 

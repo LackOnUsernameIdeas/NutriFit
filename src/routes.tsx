@@ -7,7 +7,7 @@ import {
   MdOutlineShoppingCart
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
-import { FiHelpCircle } from "react-icons/fi";
+import { IoMdMail } from "react-icons/io";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -42,7 +42,7 @@ const routes = [
     component: WeightStats
   },
   {
-    name: "Хранителен План",
+    name: "Хранителен план",
     layout: "/admin",
     path: "/mealplan",
     icon: (
@@ -64,7 +64,7 @@ const routes = [
     name: "За контакт",
     layout: "/admin",
     path: "/contact",
-    icon: <Icon as={FiHelpCircle} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
     component: Contact,
     hideInSidebar: false
   },
