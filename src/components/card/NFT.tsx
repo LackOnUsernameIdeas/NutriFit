@@ -28,9 +28,17 @@ export default function RecipeWidget(props: {
   const textColor = useColorModeValue("navy.700", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
-    <Card p="20px" borderColor={borderColor} borderWidth="2px">
+    <Card p="0" borderColor={borderColor} borderWidth="3px">
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "20px", "2xl": "20px" }} position="relative">
+          <Image
+            src={image}
+            w={{ base: "100%", "3xl": "100%" }}
+            h={{ base: "100%", "3xl": "100%" }}
+            borderRadius="20px"
+            maxH={{ base: "400px", md: "300px", lg: "220px" }}
+            objectFit="cover"
+          />
           <Flex
             justify="center"
             direction={{
@@ -40,7 +48,7 @@ export default function RecipeWidget(props: {
               xl: "column",
               "2xl": "row"
             }}
-            mb="auto"
+            mt="20px"
           >
             <Text
               color={textColor}
@@ -52,21 +60,11 @@ export default function RecipeWidget(props: {
                 "2xl": "md",
                 "3xl": "lg"
               }}
-              mb="10px"
               fontWeight="bold"
-              me="14px"
             >
               {name}
             </Text>
           </Flex>
-          <Image
-            src={image}
-            w={{ base: "100%", "3xl": "100%" }}
-            h={{ base: "100%", "3xl": "100%" }}
-            borderRadius="20px"
-            maxH={{ base: "200px", md: "150px", lg: "150px" }}
-            objectFit="cover"
-          />
           {/* 
 					----LIKE BUTTON----
 					
@@ -102,12 +100,13 @@ export default function RecipeWidget(props: {
                 base: "sm"
               }}
               fontWeight="400"
-              me="14px"
             >
               {author}
             </Text>
           </Flex>
-          <Flex justify="center">{currentbid}</Flex>
+          <Flex justify="center" mb="20px">
+            {currentbid}
+          </Flex>
           {/* 
 					
 					----BUTTON, COULD BE USED FOR RECIPES?----

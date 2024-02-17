@@ -83,6 +83,10 @@ export default function WeightStats() {
     { bg: "secondaryGray.400" },
     { bg: "whiteAlpha.50" }
   );
+  const bgHoverInfoBox = useColorModeValue(
+    { bg: "#C6C7D4" },
+    { bg: "whiteAlpha.100" }
+  );
   const bgFocus = useColorModeValue(
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
@@ -746,7 +750,7 @@ export default function WeightStats() {
                     alignItems="center"
                     justifyContent="center"
                     bg={bgButton}
-                    _hover={bgHover}
+                    _hover={bgHoverInfoBox}
                     _focus={bgFocus}
                     _active={bgFocus}
                     w="30px"
@@ -1046,7 +1050,7 @@ export default function WeightStats() {
                     alignItems="center"
                     justifyContent="center"
                     bg={bgButton}
-                    _hover={bgHover}
+                    _hover={bgHoverInfoBox}
                     _focus={bgFocus}
                     _active={bgFocus}
                     w="30px"
