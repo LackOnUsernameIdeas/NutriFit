@@ -72,11 +72,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   });
 
   const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? -10 : 0}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
+    transform: `translateY(${dropdownVisible ? -10 : 0}px)`
   });
 
   React.useEffect(() => {
@@ -304,7 +300,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
       <animated.div style={{ ...slideAnimation, position: "relative" }}>
         <Button
           onClick={handleSubmit}
-          mt={{ base: "10%", lg: "5%" }}
+          mt={dropdownVisible ? {} : { base: "10%", lg: "5%" }}
           minH="60px"
           minW="100%"
           backgroundColor={bgButton}

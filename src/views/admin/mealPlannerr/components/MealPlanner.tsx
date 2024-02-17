@@ -149,7 +149,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             //sk-g6be3IoSEJiCmPM8T(!!!BEZ TOVA!!!)h0cT3BlbkFJ6YKvNY1XBFzDcTZdVKQR"
-            Authorization: "Bearer sk-egege"
+            Authorization: "Bearer sk-gegege"
           },
           body: JSON.stringify({
             model: "gpt-4-turbo-preview",
@@ -449,6 +449,7 @@ export default function MealPlanner(props: {
                           <MealPlanDetails
                             mealPlan={mealPlan}
                             mealPlanImages={mealPlanImages}
+                            userPreferences={userPreferences}
                           />
                         </SimpleGrid>
                       </Flex>
