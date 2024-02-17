@@ -10,7 +10,15 @@ import {
   SimpleGrid,
   Tooltip,
   Link,
-  IconButton
+  IconButton,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton
 } from "@chakra-ui/react";
 import { HSeparator } from "components/separator/Separator";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -74,7 +82,11 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   userPreferences
 }) => {
   const [currentPage, setCurrentPage] = React.useState("закуска");
+  const [showInstructions, setShowInstructions] = React.useState(false);
 
+  const toggleInstructions = () => {
+    setShowInstructions(!showInstructions);
+  };
   // Function to handle next page
   const nextPage = () => {
     if (currentPage === "закуска") setCurrentPage("обяд");
@@ -118,7 +130,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
           <IconButton
             aria-label="right"
             icon={<MdOutlineKeyboardArrowRight />}
-            onClick={nextPage}
+            onClick={prevPage}
             disabled={currentPage === "dinner"}
             fontSize="4xl"
             size="lg"
@@ -1231,118 +1243,53 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       </Box>
                       {dessert !== "none" && (
                         <Box key="dessert">
-                          <Link
-                            href={
+                          <RecipeWidget
+                            name={
+                              <Flex justify="center" w="100%" overflow="hidden">
+                                <Tooltip
+                                  label={dessert?.name}
+                                  borderRadius="10px"
+                                >
+                                  <Text
+                                    fontSize="2xl"
+                                    whiteSpace="nowrap"
+                                    maxW="360px"
+                                    overflow="hidden"
+                                    textOverflow="ellipsis"
+                                  >
+                                    {dessert?.name || "Няма рецепта"}
+                                  </Text>
+                                </Tooltip>
+                              </Flex>
+                            }
+                            author={
+                              <Flex
+                                direction="column"
+                                justify="center"
+                                align="center"
+                                pt="2px"
+                                w="100%"
+                                mt="5px"
+                              ></Flex>
+                            }
+                            image={
                               (mealPlanImages as any)[mealType].dessert
                                 ? (mealPlanImages as any)[mealType].dessert
                                 : ""
                             }
-                            target="_blank"
-                          >
-                            <RecipeWidget
-                              name={
+                            currentbid={
+                              <Box>
                                 <Flex
+                                  direction={{ base: "column", md: "row" }}
                                   justify="center"
+                                  pt="5px"
                                   w="100%"
-                                  overflow="hidden"
+                                  mb="2%"
+                                  mt="2%"
                                 >
-                                  <Tooltip
-                                    label={dessert?.name}
-                                    borderRadius="10px"
-                                  >
-                                    <Text
-                                      fontSize="2xl"
-                                      whiteSpace="nowrap"
-                                      maxW="360px"
-                                      overflow="hidden"
-                                      textOverflow="ellipsis"
-                                    >
-                                      {dessert?.name || "Няма рецепта"}
-                                    </Text>
-                                  </Tooltip>
-                                </Flex>
-                              }
-                              author={
-                                <Flex
-                                  direction="column"
-                                  justify="center"
-                                  align="center"
-                                  pt="2px"
-                                  w="100%"
-                                  mt="5px"
-                                ></Flex>
-                              }
-                              image={
-                                (mealPlanImages as any)[mealType].dessert
-                                  ? (mealPlanImages as any)[mealType].dessert
-                                  : ""
-                              }
-                              currentbid={
-                                <Box>
-                                  <Flex
-                                    direction={{ base: "column", md: "row" }}
-                                    justify="center"
-                                    pt="5px"
-                                    w="100%"
-                                    mb="2%"
-                                    mt="2%"
-                                  >
-                                    <SimpleGrid
-                                      columns={{ base: 2, md: 2, lg: 2 }}
-                                      gap="10px"
-                                    >
-                                      <Text
-                                        textStyle="italic"
-                                        fontSize={{
-                                          base: "sm",
-                                          md: "md",
-                                          lg: "lg"
-                                        }}
-                                        fontStyle="italic"
-                                      >
-                                        Калории: {dessert?.totals.calories}
-                                      </Text>
-                                      <Text
-                                        textStyle="italic"
-                                        fontSize={{
-                                          base: "sm",
-                                          md: "md",
-                                          lg: "lg"
-                                        }}
-                                        mb={{ base: "2%", md: 0, lg: "3%" }}
-                                        fontStyle="italic"
-                                      >
-                                        Въглехидрати:{" "}
-                                        {dessert?.totals.carbohydrates}
-                                      </Text>
-                                      <Text
-                                        textStyle="italic"
-                                        fontSize={{
-                                          base: "sm",
-                                          md: "md",
-                                          lg: "lg"
-                                        }}
-                                        fontStyle="italic"
-                                      >
-                                        Протеин: {dessert?.totals.protein}
-                                      </Text>
-                                      <Text
-                                        textStyle="italic"
-                                        fontSize={{
-                                          base: "sm",
-                                          md: "md",
-                                          lg: "lg"
-                                        }}
-                                        mb={{ base: "2%", md: 0, lg: "3%" }}
-                                        fontStyle="italic"
-                                      >
-                                        Мазнини: {dessert?.totals.fat}
-                                      </Text>
-                                    </SimpleGrid>
-                                  </Flex>
-                                  <Flex
-                                    alignItems="center"
-                                    justifyContent="center"
+                                  <SimpleGrid
+                                    columns={{ base: 2, md: 2, lg: 2 }}
+                                    gap="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -1353,13 +1300,117 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }}
                                       fontStyle="italic"
                                     >
-                                      Грамаж: {`${dessert?.totals.grams} g`}
+                                      Калории: {dessert?.totals.calories}
                                     </Text>
-                                  </Flex>
-                                </Box>
-                              }
-                            />
-                          </Link>
+                                    <Text
+                                      textStyle="italic"
+                                      fontSize={{
+                                        base: "sm",
+                                        md: "md",
+                                        lg: "lg"
+                                      }}
+                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      fontStyle="italic"
+                                    >
+                                      Въглехидрати:{" "}
+                                      {dessert?.totals.carbohydrates}
+                                    </Text>
+                                    <Text
+                                      textStyle="italic"
+                                      fontSize={{
+                                        base: "sm",
+                                        md: "md",
+                                        lg: "lg"
+                                      }}
+                                      fontStyle="italic"
+                                    >
+                                      Протеин: {dessert?.totals.protein}
+                                    </Text>
+                                    <Text
+                                      textStyle="italic"
+                                      fontSize={{
+                                        base: "sm",
+                                        md: "md",
+                                        lg: "lg"
+                                      }}
+                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      fontStyle="italic"
+                                    >
+                                      Мазнини: {dessert?.totals.fat}
+                                    </Text>
+                                  </SimpleGrid>
+                                </Flex>
+                                <Flex
+                                  alignItems="center"
+                                  justifyContent="center"
+                                >
+                                  <Text
+                                    textStyle="italic"
+                                    fontSize={{
+                                      base: "sm",
+                                      md: "md",
+                                      lg: "lg"
+                                    }}
+                                    fontStyle="italic"
+                                  >
+                                    Грамаж: {`${dessert?.totals.grams} g`}
+                                  </Text>
+                                </Flex>
+                                <Flex
+                                  mt="20px"
+                                  alignItems="center"
+                                  justifyContent="center"
+                                >
+                                  <Button
+                                    size="lg"
+                                    bg="#7c6bff"
+                                    color="white"
+                                    onClick={toggleInstructions}
+                                  >
+                                    Рецепта
+                                  </Button>
+                                </Flex>
+
+                                <Modal
+                                  isOpen={showInstructions}
+                                  onClose={toggleInstructions}
+                                >
+                                  <ModalOverlay />
+                                  <ModalContent borderRadius="20px">
+                                    <ModalHeader fontSize="2xl">
+                                      Рецепта
+                                    </ModalHeader>
+                                    <ModalCloseButton />
+                                    <ModalBody>
+                                      <b>Съставки:</b>
+                                      {dessert?.ingredients.map(
+                                        (step: string, index: number) => (
+                                          <Text key={index}>{step}</Text>
+                                        )
+                                      )}
+                                      <br />
+                                      <b>Инструкции:</b>
+                                      {dessert?.instructions.map(
+                                        (step: string, index: number) => (
+                                          <Text key={index}>{step}</Text>
+                                        )
+                                      )}
+                                    </ModalBody>
+                                    <ModalFooter>
+                                      <Button
+                                        bg="#7c6bff"
+                                        color="white"
+                                        mr={3}
+                                        onClick={toggleInstructions}
+                                      >
+                                        Излез
+                                      </Button>
+                                    </ModalFooter>
+                                  </ModalContent>
+                                </Modal>
+                              </Box>
+                            }
+                          />
                         </Box>
                       )}
                     </SimpleGrid>
