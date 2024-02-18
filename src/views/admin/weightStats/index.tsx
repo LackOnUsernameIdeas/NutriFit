@@ -179,7 +179,8 @@ export default function WeightStats() {
       bodyFat: 0,
       bodyFatMass: 0,
       leanBodyMass: 0,
-      differenceFromPerfectWeight: 0
+      differenceFromPerfectWeight: 0,
+      isUnderOrAbove: ""
     }
   ]);
   userDataForCharts.sort((a, b) =>
@@ -200,8 +201,11 @@ export default function WeightStats() {
   const lineChartForLeanBodyMassData = userDataForCharts.map(
     (entry) => entry.leanBodyMass
   );
-  const lineChartForDifferenceFromPerfectWeightData = userDataForCharts.map(
+  const differenceFromPerfectWeightData = userDataForCharts.map(
     (entry) => entry.differenceFromPerfectWeight
+  );
+  const isUnderOrAboveData = userDataForCharts.map(
+    (entry) => entry.isUnderOrAbove
   );
 
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
@@ -209,6 +213,17 @@ export default function WeightStats() {
     useState<WeightDifference>({
       difference: 0,
       isUnderOrAbove: ""
+    });
+
+  const lineChartForDifferenceFromPerfectWeightData =
+    differenceFromPerfectWeightData.map((difference, index) => {
+      // If the user is above perfect weight, keep the difference as is
+      if (isUnderOrAboveData[index] === "above") {
+        return difference;
+      } else {
+        // If the user is below perfect weight, make the difference negative
+        return -difference;
+      }
     });
 
   const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
@@ -383,6 +398,10 @@ export default function WeightStats() {
                       differenceFromPerfectWeight: dateData.PerfectWeightData
                         ? dateData.PerfectWeightData.differenceFromPerfectWeight
                             .difference
+                        : undefined,
+                      isUnderOrAbove: dateData.PerfectWeightData
+                        ? dateData.PerfectWeightData.differenceFromPerfectWeight
+                            .isUnderOrAbove
                         : undefined
                     });
                   }
@@ -1494,7 +1513,7 @@ export default function WeightStats() {
                       flexDirection="column"
                       fontWeight="500"
                     >
-                      Килограмите ви под нормата
+                      Теглото ви под/над нормата (кг.)
                     </Card>
                     <Card
                       alignItems="center"
@@ -1527,11 +1546,7 @@ export default function WeightStats() {
                         lineChartData={
                           lineChartForDifferenceFromPerfectWeightData
                         }
-                        lineChartLabelName={`Изменение в килограми ${
-                          differenceFromPerfectWeight.isUnderOrAbove == "above"
-                            ? "над"
-                            : "под"
-                        } нормата`}
+                        lineChartLabelName={`Изменение в килограмите ви под/над нормата`}
                         textColor={chartsColor}
                         color="#a194ff"
                       />
