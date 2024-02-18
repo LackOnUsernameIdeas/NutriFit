@@ -358,16 +358,9 @@ export default function UserReports() {
   }, []);
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const firestore = getFirestore();
-        const usersDataCollectionRef = collection(
-          firestore,
-          "additionalUserData"
-        );
-
-        const querySnapshot = await getDocs(usersDataCollectionRef);
-
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      (querySnapshot) => {
         let totalCaloriesMale = 0;
         let totalProteinMale = 0;
         let totalCarbsMale = 0;
@@ -393,8 +386,7 @@ export default function UserReports() {
 
         querySnapshot.forEach((userDoc) => {
           const userData = userDoc.data();
-
-          const gender = userData.gender; // Retrieve gender directly from userData
+          const gender = userData.gender;
 
           if (gender === "male") {
             malesCount++;
@@ -402,102 +394,44 @@ export default function UserReports() {
             femalesCount++;
           }
 
-          const timestampedObjects = Object.entries(userData)
-            .filter(([key, value]) => typeof value === "object")
-            .map(([key, value]) => {
-              return { key, ...value };
-            });
-
-          const orderedTimestampObjects = [...timestampedObjects].sort(
-            (a, b) => {
-              const keyA = a.key;
-              const keyB = b.key;
-              return new Date(keyB).getTime() - new Date(keyA).getTime();
-            }
-          );
-
-          let latestTimestampData = undefined;
-          for (const obj of orderedTimestampObjects) {
-            if (obj.weight && obj.BodyMassData) {
-              latestTimestampData = obj;
-              break; // Stop loop once found
-            }
-          }
-
-          if (gender === "male" && latestTimestampData !== undefined) {
-            malesWithData++;
-          } else if (gender === "female" && latestTimestampData !== undefined) {
-            femalesWithData++;
-          }
-
-          let latestTimestampDataWithNutrients = undefined;
-          for (const obj of orderedTimestampObjects) {
-            if (obj.Preferences) {
-              latestTimestampDataWithNutrients = obj;
-              break; // Stop loop once found
-            }
-          }
-
-          if (
-            gender === "male" &&
-            latestTimestampDataWithNutrients !== undefined
-          ) {
-            malesWithNutrients++;
-          } else if (
-            gender === "female" &&
-            latestTimestampDataWithNutrients !== undefined
-          ) {
-            femalesWithNutrients++;
-          }
-
-          console.log("males: ", malesCount, "females: ", femalesCount);
-
-          console.log("orderedTimestampObjects: ", orderedTimestampObjects);
-          // Find the latest timestamped object
-
-          let latestTimestampDataForNutrients;
-          for (const obj of orderedTimestampObjects) {
-            if (obj.Preferences) {
-              latestTimestampDataForNutrients = obj;
-              break; // Stop loop once found
-            }
-          }
-
-          // Check if the timestamped object has a weight field
-          if (latestTimestampData || latestTimestampDataForNutrients) {
+          const latestTimestampData = getLatestTimestampData(userData);
+          if (latestTimestampData !== undefined) {
             if (gender === "male") {
-              if (latestTimestampDataForNutrients?.Preferences?.calories) {
+              malesWithData++;
+              if (latestTimestampData.Preferences) {
+                malesWithNutrients++;
                 totalCaloriesMale +=
-                  latestTimestampDataForNutrients.Preferences.calories;
+                  latestTimestampData.Preferences.calories || 0;
                 totalProteinMale +=
-                  latestTimestampDataForNutrients.Preferences.nutrients.protein;
+                  latestTimestampData.Preferences.nutrients.protein || 0;
                 totalCarbsMale +=
-                  latestTimestampDataForNutrients.Preferences.nutrients.carbs;
+                  latestTimestampData.Preferences.nutrients.carbs || 0;
                 totalFatMale +=
-                  latestTimestampDataForNutrients.Preferences.nutrients.fat;
+                  latestTimestampData.Preferences.nutrients.fat || 0;
               }
-              totalWeightMale += latestTimestampData.weight;
+              totalWeightMale += latestTimestampData.weight || 0;
               totalBodyFatPercentageMale +=
-                latestTimestampData.BodyMassData.bodyFat;
+                latestTimestampData.BodyMassData.bodyFat || 0;
             } else if (gender === "female") {
-              if (latestTimestampDataForNutrients?.Preferences?.calories) {
+              femalesWithData++;
+              if (latestTimestampData.Preferences) {
+                femalesWithNutrients++;
                 totalCaloriesFemale +=
-                  latestTimestampDataForNutrients.Preferences.calories;
+                  latestTimestampData.Preferences.calories || 0;
                 totalProteinFemale +=
-                  latestTimestampDataForNutrients.Preferences.nutrients.protein;
+                  latestTimestampData.Preferences.nutrients.protein || 0;
                 totalCarbsFemale +=
-                  latestTimestampDataForNutrients.Preferences.nutrients.carbs;
+                  latestTimestampData.Preferences.nutrients.carbs || 0;
                 totalFatFemale +=
-                  latestTimestampDataForNutrients.Preferences.nutrients.fat;
+                  latestTimestampData.Preferences.nutrients.fat || 0;
               }
-              totalWeightFemale += latestTimestampData.weight;
+              totalWeightFemale += latestTimestampData.weight || 0;
               totalBodyFatPercentageFemale +=
-                latestTimestampData.BodyMassData.bodyFat;
+                latestTimestampData.BodyMassData.bodyFat || 0;
             }
           }
         });
 
-        // Calculate the average statistics for male users
         const meanCaloriesMale =
           malesWithNutrients > 0 ? totalCaloriesMale / malesWithNutrients : 0;
         const meanProteinMale =
@@ -511,7 +445,6 @@ export default function UserReports() {
         const meanBodyFatPercentageMale =
           malesWithData > 0 ? totalBodyFatPercentageMale / malesWithData : 0;
 
-        // Calculate the average statistics for female users
         const meanCaloriesFemale =
           femalesWithNutrients > 0
             ? totalCaloriesFemale / femalesWithNutrients
@@ -533,17 +466,6 @@ export default function UserReports() {
             ? totalBodyFatPercentageFemale / femalesWithData
             : 0;
 
-        console.log(
-          "totalCaloriesFemale: ",
-          totalCaloriesFemale,
-          "totalProteinFemale: ",
-          totalProteinFemale,
-          "totalCarbsFemale: ",
-          totalCarbsFemale,
-          "totalFatFemale: ",
-          totalFatFemale
-        );
-        // Update state with calculated averages for both genders
         setAverageStats({
           male: {
             totalUsers: malesCount,
@@ -565,13 +487,29 @@ export default function UserReports() {
           }
         });
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching additional user data:", error);
       }
-    };
+    );
 
-    fetchData();
+    return () => unsubscribe(); // Cleanup function to unsubscribe from snapshot listener
   }, []);
+
+  // Function to get the latest timestamp data
+  const getLatestTimestampData = (userData: {
+    [key: string]: any;
+  }): { [key: string]: any } | undefined => {
+    const timestampedObjects = Object.entries(userData)
+      .filter(([key, value]) => typeof value === "object")
+      .map(([key, value]) => ({ key, ...value }));
+    const orderedTimestampObjects = [...timestampedObjects].sort(
+      (a, b) => new Date(b.key).getTime() - new Date(a.key).getTime()
+    );
+    for (const obj of orderedTimestampObjects) {
+      if (obj.weight && obj.BodyMassData) {
+        return obj;
+      }
+    }
+    return undefined;
+  };
 
   return (
     <FadeInWrapper>
