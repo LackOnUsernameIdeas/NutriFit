@@ -330,6 +330,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                           <Text key={index}>{step}</Text>
                                         )
                                       )}
+                                      <br />
+                                      <b>Крайно количество: </b>
+                                      {appetizer?.recipeQuantity}
                                     </ModalBody>
                                     <ModalFooter>
                                       <Button
@@ -504,6 +507,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         <Text key={index}>{step}</Text>
                                       )
                                     )}
+                                    <br />
+                                    <b>Крайно количество: </b>
+                                    {main?.recipeQuantity}
                                   </ModalBody>
                                   <ModalFooter>
                                     <Button
@@ -682,6 +688,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                           <Text key={index}>{step}</Text>
                                         )
                                       )}
+                                      <br />
+                                      <b>Крайно количество: </b>
+                                      {dessert?.recipeQuantity}
                                     </ModalBody>
                                     <ModalFooter>
                                       <Button
@@ -886,6 +895,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                           <Text key={index}>{step}</Text>
                                         )
                                       )}
+                                      <br />
+                                      <b>Крайно количество: </b>
+                                      {appetizer?.recipeQuantity}
                                     </ModalBody>
                                     <ModalFooter>
                                       <Button
@@ -1060,6 +1072,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         <Text key={index}>{step}</Text>
                                       )
                                     )}
+                                    <br />
+                                    <b>Крайно количество: </b>
+                                    {main?.recipeQuantity}
                                   </ModalBody>
                                   <ModalFooter>
                                     <Button
@@ -1238,6 +1253,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                           <Text key={index}>{step}</Text>
                                         )
                                       )}
+                                      <br />
+                                      <b>Крайно количество: </b>
+                                      {dessert?.recipeQuantity}
                                     </ModalBody>
                                     <ModalFooter>
                                       <Button
@@ -1443,6 +1461,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                           <Text key={index}>{step}</Text>
                                         )
                                       )}
+                                      <br />
+                                      <b>Крайно количество: </b>
+                                      {appetizer?.recipeQuantity}
                                     </ModalBody>
                                     <ModalFooter>
                                       <Button
@@ -1617,6 +1638,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         <Text key={index}>{step}</Text>
                                       )
                                     )}
+                                    <br />
+                                    <b>Крайно количество: </b>
+                                    {main?.recipeQuantity}
                                   </ModalBody>
                                   <ModalFooter>
                                     <Button
@@ -1794,6 +1818,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                           <Text key={index}>{step}</Text>
                                         )
                                       )}
+                                      <br />
+                                      <b>Крайно количество: </b>
+                                      {dessert?.recipeQuantity}
                                     </ModalBody>
                                     <ModalFooter>
                                       <Button
