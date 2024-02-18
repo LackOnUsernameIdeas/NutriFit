@@ -29,7 +29,7 @@ export interface Recipe {
     amount: number;
     unit: string;
   };
-  suggestedMaxServing: number;
+  suggestedMaxServing?: number;
 }
 
 export type UserData = {

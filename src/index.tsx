@@ -16,6 +16,9 @@ import LandingLayout from "./layouts/landing";
 import MeasurementsLayout from "./layouts/measurements";
 import Landing from "views/landing";
 import Cookies from "js-cookie";
+import { firebaseConfig } from "./database/connection";
+import { initializeApp } from "firebase/app";
+
 import {
   getAuth,
   onAuthStateChanged,
@@ -24,6 +27,8 @@ import {
   browserSessionPersistence
 } from "firebase/auth";
 import { fetchAdditionalUserData } from "database/getAdditionalUserData";
+
+const app = initializeApp(firebaseConfig);
 
 interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
