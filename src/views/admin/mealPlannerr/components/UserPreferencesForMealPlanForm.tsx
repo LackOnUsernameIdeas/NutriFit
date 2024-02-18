@@ -10,6 +10,7 @@ import {
   Flex,
   Icon,
   Box,
+  Image,
   SimpleGrid,
   useBreakpointValue,
   useColorModeValue
@@ -152,6 +153,17 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
     "Италианска",
     "Френска"
   ];
+
+  const countriesFlags = [
+    "https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Bulgaria.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg/1200px-Flag_of_the_United_Kingdom_%281-2%29.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/800px-Flag_of_the_People%27s_Republic_of_China.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/1200px-Flag_of_Mexico.svg.png",
+    "https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1280px-Bandera_de_Espa%C3%B1a.svg.png",
+    "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/1280px-Flag_of_Italy.svg.png",
+    "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/800px-Flag_of_France.svg.png"
+  ];
   return (
     <Card>
       <SimpleGrid
@@ -288,7 +300,10 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                       }
                       onChange={handleCheckboxChange}
                     >
-                      {bulgarianCuisines[index]}
+                      <Flex alignItems="center" gap="3px">
+                        {bulgarianCuisines[index]}
+                        <Image src={`${countriesFlags[index]}`} maxW="20px" />
+                      </Flex>
                     </Checkbox>
                   ))}
                 </SimpleGrid>

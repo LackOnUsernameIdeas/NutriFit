@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import backgroundImageWhite from "../../assets/img/layout/layered-waves-haikei-white.svg";
 import backgroundImageDark from "../../assets/img/layout/layered-waves-haikei-dark.svg";
+
+import techStackImage from "../../assets/img/layout/techStack.jpg";
 const Footer = (props: { isForLanding?: boolean }) => {
   const { isForLanding } = props;
   const { colorMode } = useColorMode();
@@ -107,6 +109,7 @@ const Footer = (props: { isForLanding?: boolean }) => {
               <List lineHeight="2">
                 <LinkItem text="Калкулатор за Тегло" href="/#/admin/weight" />
                 <LinkItem text="Хранителен План" href="/#/admin/meal-plan" />
+                <LinkItem text="За Контакт" href="/#/admin/contact" />
               </List>
             </Box>
             <Box mb={{ base: "1.5rem", lg: "0" }}>
@@ -121,8 +124,16 @@ const Footer = (props: { isForLanding?: boolean }) => {
               </Text>
               <List lineHeight="2">
                 <LinkItem
-                  text="Nutritionix API"
-                  href="https://www.nutritionix.com/business/api"
+                  text="OpenAI API"
+                  href="https://platform.openai.com/docs/overview"
+                />
+                <LinkItem
+                  text="Fitness Calculator API"
+                  href="https://rapidapi.com/malaaddincelik/api/fitness-calculator"
+                />
+                <LinkItem
+                  text="Chakra UI"
+                  href="https://chakra-ui.com/getting-started"
                 />
               </List>
             </Box>
@@ -135,9 +146,9 @@ const Footer = (props: { isForLanding?: boolean }) => {
                 maxWidth="100%" // Set maximum width to prevent overflow
               >
                 <Image
-                  src="https://tubefeel.noit.eu/static/media/footer_technologies.e02131cc1165be88341a.png"
-                  alt="Dan Abramov"
-                  width="100%" // Ensure image responsiveness
+                  src={techStackImage}
+                  alt="Tech Stack"
+                  width="100%"
                   position="absolute"
                   top="50%"
                   left="50%"

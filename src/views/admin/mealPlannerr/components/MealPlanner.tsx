@@ -148,8 +148,9 @@ export default function MealPlanner(props: {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            //sk-g6be3IoSEJiCmPM8T(!!!BEZ TOVA!!!)h0cT3BlbkFJ6YKvNY1XBFzDcTZdVKQR"
-            Authorization: "Bearer sk-gegege"
+            //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"
+            Authorization:
+              "Bearer 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"
           },
           // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII(without the second I)
           body: JSON.stringify({
@@ -157,8 +158,16 @@ export default function MealPlanner(props: {
             messages: [
               {
                 role: "system",
-                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is ONLY from 
-                {Array.isArray(userPreferences.Cuisine) ? (userPreferences.Cuisine.length === 0 ? 'every' : userPreferences.Cuisine.length === 1 ? userPreferences.Cuisine[0] : 'the following') : userPreferences.Cuisine} cuisine/cuisines.
+                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is from 
+                ${
+                  Array.isArray(userPreferences.Cuisine)
+                    ? userPreferences.Cuisine.length === 0
+                      ? "every"
+                      : userPreferences.Cuisine.length === 1
+                      ? userPreferences.Cuisine[0]
+                      : "the following"
+                    : userPreferences.Cuisine
+                } cuisine/cuisines.
                 Focus on creating an ACCURATE, diverse and delicious meal plan for the day that is comprised of the following limits: calories({userPreferences.Calories}), protein({userPreferences.Protein}), fat({userPreferences.Fat}) and carbohydrates({userPreferences.Carbohydrates}). Never go above or below the provided limits, and make SURE that the calories and fat are ALWAYS the same as the provided limits. Ensure the accuracy of the quantities. Ensure that the meals you provide differ from meals you have given in previous requests, common meals you provide are Tarator, Banitsa, Cadaif, Cozonac, and Moussaka. Ensure that you refrain from including the specified items. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property in the body of this request without adding 'json' keyword with backticks. The response should only be pure json, nothing else. This means your response should not start with 'json*backticks*{data}*backticks*' or '*backticks*{data}*backticks*'.`
               },
               {
@@ -176,18 +185,17 @@ export default function MealPlanner(props: {
                 Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
                 Форматирай ЦЯЛАТА информация в JSON точно така: '{
                 breakfast':{
-                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
                 },
                 'lunch':{
-                  'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
-                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
-                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
+                  'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
+                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
                 }, 
                 'dinner':{
-                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
-                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['string','string','string','string','string'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
-                },
-                'totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number'}}', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...]}, 
+                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...]}
+                }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
                 Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
                 Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
                 Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 

@@ -97,21 +97,16 @@ export default function WeightStats() {
   );
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.400" },
-    { bg: "whiteAlpha.50" }
+    { bg: "whiteAlpha.100" }
+  );
+  const bgHoverInfoBox = useColorModeValue(
+    { bg: "#C6C7D4" },
+    { bg: "whiteAlpha.100" }
   );
   const bgFocus = useColorModeValue(
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
-  const bgDropHover = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "secondaryGray.100" }
-  );
-  const bgDropFocus = useColorModeValue(
-    { bg: "secondaryGray.200" },
-    { bg: "secondaryGray.900" }
-  );
-
   // State за разкриване на информация за менюто с информация
   const {
     isOpen: isOpenLevels,
@@ -375,7 +370,7 @@ export default function WeightStats() {
       case "mildgain":
         return "Леко Качване на Тегло";
         break;
-      case "weightlose":
+      case "weightgain":
         return "Качване на Тегло";
         break;
       case "extremegain":
@@ -987,7 +982,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашите приети калории
+                            Вашите приети калории (kcal)
                           </Card>
                           <Card
                             fontSize="3xl"
@@ -998,7 +993,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашият приет протеин
+                            Вашият приет протеин (g.)
                           </Card>
                           <Card
                             alignItems="center"
@@ -1043,7 +1038,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашите приети мазнини
+                            Вашите приети мазнини (g.)
                           </Card>
                           <Card
                             fontSize="3xl"
@@ -1054,7 +1049,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашите приети въглехидрати
+                            Вашите приети въглехидрати (g.)
                           </Card>
                           <Card
                             alignItems="center"
@@ -1148,7 +1143,7 @@ export default function WeightStats() {
                             alignItems="center"
                             justifyContent="center"
                             bg={bgButton}
-                            _hover={bgHover}
+                            _hover={bgHoverInfoBox}
                             _focus={bgFocus}
                             _active={bgFocus}
                             w="30px"
@@ -1356,7 +1351,7 @@ export default function WeightStats() {
                                           alignItems="center"
                                           justifyContent="center"
                                           bg={bgButton}
-                                          _hover={bgHover}
+                                          _hover={bgHoverInfoBox}
                                           _focus={bgFocus}
                                           _active={bgFocus}
                                           w="30px"
