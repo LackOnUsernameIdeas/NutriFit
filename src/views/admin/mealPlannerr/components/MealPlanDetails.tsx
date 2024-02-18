@@ -1833,17 +1833,41 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 borderRadius="10px"
               >
                 <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>Сумирани калории: {calculatedTotals.calories}</b>
+                  <b>
+                    Сумирани калории: {calculatedTotals.calories.toFixed(2)}
+                  </b>
                   {calculatedTotals.calories - userPreferences.Calories !==
-                    0 && (
-                    <Text fontSize="lg" color="rgba(67,24,255,1)">
-                      (
-                      {calculatedTotals.calories - userPreferences.Calories >
-                        0 && "+"}
-                      {(
-                        calculatedTotals.calories - userPreferences.Calories
-                      ).toFixed(2)}
-                      )
+                  0 ? (
+                    <Box>
+                      <Text fontSize="lg" color="white">
+                        Отклонение на chatGPT в цифри:
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        (
+                        {calculatedTotals.calories - userPreferences.Calories >
+                          0 && "+"}
+                        {(
+                          calculatedTotals.calories - userPreferences.Calories
+                        ).toFixed(2)}
+                        )
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        <Text fontSize="lg" color="white">
+                          Процент на отклонение на chatGPT:
+                        </Text>
+                        (+
+                        {(
+                          ((calculatedTotals.calories -
+                            userPreferences.Calories) /
+                            userPreferences.Calories) *
+                          100
+                        ).toFixed(2)}
+                        %)
+                      </Text>
+                    </Box>
+                  ) : (
+                    <Text fontSize="lg" color="#03AC13">
+                      Няма отклонение от страна на chatGPT!
                     </Text>
                   )}
                 </Text>
@@ -1856,17 +1880,35 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 borderRadius="10px"
               >
                 <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>Сумиран протеин: {calculatedTotals.protein}</b>
+                  <b>Сумиран протеин: {calculatedTotals.protein.toFixed(2)}</b>
                   {calculatedTotals.protein - userPreferences.Protein !== 0 && (
-                    <Text fontSize="lg" color="rgba(67,24,255,1)">
-                      (
-                      {calculatedTotals.protein - userPreferences.Protein > 0 &&
-                        "+"}
-                      {(
-                        calculatedTotals.protein - userPreferences.Protein
-                      ).toFixed(2)}
-                      )
-                    </Text>
+                    <Box>
+                      <Text fontSize="lg" color="white">
+                        Отклонение на chatGPT в цифри:
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        (
+                        {calculatedTotals.protein - userPreferences.Protein >
+                          0 && "+"}
+                        {(
+                          calculatedTotals.protein - userPreferences.Protein
+                        ).toFixed(2)}
+                        )
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        <Text fontSize="lg" color="white">
+                          Отклонение на chatGPT в цифри:
+                        </Text>
+                        (+
+                        {(
+                          ((calculatedTotals.protein -
+                            userPreferences.Protein) /
+                            userPreferences.Protein) *
+                          100
+                        ).toFixed(2)}
+                        %)
+                      </Text>
+                    </Box>
                   )}
                 </Text>
               </Tooltip>
@@ -1878,21 +1920,42 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 borderRadius="10px"
               >
                 <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>Сумирани въглехидрати: {calculatedTotals.carbohydrates}</b>
+                  <b>
+                    Сумирани въглехидрати:{" "}
+                    {calculatedTotals.carbohydrates.toFixed(2)}
+                  </b>
                   {calculatedTotals.carbohydrates -
                     userPreferences.Carbohydrates !==
                     0 && (
-                    <Text fontSize="lg" color="rgba(67,24,255,1)">
-                      (
-                      {calculatedTotals.carbohydrates -
-                        userPreferences.Carbohydrates >
-                        0 && "+"}
-                      {(
-                        calculatedTotals.carbohydrates -
-                        userPreferences.Carbohydrates
-                      ).toFixed(2)}
-                      )
-                    </Text>
+                    <Box>
+                      <Text fontSize="lg" color="white">
+                        Отклонение на chatGPT в цифри:
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        (
+                        {calculatedTotals.carbohydrates -
+                          userPreferences.Carbohydrates >
+                          0 && "+"}
+                        {(
+                          calculatedTotals.carbohydrates -
+                          userPreferences.Carbohydrates
+                        ).toFixed(2)}
+                        )
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        <Text fontSize="lg" color="white">
+                          Процент на отклонение на chatGPT:
+                        </Text>
+                        (+
+                        {(
+                          ((calculatedTotals.carbohydrates -
+                            userPreferences.Carbohydrates) /
+                            userPreferences.Carbohydrates) *
+                          100
+                        ).toFixed(2)}
+                        %)
+                      </Text>
+                    </Box>
                   )}
                 </Text>
               </Tooltip>
@@ -1904,12 +1967,32 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 borderRadius="10px"
               >
                 <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>Сумирани мазнини: {calculatedTotals.fat}</b>
+                  <b>Сумирани мазнини: {calculatedTotals.fat.toFixed(2)}</b>
                   {calculatedTotals.fat - userPreferences.Fat !== 0 && (
-                    <Text fontSize="lg" color="rgba(67,24,255,1)">
-                      ({calculatedTotals.fat - userPreferences.Fat > 0 && "+"}
-                      {(calculatedTotals.fat - userPreferences.Fat).toFixed(2)})
-                    </Text>
+                    <Box>
+                      <Text fontSize="lg" color="white">
+                        Отклонение на chatGPT в цифри:
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        ({calculatedTotals.fat - userPreferences.Fat > 0 && "+"}
+                        {(calculatedTotals.fat - userPreferences.Fat).toFixed(
+                          2
+                        )}
+                        )
+                      </Text>
+                      <Text fontSize="lg" color="rgba(67,24,255,1)">
+                        <Text fontSize="lg" color="white">
+                          Процент на отклонение на chatGPT:
+                        </Text>
+                        (+
+                        {(
+                          ((calculatedTotals.fat - userPreferences.Fat) /
+                            userPreferences.Fat) *
+                          100
+                        ).toFixed(2)}
+                        %)
+                      </Text>
+                    </Box>
                   )}
                 </Text>
               </Tooltip>

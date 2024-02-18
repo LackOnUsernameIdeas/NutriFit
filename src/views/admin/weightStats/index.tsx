@@ -129,7 +129,7 @@ export default function WeightStats() {
   });
 
   const [bmiChange, setBMIChange] = useState<number | null>(null);
-  const [bodyFatChange, setBodyFatChange] = useState<number | null>(null);
+  const [bodyFatChange, setBodyFatChange] = useState<number>(null);
   const [bodyFatMassChange, setBodyFatMassChange] = useState<number | null>(
     null
   );
@@ -844,7 +844,7 @@ export default function WeightStats() {
                         _active={bgFocus}
                       >
                         <Text fontSize="1xl" fontWeight="400">
-                          Видовете състояние според ИТМ могат да бъдат:
+                          Видовете състояние според ИТМ
                         </Text>
                       </MenuItem>
                       <AlertDialog
@@ -859,7 +859,7 @@ export default function WeightStats() {
                             borderColor={borderColor}
                           >
                             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Видовете състояние според ИТМ могат да бъдат:
+                              Видовете състояние според ИТМ:
                             </AlertDialogHeader>
 
                             <AlertDialogCloseButton borderRadius="20px" />
@@ -1017,6 +1017,13 @@ export default function WeightStats() {
                       key == "bmi" && bmiChange
                         ? bmiChange < 0
                           ? `${bmiChange.toFixed(2)}`
+                          : null
+                        : null
+                    }
+                    neutral={
+                      key == "bmi" && bmiChange == 0
+                        ? bmiChange == 0
+                          ? `${"0.00"}`
                           : null
                         : null
                     }
@@ -1203,6 +1210,13 @@ export default function WeightStats() {
                         : null
                       : null
                   }
+                  neutral={
+                    differenceFromPerfectWeightChange == 0
+                      ? differenceFromPerfectWeightChange == 0
+                        ? `${"0.00"}`
+                        : null
+                      : null
+                  }
                   subtext={`в сравнение с ${userDataLastSavedDate}`}
                 />
               </SimpleGrid>
@@ -1276,6 +1290,22 @@ export default function WeightStats() {
                             : null
                           : null
                       }
+                      neutral={
+                        key === "Body Fat (U.S. Navy Method)" &&
+                        bodyFatChange == 0
+                          ? bodyFatChange == 0
+                            ? `${"0.00"}`
+                            : null
+                          : key === "Body Fat Mass" && bodyFatMassChange == 0
+                          ? bodyFatMassChange == 0
+                            ? `${"0.00"}`
+                            : null
+                          : key === "Lean Body Mass" && leanBodyMassChange == 0
+                          ? leanBodyMassChange == 0
+                            ? `${"0.00"}`
+                            : null
+                          : null
+                      }
                       subtext={`в сравнение с ${userDataLastSavedDate}`}
                     />
                   )
@@ -1340,7 +1370,7 @@ export default function WeightStats() {
                       justifyContent="center"
                       flexDirection="column"
                     >
-                      Вашето тегло
+                      Вашето тегло (кг.)
                     </Card>
                     <Card
                       fontSize="3xl"
@@ -1407,7 +1437,7 @@ export default function WeightStats() {
                       justifyContent="center"
                       flexDirection="column"
                     >
-                      Вашата мастна телесна маса
+                      Вашата мастна телесна маса (кг.)
                     </Card>
                     <Card
                       alignItems="center"
@@ -1452,7 +1482,7 @@ export default function WeightStats() {
                       justifyContent="center"
                       flexDirection="column"
                     >
-                      Вашата чиста телесна маса
+                      Вашата чиста телесна маса (кг.)
                     </Card>
                     <Card
                       fontSize="3xl"

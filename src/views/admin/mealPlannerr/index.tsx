@@ -982,7 +982,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашите приети калории
+                            Вашите приети калории (kcal)
                           </Card>
                           <Card
                             fontSize="3xl"
@@ -993,7 +993,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашият приет протеин
+                            Вашият приет протеин (g.)
                           </Card>
                           <Card
                             alignItems="center"
@@ -1038,7 +1038,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашите приети мазнини
+                            Вашите приети мазнини (g.)
                           </Card>
                           <Card
                             fontSize="3xl"
@@ -1049,7 +1049,7 @@ export default function WeightStats() {
                             justifyContent="center"
                             flexDirection="column"
                           >
-                            Вашите приети въглехидрати
+                            Вашите приети въглехидрати (g.)
                           </Card>
                           <Card
                             alignItems="center"

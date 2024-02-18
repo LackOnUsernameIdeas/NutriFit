@@ -18,6 +18,7 @@ export default function Default(props: {
   name?: string;
   growth?: string | number;
   decrease?: string | number;
+  neutral?: string | number;
   subtext?: string;
   value: string | number;
   tooltipLabel?: string;
@@ -34,6 +35,7 @@ export default function Default(props: {
     name,
     growth,
     decrease,
+    neutral,
     subtext,
     value,
     tooltipLabel,
@@ -129,6 +131,20 @@ export default function Default(props: {
               <Flex align="center">
                 <Text color="#452efb" fontSize="xs" fontWeight="700" me="5px">
                   {decrease}
+                </Text>
+                <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
+                  {subtext ? subtext : ""}
+                </Text>
+              </Flex>
+            ) : neutral ? (
+              <Flex align="center">
+                <Text
+                  color="secondaryGray.800"
+                  fontSize="xs"
+                  fontWeight="700"
+                  me="5px"
+                >
+                  {neutral}
                 </Text>
                 <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
                   {subtext ? subtext : ""}
