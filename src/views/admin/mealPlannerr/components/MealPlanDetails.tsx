@@ -124,35 +124,23 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   return (
     <FadeInWrapper>
       <Card>
-        <Flex justify="center">
-          <IconButton
-            aria-label="left"
-            icon={<MdOutlineKeyboardArrowLeft />}
-            onClick={prevPage}
-            disabled={currentPage === "breakfast"}
-            fontSize="4xl"
-            size="lg"
-            _hover={{ bg: "none" }}
-            _active={{ bg: "none" }}
-            bg="none"
-          />
-          <Text fontSize="4xl" fontWeight="bold" ml="10px" mr="10px">
-            {currentPage.toUpperCase()}
-          </Text>
-          <IconButton
-            aria-label="right"
-            icon={<MdOutlineKeyboardArrowRight />}
-            onClick={nextPage}
-            disabled={currentPage === "dinner"}
-            fontSize="4xl"
-            size="lg"
-            _hover={{ bg: "none" }}
-            _active={{ bg: "none" }}
-            bg="none"
-          />
-        </Flex>
         {currentPage === "закуска" && (
           <>
+            <Flex justify="center">
+              <Text fontSize="4xl" fontWeight="bold" ml="10px" mr="10px">
+                {currentPage.toUpperCase()}
+              </Text>
+              <IconButton
+                aria-label="right"
+                icon={<MdOutlineKeyboardArrowRight />}
+                onClick={nextPage}
+                fontSize="4xl"
+                size="lg"
+                _hover={{ bg: "none" }}
+                _active={{ bg: "none" }}
+                bg="none"
+              />
+            </Flex>
             {Object.keys(filteredArr).map((mealType, index) => {
               if (mealType === "breakfast") {
                 const meal = (mealPlan as any)[mealType];
@@ -718,6 +706,31 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
         )}
         {currentPage === "обяд" && (
           <>
+            <Flex justify="center">
+              <IconButton
+                aria-label="left"
+                icon={<MdOutlineKeyboardArrowLeft />}
+                onClick={prevPage}
+                fontSize="4xl"
+                size="lg"
+                _hover={{ bg: "none" }}
+                _active={{ bg: "none" }}
+                bg="none"
+              />
+              <Text fontSize="4xl" fontWeight="bold" ml="10px" mr="10px">
+                {currentPage.toUpperCase()}
+              </Text>
+              <IconButton
+                aria-label="right"
+                icon={<MdOutlineKeyboardArrowRight />}
+                onClick={nextPage}
+                fontSize="4xl"
+                size="lg"
+                _hover={{ bg: "none" }}
+                _active={{ bg: "none" }}
+                bg="none"
+              />
+            </Flex>
             {Object.keys(filteredArr).map((mealType, index) => {
               if (mealType === "lunch") {
                 const meal = (mealPlan as any)[mealType];
@@ -1283,6 +1296,21 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
         )}
         {currentPage === "вечеря" && (
           <>
+            <Flex justify="center">
+              <IconButton
+                aria-label="left"
+                icon={<MdOutlineKeyboardArrowLeft />}
+                onClick={prevPage}
+                fontSize="4xl"
+                size="lg"
+                _hover={{ bg: "none" }}
+                _active={{ bg: "none" }}
+                bg="none"
+              />
+              <Text fontSize="4xl" fontWeight="bold" ml="10px" mr="10px">
+                {currentPage.toUpperCase()}
+              </Text>
+            </Flex>
             {Object.keys(filteredArr).map((mealType, index) => {
               if (mealType === "dinner") {
                 const meal = (mealPlan as any)[mealType];
@@ -1908,7 +1936,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
               >
                 <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
                   <b>Сумиран протеин: {calculatedTotals.protein.toFixed(2)}</b>
-                  {calculatedTotals.protein - userPreferences.Protein !== 0 && (
+                  {calculatedTotals.protein - userPreferences.Protein !== 0 ? (
                     <Box>
                       <Text fontSize="lg" color="white">
                         Отклонение на chatGPT в цифри:
@@ -1936,6 +1964,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         %)
                       </Text>
                     </Box>
+                  ) : (
+                    <Text fontSize="lg" color="#03AC13">
+                      Няма отклонение от страна на chatGPT!
+                    </Text>
                   )}
                 </Text>
               </Tooltip>
@@ -1953,7 +1985,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                   </b>
                   {calculatedTotals.carbohydrates -
                     userPreferences.Carbohydrates !==
-                    0 && (
+                  0 ? (
                     <Box>
                       <Text fontSize="lg" color="white">
                         Отклонение на chatGPT в цифри:
@@ -1983,6 +2015,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         %)
                       </Text>
                     </Box>
+                  ) : (
+                    <Text fontSize="lg" color="#03AC13">
+                      Няма отклонение от страна на chatGPT!
+                    </Text>
                   )}
                 </Text>
               </Tooltip>
@@ -1995,7 +2031,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
               >
                 <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
                   <b>Сумирани мазнини: {calculatedTotals.fat.toFixed(2)}</b>
-                  {calculatedTotals.fat - userPreferences.Fat !== 0 && (
+                  {calculatedTotals.fat - userPreferences.Fat !== 0 ? (
                     <Box>
                       <Text fontSize="lg" color="white">
                         Отклонение на chatGPT в цифри:
@@ -2020,6 +2056,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         %)
                       </Text>
                     </Box>
+                  ) : (
+                    <Text fontSize="lg" color="#03AC13">
+                      Няма отклонение от страна на chatGPT!
+                    </Text>
                   )}
                 </Text>
               </Tooltip>
