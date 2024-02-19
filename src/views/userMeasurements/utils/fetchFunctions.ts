@@ -37,7 +37,7 @@ function translateBMIHealthToBulgarian(englishHealth: string) {
   return (bulgarianTranslations as any)[englishHealth] || englishHealth;
 }
 
-const sendBeaconWithData = (url: string, data: any) => {
+export const sendBeaconWithData = (url: string, data: any) => {
   navigator.sendBeacon(url, JSON.stringify(data));
 };
 

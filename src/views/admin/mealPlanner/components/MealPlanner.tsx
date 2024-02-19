@@ -22,8 +22,6 @@ import {
   CustomServings,
   UserIntakes
 } from "../../../../types/weightStats";
-import { generateMealPlan } from "../utils/generateMealPlan";
-import { calculateNutrientForMealPlan } from "../utils/calculateNutrientForMealPlan";
 import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
 import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
