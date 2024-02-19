@@ -17,6 +17,7 @@ import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
+import TopMeals from "views/admin/topMeals";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -55,6 +56,14 @@ const routes = [
     path: "/contact",
     icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
     component: Contact,
+    hideInSidebar: false
+  },
+  {
+    name: "Класации",
+    layout: "/admin",
+    path: "/top-meals",
+    icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
+    component: TopMeals,
     hideInSidebar: false
   },
   {

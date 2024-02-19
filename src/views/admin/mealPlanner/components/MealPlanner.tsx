@@ -22,9 +22,11 @@ import {
   CustomServings,
   UserIntakes
 } from "../../../../types/weightStats";
+import { saveMealPlan } from "../../../../database/setWeightStatsData";
 import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
 import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
+import { getAuth } from "firebase/auth";
 
 export default function MealPlanner(props: {
   chosenCalories: number | null;
@@ -147,7 +149,7 @@ export default function MealPlanner(props: {
           headers: {
             "Content-Type": "application/json",
             //sk-C3emePASFrGkhpqNq0Fs(!!!BEZ TOVA!!!)T3BlbkFJVsTta5pgITgCpZZkttfW"
-            Authorization: "Bearer sk-wfwfw"
+            Authorization: "Bearer sk-ssssssssssssss"
           },
           // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII(without the second I)
           body: JSON.stringify({
@@ -339,15 +341,7 @@ export default function MealPlanner(props: {
       setMealPlan({
         breakfast: data.breakfast,
         lunch: data.lunch,
-        dinner: data.dinner,
-        totals: data.totals
-      });
-
-      setUserIntakes({
-        Calories: data.totals.calories,
-        Protein: data.totals.protein,
-        Fat: data.totals.fat,
-        Carbohydrates: data.totals.carbohydrates
+        dinner: data.dinner
       });
       setIsLoading(false);
     } catch (error) {
@@ -361,7 +355,20 @@ export default function MealPlanner(props: {
   //   console.log((mealPlan as any)[mealType]?.name, index);
   // });
   // console.log("filteredArr: ", filteredArr);
-  console.log("totals: ", mealPlan.totals);
+
+  useEffect(() => {
+    const saveMealPlanData = async () => {
+      try {
+        const userId = getAuth().currentUser.uid;
+        await saveMealPlan(userId, mealPlan);
+      } catch (error) {
+        console.error("Error saving meal plan:", error);
+      }
+    };
+
+    // Trigger saveMealPlanData whenever mealPlan state changes
+    saveMealPlanData();
+  }, [mealPlan]);
 
   interface LinearGradientTextProps {
     text: any;

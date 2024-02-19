@@ -197,12 +197,6 @@ export type MealPlan2 = {
     main: any;
     dessert: any;
   } | null;
-  totals?: {
-    calories: number;
-    protein: number;
-    fat: number;
-    carbohydrates: number;
-  };
 };
 
 export type WeightPerServing = {
