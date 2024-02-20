@@ -54,46 +54,14 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
     [key: string]: string;
   }>({});
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
-
-  const handleDropdownToggle = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
-
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
+  const DropdownPosition = useSpring({
+    opacity: 1,
+    transform: `translateY(${-50}px)`,
     config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
+      tension: 170,
+      friction: 12
     }
   });
-
-  const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? -10 : 0}px)`
-  });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
 
   const isNutrientDataValid = () => {
     const errors: { [key: string]: string } = {};
@@ -249,81 +217,60 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         })}
         <Box mt="20px">
           <Card
-            onClick={handleDropdownToggle}
-            cursor="pointer"
             zIndex="1"
             position="relative"
-            bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+            bg={dropdownActiveBoxBg}
             transition="background-image 0.5s ease-in-out"
             style={{ height: "80px" }}
           >
             <Flex justify="space-between" alignItems="center" mt="3px">
               <Text
                 fontSize="2xl"
-                style={
-                  dropdownVisible
-                    ? {
-                        backgroundImage: gradient,
-                        WebkitBackgroundClip: "text",
-                        color: "transparent"
-                      }
-                    : {}
-                }
+                style={{
+                  backgroundImage: gradient,
+                  WebkitBackgroundClip: "text",
+                  color: "transparent"
+                }}
                 userSelect="none"
               >
-                {dropdownVisible ? <b>Изберете кухня:</b> : "Изберете кухня:"}
+                <b>Изберете кухня:</b>
               </Text>
-              <Icon
-                as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                boxSize={6}
-                color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-              />
             </Flex>
           </Card>
-          {renderDropdown && (
-            <animated.div
-              style={{ ...slideAnimationDrop, position: "relative" }}
-            >
-              <Card
-                bg={boxBg}
-                minH={{ base: "800px", md: "300px", xl: "100px" }}
-              >
-                <SimpleGrid mt="50px" columns={{ base: 2, md: 3 }}>
-                  {englishCuisines.map((cuisine, index) => (
-                    <Checkbox
-                      key={cuisine}
-                      name={cuisine}
-                      isChecked={
-                        Array.isArray(userPreferences.Cuisine)
-                          ? userPreferences.Cuisine.includes(cuisine)
-                          : userPreferences.Cuisine === cuisine
-                      }
-                      onChange={handleCheckboxChange}
-                    >
-                      <Flex alignItems="center" gap="3px">
-                        {bulgarianCuisines[index]}
-                        <Image src={`${countriesFlags[index]}`} maxW="20px" />
-                      </Flex>
-                    </Checkbox>
-                  ))}
-                </SimpleGrid>
-              </Card>
-            </animated.div>
-          )}
+          <animated.div style={{ ...DropdownPosition, position: "relative" }}>
+            <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "100px" }}>
+              <SimpleGrid mt="50px" columns={{ base: 2, md: 3 }}>
+                {englishCuisines.map((cuisine, index) => (
+                  <Checkbox
+                    key={cuisine}
+                    name={cuisine}
+                    isChecked={
+                      Array.isArray(userPreferences.Cuisine)
+                        ? userPreferences.Cuisine.includes(cuisine)
+                        : userPreferences.Cuisine === cuisine
+                    }
+                    onChange={handleCheckboxChange}
+                  >
+                    <Flex alignItems="center" gap="3px">
+                      {bulgarianCuisines[index]}
+                      <Image src={`${countriesFlags[index]}`} maxW="20px" />
+                    </Flex>
+                  </Checkbox>
+                ))}
+              </SimpleGrid>
+            </Card>
+          </animated.div>
         </Box>
       </SimpleGrid>
-      <animated.div style={{ ...slideAnimation, position: "relative" }}>
-        <Button
-          onClick={handleSubmit}
-          mt={dropdownVisible ? {} : { base: "10%", lg: "5%" }}
-          minH="60px"
-          minW="100%"
-          backgroundColor={bgButton}
-          color={brandColor}
-        >
-          Създайте хранителен план
-        </Button>
-      </animated.div>
+      <Button
+        onClick={handleSubmit}
+        minH="60px"
+        minW="100%"
+        backgroundColor={bgButton}
+        color={brandColor}
+      >
+        Създайте хранителен план
+      </Button>
     </Card>
   );
 };
