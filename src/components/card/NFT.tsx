@@ -31,14 +31,27 @@ export default function RecipeWidget(props: {
     <Card p="0" borderColor={borderColor} borderWidth="3px">
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "20px", "2xl": "20px" }} position="relative">
-          <Image
-            src={image}
-            w={{ base: "100%", "3xl": "100%" }}
-            h={{ base: "100%", "3xl": "100%" }}
-            borderRadius="20px"
-            maxH={{ base: "400px", md: "300px", lg: "220px" }}
-            objectFit="cover"
-          />
+          {image ? (
+            <Link href={image} target="_blank">
+              <Image
+                src={image}
+                w={{ base: "100%", "3xl": "100%" }}
+                h={{ base: "100%", "3xl": "100%" }}
+                borderRadius="20px"
+                maxH={{ base: "400px", md: "300px", lg: "220px" }}
+                objectFit="cover"
+              />
+            </Link>
+          ) : (
+            <Image
+              src={image}
+              w={{ base: "100%", "3xl": "100%" }}
+              h={{ base: "100%", "3xl": "100%" }}
+              borderRadius="20px"
+              maxH={{ base: "400px", md: "300px", lg: "220px" }}
+              objectFit="cover"
+            />
+          )}
           <Flex
             justify="center"
             direction={{
