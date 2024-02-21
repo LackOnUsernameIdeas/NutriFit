@@ -31,7 +31,20 @@ import { LineAvaragesChart } from "components/charts/LineCharts";
 interface Meal {
   name: string;
   count: number;
-  image: string;
+  mealData: {
+    totals: {
+      calories: number;
+      carbohydrates: number;
+      grams: number;
+      fat: number;
+      protein: number;
+    };
+    recipeQuantity: number;
+    image: string;
+    ingredients: string[];
+    name: string;
+    instructions: string[];
+  };
 }
 
 export default function TopMeals() {
@@ -45,51 +58,101 @@ export default function TopMeals() {
   const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
-  const [allMeals, setAllMeals] = React.useState<Meal[]>([
+  const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
     {
       name: "Tova",
       count: 2,
-      image: "https://i.ytimg.com/vi/ej-8AxMAcAQ/maxresdefault.jpg"
-    },
-    {
-      name: "Onuy",
-      count: 1,
-      image: "https://gradcontent.com/lib/400x296/quinoa-spinach.webp"
-    },
-    {
-      name: "Tuyto",
-      count: 1,
-      image: "https://gradcontent.com/lib/400x296/zucchini-soup.webp"
-    },
-    {
-      name: "Tova",
-      count: 2,
-      image: "https://i.ytimg.com/vi/ej-8AxMAcAQ/maxresdefault.jpg"
-    },
-    {
-      name: "Onuy",
-      count: 1,
-      image: "https://gradcontent.com/lib/400x296/quinoa-spinach.webp"
-    },
-    {
-      name: "Tuyto",
-      count: 1,
-      image: "https://gradcontent.com/lib/400x296/zucchini-soup.webp"
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
     },
     {
       name: "Tova",
-      count: 2,
-      image: "https://i.ytimg.com/vi/ej-8AxMAcAQ/maxresdefault.jpg"
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
     },
     {
-      name: "Onuy",
+      name: "Tova",
       count: 1,
-      image: "https://gradcontent.com/lib/400x296/quinoa-spinach.webp"
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
     },
     {
-      name: "Tuyto",
+      name: "Tova",
       count: 1,
-      image: "https://gradcontent.com/lib/400x296/zucchini-soup.webp"
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
     }
   ]);
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -213,7 +276,7 @@ export default function TopMeals() {
                         // Set author, date, image, and price according to your data structure
                         author={"Брой: " + meal.count.toString()}
                         date="Date"
-                        image={meal.image} // You may want to update this based on the meal data
+                        image={meal?.mealData.image} // You may want to update this based on the meal data
                         price="Price"
                       />
                     ))}
