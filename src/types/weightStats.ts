@@ -203,7 +203,7 @@ export type MealPlanImages = {
   [mealType: string]: {
     [course: string]: string;
   };
-}[];
+};
 
 export type WeightPerServing = {
   breakfast: {

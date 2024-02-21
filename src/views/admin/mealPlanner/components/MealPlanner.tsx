@@ -150,7 +150,7 @@ export default function MealPlanner(props: {
             "Content-Type": "application/json",
             //sk-C3emePASFrGkhpqNq0Fs(!!!BEZ TOVA!!!)T3BlbkFJVsTta5pgITgCpZZkttfW"
             Authorization:
-              "Bearer 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"
+              "Bearer sk-t6ZLFG2tQfoEpyQQq1JL(!!!BEZ TOVA!!!)T3BlbkFJVYKpRlN4VK8dtm8PPb7E"
           },
           // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII(without the second I)
           body: JSON.stringify({
@@ -361,7 +361,7 @@ export default function MealPlanner(props: {
     const saveMealPlanData = async () => {
       try {
         const userId = getAuth().currentUser.uid;
-        await saveMealPlan(userId, mealPlan, mealPlanImages);
+        await Promise.all([saveMealPlan(userId, mealPlan, mealPlanImages)]);
       } catch (error) {
         console.error("Error saving meal plan:", error);
       }
