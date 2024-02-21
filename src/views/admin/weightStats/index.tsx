@@ -329,18 +329,27 @@ export default function WeightStats() {
                     : 0
                 };
                 const bmiData: BMIInfo = {
-                  bmi: additionalData[timestampKey].BMI.bmi,
-                  health: additionalData[timestampKey].BMI.health,
-                  healthy_bmi_range:
-                    additionalData[timestampKey].BMI.healthy_bmi_range
+                  bmi: additionalData[timestampKey].BMI
+                    ? additionalData[timestampKey].BMI.bmi
+                    : 0,
+                  health: additionalData[timestampKey].BMI
+                    ? additionalData[timestampKey].BMI.health
+                    : "",
+                  healthy_bmi_range: additionalData[timestampKey].BMI
+                    ? additionalData[timestampKey].BMI.healthy_bmi_range
+                    : ""
                 };
                 const bodyMass: BodyMass = {
-                  "Body Fat (U.S. Navy Method)":
-                    additionalData[timestampKey].BodyMassData.bodyFat,
-                  "Body Fat Mass":
-                    additionalData[timestampKey].BodyMassData.bodyFatMass,
-                  "Lean Body Mass":
-                    additionalData[timestampKey].BodyMassData.leanBodyMass
+                  "Body Fat (U.S. Navy Method)": additionalData[timestampKey]
+                    .BodyMassData
+                    ? additionalData[timestampKey].BodyMassData.bodyFat
+                    : 0,
+                  "Body Fat Mass": additionalData[timestampKey].BodyMassData
+                    ? additionalData[timestampKey].BodyMassData.bodyFatMass
+                    : 0,
+                  "Lean Body Mass": additionalData[timestampKey].BodyMassData
+                    ? additionalData[timestampKey].BodyMassData.leanBodyMass
+                    : 0
                 };
                 setPerfectWeight(
                   additionalData[timestampKey].PerfectWeightData

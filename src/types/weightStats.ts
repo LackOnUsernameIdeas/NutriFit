@@ -199,6 +199,12 @@ export type MealPlan2 = {
   } | null;
 };
 
+export type MealPlanImages = {
+  [mealType: string]: {
+    [course: string]: string;
+  };
+}[];
+
 export type WeightPerServing = {
   breakfast: {
     amount: number;

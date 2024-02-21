@@ -32,10 +32,13 @@ import Nft3 from "assets/img/nfts/Nft3.png";
 import Nft4 from "assets/img/nfts/Nft4.png";
 import Nft5 from "assets/img/nfts/Nft5.png";
 import Nft6 from "assets/img/nfts/Nft6.png";
+
 interface Meal {
   name: string;
   count: number;
+  image: string;
 }
+
 export default function TopMeals() {
   // Chakra Color Mode
   const { colorMode } = useColorMode();
@@ -49,8 +52,8 @@ export default function TopMeals() {
     orderMealsByFrequency().then((sortedMeals) => {
       console.log("Sorted meals by frequency:", sortedMeals);
       setAllMeals(sortedMeals);
+      setLoading(false);
     });
-    setLoading(false);
   }, []);
 
   return (
@@ -64,6 +67,7 @@ export default function TopMeals() {
           <Flex
             flexDirection="column"
             gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
+            mb="20px"
           >
             <Card p="0px">
               <Flex
@@ -79,48 +83,18 @@ export default function TopMeals() {
                 <Button variant="action">See all</Button>
               </Flex>
 
-              <HistoryItem
-                name="Colorful Heaven"
-                author="By Mark Benjamin"
-                date="30s ago"
-                image={Nft5}
-                price="0.91 ETH"
-              />
-              <HistoryItem
-                name="Abstract Colors"
-                author="By Esthera Jackson"
-                date="58s ago"
-                image={Nft1}
-                price="0.91 ETH"
-              />
-              <HistoryItem
-                name="ETH AI Brain"
-                author="By Nick Wilson"
-                date="1m ago"
-                image={Nft2}
-                price="0.91 ETH"
-              />
-              <HistoryItem
-                name="Swipe Circles"
-                author="By Peter Will"
-                date="1m ago"
-                image={Nft4}
-                price="0.91 ETH"
-              />
-              <HistoryItem
-                name="Mesh Gradients "
-                author="By Will Smith"
-                date="2m ago"
-                image={Nft3}
-                price="0.91 ETH"
-              />
-              <HistoryItem
-                name="3D Cubes Art"
-                author="By Manny Gates"
-                date="3m ago"
-                image={Nft6}
-                price="0.91 ETH"
-              />
+              {/* Map over allMeals and render HistoryItem for each meal */}
+              {allMeals.map((meal, index) => (
+                <HistoryItem
+                  key={index}
+                  name={meal.name}
+                  // Set author, date, image, and price according to your data structure
+                  author={"Брой: " + meal.count.toString()}
+                  date="Date"
+                  image={meal.image} // You may want to update this based on the meal data
+                  price="Price"
+                />
+              ))}
             </Card>
           </Flex>
         )}
