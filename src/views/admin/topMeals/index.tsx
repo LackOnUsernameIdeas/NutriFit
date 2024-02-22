@@ -28,6 +28,8 @@ import { useSpring, animated } from "react-spring";
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
 
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+
 interface Meal {
   name: string;
   count: number;
@@ -158,15 +160,52 @@ export default function TopMeals() {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
 
-  // React.useEffect(() => {
-  //   setLoading(true);
-  //   orderMealsByFrequency().then((sortedMeals) => {
-  //     console.log("Sorted meals by frequency:", sortedMeals);
-  //     setAllMeals(sortedMeals);
-  //     setLoading(false);
-  //   });
-  // }, []);
+  React.useEffect(() => {
+    const fetchSortedMeals = async () => {
+      try {
+        const mealsCollectionRef = collection(getFirestore(), "orderedMeals"); // Change "orderedMeals" to your collection name
+        const querySnapshot = await getDocs(mealsCollectionRef);
+        const sortedMeals: Meal[] = [];
+        querySnapshot.forEach((doc) => {
+          sortedMeals.push(doc.data() as Meal);
+        });
+        setAllMeals(sortedMeals);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching sorted meals:", error);
+      }
+    };
 
+    fetchSortedMeals();
+  }, []);
+
+  React.useEffect(() => {
+    const headers = {
+      "Content-Type": "application/json"
+    };
+    const fetchData = () => {
+      fetch("https://nutri-api.noit.eu/orderMealsByFrequency", {
+        method: "GET",
+        headers: headers,
+        keepalive: true
+      })
+        .then((response) => {
+          console.log(response);
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+          return response.text();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    fetchData();
+  }, []);
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);

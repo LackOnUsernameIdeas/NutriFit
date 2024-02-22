@@ -148,11 +148,10 @@ export default function MealPlanner(props: {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            //sk-C3emePASFrGkhpqNq0Fs(!!!BEZ TOVA!!!)T3BlbkFJVsTta5pgITgCpZZkttfW"
             Authorization:
               "Bearer sk-t6ZLFG2tQfoEpyQQq1JL(!!!BEZ TOVA!!!)T3BlbkFJVYKpRlN4VK8dtm8PPb7E"
           },
-          // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII(without the second I)
+          // Hosting: sk-b9clb7GWmwNNxfWYy6(!!!!!!!!!)kNT3BlbkFJ3hf0v66GWcDzApKAUR1U
           body: JSON.stringify({
             model: "gpt-4-0125-preview",
             messages: [
