@@ -138,6 +138,7 @@ export default function MealPlanner(props: {
   }, [chosenCalories, chosenNutrients]);
 
   console.log(userPreferences);
+  const openAIKey = process.env.REACT_APP_API_KEY;
   const generatePlan = async () => {
     try {
       setIsSubmitted(true);
@@ -148,10 +149,9 @@ export default function MealPlanner(props: {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Bearer sk-t6ZLFG2tQfoEpyQQq1JL(!!!BEZ TOVA!!!)T3BlbkFJVYKpRlN4VK8dtm8PPb7E"
+            Authorization: `Bearer ${openAIKey}`
           },
-          // Hosting: sk-b9clb7GWmwNNxfWYy6(!!!!!!!!!)kNT3BlbkFJ3hf0v66GWcDzApKAUR1U
+          // Hosting: REACT_APP_API_KEY_HOSTING
           body: JSON.stringify({
             model: "gpt-4-0125-preview",
             messages: [

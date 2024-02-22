@@ -28,7 +28,14 @@ import { useSpring, animated } from "react-spring";
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
 
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  onSnapshot
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 interface Meal {
   name: string;
@@ -163,13 +170,26 @@ export default function TopMeals() {
   React.useEffect(() => {
     const fetchSortedMeals = async () => {
       try {
-        const mealsCollectionRef = collection(getFirestore(), "orderedMeals"); // Change "orderedMeals" to your collection name
+        const mealsCollectionRef = collection(getFirestore(), "orderedMeals");
         const querySnapshot = await getDocs(mealsCollectionRef);
+        console.log("snap :", querySnapshot);
         const sortedMeals: Meal[] = [];
         querySnapshot.forEach((doc) => {
-          sortedMeals.push(doc.data() as Meal);
+          const orderedMealsData = doc.data().orderedMeals;
+          Object.keys(orderedMealsData).forEach((key) => {
+            sortedMeals.push(orderedMealsData[key]);
+          });
         });
-        setAllMeals(sortedMeals);
+        console.log("ordered meals collection data :", sortedMeals);
+        if (sortedMeals.length !== 0) {
+          setAllMeals(sortedMeals);
+        } else {
+          orderMealsByFrequency().then((sortedMeals) => {
+            console.log("Sorted meals by frequency:", sortedMeals);
+            setAllMeals(sortedMeals);
+            setLoading(false);
+          });
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching sorted meals:", error);
@@ -179,33 +199,54 @@ export default function TopMeals() {
     fetchSortedMeals();
   }, []);
 
-  React.useEffect(() => {
-    const headers = {
-      "Content-Type": "application/json"
-    };
-    const fetchData = () => {
-      fetch("https://nutri-api.noit.eu/orderMealsByFrequency", {
-        method: "GET",
-        headers: headers,
-        keepalive: true
-      })
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          }
-          return response.text();
-        })
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    };
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     console.log("NOT FETCHED YET!");
+  //     const sortedMeals = await orderMealsByFrequency();
+  //     console.log("Sorted meals by frequency:", sortedMeals);
+  //     setAllMeals(sortedMeals);
+  //     console.log("FETCHED!");
+  //   };
 
-    fetchData();
-  }, []);
+  //   const unsubscribe = onSnapshot(
+  //     collection(getFirestore(), "additionalUserData"),
+  //     async (querySnapshot) => {
+  //       await fetchData(); // Call fetchData when a snapshot occurs
+  //     }
+  //   );
+
+  //   // Cleanup function to unsubscribe from snapshot listener
+  //   return () => unsubscribe();
+  // }, []);
+
+  // React.useEffect(() => {
+  //   const headers = {
+  //     "Content-Type": "application/json"
+  //   };
+  //   const fetchData = () => {
+  //     fetch("https://nutri-api.noit.eu/orderMealsByFrequency", {
+  //       method: "GET",
+  //       headers: headers,
+  //       keepalive: true
+  //     })
+  //       .then((response) => {
+  //         console.log(response);
+  //         if (!response.ok) {
+  //           throw new Error("Failed to fetch data");
+  //         }
+  //         return response.text();
+  //       })
+  //       .then((data) => {
+  //         console.log(data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching data:", error);
+  //       });
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);

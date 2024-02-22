@@ -26,7 +26,7 @@ export default function NFT(props: {
     { bg: "navy.700", boxShadow: "unset" }
   );
   const textColorDate = useColorModeValue("secondaryGray.600", "white");
-
+  const [expandedImage, setExpandedImage] = useState(false);
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);
@@ -34,6 +34,14 @@ export default function NFT(props: {
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleImageExpand = () => {
+    setExpandedImage(true);
+  };
+
+  const handleImageShrink = () => {
+    setExpandedImage(false);
   };
 
   const slideAnimationDrop = useSpring({
@@ -73,30 +81,46 @@ export default function NFT(props: {
       transition="0.2s linear"
       onClick={handleDropdownToggle}
       cursor="pointer"
+      overflow="visible"
     >
       <Flex direction={{ base: "column" }} justify="center">
         <Flex position="relative" align="center" zIndex="1">
-          <Image src={image} w="66px" h="66px" borderRadius="20px" me="16px" />
+          {renderDropdown ? (
+            <Icon
+              as={FaAngleDown}
+              ms="auto"
+              fontSize="lg"
+              color={textColorDate}
+            />
+          ) : (
+            <Icon
+              as={FaAngleRight}
+              ms="auto"
+              fontSize="lg"
+              color={textColorDate}
+            />
+          )}
+          <div
+            style={{
+              left: "-20px",
+              top: "-20px",
+              zIndex: 2
+            }}
+          >
+            <Image
+              src={image}
+              w="66px"
+              h="66px"
+              borderRadius="20px"
+              mx="16px"
+              style={{ border: "4px solid #fff" }} // Adding a border to cover the card's border
+            />
+          </div>
           <Flex
             direction="column"
             w={{ base: "70%", md: "100%" }}
             me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
           >
-            {expanded ? (
-              <Icon
-                as={FaAngleDown}
-                ms="auto"
-                fontSize="lg"
-                color={textColorDate}
-              />
-            ) : (
-              <Icon
-                as={FaAngleRight}
-                ms="auto"
-                fontSize="lg"
-                color={textColorDate}
-              />
-            )}
             <Text
               color={textColor}
               fontSize={{
