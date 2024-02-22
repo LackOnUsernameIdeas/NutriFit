@@ -60,7 +60,7 @@ export default function TopMeals() {
   // Chakra Color Mode
   const { colorMode } = useColorMode();
   const chartsColor = useColorModeValue("brand.500", "white");
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";

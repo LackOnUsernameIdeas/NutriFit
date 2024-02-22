@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Flex, Icon, Image, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Icon,
+  Image,
+  Text,
+  useColorModeValue,
+  SimpleGrid
+} from "@chakra-ui/react";
 import { FaEthereum, FaAngleRight, FaAngleDown } from "react-icons/fa";
 import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
@@ -85,73 +93,62 @@ export default function NFT(props: {
     >
       <Flex direction={{ base: "column" }} justify="center">
         <Flex position="relative" align="center" zIndex="1">
-          {renderDropdown ? (
-            <Icon
-              as={FaAngleDown}
-              ms="auto"
-              fontSize="lg"
-              color={textColorDate}
-            />
-          ) : (
-            <Icon
-              as={FaAngleRight}
-              ms="auto"
-              fontSize="lg"
-              color={textColorDate}
-            />
+          <Icon
+            as={renderDropdown ? FaAngleDown : FaAngleRight} // Conditionally render the arrow based on the dropdown state
+            mr={renderDropdown ? "auto" : undefined} // If dropdown is rendered, set margin-right to auto to push the arrow to the left
+            ml={renderDropdown ? undefined : "auto"} // If dropdown is not rendered, set margin-left to auto to push the arrow to the right
+            mt={renderDropdown ? "25px" : undefined} // If dropdown is not rendered, set margin-left to auto to push the arrow to the right
+            fontSize="lg"
+            color={textColorDate}
+          />
+          {!renderDropdown && (
+            <>
+              <Image
+                src={image}
+                w="66px"
+                h="66px"
+                borderRadius="20px"
+                mx="16px"
+                style={{ border: "4px solid #fff" }}
+              />
+              <Flex
+                direction="column"
+                w={{ base: "70%", md: "100%" }}
+                me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
+              >
+                <Text
+                  color={textColor}
+                  fontSize={{
+                    base: "md"
+                  }}
+                  mb="5px"
+                  fontWeight="bold"
+                  me="14px"
+                >
+                  {name}
+                </Text>
+                <Text
+                  color="secondaryGray.600"
+                  fontSize={{
+                    base: "sm"
+                  }}
+                  fontWeight="400"
+                  me="14px"
+                >
+                  {author}
+                </Text>
+              </Flex>
+              <Flex
+                me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
+                align="center"
+              >
+                <Icon as={FaEthereum} color={textColor} width="9px" me="7px" />
+                <Text fontWeight="700" fontSize="md" color={textColor}>
+                  {price}
+                </Text>
+              </Flex>
+            </>
           )}
-          <div
-            style={{
-              left: "-20px",
-              top: "-20px",
-              zIndex: 2
-            }}
-          >
-            <Image
-              src={image}
-              w="66px"
-              h="66px"
-              borderRadius="20px"
-              mx="16px"
-              style={{ border: "4px solid #fff" }} // Adding a border to cover the card's border
-            />
-          </div>
-          <Flex
-            direction="column"
-            w={{ base: "70%", md: "100%" }}
-            me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
-          >
-            <Text
-              color={textColor}
-              fontSize={{
-                base: "md"
-              }}
-              mb="5px"
-              fontWeight="bold"
-              me="14px"
-            >
-              {name}
-            </Text>
-            <Text
-              color="secondaryGray.600"
-              fontSize={{
-                base: "sm"
-              }}
-              fontWeight="400"
-              me="14px"
-            >
-              {author}
-            </Text>
-          </Flex>
-          <Flex
-            me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
-            align="center"
-          >
-            <Icon as={FaEthereum} color={textColor} width="9px" me="7px" />
-            <Text fontWeight="700" fontSize="md" color={textColor}>
-              {price}
-            </Text>
-          </Flex>
         </Flex>
         {renderDropdown && (
           <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
@@ -159,10 +156,50 @@ export default function NFT(props: {
               bg="transparent"
               minH={{ base: "800px", md: "300px", xl: "180px" }}
             >
-              <Flex direction="column" mt="50px">
-                <Text fontWeight="700" fontSize="2xl" color="purple">
-                  testing
-                </Text>
+              <Flex mt="60px">
+                <Flex direction="column" mr="2%">
+                  <Image
+                    src={image}
+                    w="400px"
+                    h="400px"
+                    borderRadius="20px"
+                    mx="16px"
+                    style={{ border: "4px solid #fff" }}
+                  />
+                </Flex>
+                <SimpleGrid
+                  columns={{ base: 1, md: 1, xl: 1 }}
+                  gap="100px"
+                  mb="20px"
+                >
+                  <Flex
+                    direction="column"
+                    w={{ base: "70%", md: "100%" }}
+                    me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
+                  >
+                    <Text
+                      color={textColor}
+                      fontSize={{
+                        base: "3xl"
+                      }}
+                      mb="5px"
+                      fontWeight="bold"
+                      me="14px"
+                    >
+                      {name}
+                    </Text>
+                    <Text
+                      color="secondaryGray.600"
+                      fontSize={{
+                        base: "xl"
+                      }}
+                      fontWeight="400"
+                      me="14px"
+                    >
+                      {author}
+                    </Text>
+                  </Flex>
+                </SimpleGrid>
               </Flex>
             </Card>
           </animated.div>
