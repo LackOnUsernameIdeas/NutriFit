@@ -448,6 +448,7 @@ export default function TopMeals() {
                         instructions={meal?.mealData.instructions}
                         image={meal?.mealData.image} // You may want to update this based on the meal data
                         ingredients={meal?.mealData.ingredients}
+                        totals={meal?.mealData.totals}
                       />
                     ))}
                   </Box>
