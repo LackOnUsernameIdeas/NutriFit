@@ -265,14 +265,17 @@ export default function TopMeals() {
         });
         console.log("ordered meals collection data :", sortedMeals);
         if (sortedMeals.length !== 0) {
-          setAllMeals(sortedMeals);
+          const mealsSortedByCount = sortedMeals.sort(
+            (a, b) => b.count - a.count
+          );
+          setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
         } else {
           orderMealsByFrequency().then((sortedMeals) => {
             console.log("Sorted meals by frequency:", sortedMeals);
             const mealsSortedByCount = sortedMeals.sort(
               (a, b) => b.count - a.count
             );
-            setAllMeals(mealsSortedByCount as Meal[]);
+            setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
             setLoading(false);
           });
         }
@@ -291,7 +294,7 @@ export default function TopMeals() {
       const sortedMeals = await orderMealsByFrequency();
       console.log("Sorted meals by frequency:", sortedMeals);
       const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals(mealsSortedByCount as Meal[]);
+      setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
       console.log("FETCHED!");
     };
 
