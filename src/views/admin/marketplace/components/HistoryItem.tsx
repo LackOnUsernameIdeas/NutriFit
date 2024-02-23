@@ -131,6 +131,7 @@ export default function NFT(props: {
                 w="66px"
                 h="66px"
                 borderRadius="20px"
+                borderColor={boxBg}
                 mx="16px"
                 style={{ border: "4px solid #fff" }}
               />
@@ -181,6 +182,7 @@ export default function NFT(props: {
                     maxW="600px"
                     h="400px"
                     borderRadius="20px"
+                    borderColor={boxBg}
                     mx="16px"
                     style={{ border: "4px solid #fff" }}
                   />
