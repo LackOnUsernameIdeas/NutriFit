@@ -10,11 +10,19 @@ import {
   Icon,
   Select,
   SimpleGrid,
+  Tooltip,
   useColorMode,
   useColorModeValue,
   useBreakpointValue,
   Text,
-  Link
+  Link,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -23,10 +31,12 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
+import RecipeWidget from "components/card/NFT";
+
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
-import { LineAvaragesChart } from "components/charts/LineCharts";
+import { ColumnChart } from "components/charts/BarCharts";
 
 import {
   collection,
@@ -36,6 +46,11 @@ import {
   onSnapshot
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import {
+  MdOutlineKeyboardArrowRight,
+  MdOutlineKeyboardArrowLeft,
+  MdFlatware
+} from "react-icons/md";
 
 interface Meal {
   name: string;
@@ -164,6 +179,74 @@ export default function TopMeals() {
       }
     }
   ]);
+
+  // Sorting by calories
+  const sortedByCaloriesDescending = [...allMeals].sort(
+    (a, b) => b.mealData.totals.calories - a.mealData.totals.calories
+  );
+
+  const sortedByCaloriesAscending = [...allMeals].sort(
+    (a, b) => a.mealData.totals.calories - b.mealData.totals.calories
+  );
+
+  // Sorting by carbohydrates
+  const sortedByCarbohydratesDescending = [...allMeals].sort(
+    (a, b) => b.mealData.totals.carbohydrates - a.mealData.totals.carbohydrates
+  );
+
+  const sortedByCarbohydratesAscending = [...allMeals].sort(
+    (a, b) => a.mealData.totals.carbohydrates - b.mealData.totals.carbohydrates
+  );
+
+  // Sorting by fat
+  const sortedByFatDescending = [...allMeals].sort(
+    (a, b) => b.mealData.totals.fat - a.mealData.totals.fat
+  );
+
+  const sortedByFatAscending = [...allMeals].sort(
+    (a, b) => a.mealData.totals.fat - b.mealData.totals.fat
+  );
+
+  // Sorting by protein
+  const sortedByProteinDescending = [...allMeals].sort(
+    (a, b) => b.mealData.totals.protein - a.mealData.totals.protein
+  );
+
+  const sortedByProteinAscending = [...allMeals].sort(
+    (a, b) => a.mealData.totals.protein - b.mealData.totals.protein
+  );
+
+  const barChartLabels = allMeals.slice(0, 10).map((entry) => entry.name);
+  const barChartForTopSuggestions = allMeals
+    .slice(0, 10)
+    .map((entry) => entry.count);
+  const barChartForCalories = allMeals
+    .slice(0, 10)
+    .map((entry) => entry.mealData.totals.calories);
+  const barChartForProtein = allMeals
+    .slice(0, 10)
+    .map((entry) => entry.mealData.totals.protein);
+  const barChartForFat = allMeals
+    .slice(0, 10)
+    .map((entry) => entry.mealData.totals.fat);
+  const barChartForCarbohydrates = allMeals
+    .slice(0, 10)
+    .map((entry) => entry.mealData.totals.carbohydrates);
+
+  console.log(
+    "Sorted by calories (descending order):",
+    sortedByCaloriesDescending
+  );
+  console.log(
+    "Sorted by carbohydrates (descending order):",
+    sortedByCarbohydratesDescending
+  );
+  console.log("Sorted by fat (descending order):", sortedByFatDescending);
+  console.log(
+    "Sorted by protein (descending order):",
+    sortedByProteinDescending
+  );
+
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
 
@@ -252,8 +335,15 @@ export default function TopMeals() {
     React.useState(false);
   const [renderDropdown, setRenderDropdown] = React.useState(false);
 
+  const [showAppetizerInstructions, setShowAppetizerInstructions] =
+    React.useState(false);
+
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
+  };
+
+  const toggleAppetizerInstructions = () => {
+    setShowAppetizerInstructions(!showAppetizerInstructions);
   };
 
   const slideAnimationDrop = useSpring({
@@ -332,7 +422,7 @@ export default function TopMeals() {
                     userSelect="none"
                   >
                     {dropdownVisible ? (
-                      <b>Най-често препоръчани храни от ChatGPT!</b>
+                      <b>Най-препоръчани храни от ChatGPT!</b>
                     ) : (
                       "Най-често препоръчани храни от ChatGPT!"
                     )}
@@ -371,40 +461,1854 @@ export default function TopMeals() {
                 mt="20px"
               >
                 <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-препоръчана храна от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-калорична храна от ChatGPT!
+                </Card>
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip label={allMeals[0]?.name} borderRadius="10px">
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {allMeals[0]?.name || "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={allMeals[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж: {`${allMeals[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${allMeals[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${allMeals[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${allMeals[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини: {`${allMeals[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {allMeals[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {allMeals[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {allMeals[0]?.mealData?.recipeQuantity}
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByCaloriesDescending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByCaloriesDescending[0]?.name ||
+                            "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByCaloriesDescending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByCaloriesDescending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByCaloriesDescending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByCaloriesDescending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByCaloriesDescending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByCaloriesDescending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByCaloriesDescending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByCaloriesDescending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByCaloriesDescending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-богата на въглехидрати храна от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-богата на мазнини храна от ChatGPT!
+                </Card>
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByCarbohydratesDescending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByCarbohydratesDescending[0]?.name ||
+                            "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByCarbohydratesDescending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByCarbohydratesDescending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByCarbohydratesDescending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByCarbohydratesDescending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByCarbohydratesDescending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByCarbohydratesDescending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByCarbohydratesDescending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByCarbohydratesDescending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByCarbohydratesDescending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByProteinDescending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByProteinDescending[0]?.name || "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByProteinDescending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByProteinDescending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByProteinDescending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByProteinDescending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByProteinDescending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+              >
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-богата на протеин храна от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-препоръчани храни от ChatGPT!
+                </Card>
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByProteinDescending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByProteinDescending[0]?.name || "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByProteinDescending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByProteinDescending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByProteinDescending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByProteinDescending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByProteinDescending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByProteinDescending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <Card
                   alignItems="center"
                   flexDirection="column"
-                  minH={{ sm: "150px", md: "300px", lg: "300px" }}
-                  minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
-                  maxH="400px"
-                  mt="40px"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
                 >
-                  {/* BarChart component with adjusted width */}
-                  <LineAvaragesChart
-                    lineChartData={[4, 2]}
-                    lineChartData2={[2, 4]}
-                    lineChartLabels={["yes", "no"]}
-                    lineChartLabelName={"Мъже"}
-                    lineChartLabelName2={"Жени"}
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForTopSuggestions}
+                    chartLabelName="Сравнение на препоръчани храни"
                     textColor={chartsColor}
+                    color="#a194ff"
+                  />
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Сравнение на протеин(g) на първите 10
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Сравнение на въглехидрати(g) на първите 10
+                </Card>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForProtein}
+                    chartLabelName="Сравнение на протеин(g)"
+                    textColor={chartsColor}
+                    color="#a194ff"
                   />
                 </Card>
                 <Card
                   alignItems="center"
                   flexDirection="column"
-                  minH={{ sm: "150px", md: "300px", lg: "300px" }}
-                  minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
-                  maxH="400px"
-                  mt="40px"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
                 >
-                  <ColumnAvaragesChart
-                    chartData={[4, 2]}
-                    chartData2={[2, 4]}
-                    chartLabels={["yes", "no"]}
-                    chartLabelName={"Мъже"}
-                    chartLabelName2={"Жени"}
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForCarbohydrates}
+                    chartLabelName="Сравнение на въглехидрати(g)"
                     textColor={chartsColor}
+                    color="#a194ff"
                   />
                 </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Сравнение на мазнини(g) на първите 10
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Сравнение на калории(g) на първите 10
+                </Card>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForFat}
+                    chartLabelName="Сравнение на мазнини(g)"
+                    textColor={chartsColor}
+                    color="#a194ff"
+                  />
+                </Card>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForCalories}
+                    chartLabelName="Сравнение на калории(g)"
+                    textColor={chartsColor}
+                    color="#a194ff"
+                  />
+                </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+              >
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-ниско калорична храна от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-бедна на въглехидрати храна от ChatGPT!
+                </Card>
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByCaloriesAscending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByCaloriesAscending[0]?.name || "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByCaloriesAscending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByCaloriesAscending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByCaloriesAscending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByCaloriesAscending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByCaloriesAscending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByCaloriesAscending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByCaloriesAscending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByCaloriesAscending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByCaloriesAscending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByCaloriesAscending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByCarbohydratesAscending[0]?.name ||
+                            "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByCarbohydratesAscending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByCarbohydratesAscending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByCarbohydratesAscending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByCarbohydratesAscending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByCarbohydratesAscending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByCarbohydratesAscending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByCarbohydratesAscending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByCarbohydratesAscending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByCarbohydratesAscending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-бедна на протеин храна от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  Най-бедна на мазнини храна от ChatGPT!
+                </Card>
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByProteinAscending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByProteinAscending[0]?.name || "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByProteinAscending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByProteinAscending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByProteinAscending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByProteinAscending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByProteinAscending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByProteinAscending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByProteinAscending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByProteinAscending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {
+                              sortedByProteinAscending[0]?.mealData
+                                ?.recipeQuantity
+                            }
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
+                <RecipeWidget
+                  name={
+                    <Flex justify="center" w="100%" overflow="hidden">
+                      <Tooltip
+                        label={sortedByFatAscending[0]?.name}
+                        borderRadius="10px"
+                      >
+                        <Text
+                          fontSize="2xl"
+                          whiteSpace="nowrap"
+                          maxW="360px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          {sortedByFatAscending[0]?.name || "Няма рецепта"}
+                        </Text>
+                      </Tooltip>
+                    </Flex>
+                  }
+                  author={
+                    <Flex
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      pt="2px"
+                      w="100%"
+                      mt="5px"
+                    ></Flex>
+                  }
+                  image={sortedByFatAscending[0]?.mealData?.image}
+                  currentbid={
+                    <Box>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        mb="30px"
+                      >
+                        <Icon
+                          as={MdFlatware}
+                          boxSize={6}
+                          color="purple.500"
+                          mr={2}
+                        />
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Грамаж:{" "}
+                          {`${sortedByFatAscending[0]?.mealData?.totals?.grams} g`}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="center"
+                        pt="5px"
+                        w="100%"
+                        mb="2%"
+                        mt="2%"
+                      >
+                        <SimpleGrid
+                          columns={{ base: 2, md: 2, lg: 2 }}
+                          gap="10px"
+                        >
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Калории:{" "}
+                            {`${sortedByFatAscending[0]?.mealData?.totals?.calories} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Въглехидрати:{" "}
+                            {`${sortedByFatAscending[0]?.mealData?.totals?.carbohydrates} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            fontStyle="italic"
+                          >
+                            Протеин:{" "}
+                            {`${sortedByFatAscending[0]?.mealData?.totals?.protein} g`}
+                          </Text>
+                          <Text
+                            textStyle="italic"
+                            fontSize={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg"
+                            }}
+                            mb={{ base: "2%", md: 0, lg: "3%" }}
+                            fontStyle="italic"
+                          >
+                            Мазнини:{" "}
+                            {`${sortedByFatAscending[0]?.mealData?.totals?.fat} g`}
+                          </Text>
+                        </SimpleGrid>
+                      </Flex>
+                      <Flex
+                        mt="20px"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Button
+                          size="lg"
+                          bg="#7c6bff"
+                          color="white"
+                          onClick={toggleAppetizerInstructions}
+                        >
+                          Рецепта
+                        </Button>
+                      </Flex>
+
+                      <Modal
+                        isOpen={showAppetizerInstructions}
+                        onClose={toggleAppetizerInstructions}
+                      >
+                        <ModalOverlay />
+                        <ModalContent borderRadius="20px">
+                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody>
+                            <b>Съставки:</b>
+                            {sortedByFatAscending[0]?.mealData?.ingredients.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Инструкции:</b>
+                            {sortedByFatAscending[0]?.mealData?.instructions.map(
+                              (step: string, index: number) => (
+                                <Text key={index}>{step}</Text>
+                              )
+                            )}
+                            <br />
+                            <b>Крайно количество: </b>
+                            {sortedByFatAscending[0]?.mealData?.recipeQuantity}
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button
+                              bg="#7c6bff"
+                              color="white"
+                              mr={3}
+                              onClick={toggleAppetizerInstructions}
+                            >
+                              Излез
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </Box>
+                  }
+                />
               </SimpleGrid>
             </animated.div>
           </Flex>

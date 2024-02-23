@@ -11,23 +11,69 @@ type ChartProps = {
   chartLabelName: string;
   chartLabelName2?: string;
   textColor?: string;
+  color?: string;
 };
 
 const ColumnChart: React.FC<ChartProps> = ({
   chartData,
   chartLabels,
-  chartLabelName
+  chartLabelName,
+  textColor,
+  color
 }) => {
+  const { colorMode } = useColorMode();
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart>();
+  const fontWeight = colorMode === "light" ? 550 : 0;
 
   useEffect(() => {
     if (chartRef.current) {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+
+      const customOptions = {
+        ...barChartOptions,
+        scales: {
+          x: {
+            ...barChartOptions.scales.x,
+            ticks: {
+              ...barChartOptions.scales.x.ticks,
+              color: textColor,
+              font: {
+                ...barChartOptions.scales.x.ticks.font,
+                weight: fontWeight
+              }
+            }
+          },
+          y: {
+            ...barChartOptions.scales.y,
+            ticks: {
+              ...barChartOptions.scales.y.ticks,
+              color: textColor,
+              font: {
+                ...barChartOptions.scales.y.ticks.font,
+                weight: fontWeight
+              }
+            }
+          }
+        },
+        plugins: {
+          ...barChartOptions.plugins,
+          legend: null,
+          tooltip: {
+            ...barChartOptions.plugins?.tooltip,
+            bodyFont: {
+              ...barChartOptions.plugins?.tooltip?.bodyFont,
+              color: textColor,
+              weight: fontWeight
+            }
+          }
+        }
+      };
+
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
-        if (chartInstance.current) {
-          chartInstance.current.destroy();
-        }
         chartInstance.current = new Chart(ctx, {
           type: "bar",
           data: {
@@ -42,7 +88,7 @@ const ColumnChart: React.FC<ChartProps> = ({
               }
             ]
           },
-          options: barChartOptions
+          options: customOptions
         });
       }
     }
