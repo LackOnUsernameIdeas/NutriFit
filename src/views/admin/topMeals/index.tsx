@@ -269,7 +269,10 @@ export default function TopMeals() {
         } else {
           orderMealsByFrequency().then((sortedMeals) => {
             console.log("Sorted meals by frequency:", sortedMeals);
-            setAllMeals(sortedMeals);
+            const mealsSortedByCount = sortedMeals.sort(
+              (a, b) => b.count - a.count
+            );
+            setAllMeals(mealsSortedByCount as Meal[]);
             setLoading(false);
           });
         }
@@ -282,25 +285,26 @@ export default function TopMeals() {
     fetchSortedMeals();
   }, []);
 
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     console.log("NOT FETCHED YET!");
-  //     const sortedMeals = await orderMealsByFrequency();
-  //     console.log("Sorted meals by frequency:", sortedMeals);
-  //     setAllMeals(sortedMeals);
-  //     console.log("FETCHED!");
-  //   };
+  React.useEffect(() => {
+    const fetchData = async () => {
+      console.log("NOT FETCHED YET!");
+      const sortedMeals = await orderMealsByFrequency();
+      console.log("Sorted meals by frequency:", sortedMeals);
+      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
+      setAllMeals(mealsSortedByCount as Meal[]);
+      console.log("FETCHED!");
+    };
 
-  //   const unsubscribe = onSnapshot(
-  //     collection(getFirestore(), "additionalUserData"),
-  //     async (querySnapshot) => {
-  //       await fetchData(); // Call fetchData when a snapshot occurs
-  //     }
-  //   );
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      async (querySnapshot) => {
+        await fetchData(); // Call fetchData when a snapshot occurs
+      }
+    );
 
-  //   // Cleanup function to unsubscribe from snapshot listener
-  //   return () => unsubscribe();
-  // }, []);
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
+  }, []);
 
   // React.useEffect(() => {
   //   const headers = {
