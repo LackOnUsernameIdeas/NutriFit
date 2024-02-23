@@ -354,10 +354,10 @@ export default function TopMeals() {
                         key={index}
                         name={meal.name}
                         // Set author, date, image, and price according to your data structure
-                        author={"Брой: " + meal.count.toString()}
-                        date="Date"
+                        count={"Брой: " + meal.count.toString()}
+                        instructions={meal?.mealData.instructions}
                         image={meal?.mealData.image} // You may want to update this based on the meal data
-                        price="Price"
+                        ingredients={meal?.mealData.ingredients}
                       />
                     ))}
                   </Box>

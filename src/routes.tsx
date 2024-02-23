@@ -64,7 +64,7 @@ const routes = [
     path: "/top-meals",
     icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
     component: TopMeals,
-    hideInSidebar: true
+    hideInSidebar: false
   },
   {
     name: "NFT Marketplace",
