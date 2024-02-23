@@ -131,6 +131,7 @@ export default function NFT(props: {
                 w="66px"
                 h="66px"
                 borderRadius="20px"
+                borderColor={boxBg}
                 mx="16px"
                 style={{ border: "4px solid #fff" }}
               />
@@ -181,6 +182,7 @@ export default function NFT(props: {
                     maxW="600px"
                     h="400px"
                     borderRadius="20px"
+                    borderColor={boxBg}
                     mx="16px"
                     style={{ border: "4px solid #fff" }}
                   />
@@ -320,7 +322,7 @@ export default function NFT(props: {
                       }
                       name="Калории"
                       value={totals.calories}
-                      backgroundColor="secondaryGray.300"
+                      backgroundColor={boxBg}
                     />
                   </Box>
                   <SimpleGrid
@@ -346,7 +348,7 @@ export default function NFT(props: {
                       }
                       name="Въглехидрати"
                       value={totals.carbohydrates}
-                      backgroundColor="secondaryGray.300"
+                      backgroundColor={boxBg}
                     />
                     <MiniStatistics
                       startContent={
@@ -366,7 +368,7 @@ export default function NFT(props: {
                       }
                       name="Мазнини"
                       value={totals.fat}
-                      backgroundColor="secondaryGray.300"
+                      backgroundColor={boxBg}
                     />
                     <MiniStatistics
                       startContent={
@@ -386,7 +388,7 @@ export default function NFT(props: {
                       }
                       name="Протеин"
                       value={totals.protein}
-                      backgroundColor="secondaryGray.300"
+                      backgroundColor={boxBg}
                     />
                   </SimpleGrid>
                 </Box>
@@ -410,7 +412,7 @@ export default function NFT(props: {
                       }
                       name="Грамаж"
                       value={totals.grams}
-                      backgroundColor="secondaryGray.300"
+                      backgroundColor={boxBg}
                     />
                   </Box>
                   <Card
@@ -418,7 +420,7 @@ export default function NFT(props: {
                     flexDirection="column"
                     minH={{ sm: "150px", md: "300px", lg: "270px" }}
                     minW={{ sm: "150px", md: "200px", lg: "100%" }}
-                    backgroundColor="secondaryGray.300"
+                    backgroundColor={boxBg}
                     maxH="400px"
                     mt="40px"
                   >
