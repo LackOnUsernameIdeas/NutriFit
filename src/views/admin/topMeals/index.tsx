@@ -362,7 +362,7 @@ export default function TopMeals() {
   });
 
   const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? -50 : 0}px)`,
+    transform: `translateY(${dropdownVisible ? 0 : 0}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -1239,7 +1239,7 @@ export default function TopMeals() {
               >
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1252,7 +1252,7 @@ export default function TopMeals() {
                 </Card>
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1265,7 +1265,7 @@ export default function TopMeals() {
                 </Card>
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1278,7 +1278,7 @@ export default function TopMeals() {
                 </Card>
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1520,9 +1520,15 @@ export default function TopMeals() {
                     color="#a194ff"
                   />
                 </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 4 }}
+                gap="20px"
+                mt="20px"
+              >
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1535,7 +1541,7 @@ export default function TopMeals() {
                 </Card>
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1545,6 +1551,32 @@ export default function TopMeals() {
                   borderWidth="3px"
                 >
                   Сравнение на калории(kCal) на първите 10
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Най-ниско калорична храна от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Най-бедна на въглехидрати храна от ChatGPT!
                 </Card>
                 <Card
                   alignItems="center"
@@ -1581,38 +1613,6 @@ export default function TopMeals() {
                     textColor={chartsColor}
                     color="#a194ff"
                   />
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-              >
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Най-ниско калорична храна от ChatGPT!
-                </Card>
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Най-бедна на въглехидрати храна от ChatGPT!
                 </Card>
                 <RecipeWidget
                   name={
@@ -1973,6 +1973,12 @@ export default function TopMeals() {
                     </Box>
                   }
                 />
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+              >
                 <Card
                   fontSize="3xl"
                   maxH={{ sm: "100px", md: "150px", lg: "60px" }}
