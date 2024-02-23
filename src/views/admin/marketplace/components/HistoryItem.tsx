@@ -22,7 +22,7 @@ import { useSpring, animated } from "react-spring";
 import IconBox from "components/icons/IconBox";
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
-import { ColumnAvaragesChart } from "components/charts/BarCharts";
+import { ColumnChart } from "components/charts/BarCharts";
 
 export default function NFT(props: {
   image: string;
@@ -424,12 +424,14 @@ export default function NFT(props: {
                     maxH="400px"
                     mt="40px"
                   >
-                    <ColumnAvaragesChart
-                      chartData={[4, 2]}
-                      chartData2={[2, 4]}
-                      chartLabels={["yes", "no"]}
-                      chartLabelName={"Мъже"}
-                      chartLabelName2={"Жени"}
+                    <ColumnChart
+                      chartData={[
+                        totals.protein,
+                        totals.fat,
+                        totals.carbohydrates
+                      ]}
+                      chartLabels={["Протеин", "Мазнини", "Въглехидрати"]}
+                      chartLabelName={"Нутриенти"}
                       textColor={chartsColor}
                     />
                   </Card>
