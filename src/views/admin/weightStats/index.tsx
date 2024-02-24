@@ -705,7 +705,8 @@ export default function WeightStats() {
                         textTransform="uppercase"
                         fontWeight={fontWeight}
                       >
-                        <b>Цел:</b> {mapGoalToDisplayValue(userData.goal)}
+                        <b>Последно избрана цел:</b>{" "}
+                        {mapGoalToDisplayValue(userData.goal)}
                       </Heading>
                     </Box>
                   )}

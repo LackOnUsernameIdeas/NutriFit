@@ -4,7 +4,8 @@ import {
   MdPerson,
   MdHome,
   MdLock,
-  MdOutlineShoppingCart
+  MdOutlineShoppingCart,
+  MdLeaderboard
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
 import { IoMdMail } from "react-icons/io";
@@ -62,7 +63,9 @@ const routes = [
     name: "Класации",
     layout: "/admin",
     path: "/top-meals",
-    icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
+    icon: (
+      <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
+    ),
     component: TopMeals,
     hideInSidebar: false
   },
