@@ -23,7 +23,8 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useMediaQuery
+  useMediaQuery,
+  IconButton
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -48,28 +49,14 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import {
-  MdOutlineKeyboardArrowRight,
-  MdOutlineKeyboardArrowLeft,
+  MdKeyboardArrowLeft,
+  MdKeyboardArrowRight,
   MdFlatware
 } from "react-icons/md";
-
-interface Meal {
-  name: string;
-  count: number;
-  mealData: {
-    totals: {
-      calories: number;
-      carbohydrates: number;
-      grams: number;
-      fat: number;
-      protein: number;
-    };
-    recipeQuantity: number;
-    image: string;
-    ingredients: string[];
-    name: string;
-    instructions: string[];
-  };
+import RecipeModal from "./components/RecipeModal";
+import { Meal } from "../../../types/weightStats";
+interface DropdownState {
+  currentPage: number;
 }
 
 export default function TopMeals() {
@@ -83,7 +70,10 @@ export default function TopMeals() {
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
+  const ITEMS_PER_PAGE = 5;
+  const [dropdownState, setDropdownState] = React.useState<DropdownState>({
+    currentPage: 0
+  });
   const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
     {
       name: "Tova",
@@ -181,7 +171,7 @@ export default function TopMeals() {
       }
     }
   ]);
-
+  const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
   // Sorting by calories
   const sortedByCaloriesDescending = [...allMeals].sort(
     (a, b) => b.mealData.totals.calories - a.mealData.totals.calories
@@ -248,9 +238,9 @@ export default function TopMeals() {
     "Sorted by protein (descending order):",
     sortedByProteinDescending
   );
-
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+
   React.useEffect(() => {
     const fetchSortedMeals = async () => {
       try {
@@ -338,20 +328,13 @@ export default function TopMeals() {
   //   fetchData();
   // }, []);
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
+  const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
-
-  const [showAppetizerInstructions, setShowAppetizerInstructions] =
-    React.useState(false);
+    React.useState(true);
+  const [renderDropdown, setRenderDropdown] = React.useState(true);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
-  };
-
-  const toggleAppetizerInstructions = () => {
-    setShowAppetizerInstructions(!showAppetizerInstructions);
   };
 
   const slideAnimationDrop = useSpring({
@@ -389,6 +372,13 @@ export default function TopMeals() {
 
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
+
+  const mealsToShow = allMeals.slice(
+    dropdownState.currentPage * ITEMS_PER_PAGE,
+    (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
+  );
+
+  const topMeals = allMeals.slice(0, 3);
 
   return (
     <FadeInWrapper>
@@ -449,18 +439,64 @@ export default function TopMeals() {
                   style={{ ...slideAnimationDrop, position: "relative" }}
                 >
                   <Box mt="50px">
-                    {allMeals.map((meal, index) => (
-                      <HistoryItem
-                        key={index}
-                        name={meal.name}
-                        // Set author, date, image, and price according to your data structure
-                        count={"Брой: " + meal.count.toString()}
-                        instructions={meal?.mealData.instructions}
-                        image={meal?.mealData.image} // You may want to update this based on the meal data
-                        ingredients={meal?.mealData.ingredients}
-                        totals={meal?.mealData.totals}
+                    {mealsToShow.map((meal: Meal, index: number) => {
+                      const isTopMeal =
+                        topMeals.findIndex(
+                          (topMeal) => topMeal.name === meal.name
+                        ) !== -1;
+
+                      return (
+                        <HistoryItem
+                          key={index}
+                          name={meal.name}
+                          count={"Брой препоръчвания: " + meal.count.toString()}
+                          instructions={meal?.mealData.instructions}
+                          image={meal?.mealData.image}
+                          ingredients={meal?.mealData.ingredients}
+                          totals={meal?.mealData.totals}
+                          topMeals={isTopMeal ? topMeals : undefined}
+                        />
+                      );
+                    })}
+                    <Flex justify="center" mt="40px">
+                      <IconButton
+                        aria-label="Previous page"
+                        icon={<MdKeyboardArrowLeft />}
+                        onClick={() =>
+                          setDropdownState((prevState) => ({
+                            ...prevState,
+                            currentPage: Math.max(0, prevState.currentPage - 1)
+                          }))
+                        }
+                        disabled={dropdownState.currentPage === 0}
+                        variant="unstyled"
+                        _hover={{ bg: "none" }}
+                        boxSize={8}
                       />
-                    ))}
+                      <Text mt="1px" mr="15px" fontSize="xl">
+                        <b>{`Страница ${
+                          dropdownState.currentPage + 1
+                        } от ${totalPages}`}</b>
+                      </Text>
+                      <IconButton
+                        aria-label="Next page"
+                        icon={<MdKeyboardArrowRight />}
+                        onClick={() =>
+                          setDropdownState((prevState) => ({
+                            ...prevState,
+                            currentPage: Math.min(
+                              prevState.currentPage + 1,
+                              totalPages - 1
+                            )
+                          }))
+                        }
+                        ml="10px"
+                        disabled={dropdownState.currentPage === totalPages - 1}
+                        variant="unstyled"
+                        _hover={{ bg: "none" }}
+                        boxSize={8} // Adjust the box size to match the text size
+                      />
+                    </Flex>
                   </Box>
                 </animated.div>
               )}
@@ -648,57 +684,20 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByProteinDescending[0]?.mealData?.ingredients
+                          }
+                          instructions={
+                            sortedByProteinDescending[0]?.mealData?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByProteinDescending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByProteinDescending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByProteinDescending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByProteinDescending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -828,57 +827,21 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByCaloriesDescending[0]?.mealData?.ingredients
+                          }
+                          instructions={
+                            sortedByCaloriesDescending[0]?.mealData
+                              ?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByCaloriesDescending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByCaloriesDescending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByCaloriesDescending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByCaloriesDescending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -1008,57 +971,22 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByCarbohydratesDescending[0]?.mealData
+                              ?.ingredients
+                          }
+                          instructions={
+                            sortedByCarbohydratesDescending[0]?.mealData
+                              ?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByCarbohydratesDescending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByCarbohydratesDescending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByCarbohydratesDescending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByCarbohydratesDescending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -1187,57 +1115,20 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByProteinDescending[0]?.mealData?.ingredients
+                          }
+                          instructions={
+                            sortedByProteinDescending[0]?.mealData?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByProteinDescending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByProteinDescending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByProteinDescending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByProteinDescending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -1429,57 +1320,20 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByProteinAscending[0]?.mealData?.ingredients
+                          }
+                          instructions={
+                            sortedByProteinAscending[0]?.mealData?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByProteinAscending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByProteinAscending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByProteinAscending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByProteinAscending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -1608,54 +1462,19 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByFatAscending[0]?.mealData?.ingredients
+                          }
+                          instructions={
+                            sortedByFatAscending[0]?.mealData?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByFatAscending[0]?.mealData?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByFatAscending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByFatAscending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {sortedByFatAscending[0]?.mealData?.recipeQuantity}
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -1814,57 +1633,20 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByCaloriesAscending[0]?.mealData?.ingredients
+                          }
+                          instructions={
+                            sortedByCaloriesAscending[0]?.mealData?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByCaloriesAscending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByCaloriesAscending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByCaloriesAscending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByCaloriesAscending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -1994,57 +1776,22 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={
+                            sortedByCarbohydratesAscending[0]?.mealData
+                              ?.ingredients
+                          }
+                          instructions={
+                            sortedByCarbohydratesAscending[0]?.mealData
+                              ?.instructions
+                          }
+                          recipeQuantity={
+                            sortedByCarbohydratesAscending[0]?.mealData
+                              ?.recipeQuantity
+                          }
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {sortedByCarbohydratesAscending[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {sortedByCarbohydratesAscending[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {
-                              sortedByCarbohydratesAscending[0]?.mealData
-                                ?.recipeQuantity
-                            }
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />
@@ -2379,54 +2126,13 @@ export default function TopMeals() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <Button
-                          size="lg"
-                          bg="#7c6bff"
-                          color="white"
-                          onClick={toggleAppetizerInstructions}
-                        >
-                          Рецепта
-                        </Button>
+                        <RecipeModal
+                          title="Рецепта"
+                          ingredients={allMeals[0]?.mealData?.ingredients}
+                          instructions={allMeals[0]?.mealData?.instructions}
+                          recipeQuantity={allMeals[0]?.mealData?.recipeQuantity}
+                        />
                       </Flex>
-
-                      <Modal
-                        isOpen={showAppetizerInstructions}
-                        onClose={toggleAppetizerInstructions}
-                      >
-                        <ModalOverlay />
-                        <ModalContent borderRadius="20px">
-                          <ModalHeader fontSize="2xl">Рецепта</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody>
-                            <b>Съставки:</b>
-                            {allMeals[0]?.mealData?.ingredients.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Инструкции:</b>
-                            {allMeals[0]?.mealData?.instructions.map(
-                              (step: string, index: number) => (
-                                <Text key={index}>{step}</Text>
-                              )
-                            )}
-                            <br />
-                            <b>Крайно количество: </b>
-                            {allMeals[0]?.mealData?.recipeQuantity}
-                          </ModalBody>
-                          <ModalFooter>
-                            <Button
-                              bg="#7c6bff"
-                              color="white"
-                              mr={3}
-                              onClick={toggleAppetizerInstructions}
-                            >
-                              Излез
-                            </Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
                     </Box>
                   }
                 />

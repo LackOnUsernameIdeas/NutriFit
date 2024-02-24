@@ -32,6 +32,25 @@ export interface Recipe {
   suggestedMaxServing?: number;
 }
 
+export interface Meal {
+  name: string;
+  count: number;
+  mealData: {
+    totals: {
+      calories: number;
+      carbohydrates: number;
+      grams: number;
+      fat: number;
+      protein: number;
+    };
+    recipeQuantity: number;
+    image: string;
+    ingredients: string[];
+    name: string;
+    instructions: string[];
+  };
+}
+
 export type UserData = {
   gender?: "male" | "female";
   height: number;

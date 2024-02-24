@@ -514,7 +514,7 @@ export default function UserReports() {
   return (
     <FadeInWrapper>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="100px" mb="20px">
+        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
           <Card>
             <Flex justify="left" alignItems="center">
               <Text fontSize="5xl" mr="2">
@@ -535,13 +535,11 @@ export default function UserReports() {
               />
             </Flex>
           </Card>
-        </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
           <Card>
             <Flex justify="left">
               <Text fontSize="2xl">
-                Нашата цел е да помогнем на нашите потребители да поддържат
-                перфектното тегло с помощта на статистики и диаграми.
+                Нашата цел е да помогнем на потребители ни да спазват хранителен
+                режим и здравословно телесно състояние с изкуствен интелект.
               </Text>
             </Flex>
           </Card>
@@ -1149,8 +1147,8 @@ export default function UserReports() {
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
                         Посетете нашата страница с калкулатор за тегло!
-                        Предлагаме интерактивни диаграми и статистики, създадени
-                        за вас!
+                        Предлагаме интерактивни диаграми и статистики, с които
+                        вие можете да следите вашето телесно изменение.
                       </Text>
                     </Flex>
                   </Card>
@@ -1168,18 +1166,17 @@ export default function UserReports() {
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
                         Посетете нашата страница за създаване на хранителен
-                        план! Имаме обширна база данни със рецепти, която
-                        използваме да създадем хранителен режим с вашите
-                        предпочитания!
+                        план! Ние използваме изкуствен интелект, с който
+                        създаваме хранителен режим според вашите предпочитания.
                       </Text>
                     </Flex>
                   </Card>
                 </Link>
-                <Link href="#/admin/mealplan">
+                <Link href="#/admin/top-meals">
                   <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
                     <Flex pt="5px" w="100%">
                       <LinearGradientText
-                        text={<b>Пример ↪</b>}
+                        text={<b>Класации ↪</b>}
                         gradient={gradient}
                         fontSize="xl"
                         mr="2"
@@ -1187,19 +1184,19 @@ export default function UserReports() {
                     </Flex>
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница за създаване на хранителен
-                        план! Имаме обширна база данни със рецепти, която
-                        използваме да създадем хранителен режим с вашите
-                        предпочитания!
+                        Посетете нашата страница с класации за храните,
+                        генерирани от ChatGPT! Ние запазваме всички хранителни
+                        планове, които генерираме и ги използваме за да ви
+                        предоставим статистики.
                       </Text>
                     </Flex>
                   </Card>
                 </Link>
-                <Link href="#/admin/mealplan">
+                <Link href="#/admin/contact">
                   <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
                     <Flex pt="5px" w="100%">
                       <LinearGradientText
-                        text={<b>Пример ↪</b>}
+                        text={<b>Контакт ↪</b>}
                         gradient={gradient}
                         fontSize="xl"
                         mr="2"
@@ -1207,10 +1204,8 @@ export default function UserReports() {
                     </Flex>
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница за създаване на хранителен
-                        план! Имаме обширна база данни със рецепти, която
-                        използваме да създадем хранителен режим с вашите
-                        предпочитания!
+                        Свържете се с нас! Ако изпитате проблем или имате
+                        препоръка, попълнете бланката и ни изпратете съобщение.
                       </Text>
                     </Flex>
                   </Card>

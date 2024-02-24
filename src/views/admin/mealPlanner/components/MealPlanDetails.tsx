@@ -290,7 +290,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -301,7 +301,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -467,7 +467,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   color="white"
                                   onClick={toggleMainInstructions}
                                 >
-                                  Рецепта
+                                  Начин на приготвяне
                                 </Button>
                               </Flex>
 
@@ -478,7 +478,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 <ModalOverlay />
                                 <ModalContent borderRadius="20px">
                                   <ModalHeader fontSize="2xl">
-                                    Рецепта
+                                    Начин на приготвяне
                                   </ModalHeader>
                                   <ModalCloseButton />
                                   <ModalBody>
@@ -648,7 +648,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleDessertInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -659,7 +659,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -880,7 +880,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -891,7 +891,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1057,7 +1057,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   color="white"
                                   onClick={toggleMainInstructions}
                                 >
-                                  Рецепта
+                                  Начин на приготвяне
                                 </Button>
                               </Flex>
 
@@ -1068,7 +1068,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 <ModalOverlay />
                                 <ModalContent borderRadius="20px">
                                   <ModalHeader fontSize="2xl">
-                                    Рецепта
+                                    Начин на приготвяне
                                   </ModalHeader>
                                   <ModalCloseButton />
                                   <ModalBody>
@@ -1238,7 +1238,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleDessertInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -1249,7 +1249,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1461,7 +1461,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -1472,7 +1472,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1638,7 +1638,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   color="white"
                                   onClick={toggleMainInstructions}
                                 >
-                                  Рецепта
+                                  Начин на приготвяне
                                 </Button>
                               </Flex>
 
@@ -1649,7 +1649,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 <ModalOverlay />
                                 <ModalContent borderRadius="20px">
                                   <ModalHeader fontSize="2xl">
-                                    Рецепта
+                                    Начин на приготвяне
                                   </ModalHeader>
                                   <ModalCloseButton />
                                   <ModalBody>
@@ -1819,7 +1819,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleDessertInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
                                 <Modal
@@ -1829,7 +1829,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>

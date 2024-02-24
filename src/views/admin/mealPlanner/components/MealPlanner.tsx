@@ -9,7 +9,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 
-import Loading from "views/admin/weightStats/components/Loading";
+import MealLoading from "./LoaderMealPlan";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import { HSeparator } from "components/separator/Separator";
 import {
@@ -439,7 +439,7 @@ export default function MealPlanner(props: {
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
-                    <Loading />
+                    <MealLoading userPreferences={userPreferences} />
                   </>
                 ) : (
                   <>

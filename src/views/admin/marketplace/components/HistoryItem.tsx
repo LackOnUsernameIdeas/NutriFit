@@ -23,7 +23,7 @@ import IconBox from "components/icons/IconBox";
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import { ColumnChart } from "components/charts/BarCharts";
-
+import { Meal } from "types/weightStats";
 export default function NFT(props: {
   image: string;
   name: string;
@@ -31,8 +31,10 @@ export default function NFT(props: {
   instructions: string[];
   ingredients: string[];
   totals: any;
+  topMeals: Meal[];
 }) {
-  const { image, name, count, instructions, ingredients, totals } = props;
+  const { image, name, count, instructions, ingredients, totals, topMeals } =
+    props;
   const boxBg = useColorModeValue("secondaryGray.300", "#263363");
   const textColor = useColorModeValue("brands.900", "white");
   const bgItem = useColorModeValue(
@@ -46,6 +48,17 @@ export default function NFT(props: {
     React.useState(false);
   const [renderDropdown, setRenderDropdown] = React.useState(false);
   const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
+  console.log("topMeals:", topMeals);
+
+  const rank = topMeals
+    ? topMeals.findIndex((meal) => {
+        console.log("meal.name:", meal.name);
+        console.log("name:", name);
+        return meal.name === name;
+      }) + 1
+    : null;
+
+  console.log("rank:", rank);
   const cancelRefBMIAlert = React.useRef();
   const {
     isOpen: isOpenBMIAlert,
@@ -91,6 +104,7 @@ export default function NFT(props: {
 
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
+  console.log("top 3 meals: ", topMeals);
   return (
     <Card
       _hover={bgItem}
@@ -106,10 +120,10 @@ export default function NFT(props: {
       <Flex direction={{ base: "column" }} justify="center">
         <Flex position="relative" align="center" zIndex="1">
           <Icon
-            as={renderDropdown ? FaAngleDown : FaAngleRight} // Conditionally render the arrow based on the dropdown state
-            mr={renderDropdown ? "auto" : undefined} // If dropdown is rendered, set margin-right to auto to push the arrow to the left
-            ml={renderDropdown ? undefined : "auto"} // If dropdown is not rendered, set margin-left to auto to push the arrow to the right
-            mt={renderDropdown ? "25px" : undefined} // If dropdown is not rendered, set margin-left to auto to push the arrow to the right
+            as={renderDropdown ? FaAngleDown : FaAngleRight}
+            mr={renderDropdown ? "auto" : undefined}
+            ml={renderDropdown ? undefined : "auto"}
+            mt={renderDropdown ? "25px" : undefined}
             fontSize="lg"
             color={textColorDate}
           />
@@ -127,21 +141,34 @@ export default function NFT(props: {
                 w={{ base: "70%", md: "100%" }}
                 me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
               >
-                <Text
-                  color={textColor}
-                  fontSize={{
-                    base: "md"
-                  }}
-                  mb="5px"
-                  fontWeight="bold"
-                  me="14px"
-                >
-                  {name}
-                </Text>
+                <Flex>
+                  {rank && rank <= 3 && (
+                    <Text
+                      fontSize="lg"
+                      mr="5px"
+                      color={
+                        rank === 1 ? "gold" : rank === 2 ? "silver" : "#cd7f32"
+                      }
+                    >
+                      <b>#{rank}</b>
+                    </Text>
+                  )}
+                  <Text
+                    color={textColor}
+                    fontSize={{
+                      base: "lg"
+                    }}
+                    mb="5px"
+                    fontWeight="bold"
+                    me="14px"
+                  >
+                    {name}
+                  </Text>
+                </Flex>
                 <Text
                   color="secondaryGray.600"
                   fontSize={{
-                    base: "sm"
+                    base: "md"
                   }}
                   fontWeight="400"
                   me="14px"
@@ -186,6 +213,20 @@ export default function NFT(props: {
                       "3xl": "32px"
                     }}
                   >
+                    {rank && rank <= 3 && (
+                      <Text
+                        fontSize="4xl"
+                        color={
+                          rank === 1
+                            ? "gold"
+                            : rank === 2
+                            ? "silver"
+                            : "#cd7f32"
+                        }
+                      >
+                        <b>#{rank}</b>
+                      </Text>
+                    )}
                     <Text
                       color={textColor}
                       fontSize={{ base: "3xl" }}
@@ -218,7 +259,7 @@ export default function NFT(props: {
                         me="14px"
                         mb="20px"
                       >
-                        Грамаж за една порция: {totals.calories}
+                        Грамаж за една порция: {totals.calories}g
                       </Text>
                       <Button
                         onClick={(event) => {
@@ -254,7 +295,11 @@ export default function NFT(props: {
 
                             <AlertDialogCloseButton borderRadius="20px" />
 
-                            <AlertDialogBody>{ingredients}</AlertDialogBody>
+                            <AlertDialogBody>
+                              {ingredients.map((ingredient, index) => (
+                                <Text key={index}>{ingredient}</Text>
+                              ))}
+                            </AlertDialogBody>
                             <AlertDialogFooter></AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialogOverlay>
@@ -291,7 +336,11 @@ export default function NFT(props: {
                             </AlertDialogHeader>
 
                             <AlertDialogCloseButton borderRadius="20px" />
-                            <AlertDialogBody>{instructions}</AlertDialogBody>
+                            <AlertDialogBody>
+                              {instructions.map((instruction, index) => (
+                                <Text key={index}>{instruction}</Text>
+                              ))}
+                            </AlertDialogBody>
                             <AlertDialogFooter></AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialogOverlay>
@@ -322,7 +371,7 @@ export default function NFT(props: {
                         />
                       }
                       name="Калории"
-                      value={totals.calories}
+                      value={totals.calories + " kCal"}
                       backgroundColor={boxBg}
                     />
                     <SimpleGrid
@@ -347,7 +396,7 @@ export default function NFT(props: {
                           />
                         }
                         name="Въглехидрати"
-                        value={totals.carbohydrates}
+                        value={totals.carbohydrates + " g"}
                         backgroundColor={boxBg}
                       />
                       <MiniStatistics
@@ -367,7 +416,7 @@ export default function NFT(props: {
                           />
                         }
                         name="Мазнини"
-                        value={totals.fat}
+                        value={totals.fat + " g"}
                         backgroundColor={boxBg}
                       />
                       <MiniStatistics
@@ -387,7 +436,7 @@ export default function NFT(props: {
                           />
                         }
                         name="Протеин"
-                        value={totals.protein}
+                        value={totals.protein + " g"}
                         backgroundColor={boxBg}
                       />
                     </SimpleGrid>
@@ -410,7 +459,7 @@ export default function NFT(props: {
                         />
                       }
                       name="Грамаж"
-                      value={totals.grams}
+                      value={totals.grams + " g"}
                       backgroundColor={boxBg}
                     />
 
