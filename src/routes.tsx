@@ -52,14 +52,6 @@ const routes = [
     component: MealPlanner
   },
   {
-    name: "За контакт",
-    layout: "/admin",
-    path: "/contact",
-    icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
-    component: Contact,
-    hideInSidebar: false
-  },
-  {
     name: "Класации",
     layout: "/admin",
     path: "/top-meals",
@@ -67,6 +59,14 @@ const routes = [
       <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
     ),
     component: TopMeals,
+    hideInSidebar: false
+  },
+  {
+    name: "За контакт",
+    layout: "/admin",
+    path: "/contact",
+    icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
+    component: Contact,
     hideInSidebar: false
   },
   {
