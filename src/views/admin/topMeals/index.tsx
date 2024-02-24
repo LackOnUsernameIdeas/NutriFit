@@ -1475,6 +1475,8 @@ export default function TopMeals() {
                   w="100%"
                   minH={{ sm: "150px", md: "300px", lg: "auto" }}
                   minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
                 >
                   <ColumnChart
                     chartLabels={barChartLabels}
@@ -1975,13 +1977,13 @@ export default function TopMeals() {
                 />
               </SimpleGrid>
               <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
+                columns={{ base: 1, md: 2, xl: 4 }}
                 gap="20px"
                 mt="20px"
               >
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -1994,7 +1996,7 @@ export default function TopMeals() {
                 </Card>
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                  maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -2005,6 +2007,12 @@ export default function TopMeals() {
                 >
                   Най-бедна на мазнини храна от ChatGPT!
                 </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 4 }}
+                gap="20px"
+                mt="20px"
+              >
                 <Box mb="20px">
                   <RecipeWidget
                     name={
