@@ -33,14 +33,7 @@ export default function NFT(props: {
   totals: any;
 }) {
   const { image, name, count, instructions, ingredients, totals } = props;
-  const [expanded, setExpanded] = useState(false);
-
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
-  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
-  const gradient = useColorModeValue(gradientLight, gradientDark);
-  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
+  const boxBg = useColorModeValue("secondaryGray.300", "#263363");
   const textColor = useColorModeValue("brands.900", "white");
   const bgItem = useColorModeValue(
     { bg: "white", boxShadow: "0px 40px 58px -20px rgba(112, 144, 176, 0.12)" },
@@ -107,15 +100,11 @@ export default function NFT(props: {
       py="21px"
       transition="0.2s linear"
       cursor="pointer"
+      onClick={handleDropdownToggle}
       overflow="visible"
     >
       <Flex direction={{ base: "column" }} justify="center">
-        <Flex
-          position="relative"
-          align="center"
-          zIndex="1"
-          onClick={handleDropdownToggle}
-        >
+        <Flex position="relative" align="center" zIndex="1">
           <Icon
             as={renderDropdown ? FaAngleDown : FaAngleRight} // Conditionally render the arrow based on the dropdown state
             mr={renderDropdown ? "auto" : undefined} // If dropdown is rendered, set margin-right to auto to push the arrow to the left
@@ -131,9 +120,7 @@ export default function NFT(props: {
                 w="66px"
                 h="66px"
                 borderRadius="20px"
-                borderColor={boxBg}
                 mx="16px"
-                style={{ border: "4px solid #fff" }}
               />
               <Flex
                 direction="column"
@@ -172,23 +159,24 @@ export default function NFT(props: {
               minH={{ base: "800px", md: "300px", xl: "180px" }}
             >
               <SimpleGrid
-                columns={{ base: 1, md: 4, xl: 4 }}
-                mt="30px"
+                columns={{ base: 1, md: 2, xl: 2 }}
+                mt="60px"
                 gap="20px"
               >
-                <Flex direction="column">
-                  <Image
-                    src={image}
-                    maxW="600px"
-                    h="400px"
-                    borderRadius="20px"
-                    borderColor={boxBg}
-                    mx="16px"
-                    style={{ border: "4px solid #fff" }}
-                  />
-                </Flex>
-                <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px">
+                <Flex>
+                  <Flex direction="column" onClick={handleDropdownToggle}>
+                    <Image
+                      src={image}
+                      maxW="400px"
+                      h="400px"
+                      borderRadius="20px"
+                      backgroundColor={boxBg}
+                      mx="16px"
+                      mr="20px"
+                    />
+                  </Flex>
                   <Flex
+                    minW="100%"
                     direction="column"
                     w={{ base: "70%", md: "100%" }}
                     me={{
@@ -200,110 +188,123 @@ export default function NFT(props: {
                   >
                     <Text
                       color={textColor}
-                      fontSize={{
-                        base: "3xl"
-                      }}
+                      fontSize={{ base: "3xl" }}
                       mb="5px"
                       fontWeight="bold"
                       me="14px"
-                      maxW="400px"
+                      maxW="300px"
                     >
                       {name}
                     </Text>
                     <Text
                       color="secondaryGray.600"
-                      fontSize={{
-                        base: "xl"
-                      }}
+                      fontSize={{ base: "xl" }}
                       fontWeight="400"
                       me="14px"
-                      mb="100px"
                     >
                       {count}
                     </Text>
-                    <Text
-                      color="secondaryGray.600"
-                      fontSize={{
-                        base: "xl"
-                      }}
-                      fontWeight="400"
-                      me="14px"
-                      mb="20px"
+                    <SimpleGrid
+                      mt="auto"
+                      mb="25px"
+                      columns={{ base: 1, md: 1, xl: 1 }}
                     >
-                      Грамаж за една порция: {totals.calories}
-                    </Text>
-                    <Button
-                      onClick={onOpenIngredients}
-                      borderRadius="20px"
-                      size="lg"
-                      bg="#7c6bff"
-                      color="white"
-                      maxW="250px"
-                      mb="20px"
-                    >
-                      <Text fontSize="1xl" fontWeight="400">
-                        Вижте продукти
+                      <Text
+                        color="secondaryGray.600"
+                        fontSize={{
+                          base: "xl"
+                        }}
+                        fontWeight="400"
+                        me="14px"
+                        mb="20px"
+                      >
+                        Грамаж за една порция: {totals.calories}
                       </Text>
-                    </Button>
-                    <AlertDialog
-                      isOpen={isOpenIngredients}
-                      leastDestructiveRef={cancelRefIngredients}
-                      onClose={onCloseIngredients}
-                    >
-                      <AlertDialogOverlay>
-                        <AlertDialogContent
-                          border="2px"
-                          borderRadius="25px"
-                          borderColor={borderColor}
-                        >
-                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            Продукти
-                          </AlertDialogHeader>
+                      <Button
+                        onClick={(event) => {
+                          onOpenIngredients();
+                          event.stopPropagation();
+                        }}
+                        borderRadius="20px"
+                        zIndex="2"
+                        size="lg"
+                        bg="#7c6bff"
+                        color="white"
+                        maxW="250px"
+                        mb="20px"
+                      >
+                        <Text fontSize="1xl" fontWeight="400">
+                          Вижте продукти
+                        </Text>
+                      </Button>
+                      <AlertDialog
+                        isOpen={isOpenIngredients}
+                        leastDestructiveRef={cancelRefIngredients}
+                        onClose={onCloseIngredients}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent
+                            border="2px"
+                            borderRadius="25px"
+                            borderColor={borderColor}
+                          >
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                              Продукти
+                            </AlertDialogHeader>
 
-                          <AlertDialogCloseButton borderRadius="20px" />
+                            <AlertDialogCloseButton borderRadius="20px" />
 
-                          <AlertDialogBody>{ingredients}</AlertDialogBody>
-                          <AlertDialogFooter></AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialogOverlay>
-                    </AlertDialog>
-                    <Button
-                      onClick={onOpenBMIAlert}
-                      borderRadius="20px"
-                      size="lg"
-                      bg="#7c6bff"
-                      color="white"
-                      maxW="250px"
-                    >
-                      <Text fontSize="1xl" fontWeight="400">
-                        Вижте рецепта
-                      </Text>
-                    </Button>
-                    <AlertDialog
-                      isOpen={isOpenBMIAlert}
-                      leastDestructiveRef={cancelRefBMIAlert}
-                      onClose={onCloseBMIAlert}
-                    >
-                      <AlertDialogOverlay>
-                        <AlertDialogContent
-                          border="2px"
-                          borderRadius="25px"
-                          borderColor={borderColor}
-                        >
-                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            Стъпки за приготвяне
-                          </AlertDialogHeader>
+                            <AlertDialogBody>{ingredients}</AlertDialogBody>
+                            <AlertDialogFooter></AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
+                      <Button
+                        onClick={(event) => {
+                          onOpenBMIAlert();
+                          event.stopPropagation();
+                        }}
+                        borderRadius="20px"
+                        size="lg"
+                        zIndex="2"
+                        bg="#7c6bff"
+                        color="white"
+                        maxW="250px"
+                      >
+                        <Text fontSize="1xl" fontWeight="400">
+                          Вижте рецепта
+                        </Text>
+                      </Button>
+                      <AlertDialog
+                        isOpen={isOpenBMIAlert}
+                        leastDestructiveRef={cancelRefBMIAlert}
+                        onClose={onCloseBMIAlert}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent
+                            border="2px"
+                            borderRadius="25px"
+                            borderColor={borderColor}
+                          >
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                              Стъпки за приготвяне
+                            </AlertDialogHeader>
 
-                          <AlertDialogCloseButton borderRadius="20px" />
-                          <AlertDialogBody>{instructions}</AlertDialogBody>
-                          <AlertDialogFooter></AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialogOverlay>
-                    </AlertDialog>
+                            <AlertDialogCloseButton borderRadius="20px" />
+                            <AlertDialogBody>{instructions}</AlertDialogBody>
+                            <AlertDialogFooter></AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
+                    </SimpleGrid>
                   </Flex>
-                </SimpleGrid>
-                <Box>
-                  <Box mb="110px">
+                </Flex>
+                <SimpleGrid
+                  columns={{ base: 1, md: 2, xl: 2 }}
+                  gap="20px"
+                  onClick={handleDropdownToggle}
+                >
+                  <Box mb="20px">
                     <MiniStatistics
                       startContent={
                         <IconBox
@@ -324,75 +325,73 @@ export default function NFT(props: {
                       value={totals.calories}
                       backgroundColor={boxBg}
                     />
+                    <SimpleGrid
+                      columns={{ base: 1, md: 1, lg: 1, "2xl": 1 }}
+                      gap="20px"
+                      mt="20px"
+                    >
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={FaFireAlt}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Въглехидрати"
+                        value={totals.carbohydrates}
+                        backgroundColor={boxBg}
+                      />
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={FaFireAlt}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Мазнини"
+                        value={totals.fat}
+                        backgroundColor={boxBg}
+                      />
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={FaFireAlt}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Протеин"
+                        value={totals.protein}
+                        backgroundColor={boxBg}
+                      />
+                    </SimpleGrid>
                   </Box>
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                    gap="20px"
-                    mt="20px"
-                  >
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Въглехидрати"
-                      value={totals.carbohydrates}
-                      backgroundColor={boxBg}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Мазнини"
-                      value={totals.fat}
-                      backgroundColor={boxBg}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Протеин"
-                      value={totals.protein}
-                      backgroundColor={boxBg}
-                    />
-                  </SimpleGrid>
-                </Box>
-                <Box>
                   <Box>
                     <MiniStatistics
                       startContent={
@@ -414,28 +413,29 @@ export default function NFT(props: {
                       value={totals.grams}
                       backgroundColor={boxBg}
                     />
+
+                    <Card
+                      alignItems="center"
+                      flexDirection="column"
+                      minH={{ sm: "150px", md: "300px", lg: "300px" }}
+                      minW={{ sm: "150px", md: "200px", lg: "100%" }}
+                      backgroundColor={boxBg}
+                      maxH="400px"
+                      mt="20px"
+                    >
+                      <ColumnChart
+                        chartData={[
+                          totals.protein,
+                          totals.fat,
+                          totals.carbohydrates
+                        ]}
+                        chartLabels={["Протеин", "Мазнини", "Въглехидрати"]}
+                        chartLabelName={"Нутриенти"}
+                        textColor={chartsColor}
+                      />
+                    </Card>
                   </Box>
-                  <Card
-                    alignItems="center"
-                    flexDirection="column"
-                    minH={{ sm: "150px", md: "300px", lg: "270px" }}
-                    minW={{ sm: "150px", md: "200px", lg: "100%" }}
-                    backgroundColor={boxBg}
-                    maxH="400px"
-                    mt="40px"
-                  >
-                    <ColumnChart
-                      chartData={[
-                        totals.protein,
-                        totals.fat,
-                        totals.carbohydrates
-                      ]}
-                      chartLabels={["Протеин", "Мазнини", "Въглехидрати"]}
-                      chartLabelName={"Нутриенти"}
-                      textColor={chartsColor}
-                    />
-                  </Card>
-                </Box>
+                </SimpleGrid>
               </SimpleGrid>
             </Card>
           </animated.div>
