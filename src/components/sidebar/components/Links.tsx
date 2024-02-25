@@ -10,7 +10,6 @@ import {
   Collapse,
   Icon
 } from "@chakra-ui/react";
-import { MdHome, MdPerson } from "react-icons/md";
 
 type RouteType = {
   name: string;
@@ -48,79 +47,133 @@ export function SidebarLinks(props: {
 
   // Function to create a single link
   const createLink = (route: RouteType) => {
-    return (
-      <NavLink key={route.path} to={route.layout + route.path}>
-        <Box>
-          <HStack
-            spacing={activeRoute(route.path.toLowerCase()) ? "22px" : "26px"}
-            py="5px"
-            ps="10px"
-          >
-            <Flex w="100%" alignItems="center" justifyContent="center">
+    if (route.collapseRoutes) {
+      return (
+        <Button
+          key={route.path}
+          variant="unstyled"
+          textAlign="left"
+          onClick={handleToggle}
+          w="100%"
+        >
+          <Box>
+            <HStack
+              spacing={activeRoute(route.path.toLowerCase()) ? "22px" : "26px"}
+              py="5px"
+              ps="10px"
+            >
+              <Flex w="100%" alignItems="center" justifyContent="center">
+                <Box
+                  color={
+                    activeRoute(route.path.toLowerCase())
+                      ? activeIcon
+                      : textColor
+                  }
+                  me="18px"
+                >
+                  {route.icon}
+                </Box>
+                <Text
+                  me="auto"
+                  color={
+                    activeRoute(route.path.toLowerCase())
+                      ? activeColor
+                      : textColor
+                  }
+                  fontWeight={
+                    activeRoute(route.path.toLowerCase()) ? "bold" : "normal"
+                  }
+                >
+                  {route.name}
+                </Text>
+              </Flex>
               <Box
-                color={
-                  activeRoute(route.path.toLowerCase()) ? activeIcon : textColor
-                }
-                me="18px"
-              >
-                {route.icon}
-              </Box>
-              <Text
-                me="auto"
-                color={
+                h="36px"
+                w="4px"
+                bg={
                   activeRoute(route.path.toLowerCase())
-                    ? activeColor
-                    : textColor
+                    ? activeIcon
+                    : "transparent"
                 }
-                fontWeight={
-                  activeRoute(route.path.toLowerCase()) ? "bold" : "normal"
+                borderRadius="5px"
+              />
+            </HStack>
+          </Box>
+        </Button>
+      );
+    } else {
+      return (
+        <NavLink key={route.path} to={route.layout + route.path}>
+          <Box>
+            <HStack
+              spacing={activeRoute(route.path.toLowerCase()) ? "22px" : "26px"}
+              py="5px"
+              ps="10px"
+            >
+              <Flex w="100%" alignItems="center" justifyContent="center">
+                <Box
+                  color={
+                    activeRoute(route.path.toLowerCase())
+                      ? activeIcon
+                      : textColor
+                  }
+                  me="18px"
+                >
+                  {route.icon}
+                </Box>
+                <Text
+                  me="auto"
+                  color={
+                    activeRoute(route.path.toLowerCase())
+                      ? activeColor
+                      : textColor
+                  }
+                  fontWeight={
+                    activeRoute(route.path.toLowerCase()) ? "bold" : "normal"
+                  }
+                >
+                  {route.name}
+                </Text>
+              </Flex>
+              <Box
+                h="36px"
+                w="4px"
+                bg={
+                  activeRoute(route.path.toLowerCase())
+                    ? activeIcon
+                    : "transparent"
                 }
-              >
-                {route.name}
-              </Text>
-            </Flex>
-            <Box
-              h="36px"
-              w="4px"
-              bg={
-                activeRoute(route.path.toLowerCase())
-                  ? activeIcon
-                  : "transparent"
-              }
-              borderRadius="5px"
-            />
-          </HStack>
-        </Box>
-      </NavLink>
-    );
+                borderRadius="5px"
+              />
+            </HStack>
+          </Box>
+        </NavLink>
+      );
+    }
   };
 
   // Function to create links based on withCollapse prop
   const createLinks = (routes: RouteType[]) => {
     return routes.map((route) => {
-      if (route.collapseRoutes) {
-        return (
-          <Box key={route.path}>
-            <Button
-              variant="unstyled"
-              textAlign="left"
-              onClick={handleToggle}
-              w="100%"
-            >
-              {createLink(route)}
-            </Button>
+      return (
+        <Box key={route.path}>
+          {createLink(route)}
+          {route.collapseRoutes && (
             <Collapse in={show} animateOpacity>
-              {route.collapseRoutes.map((subRoute) => (
-                <Box ml={4} key={subRoute.path}>
-                  {createLink(subRoute)}
-                </Box>
-              ))}
+              {route.collapseRoutes.map((subRoute, index) => {
+                return (
+                  <>
+                    {index == 0 ? <Box mt="5px"></Box> : <></>}
+                    <Box ml={4} key={subRoute.path}>
+                      {createLink(subRoute)}
+                    </Box>
+                  </>
+                );
+              })}
             </Collapse>
-          </Box>
-        );
-      } else {
-        return <Box key={route.path}>{createLink(route)}</Box>;
-      }
+          )}
+        </Box>
+      );
     });
   };
 
