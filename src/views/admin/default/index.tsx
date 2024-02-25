@@ -658,7 +658,7 @@ export default function UserReports() {
           gap="20px"
           mb="20px"
         >
-          <Card bg={boxBg}>
+          <Card bg={boxBg} maxH={{ sm: "600px", md: "400px", lg: "640px" }}>
             <Text
               fontSize="3xl"
               mb="20px"
@@ -791,7 +791,7 @@ export default function UserReports() {
               }
             />
           </Card>
-          <Card bg={boxBg}>
+          <Card bg={boxBg} maxH={{ sm: "600px", md: "400px", lg: "640px" }}>
             <Text
               fontSize="3xl"
               mb="20px"
