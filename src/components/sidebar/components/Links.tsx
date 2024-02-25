@@ -10,6 +10,7 @@ import {
   Collapse,
   Icon
 } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons"; // Import arrow icons
 
 type RouteType = {
   name: string;
@@ -30,7 +31,7 @@ export function SidebarLinks(props: {
     "secondaryGray.600",
     "secondaryGray.600"
   );
-  const activeIcon = "#7c6bff";
+  const activeIcon = "#7c23b2";
   const textColor = useColorModeValue("secondaryGray.500", "white");
   const brandColor = useColorModeValue("brand.500", "brand.400");
 
@@ -56,49 +57,59 @@ export function SidebarLinks(props: {
           onClick={handleToggle}
           w="100%"
         >
-          <Box>
-            <HStack
-              spacing={activeRoute(route.path.toLowerCase()) ? "22px" : "26px"}
-              py="5px"
-              ps="10px"
-            >
-              <Flex w="100%" alignItems="center" justifyContent="center">
+          <Flex justify="space-between" alignItems="center">
+            <Box>
+              <HStack
+                spacing={
+                  activeRoute(route.path.toLowerCase()) ? "22px" : "26px"
+                }
+                py="5px"
+                ps="10px"
+              >
+                <Flex w="100%" alignItems="center" justifyContent="center">
+                  <Box
+                    color={
+                      activeRoute(route.path.toLowerCase())
+                        ? activeIcon
+                        : textColor
+                    }
+                    me="18px"
+                  >
+                    {route.icon}
+                  </Box>
+                  <Text
+                    me="auto"
+                    color={
+                      activeRoute(route.path.toLowerCase())
+                        ? activeColor
+                        : textColor
+                    }
+                    fontWeight={
+                      activeRoute(route.path.toLowerCase()) ? "bold" : "normal"
+                    }
+                  >
+                    {route.name}
+                  </Text>
+                </Flex>
                 <Box
-                  color={
+                  h="36px"
+                  w="4px"
+                  bg={
                     activeRoute(route.path.toLowerCase())
                       ? activeIcon
-                      : textColor
+                      : "transparent"
                   }
-                  me="18px"
-                >
-                  {route.icon}
-                </Box>
-                <Text
-                  me="auto"
-                  color={
-                    activeRoute(route.path.toLowerCase())
-                      ? activeColor
-                      : textColor
-                  }
-                  fontWeight={
-                    activeRoute(route.path.toLowerCase()) ? "bold" : "normal"
-                  }
-                >
-                  {route.name}
-                </Text>
-              </Flex>
-              <Box
-                h="36px"
-                w="4px"
-                bg={
-                  activeRoute(route.path.toLowerCase())
-                    ? activeIcon
-                    : "transparent"
-                }
-                borderRadius="5px"
-              />
-            </HStack>
-          </Box>
+                  borderRadius="5px"
+                />
+              </HStack>
+            </Box>
+            {/* Conditional rendering of arrow icon */}
+            {show ? (
+              <ChevronDownIcon color={textColor} boxSize={5} mr="3px" />
+            ) : (
+              <ChevronRightIcon color={textColor} boxSize={5} mr="3px" />
+            )}
+          </Flex>
         </Button>
       );
     } else {
