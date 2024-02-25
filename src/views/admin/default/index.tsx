@@ -653,11 +653,7 @@ export default function UserReports() {
             </Flex>
           </Card>
         </SimpleGrid>
-        <SimpleGrid
-          columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-          gap="20px"
-          mb="20px"
-        >
+        <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} gap="20px" mb="20px">
           <Card bg={boxBg} maxH={{ sm: "600px", md: "400px", lg: "640px" }}>
             <Text
               fontSize="3xl"
