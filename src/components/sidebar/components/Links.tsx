@@ -167,7 +167,7 @@ export function SidebarLinks(props: {
   const createLinks = (routes: RouteType[]) => {
     return routes.map((route) => {
       return (
-        <Box key={route.path}>
+        <Box key={route.path} mb={route.collapseRoutes ? "5px" : "0px"}>
           {createLink(route)}
           {route.collapseRoutes && (
             <Collapse in={show} animateOpacity>
