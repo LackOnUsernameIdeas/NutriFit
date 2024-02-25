@@ -61,29 +61,46 @@ const routes: RoutesType[] = [
     component: TopMeals,
     hideInSidebar: false
   },
-  {
-    name: "Parent Route",
-    layout: "/admin",
-    path: "/parent",
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: () => <div>Sub Route 1 Content</div>, // Example dummy component
-    collapseRoutes: [
-      {
-        name: "Sub Route 1",
-        layout: "/admin",
-        path: "/sub1",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: () => <div>Sub Route 1 Content</div> // Example dummy component
-      },
-      {
-        name: "Sub Route 2",
-        layout: "/admin",
-        path: "/sub2",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: undefined // No component needed
-      }
-    ]
-  },
+  // {
+  //   name: "Sub Route 1",
+  //   layout: "/admin",
+  //   path: "/sub1",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: WeightStats,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Sub Route 2",
+  //   layout: "/admin",
+  //   path: "/sub2",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: MealPlanner,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Parent Route",
+  //   layout: "/admin",
+  //   path: "/parent",
+  //   icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+  //   collapseRoutes: [
+  //     {
+  //       name: "Sub Route 1",
+  //       layout: "/admin",
+  //       path: "/sub1",
+  //       icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //       component: WeightStats,
+  //       hideInSidebar: false
+  //     },
+  //     {
+  //       name: "Sub Route 2",
+  //       layout: "/admin",
+  //       path: "/sub2",
+  //       icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //       component: MealPlanner,
+  //       hideInSidebar: false
+  //     }
+  //   ]
+  // },
   {
     name: "За контакт",
     layout: "/admin",

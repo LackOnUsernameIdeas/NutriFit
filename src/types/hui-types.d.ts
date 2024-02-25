@@ -9,7 +9,7 @@ declare global {
   interface RouteType {
     name: string;
     layout: string;
-    path: string;
+    path?: string;
     icon: JSX.Element;
     component?: () => JSX.Element;
     collapseRoutes?: RouteType[];
@@ -20,7 +20,7 @@ declare global {
   interface RoutesType {
     name: string;
     layout: string;
-    path: string;
+    path?: string;
     icon: JSX.Element;
     component?: () => JSX.Element;
     collapseRoutes?: RouteType[];
