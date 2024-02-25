@@ -20,7 +20,8 @@ import {
   renderView
 } from "components/scrollbar/Scrollbar";
 import { Scrollbars } from "react-custom-scrollbars-2";
-
+import wavesDark from "../../assets/img/layout/layered-waves-haikei-sidebar-dark.svg";
+import wavesLight from "../../assets/img/layout/layered-waves-haikei-sidebar-light.svg";
 // Assets
 import { IoMenuOutline } from "react-icons/io5";
 
@@ -33,7 +34,8 @@ function Sidebar({ routes }: { routes: RoutesType[] }) {
     "unset"
   );
   // Chakra Color Mode
-  let sidebarBg = useColorModeValue("white", "navy.800");
+  const sidebarImage = useColorModeValue(wavesLight, wavesDark);
+  const sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarMargins = "0px";
 
   // SIDEBAR
@@ -41,6 +43,7 @@ function Sidebar({ routes }: { routes: RoutesType[] }) {
     <Box display={{ sm: "none", xl: "block" }} position="fixed" minH="100%">
       <Box
         bg={sidebarBg}
+        backgroundImage={sidebarImage}
         transition={variantChange}
         w="300px"
         h="100vh"

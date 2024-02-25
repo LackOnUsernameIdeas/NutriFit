@@ -74,6 +74,7 @@ const ColumnChart: React.FC<ChartProps> = ({
 
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
+        const backgroundColor = color ? color : "#472ffb"; // Set backgroundColor based on the presence of color prop
         chartInstance.current = new Chart(ctx, {
           type: "bar",
           data: {
@@ -82,7 +83,7 @@ const ColumnChart: React.FC<ChartProps> = ({
               {
                 label: chartLabelName,
                 data: chartData,
-                backgroundColor: "#472ffb",
+                backgroundColor: backgroundColor,
                 borderColor: "rgba(67,24,255,1)",
                 borderWidth: 1
               }

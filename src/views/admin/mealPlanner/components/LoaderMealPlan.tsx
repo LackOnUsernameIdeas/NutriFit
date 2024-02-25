@@ -59,10 +59,9 @@ const MealLoading: React.FC<Props> = ({ userPreferences }) => {
       backgroundImage="none"
       transition="background-image 0.2s ease-in-out"
     >
-      {/* Always render Spinner and Text */}
       <Spinner size="xl" color="brand.500" />
-      <Text mt="4" fontSize="lg" color="gray.600">
-        Докато се генерира хранителният план, нека погледнем пример!
+      <Text mt="4" fontSize="3xl" color="gray.600">
+        Докато се генерира хранителният план, нека погледнем пример...
       </Text>
 
       {/* Conditionally render MealPlanDetails */}

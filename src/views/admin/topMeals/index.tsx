@@ -207,8 +207,10 @@ export default function TopMeals() {
   const sortedByProteinAscending = [...allMeals].sort(
     (a, b) => a.mealData.totals.protein - b.mealData.totals.protein
   );
-
-  const barChartLabels = allMeals.slice(0, 10).map((entry) => entry.name);
+  const barChartNames = allMeals.slice(0, 10).map((entry) => entry.name);
+  const barChartLabels = allMeals
+    .slice(0, 10)
+    .map((_, index) => `#${index + 1}`);
   const barChartForTopSuggestions = allMeals
     .slice(0, 10)
     .map((entry) => entry.count);
@@ -378,8 +380,6 @@ export default function TopMeals() {
     (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  const topMeals = allMeals.slice(0, 3);
-
   return (
     <FadeInWrapper>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -440,11 +440,6 @@ export default function TopMeals() {
                 >
                   <Box mt="50px">
                     {mealsToShow.map((meal: Meal, index: number) => {
-                      const isTopMeal =
-                        topMeals.findIndex(
-                          (topMeal) => topMeal.name === meal.name
-                        ) !== -1;
-
                       return (
                         <HistoryItem
                           key={index}
@@ -454,7 +449,7 @@ export default function TopMeals() {
                           image={meal?.mealData.image}
                           ingredients={meal?.mealData.ingredients}
                           totals={meal?.mealData.totals}
-                          topMeals={isTopMeal ? topMeals : undefined}
+                          topMeals={allMeals}
                         />
                       );
                     })}
@@ -1848,7 +1843,7 @@ export default function TopMeals() {
                     chartData={barChartForProtein}
                     chartLabelName="Сравнение на протеин(g)"
                     textColor={chartsColor}
-                    color="#a194ff"
+                    color="#8878ff"
                   />
                 </Card>
 
@@ -1869,7 +1864,7 @@ export default function TopMeals() {
                     chartData={barChartForCarbohydrates}
                     chartLabelName="Сравнение на въглехидрати(g)"
                     textColor={chartsColor}
-                    color="#a194ff"
+                    color="#7a69ff"
                   />
                 </Card>
               </SimpleGrid>
@@ -1925,7 +1920,7 @@ export default function TopMeals() {
                     chartData={barChartForFat}
                     chartLabelName="Сравнение на мазнини(g)"
                     textColor={chartsColor}
-                    color="#a194ff"
+                    color="#5d47ff"
                   />
                 </Card>
 
@@ -1946,7 +1941,7 @@ export default function TopMeals() {
                     chartData={barChartForCalories}
                     chartLabelName="Сравнение на калории(g)"
                     textColor={chartsColor}
-                    color="#a194ff"
+                    color="#523bff"
                   />
                 </Card>
               </SimpleGrid>
@@ -2003,7 +1998,7 @@ export default function TopMeals() {
                     chartData={barChartForTopSuggestions}
                     chartLabelName="Сравнение на препоръчани храни"
                     textColor={chartsColor}
-                    color="#a194ff"
+                    color="#472ffb"
                   />
                 </Card>
                 <RecipeWidget

@@ -13,7 +13,7 @@ export function SidebarBrand() {
     <Flex alignItems="center" flexDirection="column">
       <img src={NutriFitLogo} />
       {/* <HorizonLogo h='26px' w='175px' my='32px' color={logoColor} /> */}
-      <HSeparator mb="10px" size="3px" />
+      <HSeparator mb="10px" size="3px" color="rgba(0, 0, 0, 0.3)" />
     </Flex>
   );
 }
