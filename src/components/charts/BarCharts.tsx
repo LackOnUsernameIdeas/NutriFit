@@ -7,7 +7,7 @@ type ChartProps = {
   chartData: any[];
   chartData2?: any[];
   chartOptions?: any;
-  chartLabels: string[];
+  chartLabels: string[] | any[];
   chartLabelName: string;
   chartLabelName2?: string;
   textColor?: string;

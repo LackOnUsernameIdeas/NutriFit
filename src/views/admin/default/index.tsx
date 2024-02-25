@@ -616,7 +616,19 @@ export default function UserReports() {
     return undefined;
   };
 
-  const barChartLabels = allMeals.slice(0, 5).map((entry) => entry.name);
+  const barChartLabels = allMeals.slice(0, 5).map((entry) => {
+    const words = entry.name.split(" ");
+    const wordGroups = [];
+    for (let i = 0; i < words.length; i += 2) {
+      const group = [words[i]];
+      if (words[i + 1]) {
+        group.push(words[i + 1]);
+      }
+      wordGroups.push(group.join(" "));
+    }
+    return wordGroups;
+  });
+  console.log(barChartLabels);
   const barChartForTopSuggestions = allMeals
     .slice(0, 5)
     .map((entry) => entry.count);
