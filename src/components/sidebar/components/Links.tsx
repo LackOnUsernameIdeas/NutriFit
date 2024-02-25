@@ -31,7 +31,7 @@ export function SidebarLinks(props: {
     "secondaryGray.600",
     "secondaryGray.600"
   );
-  const activeIcon = "#7c23b2";
+  const activeIcon = "#7c6bff";
   const textColor = useColorModeValue("secondaryGray.500", "white");
   const brandColor = useColorModeValue("brand.500", "brand.400");
 
