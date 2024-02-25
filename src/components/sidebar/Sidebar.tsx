@@ -44,6 +44,8 @@ function Sidebar({ routes }: { routes: RoutesType[] }) {
       <Box
         bg={sidebarBg}
         backgroundImage={sidebarImage}
+        backgroundPosition="bottom"
+        backgroundRepeat="no-repeat"
         transition={variantChange}
         w="300px"
         h="100vh"

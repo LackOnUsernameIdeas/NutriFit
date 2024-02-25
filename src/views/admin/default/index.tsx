@@ -22,24 +22,21 @@
 import React from "react";
 // Chakra imports
 import {
-  Avatar,
-  Button,
   Box,
-  Center,
   Flex,
-  FormLabel,
   Icon,
-  Select,
+  Tooltip,
   SimpleGrid,
   useColorMode,
   useColorModeValue,
-  useBreakpointValue,
   Text,
   Link
 } from "@chakra-ui/react";
 // Assets
-import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
+import { ColumnChart } from "components/charts/BarCharts";
+import RecipeWidget from "components/card/NFT";
+import RecipeModal from "../topMeals/components/RecipeModal";
 import MiniStatistics from "components/card/MiniStatistics";
 import Card from "components/card/Card";
 import IconBox from "components/icons/IconBox";
@@ -48,7 +45,9 @@ import { FaFireAlt, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { GiWeightScale } from "react-icons/gi";
 import { BsPersonFillUp } from "react-icons/bs";
 import { RiWaterPercentFill } from "react-icons/ri";
-import { MdOutlineMale, MdOutlineFemale } from "react-icons/md";
+import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
+import { Meal } from "../../../types/weightStats";
+import { orderMealsByFrequency } from "database/getAdditionalUserData";
 import {
   getFirestore,
   collection,
@@ -59,21 +58,10 @@ import {
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import {
-  getTotalUsers,
-  getAverageWeightOfAllUsers,
-  getAverageCaloriesOfAllUsers,
-  getAverageProteinOfAllUsers,
-  getAverageCarbsOfAllUsers,
-  getAverageFatOfAllUsers,
-  getAverageBodyFatPercentageOfAllUsers
-} from "database/getMeanUsersData";
+import { getTotalUsers } from "database/getMeanUsersData";
 
 // Types
-import {
-  GenderStatistics,
-  GenderAverageStats
-} from "../../../types/weightStats";
+import { GenderAverageStats } from "../../../types/weightStats";
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
@@ -84,16 +72,6 @@ interface LinearGradientTextProps {
   fontSize?: string;
   fontFamily?: string;
   mr?: string;
-}
-
-interface TimestampedObject {
-  date: string;
-  weight?: number;
-  calories?: number;
-  protein?: number;
-  carbs?: number;
-  fat?: number;
-  bodyFatPercentage?: number;
 }
 
 const LinearGradientText: React.FC<LinearGradientTextProps> = ({
@@ -131,6 +109,7 @@ export default function UserReports() {
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const fontWeight = useColorModeValue("500", "100");
+  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const bgHover = useColorModeValue(
@@ -141,38 +120,105 @@ export default function UserReports() {
     { bg: "secondaryGray.200" },
     { bg: "whiteAlpha.100" }
   );
-  const redirectWidgetsSlidePosition = useBreakpointValue({
-    base: -805,
-    sm: -805,
-    md: -480,
-    lg: 0,
-    xl: 0
-  });
-  const dropdownWidgetsSlidePosition = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -80
-  });
-  const dropdownWidgetsSlidePositionStats = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -80
-  });
+  const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
+    {
+      name: "Tova",
+      count: 2,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    }
+  ]);
   const [loading, setLoading] = React.useState(true);
   const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
-  const [averageWeight, setAverageWeight] = React.useState<number | null>(null);
-  const [averageCalories, setAverageCalories] = React.useState<number | null>(
-    null
-  );
-  const [averageProtein, setAverageProtein] = React.useState<number | null>(
-    null
-  );
-  const [averageCarbs, setAverageCarbs] = React.useState<number | null>(null);
-  const [averageFat, setAverageFat] = React.useState<number | null>(null);
-  const [averageBodyFatPercentage, setAverageBodyFatPercentage] =
-    React.useState<number | null>(null);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
       totalUsers: 0,
@@ -358,6 +404,65 @@ export default function UserReports() {
   }, []);
 
   React.useEffect(() => {
+    const fetchSortedMeals = async () => {
+      try {
+        const mealsCollectionRef = collection(getFirestore(), "orderedMeals");
+        const querySnapshot = await getDocs(mealsCollectionRef);
+        console.log("snap :", querySnapshot);
+        const sortedMeals: Meal[] = [];
+        querySnapshot.forEach((doc) => {
+          const orderedMealsData = doc.data().orderedMeals;
+          Object.keys(orderedMealsData).forEach((key) => {
+            sortedMeals.push(orderedMealsData[key]);
+          });
+        });
+        console.log("ordered meals collection data :", sortedMeals);
+        if (sortedMeals.length !== 0) {
+          const mealsSortedByCount = sortedMeals.sort(
+            (a, b) => b.count - a.count
+          );
+          setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+        } else {
+          orderMealsByFrequency().then((sortedMeals) => {
+            console.log("Sorted meals by frequency:", sortedMeals);
+            const mealsSortedByCount = sortedMeals.sort(
+              (a, b) => b.count - a.count
+            );
+            setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+            setLoading(false);
+          });
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching sorted meals:", error);
+      }
+    };
+
+    fetchSortedMeals();
+  }, []);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      console.log("NOT FETCHED YET!");
+      const sortedMeals = await orderMealsByFrequency();
+      console.log("Sorted meals by frequency:", sortedMeals);
+      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
+      setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+      console.log("FETCHED!");
+    };
+
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      async (querySnapshot) => {
+        await fetchData(); // Call fetchData when a snapshot occurs
+      }
+    );
+
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
+  }, []);
+
+  React.useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(getFirestore(), "additionalUserData"),
       (querySnapshot) => {
@@ -511,6 +616,10 @@ export default function UserReports() {
     return undefined;
   };
 
+  const barChartLabels = allMeals.slice(0, 5).map((entry) => entry.name);
+  const barChartForTopSuggestions = allMeals
+    .slice(0, 5)
+    .map((entry) => entry.count);
   return (
     <FadeInWrapper>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -542,6 +651,176 @@ export default function UserReports() {
                 режим и здравословно телесно състояние с изкуствен интелект.
               </Text>
             </Flex>
+          </Card>
+        </SimpleGrid>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+          gap="20px"
+          mb="20px"
+        >
+          <Card bg={boxBg}>
+            <Text
+              fontSize="3xl"
+              mb="20px"
+              alignContent="center"
+              textAlign="center"
+              style={{
+                backgroundImage: gradient,
+                WebkitBackgroundClip: "text",
+                color: "transparent"
+              }}
+            >
+              <b>Най-често препоръчвана храна от ChatGPT!</b>
+            </Text>
+            <RecipeWidget
+              name={
+                <Flex justify="center" w="100%" overflow="hidden">
+                  <Tooltip label={allMeals[0]?.name} borderRadius="10px">
+                    <Text
+                      fontSize="2xl"
+                      whiteSpace="nowrap"
+                      maxW="360px"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                    >
+                      {allMeals[0]?.name || "Няма рецепта"}
+                    </Text>
+                  </Tooltip>
+                </Flex>
+              }
+              author={
+                <Flex
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  pt="2px"
+                  w="100%"
+                  mt="5px"
+                ></Flex>
+              }
+              image={allMeals[0]?.mealData?.image}
+              currentbid={
+                <Box>
+                  <Flex alignItems="center" justifyContent="center" mb="30px">
+                    <Icon
+                      as={MdFlatware}
+                      boxSize={6}
+                      color="purple.500"
+                      mr={2}
+                    />
+                    <Text
+                      textStyle="italic"
+                      fontSize={{
+                        base: "sm",
+                        md: "md",
+                        lg: "lg"
+                      }}
+                      fontStyle="italic"
+                    >
+                      Грамаж: {`${allMeals[0]?.mealData?.totals?.grams} g`}
+                    </Text>
+                  </Flex>
+                  <Flex
+                    direction={{ base: "column", md: "row" }}
+                    justify="center"
+                    pt="5px"
+                    w="100%"
+                    mb="2%"
+                    mt="2%"
+                  >
+                    <SimpleGrid columns={{ base: 2, md: 2, lg: 2 }} gap="10px">
+                      <Text
+                        textStyle="italic"
+                        fontSize={{
+                          base: "sm",
+                          md: "md",
+                          lg: "lg"
+                        }}
+                        fontStyle="italic"
+                      >
+                        Калории:{" "}
+                        {`${allMeals[0]?.mealData?.totals?.calories} g`}
+                      </Text>
+                      <Text
+                        textStyle="italic"
+                        fontSize={{
+                          base: "sm",
+                          md: "md",
+                          lg: "lg"
+                        }}
+                        mb={{ base: "2%", md: 0, lg: "3%" }}
+                        fontStyle="italic"
+                      >
+                        Въглехидрати:{" "}
+                        {`${allMeals[0]?.mealData?.totals?.carbohydrates} g`}
+                      </Text>
+                      <Text
+                        textStyle="italic"
+                        fontSize={{
+                          base: "sm",
+                          md: "md",
+                          lg: "lg"
+                        }}
+                        fontStyle="italic"
+                      >
+                        Протеин: {`${allMeals[0]?.mealData?.totals?.protein} g`}
+                      </Text>
+                      <Text
+                        textStyle="italic"
+                        fontSize={{
+                          base: "sm",
+                          md: "md",
+                          lg: "lg"
+                        }}
+                        mb={{ base: "2%", md: 0, lg: "3%" }}
+                        fontStyle="italic"
+                      >
+                        Мазнини: {`${allMeals[0]?.mealData?.totals?.fat} g`}
+                      </Text>
+                    </SimpleGrid>
+                  </Flex>
+                  <Flex mt="20px" alignItems="center" justifyContent="center">
+                    <RecipeModal
+                      title="Рецепта"
+                      ingredients={allMeals[0]?.mealData?.ingredients}
+                      instructions={allMeals[0]?.mealData?.instructions}
+                      recipeQuantity={allMeals[0]?.mealData?.recipeQuantity}
+                    />
+                  </Flex>
+                </Box>
+              }
+            />
+          </Card>
+          <Card bg={boxBg}>
+            <Text
+              fontSize="3xl"
+              mb="20px"
+              alignContent="center"
+              textAlign="center"
+              style={{
+                backgroundImage: gradient,
+                WebkitBackgroundClip: "text",
+                color: "transparent"
+              }}
+            >
+              <b>Топ 5 най-често препоръчани храни от ChatGPT!</b>
+            </Text>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+            >
+              <ColumnChart
+                chartLabels={barChartLabels}
+                chartData={barChartForTopSuggestions}
+                chartLabelName="Сравнение на препоръчани храни"
+                textColor={chartsColor}
+                color="#523bff"
+              />
+            </Card>
           </Card>
         </SimpleGrid>
         <SimpleGrid
