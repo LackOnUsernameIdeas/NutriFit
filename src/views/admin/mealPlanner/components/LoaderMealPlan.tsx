@@ -9,9 +9,10 @@ import { getAllMealPlans } from "database/getAdditionalUserData";
 
 interface Props {
   userPreferences: UserPreferencesForMealPlan;
+  isForLoading: boolean;
 }
 
-const MealLoading: React.FC<Props> = ({ userPreferences }) => {
+const MealLoading: React.FC<Props> = ({ userPreferences, isForLoading }) => {
   const [mealPlan, setMealPlan] = useState<MealPlan2 | null>(null);
   const [mealPlanImages, setMealPlanImages] = useState<{
     breakfast: { main: string };
@@ -70,6 +71,7 @@ const MealLoading: React.FC<Props> = ({ userPreferences }) => {
           mealPlan={mealPlan}
           mealPlanImages={mealPlanImages}
           userPreferences={userPreferences}
+          isForLoading={isForLoading}
         />
       )}
     </Box>

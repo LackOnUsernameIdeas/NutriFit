@@ -498,6 +498,201 @@ export default function TopMeals() {
             </Card>
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+              >
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Най-препоръчани храни от ChatGPT!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на калории(kCal) на първите 10
+                </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+                mb="20px"
+              >
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForTopSuggestions}
+                    chartLabelName="Сравнение на препоръчани храни"
+                    textColor={chartsColor}
+                    color="#472ffb"
+                  />
+                </Card>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
+                  maxH={{ lg: "600px" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForCalories}
+                    chartLabelName="Сравнение на калории(g)"
+                    textColor={chartsColor}
+                    color="#523bff"
+                  />
+                </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+              >
+                {/* Third Card */}
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на протеин(g) на първите 10
+                </Card>
+
+                {/* Fourth Card */}
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на въглехидрати(g) на първите 10
+                </Card>
+
+                {/* Third Chart */}
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
+                  maxH={{ lg: "600px" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForProtein}
+                    chartLabelName="Сравнение на протеин(g)"
+                    textColor={chartsColor}
+                    color="#8878ff"
+                  />
+                </Card>
+
+                {/* Fourth Chart */}
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
+                  maxH={{ lg: "600px" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForCarbohydrates}
+                    chartLabelName="Сравнение на въглехидрати(g)"
+                    textColor={chartsColor}
+                    color="#7a69ff"
+                  />
+                </Card>
+              </SimpleGrid>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, xl: 2 }}
+                gap="20px"
+                mt="20px"
+              >
+                <Box>
+                  <Card
+                    fontSize="3xl"
+                    maxH={{ sm: "100px", md: "150px", lg: "150px" }}
+                    p="20px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                    borderColor={borderColor}
+                    borderWidth="3px"
+                    mb="20px"
+                  >
+                    Сравнение на мазнини(g) на първите 10
+                  </Card>
+
+                  <Card
+                    alignItems="center"
+                    flexDirection="column"
+                    h="100%"
+                    w="100%"
+                    minH={{ sm: "150px", md: "300px", lg: "400px" }}
+                    maxH={{ lg: "600px" }}
+                    minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                    borderColor={borderColor}
+                    borderWidth="3px"
+                  >
+                    <ColumnChart
+                      chartLabels={barChartLabels}
+                      chartData={barChartForFat}
+                      chartLabelName="Сравнение на мазнини(g)"
+                      textColor={chartsColor}
+                      color="#5d47ff"
+                    />
+                  </Card>
+                </Box>
+              </SimpleGrid>
+              <SimpleGrid
                 columns={{ base: 1, md: 2, xl: 4 }}
                 gap="20px"
                 mt="20px"
@@ -1132,6 +1327,7 @@ export default function TopMeals() {
                 columns={{ base: 1, md: 2, xl: 4 }}
                 gap="20px"
                 mt="20px"
+                mb="20px"
               >
                 <Card
                   fontSize="3xl"
@@ -1785,347 +1981,6 @@ export default function TopMeals() {
                             sortedByCarbohydratesAscending[0]?.mealData
                               ?.recipeQuantity
                           }
-                        />
-                      </Flex>
-                    </Box>
-                  }
-                />
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-              >
-                {/* Third Card */}
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на протеин(g) на първите 10
-                </Card>
-
-                {/* Fourth Card */}
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на въглехидрати(g) на първите 10
-                </Card>
-
-                {/* Third Chart */}
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
-                  maxH={{ lg: "600px" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForProtein}
-                    chartLabelName="Сравнение на протеин(g)"
-                    textColor={chartsColor}
-                    color="#8878ff"
-                  />
-                </Card>
-
-                {/* Fourth Chart */}
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
-                  maxH={{ lg: "600px" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForCarbohydrates}
-                    chartLabelName="Сравнение на въглехидрати(g)"
-                    textColor={chartsColor}
-                    color="#7a69ff"
-                  />
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-              >
-                {/* First Card */}
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на мазнини(g) на първите 10
-                </Card>
-
-                {/* Second Card */}
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на калории(kCal) на първите 10
-                </Card>
-
-                {/* First Chart */}
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
-                  maxH={{ lg: "600px" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForFat}
-                    chartLabelName="Сравнение на мазнини(g)"
-                    textColor={chartsColor}
-                    color="#5d47ff"
-                  />
-                </Card>
-
-                {/* Second Chart */}
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "400px" }}
-                  maxH={{ lg: "600px" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForCalories}
-                    chartLabelName="Сравнение на калории(g)"
-                    textColor={chartsColor}
-                    color="#523bff"
-                  />
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-              >
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Най-препоръчани храни от ChatGPT!
-                </Card>
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Най-препоръчана храна от ChatGPT!
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-                mb="20px"
-              >
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForTopSuggestions}
-                    chartLabelName="Сравнение на препоръчани храни"
-                    textColor={chartsColor}
-                    color="#472ffb"
-                  />
-                </Card>
-                <RecipeWidget
-                  name={
-                    <Flex justify="center" w="100%" overflow="hidden">
-                      <Tooltip label={allMeals[0]?.name} borderRadius="10px">
-                        <Text
-                          fontSize="2xl"
-                          whiteSpace="nowrap"
-                          maxW="360px"
-                          overflow="hidden"
-                          textOverflow="ellipsis"
-                        >
-                          {allMeals[0]?.name || "Няма рецепта"}
-                        </Text>
-                      </Tooltip>
-                    </Flex>
-                  }
-                  author={
-                    <Flex
-                      direction="column"
-                      justify="center"
-                      align="center"
-                      pt="2px"
-                      w="100%"
-                      mt="5px"
-                    ></Flex>
-                  }
-                  image={allMeals[0]?.mealData?.image}
-                  currentbid={
-                    <Box>
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        mb="30px"
-                      >
-                        <Icon
-                          as={MdFlatware}
-                          boxSize={6}
-                          color="purple.500"
-                          mr={2}
-                        />
-                        <Text
-                          textStyle="italic"
-                          fontSize={{
-                            base: "sm",
-                            md: "md",
-                            lg: "lg"
-                          }}
-                          fontStyle="italic"
-                        >
-                          Грамаж: {`${allMeals[0]?.mealData?.totals?.grams} g`}
-                        </Text>
-                      </Flex>
-                      <Flex
-                        direction={{ base: "column", md: "row" }}
-                        justify="center"
-                        pt="5px"
-                        w="100%"
-                        mb="2%"
-                        mt="2%"
-                      >
-                        <SimpleGrid
-                          columns={{ base: 2, md: 2, lg: 2 }}
-                          gap="10px"
-                        >
-                          <Text
-                            textStyle="italic"
-                            fontSize={{
-                              base: "sm",
-                              md: "md",
-                              lg: "lg"
-                            }}
-                            fontStyle="italic"
-                          >
-                            Калории:{" "}
-                            {`${allMeals[0]?.mealData?.totals?.calories} g`}
-                          </Text>
-                          <Text
-                            textStyle="italic"
-                            fontSize={{
-                              base: "sm",
-                              md: "md",
-                              lg: "lg"
-                            }}
-                            mb={{ base: "2%", md: 0, lg: "3%" }}
-                            fontStyle="italic"
-                          >
-                            Въглехидрати:{" "}
-                            {`${allMeals[0]?.mealData?.totals?.carbohydrates} g`}
-                          </Text>
-                          <Text
-                            textStyle="italic"
-                            fontSize={{
-                              base: "sm",
-                              md: "md",
-                              lg: "lg"
-                            }}
-                            fontStyle="italic"
-                          >
-                            Протеин:{" "}
-                            {`${allMeals[0]?.mealData?.totals?.protein} g`}
-                          </Text>
-                          <Text
-                            textStyle="italic"
-                            fontSize={{
-                              base: "sm",
-                              md: "md",
-                              lg: "lg"
-                            }}
-                            mb={{ base: "2%", md: 0, lg: "3%" }}
-                            fontStyle="italic"
-                          >
-                            Мазнини: {`${allMeals[0]?.mealData?.totals?.fat} g`}
-                          </Text>
-                        </SimpleGrid>
-                      </Flex>
-                      <Flex
-                        mt="20px"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <RecipeModal
-                          title="Рецепта"
-                          ingredients={allMeals[0]?.mealData?.ingredients}
-                          instructions={allMeals[0]?.mealData?.instructions}
-                          recipeQuantity={allMeals[0]?.mealData?.recipeQuantity}
                         />
                       </Flex>
                     </Box>

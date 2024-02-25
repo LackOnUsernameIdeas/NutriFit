@@ -498,7 +498,7 @@ export default function NFT(props: {
                             totals.carbohydrates
                           ]}
                           chartLabels={["Протеин", "Мазнини", "Въглехидрати"]}
-                          chartLabelName={"Нутриенти"}
+                          chartLabelName={"Нутриенти (g.)"}
                           textColor={chartsColor}
                         />
                       </Card>

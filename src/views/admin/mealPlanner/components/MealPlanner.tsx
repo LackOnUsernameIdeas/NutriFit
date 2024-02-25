@@ -439,7 +439,10 @@ export default function MealPlanner(props: {
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
-                    <MealLoading userPreferences={userPreferences} />
+                    <MealLoading
+                      userPreferences={userPreferences}
+                      isForLoading={true}
+                    />
                   </>
                 ) : (
                   <>
