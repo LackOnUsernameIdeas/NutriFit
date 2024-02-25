@@ -653,21 +653,26 @@ export default function UserReports() {
             </Flex>
           </Card>
         </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} gap="20px" mb="20px">
-          <Card bg={boxBg} maxH={{ sm: "600px", md: "400px", lg: "640px" }}>
-            <Text
-              fontSize="3xl"
-              mb="20px"
-              alignContent="center"
-              textAlign="center"
-              style={{
-                backgroundImage: gradient,
-                WebkitBackgroundClip: "text",
-                color: "transparent"
-              }}
-            >
-              <b>Най-често препоръчвана храна от ChatGPT!</b>
-            </Text>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+          gap="20px"
+          mb="20px"
+        >
+          <Box maxH={{ sm: "600px", md: "400px", lg: "640px" }}>
+            <Card mb="20px" borderColor={borderColor} borderWidth="3px">
+              <Text
+                fontSize="3xl"
+                alignContent="center"
+                textAlign="center"
+                style={{
+                  backgroundImage: gradient,
+                  WebkitBackgroundClip: "text",
+                  color: "transparent"
+                }}
+              >
+                <b>Най-често препоръчвана храна от ChatGPT!</b>
+              </Text>
+            </Card>
             <RecipeWidget
               name={
                 <Flex justify="center" w="100%" overflow="hidden">
@@ -786,21 +791,22 @@ export default function UserReports() {
                 </Box>
               }
             />
-          </Card>
-          <Card bg={boxBg} maxH={{ sm: "600px", md: "400px", lg: "640px" }}>
-            <Text
-              fontSize="3xl"
-              mb="20px"
-              alignContent="center"
-              textAlign="center"
-              style={{
-                backgroundImage: gradient,
-                WebkitBackgroundClip: "text",
-                color: "transparent"
-              }}
-            >
-              <b>Топ 5 най-често препоръчани храни от ChatGPT!</b>
-            </Text>
+          </Box>
+          <Box maxH={{ sm: "600px", md: "400px", lg: "530px" }}>
+            <Card mb="20px" borderColor={borderColor} borderWidth="3px">
+              <Text
+                fontSize="3xl"
+                alignContent="center"
+                textAlign="center"
+                style={{
+                  backgroundImage: gradient,
+                  WebkitBackgroundClip: "text",
+                  color: "transparent"
+                }}
+              >
+                <b>Топ 5 най-често препоръчани храни от ChatGPT!</b>
+              </Text>
+            </Card>
             <Card
               alignItems="center"
               flexDirection="column"
@@ -808,6 +814,8 @@ export default function UserReports() {
               w="100%"
               minH={{ sm: "150px", md: "300px", lg: "auto" }}
               minW={{ sm: "150px", md: "200px", lg: "auto" }}
+              borderColor={borderColor}
+              borderWidth="3px"
             >
               <ColumnChart
                 chartLabels={barChartLabels}
@@ -817,7 +825,7 @@ export default function UserReports() {
                 color="#523bff"
               />
             </Card>
-          </Card>
+          </Box>
         </SimpleGrid>
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
