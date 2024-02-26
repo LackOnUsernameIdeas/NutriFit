@@ -9,6 +9,7 @@ import {
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
 import { IoMdMail } from "react-icons/io";
+import { FaTrophy } from "react-icons/fa";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -54,21 +55,21 @@ const routes: RoutesType[] = [
     component: MealPlanner
   },
   {
-    name: "Най-препоръчани храни от chatGPT",
+    name: "Най-препоръчвани храни",
     layout: "/admin",
     path: "/suggested",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
     component: RecommendedFoods,
     hideInSidebar: true
   },
-  {
-    name: "Топ калорични храни от chatGPT",
-    layout: "/admin",
-    path: "/calory",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: TopCaloryMeals,
-    hideInSidebar: true
-  },
+  // {
+  //   name: "Топ калорични храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/calory",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopCaloryMeals,
+  //   hideInSidebar: true
+  // },
   // {
   //   name: "Топ мазни храни от chatGPT",
   //   layout: "/admin",
@@ -102,21 +103,21 @@ const routes: RoutesType[] = [
     ),
     collapseRoutes: [
       {
-        name: "Най-препоръчани храни от chatGPT",
+        name: "Най-препоръчвани храни",
         layout: "/admin",
         path: "/suggested",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
         component: RecommendedFoods,
         hideInSidebar: true
-      },
-      {
-        name: "Топ калорични храни от chatGPT",
-        layout: "/admin",
-        path: "/calory",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: TopCaloryMeals,
-        hideInSidebar: true
       }
+      // {
+      //   name: "Топ калорични храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/calory",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopCaloryMeals,
+      //   hideInSidebar: true
+      // }
       // {
       //   name: "Топ мазни храни от chatGPT",
       //   layout: "/admin",

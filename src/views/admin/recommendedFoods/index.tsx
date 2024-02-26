@@ -343,9 +343,12 @@ export default function TopMeals() {
     (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
   );
 
+  console.log("all Meals: ", allMeals);
+  console.log("meals to show: ", mealsToShow);
+
   return (
     <FadeInWrapper>
-      <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      <Box pt={{ base: "160px", md: "80px", xl: "80px" }}>
         {loading ? (
           <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
             <Loading />
@@ -468,7 +471,7 @@ export default function TopMeals() {
               >
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "100px", md: "150px", lg: "150px" }}
+                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -491,7 +494,7 @@ export default function TopMeals() {
                   flexDirection="column"
                   h="100%"
                   w="100%"
-                  minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
                   minW={{ sm: "150px", md: "200px", lg: "auto" }}
                   borderColor={borderColor}
                   borderWidth="3px"
