@@ -6,7 +6,8 @@ import {
   SimpleGrid,
   Text,
   Flex,
-  useColorModeValue
+  useColorModeValue,
+  useBreakpointValue
 } from "@chakra-ui/react";
 
 import MealLoading from "./LoaderMealPlan";
@@ -400,32 +401,38 @@ export default function MealPlanner(props: {
     </Text>
   );
 
+  const fontSize = useBreakpointValue({ base: "3xl", md: "5xl" });
+
   return (
     <FadeInWrapper>
       <Box mb="20px">
         <Card>
-          <Card>
-            <Flex justify="center" w="100%" mb="5px">
-              <Text fontSize="5xl" mr="2">
-                Създайте хранителен план с{" "}
-              </Text>
-              <LinearGradientText
-                text={<b>Nutri</b>}
-                gradient={gradientNutri}
-                fontSize="5xl"
-                fontFamily="DM Sans"
-              />
-              <LinearGradientText
-                text={<b>Fit</b>}
-                gradient={gradientFit}
-                fontFamily="Leckerli One"
-                fontSize="5xl"
-                mr="1px"
-              />
-              <Text fontSize="5xl">:</Text>
-            </Flex>
-            <HSeparator />
-          </Card>
+          <Flex
+            justify="center"
+            w="100%"
+            mb="5px"
+            flexWrap="wrap"
+            textAlign="center"
+          >
+            <Text fontSize={fontSize} mr="2">
+              Създайте хранителен план с
+            </Text>
+            <LinearGradientText
+              text={<b>Nutri</b>}
+              gradient={gradientNutri}
+              fontSize={fontSize}
+              fontFamily="DM Sans"
+              mr="1px" // Adjust the margin as needed
+            />
+            <LinearGradientText
+              text={<b>Fit</b>}
+              gradient={gradientFit}
+              fontFamily="Leckerli One"
+              fontSize={fontSize}
+            />
+            <Text fontSize={fontSize}>:</Text>
+          </Flex>
+          <HSeparator />
           <Card>
             {isSubmitted ? (
               <Box>

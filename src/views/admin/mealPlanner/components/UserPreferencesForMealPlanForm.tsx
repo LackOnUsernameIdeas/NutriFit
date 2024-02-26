@@ -221,9 +221,15 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
             position="relative"
             bg={dropdownActiveBoxBg}
             transition="background-image 0.5s ease-in-out"
-            style={{ height: "80px" }}
+            minH="80px" // Use minHeight instead of height
+            maxH={{ sm: "200px", md: "100px", lg: "auto" }}
           >
-            <Flex alignItems="center" mt="3px" position="relative">
+            <Flex
+              alignItems="center"
+              mt="3px"
+              position="relative"
+              flexWrap="wrap" // Allow items to wrap to the next line
+            >
               <Text
                 fontSize="2xl"
                 style={{
@@ -248,14 +254,15 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                       maxW="35px"
                       ml="2px" // Adjust margin as needed
                       mr="2px" // Adjust margin as needed
+                      mb="2px" // Add margin between flags
                     />
                   )
               )}
             </Flex>
           </Card>
           <animated.div style={{ ...DropdownPosition, position: "relative" }}>
-            <Card bg={boxBg} minH={{ base: "800px", md: "300px", xl: "100px" }}>
-              <SimpleGrid mt="50px" columns={{ base: 1, md: 2, xl: 4 }}>
+            <Card bg={boxBg} minH={{ base: "100px", md: "100px", xl: "100px" }}>
+              <SimpleGrid mt="50px" columns={2}>
                 {englishCuisines.map((cuisine, index) => (
                   <Checkbox
                     key={cuisine}
@@ -267,7 +274,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                     }
                     onChange={handleCheckboxChange}
                   >
-                    <Flex alignItems="center" gap="3px">
+                    <Flex alignItems="center" gap="1px">
                       {bulgarianCuisines[index]}
                     </Flex>
                   </Checkbox>

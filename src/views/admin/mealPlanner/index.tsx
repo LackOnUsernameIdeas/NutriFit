@@ -28,7 +28,7 @@ import {
   StackDivider,
   Alert,
   AlertIcon,
-  Link
+  useMediaQuery
 } from "@chakra-ui/react";
 
 // React Icons
@@ -691,6 +691,9 @@ export default function WeightStats() {
   }, [clickedValueCalories, clickedValueNutrients]);
 
   console.log("userIntakes: ", userIntakes);
+
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
     <FadeInWrapper>
       <Box
@@ -1140,7 +1143,7 @@ export default function WeightStats() {
                           >
                             <Card
                               fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                              maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                               p="20px" // Add padding to the card
                               display="flex"
                               alignItems="center"
@@ -1149,25 +1152,27 @@ export default function WeightStats() {
                             >
                               Вашите приети калории (kcal)
                             </Card>
-                            <Card
-                              fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                              p="20px" // Add padding to the card
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="column"
-                            >
-                              Вашият приет протеин (g.)
-                            </Card>
+                            {!isSmallScreen && (
+                              <Card
+                                fontSize="3xl"
+                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
+                                p="20px" // Add padding to the card
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                flexDirection="column"
+                              >
+                                Вашият приет протеин (g.)
+                              </Card>
+                            )}
                             <Card
                               alignItems="center"
                               flexDirection="column"
                               h="100%"
                               w="100%"
-                              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
                               minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "100px", md: "300px", lg: "auto" }}
+                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
                             >
                               <LineChart
                                 lineChartLabels={lineChartLabels}
@@ -1177,14 +1182,27 @@ export default function WeightStats() {
                                 color="rgba(67,24,255,1)"
                               />
                             </Card>
+                            {isSmallScreen && (
+                              <Card
+                                fontSize="3xl"
+                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
+                                p="20px" // Add padding to the card
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                flexDirection="column"
+                              >
+                                Вашият приет протеин (g.)
+                              </Card>
+                            )}
                             <Card
                               alignItems="center"
                               flexDirection="column"
                               h="100%"
                               w="100%"
-                              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
                               minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
                             >
                               <LineChart
                                 lineChartLabels={lineChartLabels}
@@ -1196,7 +1214,7 @@ export default function WeightStats() {
                             </Card>
                             <Card
                               fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                              maxH={{ sm: "100px", md: "150px", lg: "100px" }}
                               p="20px"
                               display="flex"
                               alignItems="center"
@@ -1205,25 +1223,27 @@ export default function WeightStats() {
                             >
                               Вашите приети мазнини (g.)
                             </Card>
-                            <Card
-                              fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                              p="20px"
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="column"
-                            >
-                              Вашите приети въглехидрати (g.)
-                            </Card>
+                            {!isSmallScreen && (
+                              <Card
+                                fontSize="3xl"
+                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
+                                p="20px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                flexDirection="column"
+                              >
+                                Вашите приети въглехидрати (g.)
+                              </Card>
+                            )}
                             <Card
                               alignItems="center"
                               flexDirection="column"
                               h="100%"
                               w="100%"
-                              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
                               minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
                             >
                               <LineChart
                                 lineChartLabels={lineChartLabels}
@@ -1233,14 +1253,27 @@ export default function WeightStats() {
                                 color="#a194ff"
                               />
                             </Card>
+                            {isSmallScreen && (
+                              <Card
+                                fontSize="3xl"
+                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
+                                p="20px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                flexDirection="column"
+                              >
+                                Вашите приети въглехидрати (g.)
+                              </Card>
+                            )}
                             <Card
                               alignItems="center"
                               flexDirection="column"
                               h="100%"
                               w="100%"
-                              minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
                               minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
                             >
                               <LineChart
                                 lineChartLabels={lineChartLabels}
@@ -1267,46 +1300,19 @@ export default function WeightStats() {
                     mt="20px"
                     mb="20px"
                   >
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      ms="24px"
-                      fontWeight="700"
-                    >
-                      Изберете ниво на натовареност:
-                    </Text>
-                    <Box gap="10px" mb="20px" mt="20px">
-                      <Flex justifyContent="space-between" align="center">
-                        <SimpleGrid
-                          columns={{ base: 3, md: 2, lg: 7 }}
-                          spacing="10px"
-                          alignItems="center"
-                          mb="10px"
-                        >
-                          {[1, 2, 3, 4, 5, 6].map((level) => (
-                            <Button
-                              key={level}
-                              fontSize={{ base: "sm", md: "md" }}
-                              margin="0"
-                              color={
-                                activityLevel === level ? "white" : textColor
-                              }
-                              bg={activityLevel === level ? gradient : bgButton}
-                              _hover={
-                                activityLevel === level
-                                  ? gradientHover
-                                  : bgHover
-                              }
-                              transition={
-                                activityLevel === level
-                                  ? "background 0.3s ease-in-out"
-                                  : "background 0.3s ease-in-out, color 0.3s ease-in-out"
-                              }
-                              onClick={() => setActivityLevel(level)}
-                            >
-                              Ниво {level}
-                            </Button>
-                          ))}
+                    {isSmallScreen ? (
+                      <>
+                        <Flex direction="column" alignItems="center">
+                          <Text
+                            color={textColor}
+                            fontSize="2xl"
+                            ms="24px"
+                            fontWeight="700"
+                            whiteSpace="normal"
+                            textAlign="center"
+                          >
+                            Изберете ниво на натовареност:
+                          </Text>
                           <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
                             <MenuButton
                               alignItems="center"
@@ -1319,8 +1325,8 @@ export default function WeightStats() {
                               h="30px"
                               lineHeight="50%"
                               onClick={onOpenStats}
-                              borderRadius="10px"
-                              ml="10%"
+                              borderRadius="20px"
+                              mt="2px"
                             >
                               <Icon
                                 as={MdOutlineInfo}
@@ -1465,6 +1471,212 @@ export default function WeightStats() {
                               </Box>
                             </MenuList>
                           </Menu>
+                        </Flex>
+                      </>
+                    ) : (
+                      <>
+                        <Flex wrap="nowrap" alignItems="center">
+                          <Text
+                            color={textColor}
+                            fontSize="2xl"
+                            fontWeight="700"
+                            whiteSpace="nowrap"
+                            mr="10px"
+                          >
+                            Изберете ниво на натовареност:
+                          </Text>
+                          <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
+                            <MenuButton
+                              alignItems="center"
+                              justifyContent="center"
+                              bg={bgButton}
+                              _hover={bgHoverInfoBox}
+                              _focus={bgFocus}
+                              _active={bgFocus}
+                              w="30px"
+                              h="30px"
+                              lineHeight="50%"
+                              onClick={onOpenStats}
+                              borderRadius="20px"
+                            >
+                              <Icon
+                                as={MdOutlineInfo}
+                                color={infoBoxIconColor}
+                                w="24px"
+                                h="24px"
+                              />
+                            </MenuButton>
+                            <MenuList
+                              w="100%"
+                              minW="unset"
+                              ml={{ base: "2%", lg: 0 }}
+                              mr={{ base: "2%", lg: 0 }}
+                              maxW={{ base: "70%", lg: "80%" }}
+                              border="transparent"
+                              backdropFilter="blur(100px)"
+                              bg={bgList}
+                              borderRadius="20px"
+                              p="15px"
+                            >
+                              <Box
+                                transition="0.2s linear"
+                                color={textColor}
+                                p="0px"
+                                maxW={{ base: "80%", lg: "100%" }}
+                                borderRadius="8px"
+                              >
+                                <AlertDialog
+                                  isOpen={isOpenStats}
+                                  leastDestructiveRef={cancelRefStats}
+                                  onClose={onCloseStats}
+                                >
+                                  <AlertDialogOverlay>
+                                    <AlertDialogContent
+                                      border="2px"
+                                      borderRadius="25px"
+                                      borderColor={borderColor}
+                                    >
+                                      <AlertDialogHeader
+                                        fontSize="lg"
+                                        fontWeight="bold"
+                                      >
+                                        Различните нива на натовареност са:
+                                      </AlertDialogHeader>
+
+                                      <AlertDialogCloseButton borderRadius="20px" />
+
+                                      <AlertDialogBody>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mt="10px"
+                                            mb="5px"
+                                          >
+                                            <b>Ниво 1</b> - Малко или въобще не
+                                            спортувате. Примерни упражнения:
+                                            Кратка разходка, Лека Йога, Кратка
+                                            Тай Чи сесия (20 мин.)
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mt="10px"
+                                            mb="5px"
+                                          >
+                                            <b>Ниво 2</b> - Спортувате умерено
+                                            1-3 пъти в седмицата. Примерни
+                                            упражнения: Умерена разходка за 30
+                                            мин, Работа в двора/градинарство за
+                                            45 мин, Каране на колело за 1 час,
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mt="10px"
+                                            mb="5px"
+                                          >
+                                            <b>Ниво 3</b> - Спортувате умерено
+                                            4-5 пъти в седмицата. Примерни
+                                            упражнения: Тичане 30 мин, Плуване
+                                            за 30 мин, Играене на тенис/волейбол
+                                            за 45 мин.
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mt="10px"
+                                            mb="5px"
+                                          >
+                                            <b>Ниво 4</b> - Спортувате умерено
+                                            дневно или интензивно 3-4 пъти в
+                                            седмицата. Примерни упражнения:
+                                            Интервална тренировка с висока
+                                            интензивност 30 мин, Тренировка за
+                                            цялото тяло 45 мин. Бързо плуване за
+                                            45 минути.
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mt="10px"
+                                            mb="5px"
+                                          >
+                                            <b>Ниво 5</b> - Спортувате
+                                            интензивно 6-7 пъти в седмицата.
+                                            Примерни упражнения: По-тежка и
+                                            по-дълга интервална тренировка с
+                                            висока интензивност, Трениране на
+                                            Кик-бокс за 1 час, Трениране на
+                                            бойни изкуства.
+                                          </Text>
+                                        </Flex>
+                                        <Flex align="center">
+                                          <Text
+                                            fontSize="sm"
+                                            fontWeight="400"
+                                            mt="10px"
+                                          >
+                                            <b>Ниво 6</b> - Спортувате много
+                                            интензивно цялата седмица. Примерни
+                                            упражнения: Тренировка за маратон,
+                                            Каране на колело из дълги растояния
+                                            за 2 часа, Вдигане на тежести за 1
+                                            час, Участвие в спортен турнир (90
+                                            мин.)
+                                          </Text>
+                                        </Flex>
+                                      </AlertDialogBody>
+                                      <AlertDialogFooter></AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialogOverlay>
+                                </AlertDialog>
+                              </Box>
+                            </MenuList>
+                          </Menu>
+                        </Flex>
+                      </>
+                    )}
+                    <Box gap="10px" mb="20px" mt="20px">
+                      <Flex justifyContent="space-between" align="center">
+                        <SimpleGrid
+                          columns={{ base: 3, md: 2, lg: 6 }}
+                          spacing="10px"
+                          alignItems="center"
+                          mb="10px"
+                        >
+                          {[1, 2, 3, 4, 5, 6].map((level) => (
+                            <Button
+                              key={level}
+                              fontSize={{ base: "sm", md: "md" }}
+                              margin="0"
+                              color={
+                                activityLevel === level ? "white" : textColor
+                              }
+                              bg={activityLevel === level ? gradient : bgButton}
+                              _hover={
+                                activityLevel === level
+                                  ? gradientHover
+                                  : bgHover
+                              }
+                              transition={
+                                activityLevel === level
+                                  ? "background 0.3s ease-in-out"
+                                  : "background 0.3s ease-in-out, color 0.3s ease-in-out"
+                              }
+                              onClick={() => setActivityLevel(level)}
+                            >
+                              Ниво {level}
+                            </Button>
+                          ))}
                         </SimpleGrid>
                       </Flex>
                     </Box>
@@ -1530,7 +1742,7 @@ export default function WeightStats() {
                                             h="30px"
                                             lineHeight="50%"
                                             onClick={onOpen}
-                                            borderRadius="10px"
+                                            borderRadius="20px"
                                             order={1} // Set a higher order value
                                           >
                                             <Icon

@@ -13,6 +13,7 @@ import {
   Image,
   Text,
   useColorModeValue,
+  useMediaQuery,
   useDisclosure,
   SimpleGrid,
   Button
@@ -25,6 +26,7 @@ import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import { ColumnChart } from "components/charts/BarCharts";
 import { Meal } from "types/weightStats";
+
 export default function NFT(props: {
   image: string;
   name: string;
@@ -60,17 +62,10 @@ export default function NFT(props: {
     React.useState(false);
   const [renderDropdown, setRenderDropdown] = React.useState(false);
   const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
-  console.log("topMeals:", topMeals);
-
   const rank = topMeals
-    ? topMeals.findIndex((meal) => {
-        console.log("meal.name:", meal.name);
-        console.log("name:", name);
-        return meal.name === name;
-      }) + 1
+    ? topMeals.findIndex((meal) => meal.name === name) + 1
     : null;
 
-  console.log("rank:", rank);
   const cancelRefBMIAlert = React.useRef();
   const {
     isOpen: isOpenBMIAlert,
@@ -123,6 +118,9 @@ export default function NFT(props: {
       setMiniStatisticsVisible(true);
     }
   }, [keepOpen]);
+
+  const [isSmallScreen] = useMediaQuery("(max-width: 1400px)");
+  const gridColumnCount = isSmallScreen ? 1 : 2;
 
   return (
     <FadeInWrapper>
@@ -214,28 +212,31 @@ export default function NFT(props: {
                 bg="transparent"
                 minH={{ base: "800px", md: "300px", xl: "180px" }}
               >
-                <SimpleGrid
-                  columns={{ base: 1, md: 2, xl: 2 }}
-                  mt="60px"
-                  gap="20px"
-                >
-                  <Flex>
+                <SimpleGrid columns={gridColumnCount} mt="60px" gap="20px">
+                  <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
                     <Flex direction="column" onClick={handleDropdownToggle}>
                       <Image
                         src={image}
-                        maxW="400px"
-                        h="400px"
+                        maxW={{
+                          sm: "800px",
+                          md: "500px",
+                          lg: "500px",
+                          xl: "500px"
+                        }}
+                        h={{
+                          sm: "450px",
+                          md: "400px",
+                          xl: "400px"
+                        }}
                         borderRadius="20px"
                         backgroundColor={boxBg}
-                        mx="16px"
-                        mr="20px"
                       />
                     </Flex>
                     <Flex
                       minW="100%"
                       direction="column"
                       w={{ base: "70%", md: "100%" }}
-                      me={{
+                      mr={{
                         base: "4px",
                         md: "32px",
                         xl: "10px",
@@ -264,7 +265,7 @@ export default function NFT(props: {
                         fontSize={{ base: "3xl" }}
                         mb="5px"
                         fontWeight="bold"
-                        me="14px"
+                        mr="14px"
                         maxW="300px"
                       >
                         {name}
@@ -273,13 +274,13 @@ export default function NFT(props: {
                         color="secondaryGray.600"
                         fontSize={{ base: "xl" }}
                         fontWeight="400"
-                        me="14px"
+                        mr="14px"
                       >
                         {count}
                       </Text>
                       <SimpleGrid
                         mt="auto"
-                        mb="25px"
+                        mb={{ sm: "0px", md: "0px", lg: "0px", xl: "25px" }}
                         columns={{ base: 1, md: 1, xl: 1 }}
                       >
                         <Text
@@ -288,7 +289,7 @@ export default function NFT(props: {
                             base: "xl"
                           }}
                           fontWeight="400"
-                          me="14px"
+                          mr="14px"
                           mb="20px"
                         >
                           Грамаж за една порция: {totals.grams}g
@@ -303,7 +304,12 @@ export default function NFT(props: {
                           size="lg"
                           bg="#7c6bff"
                           color="white"
-                          maxW="250px"
+                          maxW={{
+                            sm: "800px",
+                            md: "500px",
+                            lg: "500px",
+                            xl: "500px"
+                          }}
                           mb="20px"
                         >
                           <Text fontSize="1xl" fontWeight="400">
@@ -349,7 +355,12 @@ export default function NFT(props: {
                           zIndex="2"
                           bg="#7c6bff"
                           color="white"
-                          maxW="250px"
+                          maxW={{
+                            sm: "800px",
+                            md: "500px",
+                            lg: "500px",
+                            xl: "500px"
+                          }}
                         >
                           <Text fontSize="1xl" fontWeight="400">
                             Вижте рецепта
@@ -385,13 +396,13 @@ export default function NFT(props: {
                         </AlertDialog>
                       </SimpleGrid>
                     </Flex>
-                  </Flex>
+                  </SimpleGrid>
                   <SimpleGrid
                     columns={{ base: 1, md: 2, xl: 2 }}
                     gap="20px"
                     onClick={handleDropdownToggle}
                   >
-                    <Box mb="20px">
+                    <Box mb={{ sm: "0px", md: "20px", lg: "20px" }}>
                       <MiniStatistics
                         startContent={
                           <IconBox
@@ -504,7 +515,7 @@ export default function NFT(props: {
                       <Card
                         alignItems="center"
                         flexDirection="column"
-                        minH={{ sm: "150px", md: "300px", lg: "300px" }}
+                        minH={{ sm: "400px", md: "300px", lg: "300px" }}
                         minW={{ sm: "150px", md: "200px", lg: "100%" }}
                         backgroundColor={boxBg}
                         maxH="400px"

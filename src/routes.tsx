@@ -54,19 +54,11 @@ const routes: RoutesType[] = [
     component: MealPlanner
   },
   {
-    name: "Най-препоръчани храни от chatGPT",
+    name: "Най-препоръчвани храни",
     layout: "/admin",
     path: "/suggested",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: RecommendedFoods,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ калорични храни от chatGPT",
-    layout: "/admin",
-    path: "/calory",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: TopCaloryMeals,
     hideInSidebar: true
   },
   // {
@@ -102,19 +94,11 @@ const routes: RoutesType[] = [
     ),
     collapseRoutes: [
       {
-        name: "Най-препоръчани храни от chatGPT",
+        name: "Най-препоръчвани храни",
         layout: "/admin",
         path: "/suggested",
         icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
         component: RecommendedFoods,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ калорични храни от chatGPT",
-        layout: "/admin",
-        path: "/calory",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: TopCaloryMeals,
         hideInSidebar: true
       }
       // {
