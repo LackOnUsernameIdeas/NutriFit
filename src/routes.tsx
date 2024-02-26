@@ -54,16 +54,6 @@ const routes: RoutesType[] = [
     component: MealPlanner
   },
   {
-    name: "Класации",
-    layout: "/admin",
-    path: "/top-meals",
-    icon: (
-      <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
-    ),
-    component: TopMeals,
-    hideInSidebar: false
-  },
-  {
     name: "Най-препоръчани храни от chatGPT",
     layout: "/admin",
     path: "/suggested",
