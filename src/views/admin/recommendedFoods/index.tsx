@@ -413,6 +413,7 @@ export default function TopMeals() {
                           ingredients={meal?.mealData.ingredients}
                           totals={meal?.mealData.totals}
                           topMeals={allMeals}
+                          keepOpen={meal === allMeals[0] ? true : false}
                         />
                       );
                     })}

@@ -33,9 +33,18 @@ export default function NFT(props: {
   ingredients: string[];
   totals: any;
   topMeals: Meal[];
+  keepOpen?: boolean;
 }) {
-  const { image, name, count, instructions, ingredients, totals, topMeals } =
-    props;
+  const {
+    image,
+    name,
+    count,
+    instructions,
+    ingredients,
+    totals,
+    topMeals,
+    keepOpen
+  } = props;
   const boxBg = useColorModeValue("secondaryGray.300", "#263363");
   const textColor = useColorModeValue("brands.900", "white");
   const bgItem = useColorModeValue(
@@ -44,7 +53,9 @@ export default function NFT(props: {
   );
   const textColorDate = useColorModeValue("secondaryGray.600", "white");
   const chartsColor = useColorModeValue("brand.500", "white");
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
+  const [dropdownVisible, setDropdownVisible] = React.useState(
+    keepOpen || false
+  );
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);
   const [renderDropdown, setRenderDropdown] = React.useState(false);
@@ -105,6 +116,14 @@ export default function NFT(props: {
 
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
+
+  React.useEffect(() => {
+    if (keepOpen) {
+      setRenderDropdown(true);
+      setMiniStatisticsVisible(true);
+    }
+  }, [keepOpen]);
+
   return (
     <FadeInWrapper>
       <Card
