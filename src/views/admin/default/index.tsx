@@ -1449,7 +1449,7 @@ export default function UserReports() {
               )}
               <animated.div style={{ ...slideAnimation, position: "relative" }}>
                 <Card
-                  minH="225px"
+                  minH="200px"
                   backgroundImage={`url(${backgroundImage})`}
                   backgroundRepeat="no-repeat"
                   backgroundSize="cover"

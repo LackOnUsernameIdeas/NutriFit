@@ -12,7 +12,7 @@ import {
   Box,
   Image,
   SimpleGrid,
-  useBreakpointValue,
+  Tooltip,
   useColorModeValue
 } from "@chakra-ui/react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
@@ -248,21 +248,26 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                   (Array.isArray(userPreferences.Cuisine)
                     ? userPreferences.Cuisine.includes(cuisine)
                     : userPreferences.Cuisine === cuisine) && (
-                    <Image
-                      key={cuisine}
-                      src={`${countriesFlags[index]}`}
-                      maxW="35px"
-                      ml="2px" // Adjust margin as needed
-                      mr="2px" // Adjust margin as needed
-                      mb="2px" // Add margin between flags
-                    />
+                    <Tooltip
+                      label={bulgarianCuisines[index]}
+                      aria-label={bulgarianCuisines[index]}
+                    >
+                      <Image
+                        src={`${countriesFlags[index]}`}
+                        alt={bulgarianCuisines[index]}
+                        maxW="35px"
+                        ml="2px" // Adjust margin as needed
+                        mr="2px" // Adjust margin as needed
+                        mb="2px" // Add margin between flags
+                      />
+                    </Tooltip>
                   )
               )}
             </Flex>
           </Card>
           <animated.div style={{ ...DropdownPosition, position: "relative" }}>
             <Card bg={boxBg} minH={{ base: "100px", md: "100px", xl: "100px" }}>
-              <SimpleGrid mt="50px" columns={2}>
+              <SimpleGrid mt="50px" columns={{ base: 2, md: 2, xl: 4 }}>
                 {englishCuisines.map((cuisine, index) => (
                   <Checkbox
                     key={cuisine}
@@ -275,7 +280,16 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
                     onChange={handleCheckboxChange}
                   >
                     <Flex alignItems="center" gap="1px">
-                      {bulgarianCuisines[index]}
+                      <Tooltip
+                        label={bulgarianCuisines[index]}
+                        aria-label={bulgarianCuisines[index]}
+                      >
+                        <Image
+                          src={`${countriesFlags[index]}`}
+                          alt={bulgarianCuisines[index]}
+                          maxW="35px"
+                        />
+                      </Tooltip>
                     </Flex>
                   </Checkbox>
                 ))}

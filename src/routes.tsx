@@ -9,6 +9,7 @@ import {
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
 import { IoMdMail } from "react-icons/io";
+import { FaTrophy } from "react-icons/fa";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -57,7 +58,7 @@ const routes: RoutesType[] = [
     name: "Най-препоръчвани храни",
     layout: "/admin",
     path: "/suggested",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
     component: RecommendedFoods,
     hideInSidebar: true
   },
@@ -105,7 +106,7 @@ const routes: RoutesType[] = [
         name: "Най-препоръчвани храни",
         layout: "/admin",
         path: "/suggested",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
         component: RecommendedFoods,
         hideInSidebar: true
       }
