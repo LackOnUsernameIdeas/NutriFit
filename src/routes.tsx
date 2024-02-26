@@ -20,6 +20,7 @@ import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
 import TopMeals from "views/admin/topMeals";
 import RecommendedFoods from "views/admin/recommendedFoods";
+import TopCaloryMeals from "views/admin/individualMealStats";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -73,35 +74,35 @@ const routes: RoutesType[] = [
   {
     name: "Топ калорични храни от chatGPT",
     layout: "/admin",
-    path: "/calorie",
+    path: "/calory",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: MealPlanner,
+    component: TopCaloryMeals,
     hideInSidebar: true
   },
-  {
-    name: "Топ мазни храни от chatGPT",
-    layout: "/admin",
-    path: "/fat",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: TopMeals,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ въглехидратни храни от chatGPT",
-    layout: "/admin",
-    path: "/carbs",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: TopMeals,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ протеинови храни от chatGPT",
-    layout: "/admin",
-    path: "/protein",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: TopMeals,
-    hideInSidebar: true
-  },
+  // {
+  //   name: "Топ мазни храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/fat",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ въглехидратни храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/carbs",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ протеинови храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/protein",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopMeals,
+  //   hideInSidebar: true
+  // },
   {
     name: "Класации",
     layout: "/admin",
@@ -121,35 +122,35 @@ const routes: RoutesType[] = [
       {
         name: "Топ калорични храни от chatGPT",
         layout: "/admin",
-        path: "/calorie",
+        path: "/calory",
         icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: MealPlanner,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ мазни храни от chatGPT",
-        layout: "/admin",
-        path: "/fat",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: TopMeals,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ въглехидратни храни от chatGPT",
-        layout: "/admin",
-        path: "/carbs",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: TopMeals,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ протеинови храни от chatGPT",
-        layout: "/admin",
-        path: "/protein",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: TopMeals,
+        component: TopCaloryMeals,
         hideInSidebar: true
       }
+      // {
+      //   name: "Топ мазни храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/fat",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopMeals,
+      //   hideInSidebar: true
+      // },
+      // {
+      //   name: "Топ въглехидратни храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/carbs",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopMeals,
+      //   hideInSidebar: true
+      // },
+      // {
+      //   name: "Топ протеинови храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/protein",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopMeals,
+      //   hideInSidebar: true
+      // }
     ]
   },
   {
