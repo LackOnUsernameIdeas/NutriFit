@@ -404,50 +404,13 @@ export default function UserReports() {
   }, []);
 
   React.useEffect(() => {
-    const fetchSortedMeals = async () => {
-      try {
-        const mealsCollectionRef = collection(getFirestore(), "orderedMeals");
-        const querySnapshot = await getDocs(mealsCollectionRef);
-        console.log("snap :", querySnapshot);
-        const sortedMeals: Meal[] = [];
-        querySnapshot.forEach((doc) => {
-          const orderedMealsData = doc.data().orderedMeals;
-          Object.keys(orderedMealsData).forEach((key) => {
-            sortedMeals.push(orderedMealsData[key]);
-          });
-        });
-        console.log("ordered meals collection data :", sortedMeals);
-        if (sortedMeals.length !== 0) {
-          const mealsSortedByCount = sortedMeals.sort(
-            (a, b) => b.count - a.count
-          );
-          setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
-        } else {
-          orderMealsByFrequency().then((sortedMeals) => {
-            console.log("Sorted meals by frequency:", sortedMeals);
-            const mealsSortedByCount = sortedMeals.sort(
-              (a, b) => b.count - a.count
-            );
-            setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
-            setLoading(false);
-          });
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching sorted meals:", error);
-      }
-    };
-
-    fetchSortedMeals();
-  }, []);
-
-  React.useEffect(() => {
     const fetchData = async () => {
       console.log("NOT FETCHED YET!");
       const sortedMeals = await orderMealsByFrequency();
       console.log("Sorted meals by frequency:", sortedMeals);
       const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
       setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+      setLoading(false);
       console.log("FETCHED!");
     };
 
@@ -591,7 +554,6 @@ export default function UserReports() {
             averageBodyFatPercentage: meanBodyFatPercentageFemale
           }
         });
-        setLoading(false);
       }
     );
 
