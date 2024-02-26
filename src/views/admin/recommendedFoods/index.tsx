@@ -249,7 +249,7 @@ export default function TopMeals() {
       const sortedMeals = await orderMealsByFrequency();
       console.log("Sorted meals by frequency:", sortedMeals);
       const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+      setAllMeals(mealsSortedByCount as Meal[]);
       setLoading(false);
       console.log("FETCHED!");
     };
