@@ -410,14 +410,14 @@ export default function UserReports() {
       console.log("Sorted meals by frequency:", sortedMeals);
       const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
       setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
-      setLoading(false);
       console.log("FETCHED!");
     };
 
     const unsubscribe = onSnapshot(
       collection(getFirestore(), "additionalUserData"),
       async (querySnapshot) => {
-        await fetchData(); // Call fetchData when a snapshot occurs
+        await fetchData();
+        setLoading(false); // Call fetchData when a snapshot occurs
       }
     );
 
