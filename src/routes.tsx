@@ -61,46 +61,96 @@ const routes: RoutesType[] = [
     component: TopMeals,
     hideInSidebar: false
   },
-  // {
-  //   name: "Sub Route 1",
-  //   layout: "/admin",
-  //   path: "/sub1",
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: WeightStats,
-  //   hideInSidebar: true
-  // },
-  // {
-  //   name: "Sub Route 2",
-  //   layout: "/admin",
-  //   path: "/sub2",
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: MealPlanner,
-  //   hideInSidebar: true
-  // },
-  // {
-  //   name: "Parent Route",
-  //   layout: "/admin",
-  //   path: "/parent",
-  //   icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-  //   collapseRoutes: [
-  //     {
-  //       name: "Sub Route 1",
-  //       layout: "/admin",
-  //       path: "/sub1",
-  //       icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //       component: WeightStats,
-  //       hideInSidebar: false
-  //     },
-  //     {
-  //       name: "Sub Route 2",
-  //       layout: "/admin",
-  //       path: "/sub2",
-  //       icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //       component: MealPlanner,
-  //       hideInSidebar: false
-  //     }
-  //   ]
-  // },
+  {
+    name: "Най-препоръчани храни от chatGPT",
+    layout: "/admin",
+    path: "/suggested",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: WeightStats,
+    hideInSidebar: true
+  },
+  {
+    name: "Топ калорични храни от chatGPT",
+    layout: "/admin",
+    path: "/calorie",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: MealPlanner,
+    hideInSidebar: true
+  },
+  {
+    name: "Топ мазни храни от chatGPT",
+    layout: "/admin",
+    path: "/fat",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopMeals,
+    hideInSidebar: true
+  },
+  {
+    name: "Топ въглехидратни храни от chatGPT",
+    layout: "/admin",
+    path: "/carbs",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopMeals,
+    hideInSidebar: true
+  },
+  {
+    name: "Топ протеинови храни от chatGPT",
+    layout: "/admin",
+    path: "/protein",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopMeals,
+    hideInSidebar: true
+  },
+  {
+    name: "Класации",
+    layout: "/admin",
+    path: "/parent",
+    icon: (
+      <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
+    ),
+    collapseRoutes: [
+      {
+        name: "Най-препоръчани храни от chatGPT",
+        layout: "/admin",
+        path: "/suggested",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: WeightStats,
+        hideInSidebar: true
+      },
+      {
+        name: "Топ калорични храни от chatGPT",
+        layout: "/admin",
+        path: "/calorie",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: MealPlanner,
+        hideInSidebar: true
+      },
+      {
+        name: "Топ мазни храни от chatGPT",
+        layout: "/admin",
+        path: "/fat",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopMeals,
+        hideInSidebar: true
+      },
+      {
+        name: "Топ въглехидратни храни от chatGPT",
+        layout: "/admin",
+        path: "/carbs",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopMeals,
+        hideInSidebar: true
+      },
+      {
+        name: "Топ протеинови храни от chatGPT",
+        layout: "/admin",
+        path: "/protein",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopMeals,
+        hideInSidebar: true
+      }
+    ]
+  },
   {
     name: "За контакт",
     layout: "/admin",
