@@ -71,9 +71,14 @@ export default function TopCaloryMeals() {
   const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const ITEMS_PER_PAGE = 5;
-  const [dropdownState, setDropdownState] = React.useState<DropdownState>({
-    currentPage: 0
-  });
+  const [dropdownStateAscending, setDropdownStateAscending] =
+    React.useState<DropdownState>({
+      currentPage: 0
+    });
+  const [dropdownStateDescending, setDropdownStateDescending] =
+    React.useState<DropdownState>({
+      currentPage: 0
+    });
   const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
     {
       name: "Tova",
@@ -304,7 +309,7 @@ export default function TopCaloryMeals() {
 
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
+    transform: `translateY(${dropdownVisible ? -40 : -90}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
@@ -384,13 +389,13 @@ export default function TopCaloryMeals() {
   }, [dropdownVisibleLow]);
 
   const mealsToShowLowCalory = sortedByCaloriesDescending.slice(
-    dropdownState.currentPage * ITEMS_PER_PAGE,
-    (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
+    dropdownStateDescending.currentPage * ITEMS_PER_PAGE,
+    (dropdownStateDescending.currentPage + 1) * ITEMS_PER_PAGE
   );
 
   const mealsToShowHighCalory = sortedByCaloriesAscending.slice(
-    dropdownState.currentPage * ITEMS_PER_PAGE,
-    (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
+    dropdownStateAscending.currentPage * ITEMS_PER_PAGE,
+    (dropdownStateAscending.currentPage + 1) * ITEMS_PER_PAGE
   );
 
   return (
@@ -408,11 +413,11 @@ export default function TopCaloryMeals() {
             >
               <Card p="0px">
                 <Card
-                  onClick={handleDropdownToggle}
+                  onClick={handleDropdownToggleLow}
                   cursor="pointer"
                   zIndex="1"
                   position="relative"
-                  bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
+                  bg={dropdownVisibleLow ? dropdownBoxBg : dropdownBoxBg}
                   borderColor={borderColor}
                   borderWidth="5px"
                 >
@@ -425,7 +430,7 @@ export default function TopCaloryMeals() {
                       color={textColor}
                       fontSize="2xl"
                       style={
-                        dropdownVisible
+                        dropdownVisibleLow
                           ? {
                               backgroundImage: gradient,
                               WebkitBackgroundClip: "text",
@@ -435,22 +440,22 @@ export default function TopCaloryMeals() {
                       }
                       userSelect="none"
                     >
-                      {dropdownVisible ? (
+                      {dropdownVisibleLow ? (
                         <b>Най-калорични храни от ChatGPT!</b>
                       ) : (
                         "Най-калорични храни от ChatGPT!"
                       )}
                     </Text>
                     <Icon
-                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                      as={dropdownVisibleLow ? FaAngleUp : FaAngleDown}
                       boxSize={6}
                       color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
                     />
                   </Flex>
                 </Card>
-                {renderDropdown && (
+                {renderDropdownLow && (
                   <animated.div
-                    style={{ ...slideAnimationDrop, position: "relative" }}
+                    style={{ ...slideAnimationDropLow, position: "relative" }}
                   >
                     <Box mt="50px">
                       {mealsToShowLowCalory.map((meal: Meal, index: number) => {
@@ -474,7 +479,7 @@ export default function TopCaloryMeals() {
                           aria-label="Previous page"
                           icon={<MdKeyboardArrowLeft />}
                           onClick={() =>
-                            setDropdownState((prevState) => ({
+                            setDropdownStateDescending((prevState) => ({
                               ...prevState,
                               currentPage: Math.max(
                                 0,
@@ -482,21 +487,21 @@ export default function TopCaloryMeals() {
                               )
                             }))
                           }
-                          disabled={dropdownState.currentPage === 0}
+                          disabled={dropdownStateDescending.currentPage === 0}
                           variant="unstyled"
                           _hover={{ bg: "none" }}
                           boxSize={8}
                         />
                         <Text mt="1px" mr="15px" fontSize="xl">
                           <b>{`Страница ${
-                            dropdownState.currentPage + 1
+                            dropdownStateDescending.currentPage + 1
                           } от ${totalPages}`}</b>
                         </Text>
                         <IconButton
                           aria-label="Next page"
                           icon={<MdKeyboardArrowRight />}
                           onClick={() =>
-                            setDropdownState((prevState) => ({
+                            setDropdownStateDescending((prevState) => ({
                               ...prevState,
                               currentPage: Math.min(
                                 prevState.currentPage + 1,
@@ -506,7 +511,8 @@ export default function TopCaloryMeals() {
                           }
                           ml="10px"
                           disabled={
-                            dropdownState.currentPage === totalPages - 1
+                            dropdownStateDescending.currentPage ===
+                            totalPages - 1
                           }
                           variant="unstyled"
                           _hover={{ bg: "none" }}
@@ -594,7 +600,7 @@ export default function TopCaloryMeals() {
                             aria-label="Previous page"
                             icon={<MdKeyboardArrowLeft />}
                             onClick={() =>
-                              setDropdownState((prevState) => ({
+                              setDropdownStateAscending((prevState) => ({
                                 ...prevState,
                                 currentPage: Math.max(
                                   0,
@@ -602,21 +608,21 @@ export default function TopCaloryMeals() {
                                 )
                               }))
                             }
-                            disabled={dropdownState.currentPage === 0}
+                            disabled={dropdownStateAscending.currentPage === 0}
                             variant="unstyled"
                             _hover={{ bg: "none" }}
                             boxSize={8}
                           />
                           <Text mt="1px" mr="15px" fontSize="xl">
                             <b>{`Страница ${
-                              dropdownState.currentPage + 1
+                              dropdownStateAscending.currentPage + 1
                             } от ${totalPages}`}</b>
                           </Text>
                           <IconButton
                             aria-label="Next page"
                             icon={<MdKeyboardArrowRight />}
                             onClick={() =>
-                              setDropdownState((prevState) => ({
+                              setDropdownStateAscending((prevState) => ({
                                 ...prevState,
                                 currentPage: Math.min(
                                   prevState.currentPage + 1,
@@ -626,7 +632,8 @@ export default function TopCaloryMeals() {
                             }
                             ml="10px"
                             disabled={
-                              dropdownState.currentPage === totalPages - 1
+                              dropdownStateAscending.currentPage ===
+                              totalPages - 1
                             }
                             variant="unstyled"
                             _hover={{ bg: "none" }}
