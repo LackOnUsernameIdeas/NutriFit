@@ -1921,7 +1921,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             <Text fontSize="lg" color="white">
                               Процент на отклонение на chatGPT:
                             </Text>
-                            (+
+                            (
+                            {calculatedTotals.calories -
+                              userPreferences.Calories >
+                              0 && "+"}
                             {(
                               ((calculatedTotals.calories -
                                 userPreferences.Calories) /
@@ -1972,7 +1975,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             <Text fontSize="lg" color="white">
                               Отклонение на chatGPT в цифри:
                             </Text>
-                            (+
+                            (
+                            {calculatedTotals.protein -
+                              userPreferences.Protein >
+                              0 && "+"}
                             {(
                               ((calculatedTotals.protein -
                                 userPreferences.Protein) /
@@ -2026,7 +2032,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             <Text fontSize="lg" color="white">
                               Процент на отклонение на chatGPT:
                             </Text>
-                            (+
+                            (
+                            {calculatedTotals.carbohydrates -
+                              userPreferences.Carbohydrates >
+                              0 && "+"}
                             {(
                               ((calculatedTotals.carbohydrates -
                                 userPreferences.Carbohydrates) /
@@ -2073,7 +2082,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             <Text fontSize="lg" color="white">
                               Процент на отклонение на chatGPT:
                             </Text>
-                            (+
+                            (
+                            {calculatedTotals.fat - userPreferences.Fat > 0 &&
+                              "+"}
                             {(
                               ((calculatedTotals.fat - userPreferences.Fat) /
                                 userPreferences.Fat) *

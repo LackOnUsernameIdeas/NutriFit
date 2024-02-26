@@ -62,6 +62,14 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   // {
+  //   name: "Топ калорични храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/calory",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopCaloryMeals,
+  //   hideInSidebar: true
+  // },
+  // {
   //   name: "Топ мазни храни от chatGPT",
   //   layout: "/admin",
   //   path: "/fat",
@@ -101,6 +109,14 @@ const routes: RoutesType[] = [
         component: RecommendedFoods,
         hideInSidebar: true
       }
+      // {
+      //   name: "Топ калорични храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/calory",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopCaloryMeals,
+      //   hideInSidebar: true
+      // }
       // {
       //   name: "Топ мазни храни от chatGPT",
       //   layout: "/admin",
