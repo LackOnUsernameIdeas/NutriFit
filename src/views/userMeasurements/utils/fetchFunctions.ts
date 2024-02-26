@@ -38,7 +38,8 @@ function translateBMIHealthToBulgarian(englishHealth: string) {
 }
 
 export const sendBeaconWithData = (url: string, data: any) => {
-  navigator.sendBeacon(url, JSON.stringify(data));
+  navigator.sendBeacon(`https://nutri-api.noit.eu${url}`, JSON.stringify(data));
+  console.log(`https://nutri-api.noit.eu${url}`);
 };
 
 export const fetchBMIData = async (
@@ -62,8 +63,8 @@ export const fetchBMIData = async (
     };
 
     const uid = getAuth().currentUser.uid;
-    saveBMI(uid, BMIInfo.bmi, BMIInfo.health, BMIInfo.healthy_bmi_range);
     sendBeaconWithData(`/saveBMI/${uid}`, BMIInfo);
+    saveBMI(uid, BMIInfo.bmi, BMIInfo.health, BMIInfo.healthy_bmi_range);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -97,11 +98,11 @@ export const fetchPerfectWeightData = async (
     };
 
     const uid = getAuth().currentUser.uid;
-    savePerfectWeight(uid, perfectWeight, differenceFromPerfectWeight);
     sendBeaconWithData(`/savePerfectWeight/${uid}`, {
       perfectWeight,
       differenceFromPerfectWeight
     });
+    savePerfectWeight(uid, perfectWeight, differenceFromPerfectWeight);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -138,13 +139,13 @@ export const fetchBodyFatAndLeanMassData = async (
     };
 
     const uid = getAuth().currentUser.uid;
+    sendBeaconWithData(`/saveBodyMass/${uid}`, bodyMassInfo);
     saveBodyMass(
       uid,
       bodyMassInfo["Body Fat (U.S. Navy Method)"],
       bodyMassInfo["Body Fat Mass"],
       bodyMassInfo["Lean Body Mass"]
     );
-    sendBeaconWithData(`/saveBodyMass/${uid}`, bodyMassInfo);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -221,11 +222,11 @@ export const fetchCaloriesForActivityLevels = async (
     );
 
     const uid = getAuth().currentUser.uid;
-    saveDailyCaloryRequirements(uid, dailyCaloryRequirementsData);
     sendBeaconWithData(
       `/saveDailyCalories/${uid}`,
       dailyCaloryRequirementsData
     );
+    saveDailyCaloryRequirements(uid, dailyCaloryRequirementsData);
   } catch (err: any) {
     if (err instanceof TypeError && err.message.includes("failed to fetch")) {
       console.error(
@@ -273,8 +274,8 @@ export const fetchMacroNutrients = async (
     }
 
     const uid = getAuth().currentUser.uid;
-    saveMacroNutrients(uid, dataFromResponse);
     sendBeaconWithData(`/saveMacroNutrients/${uid}`, dataFromResponse);
+    saveMacroNutrients(uid, dataFromResponse);
   } catch (err: any) {
     console.error(err.message);
   }

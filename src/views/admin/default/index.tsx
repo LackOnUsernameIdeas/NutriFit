@@ -22,24 +22,23 @@
 import React from "react";
 // Chakra imports
 import {
-  Avatar,
-  Button,
   Box,
-  Center,
   Flex,
-  FormLabel,
   Icon,
-  Select,
+  Tooltip,
   SimpleGrid,
   useColorMode,
   useColorModeValue,
-  useBreakpointValue,
+  useMediaQuery,
   Text,
   Link
 } from "@chakra-ui/react";
 // Assets
-import Bulgaria from "assets/img/dashboards/bulgaria.png";
 // Custom components
+import Loading from "../weightStats/components/Loading";
+import { ColumnChart } from "components/charts/BarCharts";
+import RecipeWidget from "components/card/NFT";
+import RecipeModal from "../topMeals/components/RecipeModal";
 import MiniStatistics from "components/card/MiniStatistics";
 import Card from "components/card/Card";
 import IconBox from "components/icons/IconBox";
@@ -48,7 +47,9 @@ import { FaFireAlt, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { GiWeightScale } from "react-icons/gi";
 import { BsPersonFillUp } from "react-icons/bs";
 import { RiWaterPercentFill } from "react-icons/ri";
-import { MdOutlineMale, MdOutlineFemale } from "react-icons/md";
+import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
+import { Meal } from "../../../types/weightStats";
+import { orderMealsByFrequency } from "database/getAdditionalUserData";
 import {
   getFirestore,
   collection,
@@ -59,21 +60,10 @@ import {
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import {
-  getTotalUsers,
-  getAverageWeightOfAllUsers,
-  getAverageCaloriesOfAllUsers,
-  getAverageProteinOfAllUsers,
-  getAverageCarbsOfAllUsers,
-  getAverageFatOfAllUsers,
-  getAverageBodyFatPercentageOfAllUsers
-} from "database/getMeanUsersData";
+import { getTotalUsers } from "database/getMeanUsersData";
 
 // Types
-import {
-  GenderStatistics,
-  GenderAverageStats
-} from "../../../types/weightStats";
+import { GenderAverageStats } from "../../../types/weightStats";
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
@@ -84,16 +74,6 @@ interface LinearGradientTextProps {
   fontSize?: string;
   fontFamily?: string;
   mr?: string;
-}
-
-interface TimestampedObject {
-  date: string;
-  weight?: number;
-  calories?: number;
-  protein?: number;
-  carbs?: number;
-  fat?: number;
-  bodyFatPercentage?: number;
 }
 
 const LinearGradientText: React.FC<LinearGradientTextProps> = ({
@@ -131,6 +111,7 @@ export default function UserReports() {
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const fontWeight = useColorModeValue("500", "100");
+  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const bgHover = useColorModeValue(
@@ -141,38 +122,105 @@ export default function UserReports() {
     { bg: "secondaryGray.200" },
     { bg: "whiteAlpha.100" }
   );
-  const redirectWidgetsSlidePosition = useBreakpointValue({
-    base: -805,
-    sm: -805,
-    md: -480,
-    lg: 0,
-    xl: 0
-  });
-  const dropdownWidgetsSlidePosition = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -80
-  });
-  const dropdownWidgetsSlidePositionStats = useBreakpointValue({
-    sm: -200,
-    md: -80,
-    lg: -80,
-    xl: -80
-  });
+  const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
+    {
+      name: "Tova",
+      count: 2,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    },
+    {
+      name: "Tova",
+      count: 1,
+      mealData: {
+        totals: {
+          calories: 424,
+          carbohydrates: 2135432,
+          grams: 1233412,
+          fat: 124,
+          protein: 124
+        },
+        recipeQuantity: 235,
+        image:
+          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
+        ingredients: ["wfwfwf", "fgwfwfwf"],
+        name: "string",
+        instructions: ["wfwfwf", "fgwfwfwf"]
+      }
+    }
+  ]);
   const [loading, setLoading] = React.useState(true);
   const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
-  const [averageWeight, setAverageWeight] = React.useState<number | null>(null);
-  const [averageCalories, setAverageCalories] = React.useState<number | null>(
-    null
-  );
-  const [averageProtein, setAverageProtein] = React.useState<number | null>(
-    null
-  );
-  const [averageCarbs, setAverageCarbs] = React.useState<number | null>(null);
-  const [averageFat, setAverageFat] = React.useState<number | null>(null);
-  const [averageBodyFatPercentage, setAverageBodyFatPercentage] =
-    React.useState<number | null>(null);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
       totalUsers: 0,
@@ -358,6 +406,28 @@ export default function UserReports() {
   }, []);
 
   React.useEffect(() => {
+    const fetchData = async () => {
+      console.log("NOT FETCHED YET!");
+      const sortedMeals = await orderMealsByFrequency();
+      console.log("Sorted meals by frequency:", sortedMeals);
+      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
+      setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+      console.log("FETCHED!");
+    };
+
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      async (querySnapshot) => {
+        await fetchData();
+        setLoading(false); // Call fetchData when a snapshot occurs
+      }
+    );
+
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
+  }, []);
+
+  React.useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(getFirestore(), "additionalUserData"),
       (querySnapshot) => {
@@ -486,7 +556,6 @@ export default function UserReports() {
             averageBodyFatPercentage: meanBodyFatPercentageFemale
           }
         });
-        setLoading(false);
       }
     );
 
@@ -511,714 +580,980 @@ export default function UserReports() {
     return undefined;
   };
 
+  const barChartLabels = allMeals.slice(0, 5).map((entry) => {
+    const words = entry.name.split(" ");
+    const wordGroups = [];
+    for (let i = 0; i < words.length; i += 2) {
+      const group = [words[i]];
+      if (words[i + 1]) {
+        group.push(words[i + 1]);
+      }
+      wordGroups.push(group.join(" "));
+    }
+    return wordGroups;
+  });
+  console.log(barChartLabels);
+  const barChartForTopSuggestions = allMeals
+    .slice(0, 5)
+    .map((entry) => entry.count);
+
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
     <FadeInWrapper>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="100px" mb="20px">
-          <Card>
-            <Flex justify="left" alignItems="center">
-              <Text fontSize="5xl" mr="2">
-                Добре дошли в{" "}
-              </Text>
-              <LinearGradientText
-                text={<b>Nutri</b>}
-                gradient={gradient}
-                fontSize="5xl"
-                fontFamily="DM Sans"
-              />
-              <LinearGradientText
-                text={<b>Fit⠀</b>}
-                gradient={gradientFit}
-                fontFamily="Leckerli One"
-                fontSize="5xl"
-                mr="2px"
-              />
-            </Flex>
-          </Card>
-        </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-          <Card>
-            <Flex justify="left">
-              <Text fontSize="2xl">
-                Нашата цел е да помогнем на нашите потребители да поддържат
-                перфектното тегло с помощта на статистики и диаграми.
-              </Text>
-            </Flex>
-          </Card>
-        </SimpleGrid>
-        <SimpleGrid
-          columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-          gap="20px"
-          margin="0"
-          padding="0"
-        >
-          <Box>
-            <Card
-              onClick={handleDropdownToggleMale}
-              cursor="pointer"
-              zIndex="1"
-              position="relative"
-              bg={dropdownVisibleMale ? dropdownActiveBoxBg : dropdownBoxBg}
-            >
-              <Flex justify="space-between" alignItems="center">
-                <Box>
-                  <Flex alignItems="center" justifyContent="center">
-                    <Text
-                      fontSize="2xl"
-                      fontWeight="medium"
-                      textAlign="center"
-                      color={dropdownVisibleMale && "#513bff"}
-                      userSelect="none"
-                    >
-                      {dropdownVisibleMale ? (
-                        <b>Средни статистики за МЪЖЕ</b>
-                      ) : (
-                        "Средни статистики за МЪЖЕ"
-                      )}
-                    </Text>
-                    <Icon
-                      w="30px"
-                      h="30px"
-                      as={MdOutlineMale}
-                      color="#513bff"
-                    />
-                  </Flex>
-                </Box>
-                <Icon
-                  as={dropdownVisibleMale ? FaAngleUp : FaAngleDown}
-                  boxSize={6}
-                  color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                />
-              </Flex>
-            </Card>
-            {renderDropdownMale && (
-              <animated.div
-                style={{ ...slideAnimationDropMale, position: "relative" }}
-              >
-                <Card
-                  bg={boxBg}
-                  minH={{ base: "800px", md: "300px", xl: "180px" }}
-                >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                    gap="20px"
-                    mt="50px"
-                  >
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={GiWeightScale}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Тегло"
-                      value={
-                        averageStats.male.averageWeight !== null
-                          ? `${averageStats.male.averageWeight.toFixed(2)}kg`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="28px"
-                              h="28px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Калории"
-                      value={
-                        averageStats.male.averageCalories !== null
-                          ? `${averageStats.male.averageCalories.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Протеин"
-                      value={
-                        averageStats.male.averageProtein !== null
-                          ? `${averageStats.male.averageProtein.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Въглехидрати"
-                      value={
-                        averageStats.male.averageCarbs !== null
-                          ? `${averageStats.male.averageCarbs.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Мазнини"
-                      value={
-                        averageStats.male.averageFat !== null
-                          ? `${averageStats.male.averageFat.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={RiWaterPercentFill}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Тел. Мазнини"
-                      value={
-                        averageStats.male.averageBodyFatPercentage !== null
-                          ? `${averageStats.male.averageBodyFatPercentage.toFixed(
-                              2
-                            )}%`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                  </SimpleGrid>
-                </Card>
-              </animated.div>
-            )}
+        {loading ? (
+          <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
+            <Loading />
           </Box>
+        ) : (
           <Box>
-            <Card
-              onClick={handleDropdownToggleFemale}
-              cursor="pointer"
-              zIndex="1"
-              position="relative"
-              bg={dropdownVisibleFemale ? dropdownActiveBoxBg : dropdownBoxBg}
-            >
-              <Flex justify="space-between" alignItems="center">
-                <Box>
-                  <Flex alignItems="center" justifyContent="center">
-                    <Text
-                      fontSize="2xl"
-                      fontWeight="medium"
-                      textAlign="center"
-                      color={dropdownVisibleFemale && "#8170ff"}
-                      userSelect="none"
-                    >
-                      {dropdownVisibleFemale ? (
-                        <b>Средни статистики за ЖЕНИ</b>
-                      ) : (
-                        "Средни статистики за ЖЕНИ"
-                      )}
-                    </Text>
-                    <Icon
-                      w="30px"
-                      h="30px"
-                      as={MdOutlineFemale}
-                      color="#8170ff"
-                    />
-                  </Flex>
-                </Box>
-                <Icon
-                  as={dropdownVisibleFemale ? FaAngleUp : FaAngleDown}
-                  boxSize={6}
-                  color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                />
-              </Flex>
-            </Card>
-            {renderDropdownFemale && (
-              <animated.div
-                style={{ ...slideAnimationDropFemale, position: "relative" }}
-              >
-                <Card
-                  bg={boxBg}
-                  minH={{ base: "800px", md: "300px", xl: "180px" }}
-                >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
-                    mt="50px"
-                    gap="20px"
-                  >
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={GiWeightScale}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Тегло"
-                      value={
-                        averageStats.female.averageWeight !== null
-                          ? `${averageStats.female.averageWeight.toFixed(2)}kg`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="28px"
-                              h="28px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Калории"
-                      value={
-                        averageStats.female.averageCalories !== null
-                          ? `${averageStats.female.averageCalories.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Протеин"
-                      value={
-                        averageStats.female.averageProtein !== null
-                          ? `${averageStats.female.averageProtein.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Въглехидрати"
-                      value={
-                        averageStats.female.averageCarbs !== null
-                          ? `${averageStats.female.averageCarbs.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={FaFireAlt}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Мазнини"
-                      value={
-                        averageStats.female.averageFat !== null
-                          ? `${averageStats.female.averageFat.toFixed(2)}`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                    <MiniStatistics
-                      startContent={
-                        <IconBox
-                          w="56px"
-                          h="56px"
-                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                          icon={
-                            <Icon
-                              w="32px"
-                              h="32px"
-                              as={RiWaterPercentFill}
-                              color="white"
-                            />
-                          }
-                        />
-                      }
-                      name="Тел. Мазнини"
-                      value={
-                        averageStats.female.averageBodyFatPercentage !== null
-                          ? `${averageStats.female.averageBodyFatPercentage.toFixed(
-                              2
-                            )}%`
-                          : "0"
-                      }
-                      loading={loading}
-                    />
-                  </SimpleGrid>
-                </Card>
-              </animated.div>
-            )}
-          </Box>
-        </SimpleGrid>
-        <animated.div style={{ ...slideAnimationStats, position: "relative" }}>
-          <Card
-            mt="20px"
-            onClick={handleDropdownToggle}
-            cursor="pointer"
-            zIndex="1"
-            position="relative"
-            bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-          >
-            <Flex justify="space-between" alignItems="center">
-              <Text
-                fontSize="2xl"
-                style={
-                  dropdownVisible
-                    ? {
-                        backgroundImage: gradient,
-                        WebkitBackgroundClip: "text",
-                        color: "transparent"
-                      }
-                    : {}
-                }
-                userSelect="none"
-              >
-                {dropdownVisible ? (
-                  <b>Средни статистики за ВСИЧКИ потребители:</b>
-                ) : (
-                  "Средни статистики за ВСИЧКИ потребители:"
-                )}
-              </Text>
-              <Icon
-                as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                boxSize={6}
-                color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-              />
-            </Flex>
-          </Card>
-          {renderDropdown && (
-            <animated.div
-              style={{ ...slideAnimationDrop, position: "relative" }}
-            >
-              <Card
-                bg={boxBg}
-                minH={{ base: "800px", md: "300px", xl: "180px" }}
-              >
-                <SimpleGrid
-                  columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
-                  gap="20px"
-                  mt="50px"
-                >
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={MdOutlineMale}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Мъже"
-                    value={
-                      averageStats.male.totalUsers !== null
-                        ? averageStats.male.totalUsers.toString()
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={BsPersonFillUp}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Потребители"
-                    value={
-                      averageStats.male.totalUsers !== null
-                        ? (
-                            averageStats.male.totalUsers +
-                            averageStats.female.totalUsers
-                          ).toString()
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w="56px"
-                        h="56px"
-                        bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        icon={
-                          <Icon
-                            w="32px"
-                            h="32px"
-                            as={MdOutlineFemale}
-                            color="white"
-                          />
-                        }
-                      />
-                    }
-                    name="Жени"
-                    value={
-                      averageStats.female.totalUsers !== null
-                        ? averageStats.female.totalUsers.toString()
-                        : "0"
-                    }
-                    loading={loading}
-                  />
-                </SimpleGrid>
-                <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-                  <Card
-                    alignItems="center"
-                    flexDirection="column"
-                    minH={{ sm: "150px", md: "300px", lg: "300px" }}
-                    minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
-                    maxH="400px"
-                    mt="40px"
-                  >
-                    {/* BarChart component with adjusted width */}
-                    <LineAvaragesChart
-                      lineChartData={maleChartData}
-                      lineChartData2={femaleChartData}
-                      lineChartLabels={chartLabels}
-                      lineChartLabelName={"Мъже"}
-                      lineChartLabelName2={"Жени"}
-                      textColor={chartsColor}
-                    />
-                  </Card>
-                  <Card
-                    alignItems="center"
-                    flexDirection="column"
-                    minH={{ sm: "150px", md: "300px", lg: "300px" }}
-                    minW={{ sm: "150px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
-                    maxH="400px"
-                    mt="40px"
-                  >
-                    <ColumnAvaragesChart
-                      chartData={maleChartData}
-                      chartData2={femaleChartData}
-                      chartLabels={chartLabels}
-                      chartLabelName={"Мъже"}
-                      chartLabelName2={"Жени"}
-                      textColor={chartsColor}
-                    />
-                  </Card>
-                </SimpleGrid>
-              </Card>
-            </animated.div>
-          )}
-          <animated.div style={{ ...slideAnimation, position: "relative" }}>
-            <Card
-              minH="225px"
-              backgroundImage={`url(${backgroundImage})`}
-              backgroundRepeat="no-repeat"
-              backgroundSize="cover"
-              backgroundPosition="center"
-              transition="background-image 0.5s ease-in-out"
-              mt="20px"
+            <SimpleGrid
+              columns={{ base: 1, md: 1, xl: 1 }}
+              gap="20px"
               mb="20px"
             >
-              <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px">
-                <Link href="#/admin/weight">
-                  <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-                    <Flex pt="5px" w="100%">
-                      <LinearGradientText
-                        text={<b>Калкулации за теглото ви ↪</b>}
-                        gradient={gradient}
-                        fontSize="xl"
-                        mr="2"
+              <Card>
+                <Flex
+                  justify={isSmallScreen && "center"}
+                  w="100%"
+                  mb="5px"
+                  flexWrap="wrap"
+                  textAlign={isSmallScreen ? "center" : "start"}
+                >
+                  <Text fontSize="5xl" mr="2">
+                    Добре дошли в{" "}
+                  </Text>
+                  <LinearGradientText
+                    text={<b>Nutri</b>}
+                    gradient={gradient}
+                    fontSize="5xl"
+                    fontFamily="DM Sans"
+                  />
+                  <LinearGradientText
+                    text={<b>Fit⠀</b>}
+                    gradient={gradientFit}
+                    fontFamily="Leckerli One"
+                    fontSize="5xl"
+                    mr="2px"
+                  />
+                </Flex>
+              </Card>
+              <Card>
+                <Flex justify="left">
+                  <Text fontSize="2xl">
+                    Бъдете винаги във форма и в оптимално здравословно състояние
+                    с помощта на изкуствен интелект!
+                  </Text>
+                </Flex>
+              </Card>
+            </SimpleGrid>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+              gap="20px"
+              mb="20px"
+            >
+              <Card borderColor={borderColor} borderWidth="3px">
+                <Text
+                  fontSize="3xl"
+                  alignContent="center"
+                  textAlign="center"
+                  style={{
+                    backgroundImage: gradient,
+                    WebkitBackgroundClip: "text",
+                    color: "transparent"
+                  }}
+                >
+                  <b>Най-често препоръчвано ястие от NutriFit</b>
+                </Text>
+              </Card>
+              {!isSmallScreen && (
+                <Card
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                  maxH={{ sm: "400px", md: "600px", lg: "530px" }}
+                >
+                  <Text
+                    fontSize="3xl"
+                    alignContent="center"
+                    textAlign="center"
+                    style={{
+                      backgroundImage: gradient,
+                      WebkitBackgroundClip: "text",
+                      color: "transparent"
+                    }}
+                  >
+                    <b>Топ 5 най-препоръчвани ястия от NutriFit</b>
+                  </Text>
+                </Card>
+              )}
+              <RecipeWidget
+                name={
+                  <Flex justify="center" w="100%" overflow="hidden">
+                    <Tooltip label={allMeals[0]?.name} borderRadius="10px">
+                      <Text
+                        fontSize="2xl"
+                        whiteSpace="nowrap"
+                        maxW="360px"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
+                        {allMeals[0]?.name || "Няма рецепта"}
+                      </Text>
+                    </Tooltip>
+                  </Flex>
+                }
+                author={
+                  <Flex
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    pt="2px"
+                    w="100%"
+                    mt="5px"
+                  ></Flex>
+                }
+                image={allMeals[0]?.mealData?.image}
+                currentbid={
+                  <Box>
+                    <Flex alignItems="center" justifyContent="center" mb="30px">
+                      <Icon
+                        as={MdFlatware}
+                        boxSize={6}
+                        color="purple.500"
+                        mr={2}
                       />
-                    </Flex>
-                    <Flex justify="center" mt="1%" pt="10px">
-                      <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница с калкулатор за тегло!
-                        Предлагаме интерактивни диаграми и статистики, създадени
-                        за вас!
+                      <Text
+                        textStyle="italic"
+                        fontSize={{
+                          base: "sm",
+                          md: "md",
+                          lg: "lg"
+                        }}
+                        fontStyle="italic"
+                      >
+                        Грамаж: {`${allMeals[0]?.mealData?.totals?.grams} g`}
                       </Text>
                     </Flex>
-                  </Card>
-                </Link>
-                <Link href="#/admin/mealplan">
-                  <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-                    <Flex pt="5px" w="100%">
-                      <LinearGradientText
-                        text={<b>Хранителен план ↪</b>}
-                        gradient={gradient}
-                        fontSize="xl"
-                        mr="2"
+                    <Flex
+                      direction={{ base: "column", md: "row" }}
+                      justify="center"
+                      pt="5px"
+                      w="100%"
+                      mb="2%"
+                      mt="2%"
+                    >
+                      <SimpleGrid
+                        columns={{ base: 2, md: 2, lg: 2 }}
+                        gap="10px"
+                      >
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Калории:{" "}
+                          {`${allMeals[0]?.mealData?.totals?.calories} g`}
+                        </Text>
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          mb={{ base: "2%", md: 0, lg: "3%" }}
+                          fontStyle="italic"
+                        >
+                          Въглехидрати:{" "}
+                          {`${allMeals[0]?.mealData?.totals?.carbohydrates} g`}
+                        </Text>
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          fontStyle="italic"
+                        >
+                          Протеин:{" "}
+                          {`${allMeals[0]?.mealData?.totals?.protein} g`}
+                        </Text>
+                        <Text
+                          textStyle="italic"
+                          fontSize={{
+                            base: "sm",
+                            md: "md",
+                            lg: "lg"
+                          }}
+                          mb={{ base: "2%", md: 0, lg: "3%" }}
+                          fontStyle="italic"
+                        >
+                          Мазнини: {`${allMeals[0]?.mealData?.totals?.fat} g`}
+                        </Text>
+                      </SimpleGrid>
+                    </Flex>
+                    <Flex mt="20px" alignItems="center" justifyContent="center">
+                      <RecipeModal
+                        title="Рецепта"
+                        ingredients={allMeals[0]?.mealData?.ingredients}
+                        instructions={allMeals[0]?.mealData?.instructions}
+                        recipeQuantity={allMeals[0]?.mealData?.recipeQuantity}
                       />
                     </Flex>
-                    <Flex justify="center" mt="1%" pt="10px">
-                      <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница за създаване на хранителен
-                        план! Имаме обширна база данни със рецепти, която
-                        използваме да създадем хранителен режим с вашите
-                        предпочитания!
-                      </Text>
-                    </Flex>
-                  </Card>
-                </Link>
-                <Link href="#/admin/mealplan">
-                  <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-                    <Flex pt="5px" w="100%">
-                      <LinearGradientText
-                        text={<b>Пример ↪</b>}
-                        gradient={gradient}
-                        fontSize="xl"
-                        mr="2"
+                  </Box>
+                }
+              />
+              {isSmallScreen && (
+                <Card
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                  maxH={{ sm: "400px", md: "600px", lg: "530px" }}
+                >
+                  <Text
+                    fontSize="3xl"
+                    alignContent="center"
+                    textAlign="center"
+                    style={{
+                      backgroundImage: gradient,
+                      WebkitBackgroundClip: "text",
+                      color: "transparent"
+                    }}
+                  >
+                    <b>Топ 5 най-препоръчвани ястия от NutriFit</b>
+                  </Text>
+                </Card>
+              )}
+              <Box maxH={{ sm: "400px", md: "595px", lg: "530px" }}>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "400px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForTopSuggestions}
+                    chartLabelName="Сравнение на препоръчани храни"
+                    textColor={chartsColor}
+                    color="#523bff"
+                  />
+                </Card>
+              </Box>
+            </SimpleGrid>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+              gap="20px"
+            >
+              <Box>
+                <Card
+                  onClick={handleDropdownToggleMale}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={dropdownVisibleMale ? dropdownActiveBoxBg : dropdownBoxBg}
+                >
+                  <Flex justify="space-between" alignItems="center">
+                    <Box>
+                      <Flex alignItems="center" justifyContent="center">
+                        <Text
+                          fontSize="2xl"
+                          fontWeight="medium"
+                          textAlign="center"
+                          color={dropdownVisibleMale && "#513bff"}
+                          userSelect="none"
+                        >
+                          {dropdownVisibleMale ? (
+                            <b>Средни статистики за МЪЖЕ</b>
+                          ) : (
+                            "Средни статистики за МЪЖЕ"
+                          )}
+                        </Text>
+                        <Icon
+                          w="30px"
+                          h="30px"
+                          as={MdOutlineMale}
+                          color="#513bff"
+                        />
+                      </Flex>
+                    </Box>
+                    <Icon
+                      as={dropdownVisibleMale ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdownMale && (
+                  <animated.div
+                    style={{ ...slideAnimationDropMale, position: "relative" }}
+                  >
+                    <Card
+                      bg={boxBg}
+                      minH={{ base: "700px", md: "300px", xl: "180px" }}
+                    >
+                      <SimpleGrid
+                        columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                        gap="20px"
+                        mt="50px"
+                      >
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={GiWeightScale}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Тегло"
+                          value={
+                            averageStats.male.averageWeight !== null
+                              ? `${averageStats.male.averageWeight.toFixed(
+                                  2
+                                )}kg`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="28px"
+                                  h="28px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Калории"
+                          value={
+                            averageStats.male.averageCalories !== null
+                              ? `${averageStats.male.averageCalories.toFixed(
+                                  2
+                                )}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Протеин"
+                          value={
+                            averageStats.male.averageProtein !== null
+                              ? `${averageStats.male.averageProtein.toFixed(2)}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Въглехидрати"
+                          value={
+                            averageStats.male.averageCarbs !== null
+                              ? `${averageStats.male.averageCarbs.toFixed(2)}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Мазнини"
+                          value={
+                            averageStats.male.averageFat !== null
+                              ? `${averageStats.male.averageFat.toFixed(2)}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={RiWaterPercentFill}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Тел. Мазнини"
+                          value={
+                            averageStats.male.averageBodyFatPercentage !== null
+                              ? `${averageStats.male.averageBodyFatPercentage.toFixed(
+                                  2
+                                )}%`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                      </SimpleGrid>
+                    </Card>
+                  </animated.div>
+                )}
+              </Box>
+              <Box>
+                <Card
+                  onClick={handleDropdownToggleFemale}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={
+                    dropdownVisibleFemale ? dropdownActiveBoxBg : dropdownBoxBg
+                  }
+                >
+                  <Flex justify="space-between" alignItems="center">
+                    <Box>
+                      <Flex alignItems="center" justifyContent="center">
+                        <Text
+                          fontSize="2xl"
+                          fontWeight="medium"
+                          textAlign="center"
+                          color={dropdownVisibleFemale && "#8170ff"}
+                          userSelect="none"
+                        >
+                          {dropdownVisibleFemale ? (
+                            <b>Средни статистики за ЖЕНИ</b>
+                          ) : (
+                            "Средни статистики за ЖЕНИ"
+                          )}
+                        </Text>
+                        <Icon
+                          w="30px"
+                          h="30px"
+                          as={MdOutlineFemale}
+                          color="#8170ff"
+                        />
+                      </Flex>
+                    </Box>
+                    <Icon
+                      as={dropdownVisibleFemale ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdownFemale && (
+                  <animated.div
+                    style={{
+                      ...slideAnimationDropFemale,
+                      position: "relative"
+                    }}
+                  >
+                    <Card
+                      bg={boxBg}
+                      minH={{ base: "700px", md: "300px", xl: "180px" }}
+                    >
+                      <SimpleGrid
+                        columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+                        mt="50px"
+                        gap="20px"
+                      >
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={GiWeightScale}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Тегло"
+                          value={
+                            averageStats.female.averageWeight !== null
+                              ? `${averageStats.female.averageWeight.toFixed(
+                                  2
+                                )}kg`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="28px"
+                                  h="28px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Калории"
+                          value={
+                            averageStats.female.averageCalories !== null
+                              ? `${averageStats.female.averageCalories.toFixed(
+                                  2
+                                )}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Протеин"
+                          value={
+                            averageStats.female.averageProtein !== null
+                              ? `${averageStats.female.averageProtein.toFixed(
+                                  2
+                                )}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Въглехидрати"
+                          value={
+                            averageStats.female.averageCarbs !== null
+                              ? `${averageStats.female.averageCarbs.toFixed(2)}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={FaFireAlt}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Мазнини"
+                          value={
+                            averageStats.female.averageFat !== null
+                              ? `${averageStats.female.averageFat.toFixed(2)}`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                        <MiniStatistics
+                          startContent={
+                            <IconBox
+                              w="56px"
+                              h="56px"
+                              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                              icon={
+                                <Icon
+                                  w="32px"
+                                  h="32px"
+                                  as={RiWaterPercentFill}
+                                  color="white"
+                                />
+                              }
+                            />
+                          }
+                          name="Тел. Мазнини"
+                          value={
+                            averageStats.female.averageBodyFatPercentage !==
+                            null
+                              ? `${averageStats.female.averageBodyFatPercentage.toFixed(
+                                  2
+                                )}%`
+                              : "0"
+                          }
+                          loading={loading}
+                        />
+                      </SimpleGrid>
+                    </Card>
+                  </animated.div>
+                )}
+              </Box>
+            </SimpleGrid>
+            <animated.div
+              style={{ ...slideAnimationStats, position: "relative" }}
+            >
+              <Card
+                mt="20px"
+                onClick={handleDropdownToggle}
+                cursor="pointer"
+                zIndex="1"
+                position="relative"
+                bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+              >
+                <Flex justify="space-between" alignItems="center">
+                  <Text
+                    fontSize="2xl"
+                    style={
+                      dropdownVisible
+                        ? {
+                            backgroundImage: gradient,
+                            WebkitBackgroundClip: "text",
+                            color: "transparent"
+                          }
+                        : {}
+                    }
+                    userSelect="none"
+                  >
+                    {dropdownVisible ? (
+                      <b>Средни статистики за ВСИЧКИ потребители:</b>
+                    ) : (
+                      "Средни статистики за ВСИЧКИ потребители:"
+                    )}
+                  </Text>
+                  <Icon
+                    as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                    boxSize={6}
+                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  />
+                </Flex>
+              </Card>
+              {renderDropdown && (
+                <animated.div
+                  style={{ ...slideAnimationDrop, position: "relative" }}
+                >
+                  <Card
+                    bg={boxBg}
+                    minH={{ base: "800px", md: "300px", xl: "180px" }}
+                  >
+                    <SimpleGrid
+                      columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
+                      gap="20px"
+                      mt="50px"
+                      mb="20px"
+                    >
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={MdOutlineMale}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Мъже"
+                        value={
+                          averageStats.male.totalUsers !== null
+                            ? averageStats.male.totalUsers.toString()
+                            : "0"
+                        }
+                        loading={loading}
                       />
-                    </Flex>
-                    <Flex justify="center" mt="1%" pt="10px">
-                      <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница за създаване на хранителен
-                        план! Имаме обширна база данни със рецепти, която
-                        използваме да създадем хранителен режим с вашите
-                        предпочитания!
-                      </Text>
-                    </Flex>
-                  </Card>
-                </Link>
-                <Link href="#/admin/mealplan">
-                  <Card _hover={{ bg: bgHover }} _focus={bgFocus} minH="100%">
-                    <Flex pt="5px" w="100%">
-                      <LinearGradientText
-                        text={<b>Пример ↪</b>}
-                        gradient={gradient}
-                        fontSize="xl"
-                        mr="2"
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={BsPersonFillUp}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Потребители"
+                        value={
+                          averageStats.male.totalUsers !== null
+                            ? (
+                                averageStats.male.totalUsers +
+                                averageStats.female.totalUsers
+                              ).toString()
+                            : "0"
+                        }
+                        loading={loading}
                       />
-                    </Flex>
-                    <Flex justify="center" mt="1%" pt="10px">
-                      <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница за създаване на хранителен
-                        план! Имаме обширна база данни със рецепти, която
-                        използваме да създадем хранителен режим с вашите
-                        предпочитания!
-                      </Text>
-                    </Flex>
+                      <MiniStatistics
+                        startContent={
+                          <IconBox
+                            w="56px"
+                            h="56px"
+                            bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                            icon={
+                              <Icon
+                                w="32px"
+                                h="32px"
+                                as={MdOutlineFemale}
+                                color="white"
+                              />
+                            }
+                          />
+                        }
+                        name="Жени"
+                        value={
+                          averageStats.female.totalUsers !== null
+                            ? averageStats.female.totalUsers.toString()
+                            : "0"
+                        }
+                        loading={loading}
+                      />
+                    </SimpleGrid>
+                    <SimpleGrid
+                      columns={{ base: 1, md: 2, xl: 2 }}
+                      gap="20px"
+                      mt={isSmallScreen ? "0px" : "40px"}
+                    >
+                      <Card
+                        alignItems="center"
+                        flexDirection="column"
+                        minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                        minW={{ sm: "400px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
+                        maxH="400px"
+                      >
+                        {/* BarChart component with adjusted width */}
+                        <LineAvaragesChart
+                          lineChartData={maleChartData}
+                          lineChartData2={femaleChartData}
+                          lineChartLabels={chartLabels}
+                          lineChartLabelName={"Мъже"}
+                          lineChartLabelName2={"Жени"}
+                          textColor={chartsColor}
+                        />
+                      </Card>
+                      <Card
+                        alignItems="center"
+                        flexDirection="column"
+                        minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                        minW={{ sm: "400px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
+                        maxH="400px"
+                      >
+                        <ColumnAvaragesChart
+                          chartData={maleChartData}
+                          chartData2={femaleChartData}
+                          chartLabels={chartLabels}
+                          chartLabelName={"Мъже"}
+                          chartLabelName2={"Жени"}
+                          textColor={chartsColor}
+                        />
+                      </Card>
+                    </SimpleGrid>
                   </Card>
-                </Link>
-              </SimpleGrid>
-            </Card>
-          </animated.div>
-        </animated.div>
+                </animated.div>
+              )}
+              <animated.div style={{ ...slideAnimation, position: "relative" }}>
+                <Card
+                  minH="200px"
+                  backgroundImage={`url(${backgroundImage})`}
+                  backgroundRepeat="no-repeat"
+                  backgroundSize="cover"
+                  backgroundPosition="center"
+                  transition="background-image 0.5s ease-in-out"
+                  mt="20px"
+                  mb="20px"
+                >
+                  <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="20px">
+                    <Link href="#/admin/weight">
+                      <Card
+                        _hover={{ bg: bgHover }}
+                        _focus={bgFocus}
+                        minH="100%"
+                      >
+                        <Flex pt="5px" w="100%">
+                          <LinearGradientText
+                            text={<b>Калкулации за теглото ви ↪</b>}
+                            gradient={gradient}
+                            fontSize="xl"
+                            mr="2"
+                          />
+                        </Flex>
+                        <Flex justify="center" mt="1%" pt="10px">
+                          <Text fontWeight={fontWeight} fontSize="l">
+                            Проследете вашето телесно изменение, посредством
+                            интерактивни диаграми и статистики!
+                          </Text>
+                        </Flex>
+                      </Card>
+                    </Link>
+                    <Link href="#/admin/mealplan">
+                      <Card
+                        _hover={{ bg: bgHover }}
+                        _focus={bgFocus}
+                        minH="100%"
+                      >
+                        <Flex pt="5px" w="100%">
+                          <LinearGradientText
+                            text={<b>Хранителен план ↪</b>}
+                            gradient={gradient}
+                            fontSize="xl"
+                            mr="2"
+                          />
+                        </Flex>
+                        <Flex justify="center" mt="1%" pt="10px">
+                          <Text fontWeight={fontWeight} fontSize="l">
+                            Създайте подходящия за вас хранителен план с
+                            изкуствен интелект в зависимост от интензивността на
+                            физическо натоварване!
+                          </Text>
+                        </Flex>
+                      </Card>
+                    </Link>
+                    <Link href="#/admin/top-meals">
+                      <Card
+                        _hover={{ bg: bgHover }}
+                        _focus={bgFocus}
+                        minH="100%"
+                      >
+                        <Flex pt="5px" w="100%">
+                          <LinearGradientText
+                            text={<b>Класации ↪</b>}
+                            gradient={gradient}
+                            fontSize="xl"
+                            mr="2"
+                          />
+                        </Flex>
+                        <Flex justify="center" mt="1%" pt="10px">
+                          <Text fontWeight={fontWeight} fontSize="l">
+                            Запознайте се с нашите многобройни статистики и
+                            класации за най-препоръчвани ястия от NutriFit!
+                          </Text>
+                        </Flex>
+                      </Card>
+                    </Link>
+                    <Link href="#/admin/contact">
+                      <Card
+                        _hover={{ bg: bgHover }}
+                        _focus={bgFocus}
+                        minH="100%"
+                      >
+                        <Flex pt="5px" w="100%">
+                          <LinearGradientText
+                            text={<b>Контакт ↪</b>}
+                            gradient={gradient}
+                            fontSize="xl"
+                            mr="2"
+                          />
+                        </Flex>
+                        <Flex justify="center" mt="1%" pt="10px">
+                          <Text fontWeight={fontWeight} fontSize="l">
+                            Ако имате проблем или препоръка, попълнете бланката
+                            и ни изпратете съобщение!
+                          </Text>
+                        </Flex>
+                      </Card>
+                    </Link>
+                  </SimpleGrid>
+                </Card>
+              </animated.div>
+            </animated.div>
+          </Box>
+        )}
       </Box>
     </FadeInWrapper>
   );

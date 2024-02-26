@@ -115,10 +115,11 @@ export default function AdminNavbar(props: {
           <Flex
             ml={{ sm: "0", lg: "auto" }}
             mb={{ sm: "12px", md: "0px" }}
-            w={{ sm: "130%", md: "unset" }}
+            w={{ sm: "100%", md: "unset" }}
             justifySelf="center"
+            justifyContent="space-between"
           >
-            <Box mr="20px" mt="8px">
+            <Box mt="8px">
               <Text
                 color={mainText}
                 bg="inherit"
@@ -194,7 +195,7 @@ export default function AdminNavbar(props: {
           w="100%"
           direction={{ sm: "column", md: "row" }}
           alignItems={{ sm: "flex-start", md: "center", xl: "center" }}
-          justifyContent="space-between" // Add this line
+          justifyContent="space-between"
           mb={gap}
         >
           <Box mb={{ sm: "12px", md: "0px" }}>

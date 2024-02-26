@@ -47,6 +47,7 @@ interface MealPlanDetailsProps {
     };
   };
   userPreferences: UserPreferencesForMealPlan;
+  isForLoading?: boolean;
 }
 
 const bulgarianMealType: string[] = ["Закуска", "Обяд", "Вечеря"];
@@ -81,7 +82,8 @@ const calculateMealTotals = (mealPlan: MealPlan2) => {
 const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   mealPlan,
   mealPlanImages,
-  userPreferences
+  userPreferences,
+  isForLoading
 }) => {
   const [currentPage, setCurrentPage] = React.useState("закуска");
   const [showDessertInstructions, setShowDessertInstructions] =
@@ -290,7 +292,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -301,7 +303,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -467,7 +469,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   color="white"
                                   onClick={toggleMainInstructions}
                                 >
-                                  Рецепта
+                                  Начин на приготвяне
                                 </Button>
                               </Flex>
 
@@ -478,7 +480,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 <ModalOverlay />
                                 <ModalContent borderRadius="20px">
                                   <ModalHeader fontSize="2xl">
-                                    Рецепта
+                                    Начин на приготвяне
                                   </ModalHeader>
                                   <ModalCloseButton />
                                   <ModalBody>
@@ -648,7 +650,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleDessertInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -659,7 +661,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -880,7 +882,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -891,7 +893,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1057,7 +1059,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   color="white"
                                   onClick={toggleMainInstructions}
                                 >
-                                  Рецепта
+                                  Начин на приготвяне
                                 </Button>
                               </Flex>
 
@@ -1068,7 +1070,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 <ModalOverlay />
                                 <ModalContent borderRadius="20px">
                                   <ModalHeader fontSize="2xl">
-                                    Рецепта
+                                    Начин на приготвяне
                                   </ModalHeader>
                                   <ModalCloseButton />
                                   <ModalBody>
@@ -1238,7 +1240,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleDessertInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -1249,7 +1251,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1461,7 +1463,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
 
@@ -1472,7 +1474,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1638,7 +1640,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   color="white"
                                   onClick={toggleMainInstructions}
                                 >
-                                  Рецепта
+                                  Начин на приготвяне
                                 </Button>
                               </Flex>
 
@@ -1649,7 +1651,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 <ModalOverlay />
                                 <ModalContent borderRadius="20px">
                                   <ModalHeader fontSize="2xl">
-                                    Рецепта
+                                    Начин на приготвяне
                                   </ModalHeader>
                                   <ModalCloseButton />
                                   <ModalBody>
@@ -1819,7 +1821,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     color="white"
                                     onClick={toggleDessertInstructions}
                                   >
-                                    Рецепта
+                                    Начин на приготвяне
                                   </Button>
                                 </Flex>
                                 <Modal
@@ -1829,7 +1831,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   <ModalOverlay />
                                   <ModalContent borderRadius="20px">
                                     <ModalHeader fontSize="2xl">
-                                      Рецепта
+                                      Начин на приготвяне
                                     </ModalHeader>
                                     <ModalCloseButton />
                                     <ModalBody>
@@ -1874,198 +1876,235 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
             })}
           </>
         )}
-        <HSeparator />
-        <Flex justify="center" pt="5px" w="100%" mt="20px">
-          <SimpleGrid
-            columns={{ base: 2, lg: 4 }}
-            spacing="3%"
-            alignItems="center"
-          >
-            <Flex>
-              <Tooltip
-                label={`Сумирани калории и тяхната разлика от подадените лимити.`}
-                aria-label="calories-tooltip"
-                borderRadius="10px"
+        {isForLoading ? (
+          <Box></Box>
+        ) : (
+          <Box>
+            <HSeparator />
+            <Flex justify="center" pt="5px" w="100%" mt="20px">
+              <SimpleGrid
+                columns={{ base: 2, lg: 4 }}
+                spacing="3%"
+                alignItems="center"
               >
-                <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>
-                    Сумирани калории: {calculatedTotals.calories.toFixed(2)}
-                  </b>
-                  {calculatedTotals.calories - userPreferences.Calories !==
-                  0 ? (
-                    <Box>
-                      <Text fontSize="lg" color="white">
-                        Отклонение на chatGPT в цифри:
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        (
-                        {calculatedTotals.calories - userPreferences.Calories >
-                          0 && "+"}
-                        {(
-                          calculatedTotals.calories - userPreferences.Calories
-                        ).toFixed(2)}
-                        )
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        <Text fontSize="lg" color="white">
-                          Процент на отклонение на chatGPT:
+                <Flex>
+                  <Tooltip
+                    label={`Сумирани калории и тяхната разлика от подадените лимити.`}
+                    aria-label="calories-tooltip"
+                    borderRadius="10px"
+                  >
+                    <Text
+                      mr="20%"
+                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                    >
+                      <b>
+                        Сумирани калории: {calculatedTotals.calories.toFixed(2)}
+                      </b>
+                      {calculatedTotals.calories - userPreferences.Calories !==
+                      0 ? (
+                        <Box>
+                          <Text fontSize="lg" color="white">
+                            Отклонение на chatGPT в цифри:
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            (
+                            {calculatedTotals.calories -
+                              userPreferences.Calories >
+                              0 && "+"}
+                            {(
+                              calculatedTotals.calories -
+                              userPreferences.Calories
+                            ).toFixed(2)}
+                            )
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            <Text fontSize="lg" color="white">
+                              Процент на отклонение на chatGPT:
+                            </Text>
+                            (
+                            {calculatedTotals.calories -
+                              userPreferences.Calories >
+                              0 && "+"}
+                            {(
+                              ((calculatedTotals.calories -
+                                userPreferences.Calories) /
+                                userPreferences.Calories) *
+                              100
+                            ).toFixed(2)}
+                            %)
+                          </Text>
+                        </Box>
+                      ) : (
+                        <Text fontSize="lg" color="#03AC13">
+                          Няма отклонение от страна на chatGPT!
                         </Text>
-                        (+
-                        {(
-                          ((calculatedTotals.calories -
-                            userPreferences.Calories) /
-                            userPreferences.Calories) *
-                          100
-                        ).toFixed(2)}
-                        %)
-                      </Text>
-                    </Box>
-                  ) : (
-                    <Text fontSize="lg" color="#03AC13">
-                      Няма отклонение от страна на chatGPT!
+                      )}
                     </Text>
-                  )}
-                </Text>
-              </Tooltip>
-            </Flex>
-            <Flex>
-              <Tooltip
-                label={`Сумиран протеин и неговата разлика от подадените лимити.`}
-                aria-label="protein-tooltip"
-                borderRadius="10px"
-              >
-                <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>Сумиран протеин: {calculatedTotals.protein.toFixed(2)}</b>
-                  {calculatedTotals.protein - userPreferences.Protein !== 0 ? (
-                    <Box>
-                      <Text fontSize="lg" color="white">
-                        Отклонение на chatGPT в цифри:
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        (
-                        {calculatedTotals.protein - userPreferences.Protein >
-                          0 && "+"}
-                        {(
-                          calculatedTotals.protein - userPreferences.Protein
-                        ).toFixed(2)}
-                        )
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        <Text fontSize="lg" color="white">
-                          Отклонение на chatGPT в цифри:
+                  </Tooltip>
+                </Flex>
+                <Flex>
+                  <Tooltip
+                    label={`Сумиран протеин и неговата разлика от подадените лимити.`}
+                    aria-label="protein-tooltip"
+                    borderRadius="10px"
+                  >
+                    <Text
+                      mr="20%"
+                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                    >
+                      <b>
+                        Сумиран протеин: {calculatedTotals.protein.toFixed(2)}
+                      </b>
+                      {calculatedTotals.protein - userPreferences.Protein !==
+                      0 ? (
+                        <Box>
+                          <Text fontSize="lg" color="white">
+                            Отклонение на chatGPT в цифри:
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            (
+                            {calculatedTotals.protein -
+                              userPreferences.Protein >
+                              0 && "+"}
+                            {(
+                              calculatedTotals.protein - userPreferences.Protein
+                            ).toFixed(2)}
+                            )
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            <Text fontSize="lg" color="white">
+                              Отклонение на chatGPT в цифри:
+                            </Text>
+                            (
+                            {calculatedTotals.protein -
+                              userPreferences.Protein >
+                              0 && "+"}
+                            {(
+                              ((calculatedTotals.protein -
+                                userPreferences.Protein) /
+                                userPreferences.Protein) *
+                              100
+                            ).toFixed(2)}
+                            %)
+                          </Text>
+                        </Box>
+                      ) : (
+                        <Text fontSize="lg" color="#03AC13">
+                          Няма отклонение от страна на chatGPT!
                         </Text>
-                        (+
-                        {(
-                          ((calculatedTotals.protein -
-                            userPreferences.Protein) /
-                            userPreferences.Protein) *
-                          100
-                        ).toFixed(2)}
-                        %)
-                      </Text>
-                    </Box>
-                  ) : (
-                    <Text fontSize="lg" color="#03AC13">
-                      Няма отклонение от страна на chatGPT!
+                      )}
                     </Text>
-                  )}
-                </Text>
-              </Tooltip>
-            </Flex>
-            <Flex>
-              <Tooltip
-                label={`Сумирани въглехидрати и тяхната разлика от подадените лимити.`}
-                aria-label="carbs-tooltip"
-                borderRadius="10px"
-              >
-                <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>
-                    Сумирани въглехидрати:{" "}
-                    {calculatedTotals.carbohydrates.toFixed(2)}
-                  </b>
-                  {calculatedTotals.carbohydrates -
-                    userPreferences.Carbohydrates !==
-                  0 ? (
-                    <Box>
-                      <Text fontSize="lg" color="white">
-                        Отклонение на chatGPT в цифри:
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        (
-                        {calculatedTotals.carbohydrates -
-                          userPreferences.Carbohydrates >
-                          0 && "+"}
-                        {(
-                          calculatedTotals.carbohydrates -
-                          userPreferences.Carbohydrates
-                        ).toFixed(2)}
-                        )
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        <Text fontSize="lg" color="white">
-                          Процент на отклонение на chatGPT:
+                  </Tooltip>
+                </Flex>
+                <Flex>
+                  <Tooltip
+                    label={`Сумирани въглехидрати и тяхната разлика от подадените лимити.`}
+                    aria-label="carbs-tooltip"
+                    borderRadius="10px"
+                  >
+                    <Text
+                      mr="20%"
+                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                    >
+                      <b>
+                        Сумирани въглехидрати:{" "}
+                        {calculatedTotals.carbohydrates.toFixed(2)}
+                      </b>
+                      {calculatedTotals.carbohydrates -
+                        userPreferences.Carbohydrates !==
+                      0 ? (
+                        <Box>
+                          <Text fontSize="lg" color="white">
+                            Отклонение на chatGPT в цифри:
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            (
+                            {calculatedTotals.carbohydrates -
+                              userPreferences.Carbohydrates >
+                              0 && "+"}
+                            {(
+                              calculatedTotals.carbohydrates -
+                              userPreferences.Carbohydrates
+                            ).toFixed(2)}
+                            )
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            <Text fontSize="lg" color="white">
+                              Процент на отклонение на chatGPT:
+                            </Text>
+                            (
+                            {calculatedTotals.carbohydrates -
+                              userPreferences.Carbohydrates >
+                              0 && "+"}
+                            {(
+                              ((calculatedTotals.carbohydrates -
+                                userPreferences.Carbohydrates) /
+                                userPreferences.Carbohydrates) *
+                              100
+                            ).toFixed(2)}
+                            %)
+                          </Text>
+                        </Box>
+                      ) : (
+                        <Text fontSize="lg" color="#03AC13">
+                          Няма отклонение от страна на chatGPT!
                         </Text>
-                        (+
-                        {(
-                          ((calculatedTotals.carbohydrates -
-                            userPreferences.Carbohydrates) /
-                            userPreferences.Carbohydrates) *
-                          100
-                        ).toFixed(2)}
-                        %)
-                      </Text>
-                    </Box>
-                  ) : (
-                    <Text fontSize="lg" color="#03AC13">
-                      Няма отклонение от страна на chatGPT!
+                      )}
                     </Text>
-                  )}
-                </Text>
-              </Tooltip>
-            </Flex>
-            <Flex>
-              <Tooltip
-                label={`Сумирани мазнини и тяхната разлика от подадените лимити.`}
-                aria-label="fat-tooltip"
-                borderRadius="10px"
-              >
-                <Text mr="20%" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
-                  <b>Сумирани мазнини: {calculatedTotals.fat.toFixed(2)}</b>
-                  {calculatedTotals.fat - userPreferences.Fat !== 0 ? (
-                    <Box>
-                      <Text fontSize="lg" color="white">
-                        Отклонение на chatGPT в цифри:
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        ({calculatedTotals.fat - userPreferences.Fat > 0 && "+"}
-                        {(calculatedTotals.fat - userPreferences.Fat).toFixed(
-                          2
-                        )}
-                        )
-                      </Text>
-                      <Text fontSize="lg" color="rgba(67,24,255,1)">
-                        <Text fontSize="lg" color="white">
-                          Процент на отклонение на chatGPT:
+                  </Tooltip>
+                </Flex>
+                <Flex>
+                  <Tooltip
+                    label={`Сумирани мазнини и тяхната разлика от подадените лимити.`}
+                    aria-label="fat-tooltip"
+                    borderRadius="10px"
+                  >
+                    <Text
+                      mr="20%"
+                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                    >
+                      <b>Сумирани мазнини: {calculatedTotals.fat.toFixed(2)}</b>
+                      {calculatedTotals.fat - userPreferences.Fat !== 0 ? (
+                        <Box>
+                          <Text fontSize="lg" color="white">
+                            Отклонение на chatGPT в цифри:
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            (
+                            {calculatedTotals.fat - userPreferences.Fat > 0 &&
+                              "+"}
+                            {(
+                              calculatedTotals.fat - userPreferences.Fat
+                            ).toFixed(2)}
+                            )
+                          </Text>
+                          <Text fontSize="lg" color="rgba(67,24,255,1)">
+                            <Text fontSize="lg" color="white">
+                              Процент на отклонение на chatGPT:
+                            </Text>
+                            (
+                            {calculatedTotals.fat - userPreferences.Fat > 0 &&
+                              "+"}
+                            {(
+                              ((calculatedTotals.fat - userPreferences.Fat) /
+                                userPreferences.Fat) *
+                              100
+                            ).toFixed(2)}
+                            %)
+                          </Text>
+                        </Box>
+                      ) : (
+                        <Text fontSize="lg" color="#03AC13">
+                          Няма отклонение от страна на chatGPT!
                         </Text>
-                        (+
-                        {(
-                          ((calculatedTotals.fat - userPreferences.Fat) /
-                            userPreferences.Fat) *
-                          100
-                        ).toFixed(2)}
-                        %)
-                      </Text>
-                    </Box>
-                  ) : (
-                    <Text fontSize="lg" color="#03AC13">
-                      Няма отклонение от страна на chatGPT!
+                      )}
                     </Text>
-                  )}
-                </Text>
-              </Tooltip>
+                  </Tooltip>
+                </Flex>
+              </SimpleGrid>
             </Flex>
-          </SimpleGrid>
-        </Flex>
+          </Box>
+        )}
       </Card>
     </FadeInWrapper>
   );

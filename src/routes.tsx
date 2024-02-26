@@ -4,10 +4,12 @@ import {
   MdPerson,
   MdHome,
   MdLock,
-  MdOutlineShoppingCart
+  MdOutlineShoppingCart,
+  MdLeaderboard
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
 import { IoMdMail } from "react-icons/io";
+import { FaTrophy } from "react-icons/fa";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -18,6 +20,8 @@ import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
 import TopMeals from "views/admin/topMeals";
+import RecommendedFoods from "views/admin/recommendedFoods";
+import TopCaloryMeals from "views/admin/individualMealStats";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -26,7 +30,7 @@ import ForgotPass from "views/auth/forgotPass";
 
 import Landing from "views/landing";
 
-const routes = [
+const routes: RoutesType[] = [
   {
     name: "Начало",
     layout: "/admin",
@@ -51,19 +55,101 @@ const routes = [
     component: MealPlanner
   },
   {
+    name: "Най-препоръчвани храни",
+    layout: "/admin",
+    path: "/suggested",
+    icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
+    component: RecommendedFoods,
+    hideInSidebar: true
+  },
+  // {
+  //   name: "Топ калорични храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/calory",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopCaloryMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ мазни храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/fat",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ въглехидратни храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/carbs",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ протеинови храни от chatGPT",
+  //   layout: "/admin",
+  //   path: "/protein",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopMeals,
+  //   hideInSidebar: true
+  // },
+  {
+    name: "Класации",
+    layout: "/admin",
+    path: "/parent",
+    icon: (
+      <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
+    ),
+    collapseRoutes: [
+      {
+        name: "Най-препоръчвани храни",
+        layout: "/admin",
+        path: "/suggested",
+        icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
+        component: RecommendedFoods,
+        hideInSidebar: true
+      }
+      // {
+      //   name: "Топ калорични храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/calory",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopCaloryMeals,
+      //   hideInSidebar: true
+      // }
+      // {
+      //   name: "Топ мазни храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/fat",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopMeals,
+      //   hideInSidebar: true
+      // },
+      // {
+      //   name: "Топ въглехидратни храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/carbs",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopMeals,
+      //   hideInSidebar: true
+      // },
+      // {
+      //   name: "Топ протеинови храни от chatGPT",
+      //   layout: "/admin",
+      //   path: "/protein",
+      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+      //   component: TopMeals,
+      //   hideInSidebar: true
+      // }
+    ]
+  },
+  {
     name: "За контакт",
     layout: "/admin",
     path: "/contact",
     icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
     component: Contact,
-    hideInSidebar: false
-  },
-  {
-    name: "Класации",
-    layout: "/admin",
-    path: "/top-meals",
-    icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
-    component: TopMeals,
     hideInSidebar: false
   },
   {

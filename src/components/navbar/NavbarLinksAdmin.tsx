@@ -1,4 +1,3 @@
-// Chakra Imports
 import {
   Avatar,
   Button,
@@ -22,10 +21,10 @@ import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import routes from "routes";
 import Cookies from "js-cookie";
 import { getAuth } from "firebase/auth";
+
 export default function HeaderLinks(props: { secondary: boolean }) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
-  // Chakra Color Mode
   const navbarIcon = useColorModeValue("gray.400", "white");
   let menuBg = useColorModeValue("white", "navy.800");
   const shadow = useColorModeValue(
@@ -38,6 +37,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     { bg: "secondaryGray.600" },
     { bg: "whiteAlpha.200" }
   );
+
   const handleLogOut = async () => {
     const keySession = sessionStorage.key(0);
     const keyLocalStorage = Object.keys(localStorage).filter((obj) =>
@@ -93,7 +93,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
           maxW={{ sm: "100px", lg: "100px" }}
           px="14px"
           onClick={handleLogOut}
-          ml={{ base: "20px", lg: "0", md: "0" }}
+          ml={{ base: "20px", lg: "0", md: "0" }} // Adjusted margin
         >
           <Text fontSize="sm">Излизане</Text>
         </Button>

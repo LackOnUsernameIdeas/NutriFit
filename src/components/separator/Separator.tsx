@@ -4,14 +4,15 @@ import React from "react";
 const HSeparator = (props: {
   variant?: string;
   size?: string;
+  color?: string;
   [x: string]: any;
 }) => {
-  const { variant, size, ...rest } = props;
+  const { variant, size, color, ...rest } = props;
   return (
     <Flex
       h={size ? size : "1px"}
       w="100%"
-      bg="rgba(135, 140, 189, 0.3)"
+      bg={color ? color : "rgba(135, 140, 189, 0.3)"}
       {...rest}
     />
   );

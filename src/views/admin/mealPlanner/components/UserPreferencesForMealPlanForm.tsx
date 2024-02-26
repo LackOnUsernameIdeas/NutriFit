@@ -12,7 +12,7 @@ import {
   Box,
   Image,
   SimpleGrid,
-  useBreakpointValue,
+  Tooltip,
   useColorModeValue
 } from "@chakra-ui/react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
@@ -54,46 +54,14 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
     [key: string]: string;
   }>({});
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
-
-  const handleDropdownToggle = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
-
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
+  const DropdownPosition = useSpring({
+    opacity: 1,
+    transform: `translateY(${-50}px)`,
     config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
+      tension: 170,
+      friction: 12
     }
   });
-
-  const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? -10 : 0}px)`
-  });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
 
   const isNutrientDataValid = () => {
     const errors: { [key: string]: string } = {};
@@ -134,10 +102,10 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
 
   const englishCuisines = [
     "Bulgarian",
-    "English",
-    "Chinese",
-    "Mexican",
-    "Indian",
+    // "English",
+    // "Chinese",
+    // "Mexican",
+    // "Indian",
     "Spanish",
     "Italian",
     "French"
@@ -145,10 +113,10 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
 
   const bulgarianCuisines = [
     "Българска",
-    "Английска",
-    "Китайска",
-    "Мексиканска",
-    "Индийска",
+    // "Английска",
+    // "Китайска",
+    // "Мексиканска",
+    // "Индийска",
     "Испанска",
     "Италианска",
     "Френска"
@@ -156,10 +124,10 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
 
   const countriesFlags = [
     "https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Bulgaria.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg/1200px-Flag_of_the_United_Kingdom_%281-2%29.svg.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/800px-Flag_of_the_People%27s_Republic_of_China.svg.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/1200px-Flag_of_Mexico.svg.png",
-    "https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png",
+    // "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg/1200px-Flag_of_the_United_Kingdom_%281-2%29.svg.png",
+    // "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/800px-Flag_of_the_People%27s_Republic_of_China.svg.png",
+    // "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/1200px-Flag_of_Mexico.svg.png",
+    // "https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1280px-Bandera_de_Espa%C3%B1a.svg.png",
     "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/1280px-Flag_of_Italy.svg.png",
     "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/800px-Flag_of_France.svg.png"
@@ -249,81 +217,96 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
         })}
         <Box mt="20px">
           <Card
-            onClick={handleDropdownToggle}
-            cursor="pointer"
             zIndex="1"
             position="relative"
-            bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+            bg={dropdownActiveBoxBg}
             transition="background-image 0.5s ease-in-out"
-            style={{ height: "80px" }}
+            minH="80px" // Use minHeight instead of height
+            maxH={{ sm: "200px", md: "100px", lg: "auto" }}
           >
-            <Flex justify="space-between" alignItems="center" mt="3px">
+            <Flex
+              alignItems="center"
+              mt="3px"
+              position="relative"
+              flexWrap="wrap" // Allow items to wrap to the next line
+            >
               <Text
                 fontSize="2xl"
-                style={
-                  dropdownVisible
-                    ? {
-                        backgroundImage: gradient,
-                        WebkitBackgroundClip: "text",
-                        color: "transparent"
-                      }
-                    : {}
-                }
+                style={{
+                  backgroundImage: gradient,
+                  WebkitBackgroundClip: "text",
+                  color: "transparent"
+                }}
                 userSelect="none"
+                mr="5px"
               >
-                {dropdownVisible ? <b>Изберете кухня:</b> : "Изберете кухня:"}
+                <b>Изберете кухня:</b>
               </Text>
-              <Icon
-                as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                boxSize={6}
-                color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-              />
+              {englishCuisines.map(
+                (cuisine, index) =>
+                  userPreferences.Cuisine &&
+                  (Array.isArray(userPreferences.Cuisine)
+                    ? userPreferences.Cuisine.includes(cuisine)
+                    : userPreferences.Cuisine === cuisine) && (
+                    <Tooltip
+                      label={bulgarianCuisines[index]}
+                      aria-label={bulgarianCuisines[index]}
+                    >
+                      <Image
+                        src={`${countriesFlags[index]}`}
+                        alt={bulgarianCuisines[index]}
+                        maxW="35px"
+                        ml="2px" // Adjust margin as needed
+                        mr="2px" // Adjust margin as needed
+                        mb="2px" // Add margin between flags
+                      />
+                    </Tooltip>
+                  )
+              )}
             </Flex>
           </Card>
-          {renderDropdown && (
-            <animated.div
-              style={{ ...slideAnimationDrop, position: "relative" }}
-            >
-              <Card
-                bg={boxBg}
-                minH={{ base: "800px", md: "300px", xl: "100px" }}
-              >
-                <SimpleGrid mt="50px" columns={{ base: 2, md: 3 }}>
-                  {englishCuisines.map((cuisine, index) => (
-                    <Checkbox
-                      key={cuisine}
-                      name={cuisine}
-                      isChecked={
-                        Array.isArray(userPreferences.Cuisine)
-                          ? userPreferences.Cuisine.includes(cuisine)
-                          : userPreferences.Cuisine === cuisine
-                      }
-                      onChange={handleCheckboxChange}
-                    >
-                      <Flex alignItems="center" gap="3px">
-                        {bulgarianCuisines[index]}
-                        <Image src={`${countriesFlags[index]}`} maxW="20px" />
-                      </Flex>
-                    </Checkbox>
-                  ))}
-                </SimpleGrid>
-              </Card>
-            </animated.div>
-          )}
+          <animated.div style={{ ...DropdownPosition, position: "relative" }}>
+            <Card bg={boxBg} minH={{ base: "100px", md: "100px", xl: "100px" }}>
+              <SimpleGrid mt="50px" columns={{ base: 2, md: 2, xl: 4 }}>
+                {englishCuisines.map((cuisine, index) => (
+                  <Checkbox
+                    key={cuisine}
+                    name={cuisine}
+                    isChecked={
+                      Array.isArray(userPreferences.Cuisine)
+                        ? userPreferences.Cuisine.includes(cuisine)
+                        : userPreferences.Cuisine === cuisine
+                    }
+                    onChange={handleCheckboxChange}
+                  >
+                    <Flex alignItems="center" gap="1px">
+                      <Tooltip
+                        label={bulgarianCuisines[index]}
+                        aria-label={bulgarianCuisines[index]}
+                      >
+                        <Image
+                          src={`${countriesFlags[index]}`}
+                          alt={bulgarianCuisines[index]}
+                          maxW="35px"
+                        />
+                      </Tooltip>
+                    </Flex>
+                  </Checkbox>
+                ))}
+              </SimpleGrid>
+            </Card>
+          </animated.div>
         </Box>
       </SimpleGrid>
-      <animated.div style={{ ...slideAnimation, position: "relative" }}>
-        <Button
-          onClick={handleSubmit}
-          mt={dropdownVisible ? {} : { base: "10%", lg: "5%" }}
-          minH="60px"
-          minW="100%"
-          backgroundColor={bgButton}
-          color={brandColor}
-        >
-          Създайте хранителен план
-        </Button>
-      </animated.div>
+      <Button
+        onClick={handleSubmit}
+        minH="60px"
+        minW="100%"
+        backgroundColor={bgButton}
+        color={brandColor}
+      >
+        Създайте хранителен план
+      </Button>
     </Card>
   );
 };

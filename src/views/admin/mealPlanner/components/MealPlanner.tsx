@@ -6,10 +6,11 @@ import {
   SimpleGrid,
   Text,
   Flex,
-  useColorModeValue
+  useColorModeValue,
+  useBreakpointValue
 } from "@chakra-ui/react";
 
-import Loading from "views/admin/weightStats/components/Loading";
+import MealLoading from "./LoaderMealPlan";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import { HSeparator } from "components/separator/Separator";
 import {
@@ -138,6 +139,7 @@ export default function MealPlanner(props: {
   }, [chosenCalories, chosenNutrients]);
 
   console.log(userPreferences);
+  const openAIKey = process.env.REACT_APP_API_KEY;
   const generatePlan = async () => {
     try {
       setIsSubmitted(true);
@@ -148,10 +150,9 @@ export default function MealPlanner(props: {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            //sk-C3emePASFrGkhpqNq0Fs(!!!BEZ TOVA!!!)T3BlbkFJVsTta5pgITgCpZZkttfW"
-            Authorization: "Bearer sk-ssssssssssssss"
+            Authorization: `Bearer ${openAIKey}`
           },
-          // Hosting: sk-14yD7Jthy49wCjUxHFIIT3BlbkFJEs1Rgs3TpvI2c3dllWcII(without the second I)
+          // Hosting: REACT_APP_API_KEY_HOSTING
           body: JSON.stringify({
             model: "gpt-4-0125-preview",
             messages: [
@@ -360,15 +361,14 @@ export default function MealPlanner(props: {
     const saveMealPlanData = async () => {
       try {
         const userId = getAuth().currentUser.uid;
-        await saveMealPlan(userId, mealPlan);
+        await Promise.all([saveMealPlan(userId, mealPlan, mealPlanImages)]);
       } catch (error) {
         console.error("Error saving meal plan:", error);
       }
     };
 
-    // Trigger saveMealPlanData whenever mealPlan state changes
     saveMealPlanData();
-  }, [mealPlan]);
+  }, [mealPlan, mealPlanImages]);
 
   interface LinearGradientTextProps {
     text: any;
@@ -401,32 +401,38 @@ export default function MealPlanner(props: {
     </Text>
   );
 
+  const fontSize = useBreakpointValue({ base: "3xl", md: "5xl" });
+
   return (
     <FadeInWrapper>
       <Box mb="20px">
         <Card>
-          <Card>
-            <Flex justify="center" w="100%" mb="5px">
-              <Text fontSize="5xl" mr="2">
-                Създайте хранителен план с{" "}
-              </Text>
-              <LinearGradientText
-                text={<b>Nutri</b>}
-                gradient={gradientNutri}
-                fontSize="5xl"
-                fontFamily="DM Sans"
-              />
-              <LinearGradientText
-                text={<b>Fit</b>}
-                gradient={gradientFit}
-                fontFamily="Leckerli One"
-                fontSize="5xl"
-                mr="1px"
-              />
-              <Text fontSize="5xl">:</Text>
-            </Flex>
-            <HSeparator />
-          </Card>
+          <Flex
+            justify="center"
+            w="100%"
+            mb="5px"
+            flexWrap="wrap"
+            textAlign="center"
+          >
+            <Text fontSize={fontSize} mr="2">
+              Създайте хранителен план с
+            </Text>
+            <LinearGradientText
+              text={<b>Nutri</b>}
+              gradient={gradientNutri}
+              fontSize={fontSize}
+              fontFamily="DM Sans"
+              mr="1px" // Adjust the margin as needed
+            />
+            <LinearGradientText
+              text={<b>Fit</b>}
+              gradient={gradientFit}
+              fontFamily="Leckerli One"
+              fontSize={fontSize}
+            />
+            <Text fontSize={fontSize}>:</Text>
+          </Flex>
+          <HSeparator />
           <Card>
             {isSubmitted ? (
               <Box>
@@ -440,7 +446,7 @@ export default function MealPlanner(props: {
                         generatePlan={generatePlan}
                       />
                     </SimpleGrid>
-                    <Loading />
+                    <MealLoading />
                   </>
                 ) : (
                   <>

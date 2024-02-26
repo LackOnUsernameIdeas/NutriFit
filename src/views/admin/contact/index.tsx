@@ -104,7 +104,7 @@ export default function UserReports() {
   const bgFocus = { bg: "brand.200" };
   const [isLoading, setIsLoading] = useState(false); //set to true if loading implements
   const textColor = useColorModeValue("navy.700", "white");
-  const textColorSecondary = "gray.400";
+  const textColorSecondary = "secondaryGray.500";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
   const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
@@ -226,11 +226,12 @@ export default function UserReports() {
                     isRequired={true}
                     variant="auth"
                     borderRadius="20px"
-                    borderWidth="2px"
+                    borderWidth="1px"
                     fontSize="sm"
                     placeholder="Моля напишете вашето съобщение тук..."
                     _placeholder={{
-                      verticalAlign: "top" // Align placeholder text to the top
+                      verticalAlign: "top",
+                      color: `${textColorSecondary}` // Align placeholder text to the top
                     }}
                     value={message}
                     onChange={handleInputChange}
