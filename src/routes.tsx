@@ -19,6 +19,7 @@ import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
 import TopMeals from "views/admin/topMeals";
+import RecommendedFoods from "views/admin/recommendedFoods";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -66,7 +67,7 @@ const routes: RoutesType[] = [
     layout: "/admin",
     path: "/suggested",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: WeightStats,
+    component: RecommendedFoods,
     hideInSidebar: true
   },
   {
@@ -114,7 +115,7 @@ const routes: RoutesType[] = [
         layout: "/admin",
         path: "/suggested",
         icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-        component: WeightStats,
+        component: RecommendedFoods,
         hideInSidebar: true
       },
       {
