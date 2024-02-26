@@ -343,6 +343,9 @@ export default function TopMeals() {
     (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
   );
 
+  console.log("all Meals: ", allMeals);
+  console.log("meals to show: ", mealsToShow);
+
   return (
     <FadeInWrapper>
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>

@@ -291,7 +291,7 @@ export default function NFT(props: {
                           me="14px"
                           mb="20px"
                         >
-                          Грамаж за една порция: {totals.calories}g
+                          Грамаж за една порция: {totals.grams}g
                         </Text>
                         <Button
                           onClick={(event) => {
