@@ -621,8 +621,8 @@ export default function UserReports() {
           <Card>
             <Flex justify="left">
               <Text fontSize="2xl">
-                Нашата цел е да помогнем на потребители ни да спазват хранителен
-                режим и здравословно телесно състояние с изкуствен интелект.
+                Бъдете винаги във форма и в оптимално здравословно състояние с
+                помощта на изкуствен интелект!
               </Text>
             </Flex>
           </Card>
@@ -644,7 +644,7 @@ export default function UserReports() {
                   color: "transparent"
                 }}
               >
-                <b>Най-често препоръчвана храна от ChatGPT!</b>
+                <b>Най-често препоръчвано ястие от NutriFit</b>
               </Text>
             </Card>
             <RecipeWidget
@@ -778,7 +778,7 @@ export default function UserReports() {
                   color: "transparent"
                 }}
               >
-                <b>Топ 5 най-често препоръчани храни от ChatGPT!</b>
+                <b>Топ 5 най-препоръчани ястия от NutriFit</b>
               </Text>
             </Card>
             <Card
@@ -1403,9 +1403,8 @@ export default function UserReports() {
                     </Flex>
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница с калкулатор за тегло!
-                        Предлагаме интерактивни диаграми и статистики, с които
-                        вие можете да следите вашето телесно изменение.
+                        Проследете вашето телесно изменение, посредством
+                        интерактивни диаграми и статистики!
                       </Text>
                     </Flex>
                   </Card>
@@ -1422,9 +1421,9 @@ export default function UserReports() {
                     </Flex>
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница за създаване на хранителен
-                        план! Ние използваме изкуствен интелект, с който
-                        създаваме хранителен режим според вашите предпочитания.
+                        Създайте подходящия за вас хранителен план с изкуствен
+                        интелект в зависимост от интензивността на физическо
+                        натоварване!
                       </Text>
                     </Flex>
                   </Card>
@@ -1441,10 +1440,8 @@ export default function UserReports() {
                     </Flex>
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
-                        Посетете нашата страница с класации за храните,
-                        генерирани от ChatGPT! Ние запазваме всички хранителни
-                        планове, които генерираме и ги използваме за да ви
-                        предоставим статистики.
+                        Запознайте се с нашите многобройни статистики и класации
+                        за най-препоръчвани ястия от NutriFit!
                       </Text>
                     </Flex>
                   </Card>
@@ -1461,8 +1458,8 @@ export default function UserReports() {
                     </Flex>
                     <Flex justify="center" mt="1%" pt="10px">
                       <Text fontWeight={fontWeight} fontSize="l">
-                        Свържете се с нас! Ако изпитате проблем или имате
-                        препоръка, попълнете бланката и ни изпратете съобщение.
+                        Ако имате проблем или препоръка, попълнете бланката и ни
+                        изпратете съобщение!
                       </Text>
                     </Flex>
                   </Card>
