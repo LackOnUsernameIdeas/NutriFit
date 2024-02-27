@@ -30,14 +30,15 @@ import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 // Chakra imports
 import {
   Box,
-  Button,
+  SimpleGrid,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Image
 } from "@chakra-ui/react";
 
 import MeasurementsAlertDialog from "./components/MeasurementsAlertDialog";
@@ -45,6 +46,12 @@ import MeasurementsAlertDialog from "./components/MeasurementsAlertDialog";
 import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/measurements/Default";
 // Assets
+import neckImgDark from "../../assets/img/layout/neck-measurement.png";
+import waistImgDark from "../../assets/img/layout/waist-measurement.png";
+import hipImgDark from "../../assets/img/layout/hip-measurement.png";
+import neckImgWhite from "../../assets/img/layout/neck-measurement-white.png";
+import waistImgWhite from "../../assets/img/layout/waist-measurement-white.png";
+import hipImgWhite from "../../assets/img/layout/hip-measurement-white.png";
 import illustration from "assets/img/auth/auth.png";
 import Loading from "views/admin/weightStats/components/Loading";
 import {
@@ -484,6 +491,10 @@ const UserMeasurements = () => {
   //     generateStats();
   //   }
   // }, [userData]);
+  const neckImg = useColorModeValue(neckImgDark, neckImgWhite);
+  const waistImg = useColorModeValue(waistImgDark, waistImgWhite);
+  const hipImg = useColorModeValue(hipImgDark, hipImgWhite);
+
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
@@ -539,24 +550,53 @@ const UserMeasurements = () => {
                 {Object.entries(userData).map(([key, value], index) => (
                   <Box key={key} mb="10px">
                     {key !== "gender" && key !== "goal" && (
-                      <FormLabel
-                        display="flex"
-                        ms="4px"
-                        fontSize="sm"
-                        fontWeight="500"
-                        color={textColor}
-                        mb="4px"
-                      >
-                        {userDataPropertiesTranslated[index]
-                          .charAt(0)
-                          .toUpperCase() +
-                          userDataPropertiesTranslated[index].slice(1)}
-                        {key === "age" && (
-                          <Text color={brandStars} ml="1">
-                            *
-                          </Text>
-                        )}
-                      </FormLabel>
+                      <Flex alignItems="center">
+                        <FormLabel
+                          display="flex"
+                          ms="4px"
+                          fontSize="sm"
+                          fontWeight="500"
+                          color={textColor}
+                          mb="4px"
+                        >
+                          {userDataPropertiesTranslated[index]
+                            .charAt(0)
+                            .toUpperCase() +
+                            userDataPropertiesTranslated[index].slice(1)}
+                          {key === "age" && (
+                            <Text color={brandStars} ml="1">
+                              *
+                            </Text>
+                          )}
+                        </FormLabel>
+                        <Flex alignItems="center">
+                          {key === "waist" && (
+                            <Image
+                              src={waistImg}
+                              alt="Waist Measurement"
+                              boxSize="40px"
+                              mb="5px"
+                            />
+                          )}
+                          {key === "hip" && (
+                            <Image
+                              src={hipImg}
+                              alt="Hip Measurement"
+                              boxSize="40px"
+                              mb="5px"
+                            />
+                          )}
+                          {key === "neck" && (
+                            <Image
+                              src={neckImg}
+                              alt="Neck Measurement"
+                              boxSize="40px"
+                              mb="5px"
+                              mt="10px"
+                            />
+                          )}
+                        </Flex>
+                      </Flex>
                     )}
                     {key !== "gender" &&
                       key !== "goal" &&

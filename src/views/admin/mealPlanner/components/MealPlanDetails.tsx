@@ -9,7 +9,7 @@ import {
   Flex,
   SimpleGrid,
   Tooltip,
-  Link,
+  useMediaQuery,
   IconButton,
   Icon,
   Button,
@@ -123,6 +123,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   const calculatedTotals = calculateMealTotals(mealPlan);
 
   console.log("calculatedTotals: ", calculatedTotals);
+
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
     <FadeInWrapper>
       <Card>
@@ -170,10 +173,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <Text
                                     fontSize="2xl"
-                                    whiteSpace="nowrap"
-                                    maxW="360px"
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    maxW={{
+                                      sm: "350px",
+                                      md: "200px",
+                                      lg: "200px",
+                                      xl: "360px"
+                                    }}
+                                    mx="10px"
                                     overflow="hidden"
-                                    textOverflow="ellipsis"
+                                    textOverflow={!isSmallScreen && "ellipsis"}
+                                    textAlign="center"
                                   >
                                     {appetizer?.name || "Няма рецепта"}
                                   </Text>
@@ -230,7 +245,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <SimpleGrid
                                     columns={{ base: 2, md: 2, lg: 2 }}
-                                    gap="10px"
+                                    gap={isSmallScreen ? "0px" : "10px"}
+                                    mx="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -250,7 +266,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "10%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Въглехидрати:{" "}
@@ -274,7 +290,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "5%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Мазнини: {appetizer?.totals.fat}
@@ -291,6 +307,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     bg="#7c6bff"
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
+                                    minW={{
+                                      sm: "100px",
+                                      md: "100px",
+                                      lg: "150px",
+                                      xl: "200px"
+                                    }}
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    mx="10px"
                                   >
                                     Начин на приготвяне
                                   </Button>
@@ -301,7 +330,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   onClose={toggleAppetizerInstructions}
                                 >
                                   <ModalOverlay />
-                                  <ModalContent borderRadius="20px">
+                                  <ModalContent
+                                    borderRadius="20px"
+                                    mx={isSmallScreen ? "20px" : "0px"}
+                                  >
                                     <ModalHeader fontSize="2xl">
                                       Начин на приготвяне
                                     </ModalHeader>
@@ -348,10 +380,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               <Tooltip label={main?.name} borderRadius="10px">
                                 <Text
                                   fontSize="2xl"
-                                  whiteSpace="nowrap"
-                                  maxW="360px"
+                                  whiteSpace={{
+                                    sm: "normal",
+                                    md: "normal",
+                                    lg: "normal",
+                                    xl: "nowrap"
+                                  }}
+                                  maxW={{
+                                    sm: "350px",
+                                    md: "200px",
+                                    lg: "200px",
+                                    xl: "360px"
+                                  }}
+                                  mx="10px"
                                   overflow="hidden"
-                                  textOverflow="ellipsis"
+                                  textOverflow={!isSmallScreen && "ellipsis"}
+                                  textAlign="center"
                                 >
                                   {main?.name || "Няма рецепта"}
                                 </Text>
@@ -408,7 +452,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               >
                                 <SimpleGrid
                                   columns={{ base: 2, md: 2, lg: 2 }}
-                                  gap="10px"
+                                  gap={isSmallScreen ? "0px" : "10px"}
+                                  mx="10px"
                                 >
                                   <Text
                                     textStyle="italic"
@@ -428,7 +473,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       md: "md",
                                       lg: "lg"
                                     }}
-                                    mb={{ base: "2%", md: 0, lg: "3%" }}
+                                    mb={{ base: "10%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
                                     Въглехидрати: {main?.totals.carbohydrates}
@@ -451,7 +496,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       md: "md",
                                       lg: "lg"
                                     }}
-                                    mb={{ base: "2%", md: 0, lg: "3%" }}
+                                    mb={{ base: "5%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
                                     Мазнини: {main?.totals.fat}
@@ -468,6 +513,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   bg="#7c6bff"
                                   color="white"
                                   onClick={toggleMainInstructions}
+                                  minW={{
+                                    sm: "100px",
+                                    md: "100px",
+                                    lg: "150px",
+                                    xl: "200px"
+                                  }}
+                                  whiteSpace={{
+                                    sm: "normal",
+                                    md: "normal",
+                                    lg: "normal",
+                                    xl: "nowrap"
+                                  }}
+                                  mx="10px"
                                 >
                                   Начин на приготвяне
                                 </Button>
@@ -478,7 +536,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 onClose={toggleMainInstructions}
                               >
                                 <ModalOverlay />
-                                <ModalContent borderRadius="20px">
+                                <ModalContent
+                                  borderRadius="20px"
+                                  mx={isSmallScreen ? "20px" : "0px"}
+                                >
                                   <ModalHeader fontSize="2xl">
                                     Начин на приготвяне
                                   </ModalHeader>
@@ -528,10 +589,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <Text
                                     fontSize="2xl"
-                                    whiteSpace="nowrap"
-                                    maxW="360px"
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    maxW={{
+                                      sm: "350px",
+                                      md: "200px",
+                                      lg: "200px",
+                                      xl: "360px"
+                                    }}
+                                    mx="10px"
                                     overflow="hidden"
-                                    textOverflow="ellipsis"
+                                    textOverflow={!isSmallScreen && "ellipsis"}
+                                    textAlign="center"
                                   >
                                     {dessert?.name || "Няма рецепта"}
                                   </Text>
@@ -588,7 +661,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <SimpleGrid
                                     columns={{ base: 2, md: 2, lg: 2 }}
-                                    gap="10px"
+                                    gap={isSmallScreen ? "0px" : "10px"}
+                                    mx="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -608,7 +682,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "10%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Въглехидрати:{" "}
@@ -632,7 +706,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "5%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Мазнини: {dessert?.totals.fat}
@@ -649,6 +723,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     bg="#7c6bff"
                                     color="white"
                                     onClick={toggleDessertInstructions}
+                                    minW={{
+                                      sm: "100px",
+                                      md: "100px",
+                                      lg: "150px",
+                                      xl: "200px"
+                                    }}
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    mx="10px"
                                   >
                                     Начин на приготвяне
                                   </Button>
@@ -659,7 +746,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   onClose={toggleDessertInstructions}
                                 >
                                   <ModalOverlay />
-                                  <ModalContent borderRadius="20px">
+                                  <ModalContent
+                                    borderRadius="20px"
+                                    mx={isSmallScreen ? "20px" : "0px"}
+                                  >
                                     <ModalHeader fontSize="2xl">
                                       Начин на приготвяне
                                     </ModalHeader>
@@ -760,10 +850,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <Text
                                     fontSize="2xl"
-                                    whiteSpace="nowrap"
-                                    maxW="360px"
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    maxW={{
+                                      sm: "350px",
+                                      md: "200px",
+                                      lg: "200px",
+                                      xl: "360px"
+                                    }}
+                                    mx="10px"
                                     overflow="hidden"
-                                    textOverflow="ellipsis"
+                                    textOverflow={!isSmallScreen && "ellipsis"}
+                                    textAlign="center"
                                   >
                                     {appetizer?.name || "Няма рецепта"}
                                   </Text>
@@ -820,7 +922,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <SimpleGrid
                                     columns={{ base: 2, md: 2, lg: 2 }}
-                                    gap="10px"
+                                    gap={isSmallScreen ? "0px" : "10px"}
+                                    mx="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -840,7 +943,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "10%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Въглехидрати:{" "}
@@ -864,7 +967,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "5%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Мазнини: {appetizer?.totals.fat}
@@ -881,6 +984,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     bg="#7c6bff"
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
+                                    minW={{
+                                      sm: "100px",
+                                      md: "100px",
+                                      lg: "150px",
+                                      xl: "200px"
+                                    }}
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    mx="10px"
                                   >
                                     Начин на приготвяне
                                   </Button>
@@ -891,7 +1007,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   onClose={toggleAppetizerInstructions}
                                 >
                                   <ModalOverlay />
-                                  <ModalContent borderRadius="20px">
+                                  <ModalContent
+                                    borderRadius="20px"
+                                    mx={isSmallScreen ? "20px" : "0px"}
+                                  >
                                     <ModalHeader fontSize="2xl">
                                       Начин на приготвяне
                                     </ModalHeader>
@@ -938,10 +1057,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               <Tooltip label={main?.name} borderRadius="10px">
                                 <Text
                                   fontSize="2xl"
-                                  whiteSpace="nowrap"
-                                  maxW="360px"
+                                  whiteSpace={{
+                                    sm: "normal",
+                                    md: "normal",
+                                    lg: "normal",
+                                    xl: "nowrap"
+                                  }}
+                                  maxW={{
+                                    sm: "350px",
+                                    md: "200px",
+                                    lg: "200px",
+                                    xl: "360px"
+                                  }}
+                                  mx="10px"
                                   overflow="hidden"
-                                  textOverflow="ellipsis"
+                                  textOverflow={!isSmallScreen && "ellipsis"}
+                                  textAlign="center"
                                 >
                                   {main?.name || "Няма рецепта"}
                                 </Text>
@@ -998,7 +1129,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               >
                                 <SimpleGrid
                                   columns={{ base: 2, md: 2, lg: 2 }}
-                                  gap="10px"
+                                  gap={isSmallScreen ? "0px" : "10px"}
+                                  mx="10px"
                                 >
                                   <Text
                                     textStyle="italic"
@@ -1018,7 +1150,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       md: "md",
                                       lg: "lg"
                                     }}
-                                    mb={{ base: "2%", md: 0, lg: "3%" }}
+                                    mb={{ base: "10%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
                                     Въглехидрати: {main?.totals.carbohydrates}
@@ -1041,7 +1173,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       md: "md",
                                       lg: "lg"
                                     }}
-                                    mb={{ base: "2%", md: 0, lg: "3%" }}
+                                    mb={{ base: "5%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
                                     Мазнини: {main?.totals.fat}
@@ -1058,6 +1190,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   bg="#7c6bff"
                                   color="white"
                                   onClick={toggleMainInstructions}
+                                  minW={{
+                                    sm: "100px",
+                                    md: "100px",
+                                    lg: "150px",
+                                    xl: "200px"
+                                  }}
+                                  whiteSpace={{
+                                    sm: "normal",
+                                    md: "normal",
+                                    lg: "normal",
+                                    xl: "nowrap"
+                                  }}
+                                  mx="10px"
                                 >
                                   Начин на приготвяне
                                 </Button>
@@ -1068,7 +1213,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 onClose={toggleMainInstructions}
                               >
                                 <ModalOverlay />
-                                <ModalContent borderRadius="20px">
+                                <ModalContent
+                                  borderRadius="20px"
+                                  mx={isSmallScreen ? "20px" : "0px"}
+                                >
                                   <ModalHeader fontSize="2xl">
                                     Начин на приготвяне
                                   </ModalHeader>
@@ -1118,10 +1266,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <Text
                                     fontSize="2xl"
-                                    whiteSpace="nowrap"
-                                    maxW="360px"
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    maxW={{
+                                      sm: "350px",
+                                      md: "200px",
+                                      lg: "200px",
+                                      xl: "360px"
+                                    }}
+                                    mx="10px"
                                     overflow="hidden"
-                                    textOverflow="ellipsis"
+                                    textOverflow={!isSmallScreen && "ellipsis"}
+                                    textAlign="center"
                                   >
                                     {dessert?.name || "Няма рецепта"}
                                   </Text>
@@ -1178,7 +1338,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <SimpleGrid
                                     columns={{ base: 2, md: 2, lg: 2 }}
-                                    gap="10px"
+                                    gap={isSmallScreen ? "0px" : "10px"}
+                                    mx="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -1198,7 +1359,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "10%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Въглехидрати:{" "}
@@ -1222,7 +1383,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "5%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Мазнини: {dessert?.totals.fat}
@@ -1239,6 +1400,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     bg="#7c6bff"
                                     color="white"
                                     onClick={toggleDessertInstructions}
+                                    minW={{
+                                      sm: "100px",
+                                      md: "100px",
+                                      lg: "150px",
+                                      xl: "200px"
+                                    }}
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    mx="10px"
                                   >
                                     Начин на приготвяне
                                   </Button>
@@ -1249,7 +1423,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   onClose={toggleDessertInstructions}
                                 >
                                   <ModalOverlay />
-                                  <ModalContent borderRadius="20px">
+                                  <ModalContent
+                                    borderRadius="20px"
+                                    mx={isSmallScreen ? "20px" : "0px"}
+                                  >
                                     <ModalHeader fontSize="2xl">
                                       Начин на приготвяне
                                     </ModalHeader>
@@ -1340,10 +1517,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <Text
                                     fontSize="2xl"
-                                    whiteSpace="nowrap"
-                                    maxW="360px"
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    maxW={{
+                                      sm: "350px",
+                                      md: "200px",
+                                      lg: "200px",
+                                      xl: "360px"
+                                    }}
+                                    mx="10px"
                                     overflow="hidden"
-                                    textOverflow="ellipsis"
+                                    textOverflow={!isSmallScreen && "ellipsis"}
+                                    textAlign="center"
                                   >
                                     {appetizer?.name || "Няма рецепта"}
                                   </Text>
@@ -1400,7 +1589,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <SimpleGrid
                                     columns={{ base: 2, md: 2, lg: 2 }}
-                                    gap="10px"
+                                    gap={isSmallScreen ? "0px" : "10px"}
+                                    mx="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -1420,7 +1610,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "10%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Въглехидрати:{" "}
@@ -1444,14 +1634,13 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "5%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Мазнини: {appetizer?.totals.fat}
                                     </Text>
                                   </SimpleGrid>
                                 </Flex>
-
                                 <Flex
                                   mt="20px"
                                   alignItems="center"
@@ -1462,6 +1651,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     bg="#7c6bff"
                                     color="white"
                                     onClick={toggleAppetizerInstructions}
+                                    minW={{
+                                      sm: "100px",
+                                      md: "100px",
+                                      lg: "150px",
+                                      xl: "200px"
+                                    }}
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    mx="10px"
                                   >
                                     Начин на приготвяне
                                   </Button>
@@ -1472,7 +1674,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   onClose={toggleAppetizerInstructions}
                                 >
                                   <ModalOverlay />
-                                  <ModalContent borderRadius="20px">
+                                  <ModalContent
+                                    borderRadius="20px"
+                                    mx={isSmallScreen ? "20px" : "0px"}
+                                  >
                                     <ModalHeader fontSize="2xl">
                                       Начин на приготвяне
                                     </ModalHeader>
@@ -1519,10 +1724,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               <Tooltip label={main?.name} borderRadius="10px">
                                 <Text
                                   fontSize="2xl"
-                                  whiteSpace="nowrap"
-                                  maxW="360px"
+                                  whiteSpace={{
+                                    sm: "normal",
+                                    md: "normal",
+                                    lg: "normal",
+                                    xl: "nowrap"
+                                  }}
+                                  maxW={{
+                                    sm: "350px",
+                                    md: "200px",
+                                    lg: "200px",
+                                    xl: "360px"
+                                  }}
+                                  mx="10px"
                                   overflow="hidden"
-                                  textOverflow="ellipsis"
+                                  textOverflow={!isSmallScreen && "ellipsis"}
+                                  textAlign="center"
                                 >
                                   {main?.name || "Няма рецепта"}
                                 </Text>
@@ -1579,7 +1796,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                               >
                                 <SimpleGrid
                                   columns={{ base: 2, md: 2, lg: 2 }}
-                                  gap="10px"
+                                  gap={isSmallScreen ? "0px" : "10px"}
+                                  mx="10px"
                                 >
                                   <Text
                                     textStyle="italic"
@@ -1599,7 +1817,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       md: "md",
                                       lg: "lg"
                                     }}
-                                    mb={{ base: "2%", md: 0, lg: "3%" }}
+                                    mb={{ base: "10%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
                                     Въглехидрати: {main?.totals.carbohydrates}
@@ -1622,7 +1840,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       md: "md",
                                       lg: "lg"
                                     }}
-                                    mb={{ base: "2%", md: 0, lg: "3%" }}
+                                    mb={{ base: "5%", md: 0, lg: "3%" }}
                                     fontStyle="italic"
                                   >
                                     Мазнини: {main?.totals.fat}
@@ -1639,6 +1857,19 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   bg="#7c6bff"
                                   color="white"
                                   onClick={toggleMainInstructions}
+                                  minW={{
+                                    sm: "100px",
+                                    md: "100px",
+                                    lg: "150px",
+                                    xl: "200px"
+                                  }}
+                                  whiteSpace={{
+                                    sm: "normal",
+                                    md: "normal",
+                                    lg: "normal",
+                                    xl: "nowrap"
+                                  }}
+                                  mx="10px"
                                 >
                                   Начин на приготвяне
                                 </Button>
@@ -1649,7 +1880,10 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 onClose={toggleMainInstructions}
                               >
                                 <ModalOverlay />
-                                <ModalContent borderRadius="20px">
+                                <ModalContent
+                                  borderRadius="20px"
+                                  mx={isSmallScreen ? "20px" : "0px"}
+                                >
                                   <ModalHeader fontSize="2xl">
                                     Начин на приготвяне
                                   </ModalHeader>
@@ -1699,10 +1933,22 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <Text
                                     fontSize="2xl"
-                                    whiteSpace="nowrap"
-                                    maxW="360px"
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    maxW={{
+                                      sm: "350px",
+                                      md: "200px",
+                                      lg: "200px",
+                                      xl: "360px"
+                                    }}
+                                    mx="10px"
                                     overflow="hidden"
-                                    textOverflow="ellipsis"
+                                    textOverflow={!isSmallScreen && "ellipsis"}
+                                    textAlign="center"
                                   >
                                     {dessert?.name || "Няма рецепта"}
                                   </Text>
@@ -1759,7 +2005,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                 >
                                   <SimpleGrid
                                     columns={{ base: 2, md: 2, lg: 2 }}
-                                    gap="10px"
+                                    gap={isSmallScreen ? "0px" : "10px"}
+                                    mx="10px"
                                   >
                                     <Text
                                       textStyle="italic"
@@ -1779,7 +2026,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "10%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Въглехидрати:{" "}
@@ -1803,7 +2050,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                         md: "md",
                                         lg: "lg"
                                       }}
-                                      mb={{ base: "2%", md: 0, lg: "3%" }}
+                                      mb={{ base: "5%", md: 0, lg: "3%" }}
                                       fontStyle="italic"
                                     >
                                       Мазнини: {dessert?.totals.fat}
@@ -1820,16 +2067,33 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     bg="#7c6bff"
                                     color="white"
                                     onClick={toggleDessertInstructions}
+                                    minW={{
+                                      sm: "100px",
+                                      md: "100px",
+                                      lg: "150px",
+                                      xl: "200px"
+                                    }}
+                                    whiteSpace={{
+                                      sm: "normal",
+                                      md: "normal",
+                                      lg: "normal",
+                                      xl: "nowrap"
+                                    }}
+                                    mx="10px"
                                   >
                                     Начин на приготвяне
                                   </Button>
                                 </Flex>
+
                                 <Modal
                                   isOpen={showDessertInstructions}
                                   onClose={toggleDessertInstructions}
                                 >
                                   <ModalOverlay />
-                                  <ModalContent borderRadius="20px">
+                                  <ModalContent
+                                    borderRadius="20px"
+                                    mx={isSmallScreen ? "20px" : "0px"}
+                                  >
                                     <ModalHeader fontSize="2xl">
                                       Начин на приготвяне
                                     </ModalHeader>
@@ -1883,27 +2147,31 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
             <HSeparator />
             <Flex justify="center" pt="5px" w="100%" mt="20px">
               <SimpleGrid
-                columns={{ base: 2, lg: 4 }}
+                columns={{ sm: 1, md: 2, lg: 2, xl: 4 }}
                 spacing="3%"
                 alignItems="center"
+                mb={isSmallScreen ? "40px" : "0px"}
               >
-                <Flex>
+                <Flex mb={isSmallScreen ? "20px" : "0px"}>
                   <Tooltip
                     label={`Сумирани калории и тяхната разлика от подадените лимити.`}
                     aria-label="calories-tooltip"
                     borderRadius="10px"
                   >
-                    <Text
-                      mr="20%"
-                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-                    >
-                      <b>
-                        Сумирани калории: {calculatedTotals.calories.toFixed(2)}
-                      </b>
+                    <Box>
+                      <Text
+                        mr="20%"
+                        fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                      >
+                        <b>
+                          Сумирани калории:{" "}
+                          {calculatedTotals.calories.toFixed(2)}
+                        </b>
+                      </Text>
                       {calculatedTotals.calories - userPreferences.Calories !==
                       0 ? (
                         <Box>
-                          <Text fontSize="lg" color="white">
+                          <Text fontSize="lg">
                             Отклонение на chatGPT в цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -1918,7 +2186,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             )
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
-                            <Text fontSize="lg" color="white">
+                            <Text fontSize="lg">
                               Процент на отклонение на chatGPT:
                             </Text>
                             (
@@ -1939,26 +2207,28 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           Няма отклонение от страна на chatGPT!
                         </Text>
                       )}
-                    </Text>
+                    </Box>
                   </Tooltip>
                 </Flex>
-                <Flex>
+                <Flex mb={isSmallScreen ? "20px" : "0px"}>
                   <Tooltip
                     label={`Сумиран протеин и неговата разлика от подадените лимити.`}
                     aria-label="protein-tooltip"
                     borderRadius="10px"
                   >
-                    <Text
-                      mr="20%"
-                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-                    >
-                      <b>
-                        Сумиран протеин: {calculatedTotals.protein.toFixed(2)}
-                      </b>
+                    <Box>
+                      <Text
+                        mr="20%"
+                        fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                      >
+                        <b>
+                          Сумиран протеин: {calculatedTotals.protein.toFixed(2)}
+                        </b>
+                      </Text>
                       {calculatedTotals.protein - userPreferences.Protein !==
                       0 ? (
                         <Box>
-                          <Text fontSize="lg" color="white">
+                          <Text fontSize="lg">
                             Отклонение на chatGPT в цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -1972,8 +2242,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             )
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
-                            <Text fontSize="lg" color="white">
-                              Отклонение на chatGPT в цифри:
+                            <Text fontSize="lg">
+                              Процент на отклонение на chatGPT:
                             </Text>
                             (
                             {calculatedTotals.protein -
@@ -1993,28 +2263,30 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           Няма отклонение от страна на chatGPT!
                         </Text>
                       )}
-                    </Text>
+                    </Box>
                   </Tooltip>
                 </Flex>
-                <Flex>
+                <Flex mb={isSmallScreen ? "20px" : "0px"}>
                   <Tooltip
                     label={`Сумирани въглехидрати и тяхната разлика от подадените лимити.`}
                     aria-label="carbs-tooltip"
                     borderRadius="10px"
                   >
-                    <Text
-                      mr="20%"
-                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-                    >
-                      <b>
-                        Сумирани въглехидрати:{" "}
-                        {calculatedTotals.carbohydrates.toFixed(2)}
-                      </b>
+                    <Box>
+                      <Text
+                        mr="20%"
+                        fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                      >
+                        <b>
+                          Сумирани въглехидрати:{" "}
+                          {calculatedTotals.carbohydrates.toFixed(2)}
+                        </b>
+                      </Text>
                       {calculatedTotals.carbohydrates -
                         userPreferences.Carbohydrates !==
                       0 ? (
                         <Box>
-                          <Text fontSize="lg" color="white">
+                          <Text fontSize="lg">
                             Отклонение на chatGPT в цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -2029,7 +2301,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             )
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
-                            <Text fontSize="lg" color="white">
+                            <Text fontSize="lg">
                               Процент на отклонение на chatGPT:
                             </Text>
                             (
@@ -2050,23 +2322,27 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           Няма отклонение от страна на chatGPT!
                         </Text>
                       )}
-                    </Text>
+                    </Box>
                   </Tooltip>
                 </Flex>
-                <Flex>
+                <Flex mb={isSmallScreen ? "20px" : "0px"}>
                   <Tooltip
                     label={`Сумирани мазнини и тяхната разлика от подадените лимити.`}
                     aria-label="fat-tooltip"
                     borderRadius="10px"
                   >
-                    <Text
-                      mr="20%"
-                      fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-                    >
-                      <b>Сумирани мазнини: {calculatedTotals.fat.toFixed(2)}</b>
+                    <Box>
+                      <Text
+                        mr="20%"
+                        fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                      >
+                        <b>
+                          Сумирани мазнини: {calculatedTotals.fat.toFixed(2)}
+                        </b>
+                      </Text>
                       {calculatedTotals.fat - userPreferences.Fat !== 0 ? (
                         <Box>
-                          <Text fontSize="lg" color="white">
+                          <Text fontSize="lg">
                             Отклонение на chatGPT в цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -2079,7 +2355,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                             )
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
-                            <Text fontSize="lg" color="white">
+                            <Text fontSize="lg">
                               Процент на отклонение на chatGPT:
                             </Text>
                             (
@@ -2098,7 +2374,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           Няма отклонение от страна на chatGPT!
                         </Text>
                       )}
-                    </Text>
+                    </Box>
                   </Tooltip>
                 </Flex>
               </SimpleGrid>

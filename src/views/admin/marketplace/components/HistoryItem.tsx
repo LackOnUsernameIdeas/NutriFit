@@ -120,6 +120,7 @@ export default function NFT(props: {
   }, [keepOpen]);
 
   const [isSmallScreen] = useMediaQuery("(max-width: 1400px)");
+  const [isPhoneScreen] = useMediaQuery("(max-width: 767px)");
   const gridColumnCount = isSmallScreen ? 1 : 2;
 
   return (
@@ -326,6 +327,7 @@ export default function NFT(props: {
                               border="2px"
                               borderRadius="25px"
                               borderColor={borderColor}
+                              mx={isPhoneScreen ? "20px" : "0px"}
                             >
                               <AlertDialogHeader
                                 fontSize="lg"
@@ -376,6 +378,7 @@ export default function NFT(props: {
                               border="2px"
                               borderRadius="25px"
                               borderColor={borderColor}
+                              mx={isPhoneScreen ? "20px" : "0px"}
                             >
                               <AlertDialogHeader
                                 fontSize="lg"

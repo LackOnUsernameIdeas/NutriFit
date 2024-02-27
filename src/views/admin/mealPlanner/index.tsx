@@ -1364,6 +1364,7 @@ export default function WeightStats() {
                                       border="2px"
                                       borderRadius="25px"
                                       borderColor={borderColor}
+                                      mx="20px"
                                     >
                                       <AlertDialogHeader
                                         fontSize="lg"
@@ -1782,6 +1783,11 @@ export default function WeightStats() {
                                                     border="2px"
                                                     borderRadius="25px"
                                                     borderColor={borderColor}
+                                                    mx={
+                                                      isSmallScreen
+                                                        ? "20px"
+                                                        : "0px"
+                                                    }
                                                   >
                                                     <AlertDialogHeader
                                                       fontSize="lg"

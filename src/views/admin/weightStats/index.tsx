@@ -22,7 +22,7 @@ import {
   useDisclosure,
   useColorMode,
   useColorModeValue,
-  useBreakpointValue,
+  useMediaQuery,
   Menu,
   Image,
   Heading,
@@ -650,6 +650,8 @@ export default function WeightStats() {
   ];
   const bodyFatAndLeanMassWidgetsUnits: string[] = ["%", "kg", "kg"];
 
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
     <FadeInWrapper>
       <Box
@@ -765,251 +767,528 @@ export default function WeightStats() {
               w="100%"
               mb="20px"
             >
-              <Flex justifyContent="space-between" align="center">
-                <Text
-                  color={textColor}
-                  fontSize="2xl"
-                  ms="24px"
-                  fontWeight="700"
-                >
-                  Колко е вашият Индекс на Телесна Маса :
-                </Text>
-                <Menu isOpen={isOpenBMI} onClose={onCloseBMI}>
-                  <MenuButton
-                    alignItems="center"
-                    justifyContent="center"
-                    bg={bgButton}
-                    _hover={bgHoverInfoBox}
-                    _focus={bgFocus}
-                    _active={bgFocus}
-                    w="30px"
-                    h="30px"
-                    lineHeight="50%"
-                    onClick={onOpenBMI}
-                    borderRadius="10px"
-                    ml="20px"
-                  >
-                    <Icon
-                      as={MdOutlineInfo}
-                      color={infoBoxIconColor}
-                      w="24px"
-                      h="24px"
-                    />
-                  </MenuButton>
-                  <MenuList
-                    w="100%"
-                    minW="unset"
-                    ml={{ base: "2%", lg: 0 }}
-                    mr={{ base: "2%", lg: 0 }}
-                    maxW={{ base: "23%", lg: "80%" }}
-                    border="1px"
-                    borderColor={borderColor}
-                    backdropFilter="blur(100px)"
-                    bg={bgList}
-                    borderRadius="20px"
-                    p="15px"
-                  >
-                    <Box
-                      transition="0.2s linear"
+              {isSmallScreen ? (
+                <>
+                  <Flex direction="column" alignItems="center">
+                    <Text
                       color={textColor}
-                      p="0px"
-                      maxW={{ base: "80%", lg: "100%" }}
-                      borderRadius="8px"
+                      fontSize="2xl"
+                      ms="24px"
+                      fontWeight="700"
+                      whiteSpace="normal"
+                      textAlign="center"
                     >
-                      <MenuItem
-                        onClick={onOpenBMIAlert}
-                        borderRadius="20px"
-                        _hover={bgHover}
+                      Колко е вашият Индекс на Телесна Маса:
+                    </Text>
+                    <Menu isLazy isOpen={isOpenBMI} onClose={onCloseBMI}>
+                      <MenuButton
+                        alignItems="center"
+                        justifyContent="center"
+                        bg={bgButton}
+                        _hover={bgHoverInfoBox}
                         _focus={bgFocus}
                         _active={bgFocus}
+                        w="30px"
+                        h="30px"
+                        lineHeight="50%"
+                        onClick={onOpenBMI}
+                        borderRadius="20px"
+                        ml="10px"
                       >
-                        <Text fontSize="1xl" fontWeight="400">
-                          Какво е Индекс на Телесната Маса?
-                        </Text>
-                      </MenuItem>
-                      <AlertDialog
-                        isOpen={isOpenBMIAlert}
-                        leastDestructiveRef={cancelRefBMIAlert}
-                        onClose={onCloseBMIAlert}
+                        <Icon
+                          as={MdOutlineInfo}
+                          color={infoBoxIconColor}
+                          w="24px"
+                          h="24px"
+                        />
+                      </MenuButton>
+                      <MenuList
+                        w="100%"
+                        minW="unset"
+                        ml={{ base: "2%", lg: 0 }}
+                        mr={{ base: "2%", lg: 0 }}
+                        maxW={{ base: "60%", lg: "80%" }}
+                        border="1px"
+                        borderColor={borderColor}
+                        backdropFilter="blur(100px)"
+                        bg={bgList}
+                        borderRadius="20px"
+                        p="15px"
                       >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
+                        <Box
+                          transition="0.2s linear"
+                          color={textColor}
+                          p="0px"
+                          maxW={{ base: "100%", lg: "100%" }}
+                          borderRadius="8px"
+                        >
+                          <MenuItem
+                            onClick={onOpenBMIAlert}
+                            borderRadius="20px"
+                            _hover={bgHover}
+                            _focus={bgFocus}
+                            _active={bgFocus}
                           >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            <Text fontSize="1xl" fontWeight="400">
                               Какво е Индекс на Телесната Маса?
-                            </AlertDialogHeader>
+                            </Text>
+                          </MenuItem>
+                          <AlertDialog
+                            isOpen={isOpenBMIAlert}
+                            leastDestructiveRef={cancelRefBMIAlert}
+                            onClose={onCloseBMIAlert}
+                          >
+                            <AlertDialogOverlay>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                                mx="20px"
+                              >
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
+                                >
+                                  Какво е Индекс на Телесната Маса?
+                                </AlertDialogHeader>
 
-                            <AlertDialogCloseButton borderRadius="20px" />
+                                <AlertDialogCloseButton borderRadius="20px" />
 
-                            <AlertDialogBody>
-                              <b>Индексът на телесната маса(ИТМ)</b> e
-                              медико-биологичен показател, който служи за
-                              определяне на нормалното, здравословно тегло при
-                              хора с различен ръст и за диагностициране на
-                              затлъстяване и недохранване. Индексът на телесната
-                              маса се измерва в килограми на квадратен метър и
-                              се определя по следната формула:
-                              <br />
-                              <Image
-                                src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
-                                alt="Dan Abramov"
-                              />
-                              <b>BMI</b> - индекс на телесната маса
-                              <br /> <b>W</b> - тегло в килограми
-                              <br /> <b>h</b> - височина в метри
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
-                      <MenuItem
-                        onClick={onOpenStatus}
-                        borderRadius="20px"
-                        _hover={bgHover}
+                                <AlertDialogBody>
+                                  <b>Индексът на телесната маса(ИТМ)</b> e
+                                  медико-биологичен показател, който служи за
+                                  определяне на нормалното, здравословно тегло
+                                  при хора с различен ръст и за диагностициране
+                                  на затлъстяване и недохранване. Индексът на
+                                  телесната маса се измерва в килограми на
+                                  квадратен метър и се определя по следната
+                                  формула:
+                                  <br />
+                                  <Image
+                                    src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
+                                    alt="Dan Abramov"
+                                  />
+                                  <b>BMI</b> - индекс на телесната маса
+                                  <br /> <b>W</b> - тегло в килограми
+                                  <br /> <b>h</b> - височина в метри
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
+                          <MenuItem
+                            onClick={onOpenStatus}
+                            borderRadius="20px"
+                            _hover={bgHover}
+                            _focus={bgFocus}
+                            _active={bgFocus}
+                          >
+                            <Text fontSize="1xl" fontWeight="400">
+                              Видовете състояние според ИТМ
+                            </Text>
+                          </MenuItem>
+                          <AlertDialog
+                            isOpen={isOpenStatus}
+                            leastDestructiveRef={cancelRefStatus}
+                            onClose={onCloseStatus}
+                          >
+                            <AlertDialogOverlay>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                                mx="20px"
+                              >
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
+                                >
+                                  Видовете състояние според ИТМ:
+                                </AlertDialogHeader>
+
+                                <AlertDialogCloseButton borderRadius="20px" />
+
+                                <AlertDialogBody>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Сериозно недохранване</b> - Този
+                                      статус показва тежък недостиг на
+                                      хранителни вещества, което може да доведе
+                                      до сериозни проблеми със здравето и
+                                      отслабване на организма.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Средно недохранване</b> - Този статус
+                                      показва недостиган на хранителни вещества
+                                      на умерено ниво, което може да води до
+                                      отслабване и различни проблеми със
+                                      здравето.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Леко недохранване</b> - В тази
+                                      категория теглото е леко под нормата,
+                                      което може да създаде проблеми със
+                                      здравето и да наложи корекции в
+                                      хранителния режим.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Нормално</b> - Тази категория
+                                      отразява здравословно тегло в съответствие
+                                      с височината. Хора в тази категория имат
+                                      по-нисък риск от различни здравословни
+                                      проблеми, свързани с теглото.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Наднормено тегло</b> - В тази
+                                      категория теглото е над нормалната
+                                      граница, което може да повиши риска от
+                                      заболявания, свързани със здравето, като
+                                      диабет и сърдечно-съдови заболявания.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Затлъстяване I Клас</b> - Теглото е
+                                      значително повишено, като този статус може
+                                      да увеличи риска от сериозни здравословни
+                                      проблеми.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Затлъстяване II Клас</b> - Тук има
+                                      по-висок риск от здравословни проблеми в
+                                      сравнение с предишната категория.
+                                      Затлъстяването става по-значително.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Затлъстяване III Клас</b> - Този клас
+                                      показва екстремно затлъстяване, което може
+                                      да предизвика сериозни здравословни
+                                      проблеми и изисква внимание от специалист
+                                      в здравеопазването.
+                                    </Text>
+                                  </Flex>
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
+                        </Box>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </>
+              ) : (
+                <>
+                  <Flex wrap="nowrap" alignItems="center">
+                    <Text
+                      color={textColor}
+                      fontSize="2xl"
+                      fontWeight="700"
+                      whiteSpace="nowrap"
+                      mr="10px"
+                    >
+                      Колко е вашият Индекс на Телесна Маса:
+                    </Text>
+                    <Menu isLazy isOpen={isOpenBMI} onClose={onCloseBMI}>
+                      <MenuButton
+                        alignItems="center"
+                        justifyContent="center"
+                        bg={bgButton}
+                        _hover={bgHoverInfoBox}
                         _focus={bgFocus}
                         _active={bgFocus}
+                        w="30px"
+                        h="30px"
+                        lineHeight="50%"
+                        onClick={onOpenBMI}
+                        borderRadius="20px"
+                        ml="10px"
                       >
-                        <Text fontSize="1xl" fontWeight="400">
-                          Видовете състояние според ИТМ
-                        </Text>
-                      </MenuItem>
-                      <AlertDialog
-                        isOpen={isOpenStatus}
-                        leastDestructiveRef={cancelRefStatus}
-                        onClose={onCloseStatus}
+                        <Icon
+                          as={MdOutlineInfo}
+                          color={infoBoxIconColor}
+                          w="24px"
+                          h="24px"
+                        />
+                      </MenuButton>
+                      <MenuList
+                        w="100%"
+                        minW="unset"
+                        ml={{ base: "2%", lg: 0 }}
+                        mr={{ base: "2%", lg: 0 }}
+                        maxW={{ base: "60%", lg: "80%" }}
+                        border="1px"
+                        borderColor={borderColor}
+                        backdropFilter="blur(100px)"
+                        bg={bgList}
+                        borderRadius="20px"
+                        p="15px"
                       >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
+                        <Box
+                          transition="0.2s linear"
+                          color={textColor}
+                          p="0px"
+                          maxW={{ base: "100%", lg: "100%" }}
+                          borderRadius="8px"
+                        >
+                          <MenuItem
+                            onClick={onOpenBMIAlert}
+                            borderRadius="20px"
+                            _hover={bgHover}
+                            _focus={bgFocus}
+                            _active={bgFocus}
                           >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Видовете състояние според ИТМ:
-                            </AlertDialogHeader>
+                            <Text fontSize="1xl" fontWeight="400">
+                              Какво е Индекс на Телесната Маса?
+                            </Text>
+                          </MenuItem>
+                          <AlertDialog
+                            isOpen={isOpenBMIAlert}
+                            leastDestructiveRef={cancelRefBMIAlert}
+                            onClose={onCloseBMIAlert}
+                          >
+                            <AlertDialogOverlay>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                              >
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
+                                >
+                                  Какво е Индекс на Телесната Маса?
+                                </AlertDialogHeader>
 
-                            <AlertDialogCloseButton borderRadius="20px" />
+                                <AlertDialogCloseButton borderRadius="20px" />
 
-                            <AlertDialogBody>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
+                                <AlertDialogBody>
+                                  <b>Индексът на телесната маса(ИТМ)</b> e
+                                  медико-биологичен показател, който служи за
+                                  определяне на нормалното, здравословно тегло
+                                  при хора с различен ръст и за диагностициране
+                                  на затлъстяване и недохранване. Индексът на
+                                  телесната маса се измерва в килограми на
+                                  квадратен метър и се определя по следната
+                                  формула:
+                                  <br />
+                                  <Image
+                                    src="https://wikimedia.org/api/rest_v1/media/math/render/svg/75508e7ad0fc780453684deec6aab53ea630ece7"
+                                    alt="Dan Abramov"
+                                  />
+                                  <b>BMI</b> - индекс на телесната маса
+                                  <br /> <b>W</b> - тегло в килограми
+                                  <br /> <b>h</b> - височина в метри
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
+                          <MenuItem
+                            onClick={onOpenStatus}
+                            borderRadius="20px"
+                            _hover={bgHover}
+                            _focus={bgFocus}
+                            _active={bgFocus}
+                          >
+                            <Text fontSize="1xl" fontWeight="400">
+                              Видовете състояние според ИТМ
+                            </Text>
+                          </MenuItem>
+                          <AlertDialog
+                            isOpen={isOpenStatus}
+                            leastDestructiveRef={cancelRefStatus}
+                            onClose={onCloseStatus}
+                          >
+                            <AlertDialogOverlay>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                              >
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
                                 >
-                                  <b>• Сериозно недохранване</b> - Този статус
-                                  показва тежък недостиг на хранителни вещества,
-                                  което може да доведе до сериозни проблеми със
-                                  здравето и отслабване на организма.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Средно недохранване</b> - Този статус
-                                  показва недостиган на хранителни вещества на
-                                  умерено ниво, което може да води до отслабване
-                                  и различни проблеми със здравето.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Леко недохранване</b> - В тази категория
-                                  теглото е леко под нормата, което може да
-                                  създаде проблеми със здравето и да наложи
-                                  корекции в хранителния режим.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Нормално</b> - Тази категория отразява
-                                  здравословно тегло в съответствие с
-                                  височината. Хора в тази категория имат
-                                  по-нисък риск от различни здравословни
-                                  проблеми, свързани с теглото.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Наднормено тегло</b> - В тази категория
-                                  теглото е над нормалната граница, което може
-                                  да повиши риска от заболявания, свързани със
-                                  здравето, като диабет и сърдечно-съдови
-                                  заболявания.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Затлъстяване I Клас</b> - Теглото е
-                                  значително повишено, като този статус може да
-                                  увеличи риска от сериозни здравословни
-                                  проблеми.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Затлъстяване II Клас</b> - Тук има
-                                  по-висок риск от здравословни проблеми в
-                                  сравнение с предишната категория.
-                                  Затлъстяването става по-значително.
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
-                                >
-                                  <b>• Затлъстяване III Клас</b> - Този клас
-                                  показва екстремно затлъстяване, което може да
-                                  предизвика сериозни здравословни проблеми и
-                                  изисква внимание от специалист в
-                                  здравеопазването.
-                                </Text>
-                              </Flex>
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
-                    </Box>
-                  </MenuList>
-                </Menu>
-              </Flex>
+                                  Видовете състояние според ИТМ:
+                                </AlertDialogHeader>
+
+                                <AlertDialogCloseButton borderRadius="20px" />
+
+                                <AlertDialogBody>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Сериозно недохранване</b> - Този
+                                      статус показва тежък недостиг на
+                                      хранителни вещества, което може да доведе
+                                      до сериозни проблеми със здравето и
+                                      отслабване на организма.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Средно недохранване</b> - Този статус
+                                      показва недостиган на хранителни вещества
+                                      на умерено ниво, което може да води до
+                                      отслабване и различни проблеми със
+                                      здравето.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Леко недохранване</b> - В тази
+                                      категория теглото е леко под нормата,
+                                      което може да създаде проблеми със
+                                      здравето и да наложи корекции в
+                                      хранителния режим.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Нормално</b> - Тази категория
+                                      отразява здравословно тегло в съответствие
+                                      с височината. Хора в тази категория имат
+                                      по-нисък риск от различни здравословни
+                                      проблеми, свързани с теглото.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Наднормено тегло</b> - В тази
+                                      категория теглото е над нормалната
+                                      граница, което може да повиши риска от
+                                      заболявания, свързани със здравето, като
+                                      диабет и сърдечно-съдови заболявания.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Затлъстяване I Клас</b> - Теглото е
+                                      значително повишено, като този статус може
+                                      да увеличи риска от сериозни здравословни
+                                      проблеми.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Затлъстяване II Клас</b> - Тук има
+                                      по-висок риск от здравословни проблеми в
+                                      сравнение с предишната категория.
+                                      Затлъстяването става по-значително.
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      <b>• Затлъстяване III Клас</b> - Този клас
+                                      показва екстремно затлъстяване, което може
+                                      да предизвика сериозни здравословни
+                                      проблеми и изисква внимание от специалист
+                                      в здравеопазването.
+                                    </Text>
+                                  </Flex>
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
+                        </Box>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </>
+              )}
               <SimpleGrid
                 columns={{ base: 1, md: 2, lg: 3 }}
                 gap="20px"
@@ -1069,109 +1348,229 @@ export default function WeightStats() {
               w="100%"
               mb="20px"
             >
-              <Flex justifyContent="space-between" align="center">
-                <Text
-                  color={textColor}
-                  fontSize="2xl"
-                  ms="24px"
-                  fontWeight="700"
-                >
-                  Колко е вашето перфектно тегло :
-                </Text>
-                <Menu
-                  isOpen={isOpenPerfectWeight}
-                  onClose={onClosePerfectWeight}
-                >
-                  <MenuButton
-                    alignItems="center"
-                    justifyContent="center"
-                    bg={bgButton}
-                    _hover={bgHoverInfoBox}
-                    _focus={bgFocus}
-                    _active={bgFocus}
-                    w="30px"
-                    h="30px"
-                    lineHeight="50%"
-                    onClick={onOpenPerfectWeightAlert}
-                    borderRadius="10px"
-                    ml="20px"
-                  >
-                    <Icon
-                      as={MdOutlineInfo}
-                      color={infoBoxIconColor}
-                      w="24px"
-                      h="24px"
-                    />
-                  </MenuButton>
-                  <MenuList
-                    w="100%"
-                    minW="unset"
-                    ml={{ base: "2%", lg: 0 }}
-                    mr={{ base: "2%", lg: 0 }}
-                    maxW={{ base: "50%", lg: "80%" }}
-                    border="transparent"
-                    backdropFilter="blur(100px)"
-                    bg={bgList}
-                    borderRadius="20px"
-                    p="15px"
-                  >
-                    <Box
-                      transition="0.2s linear"
+              {isSmallScreen ? (
+                <>
+                  <Flex direction="column" alignItems="center">
+                    <Text
                       color={textColor}
-                      p="0px"
-                      maxW={{ base: "80%", lg: "100%" }}
-                      borderRadius="8px"
+                      fontSize="2xl"
+                      ms="24px"
+                      fontWeight="700"
+                      whiteSpace="normal"
+                      textAlign="center"
                     >
-                      <AlertDialog
-                        isOpen={isOpenPerfectWeightAlert}
-                        leastDestructiveRef={cancelRefPerfectWeightAlert}
-                        onClose={onClosePerfectWeightAlert}
+                      Колко е вашето перфектно тегло:
+                    </Text>
+                    <Menu
+                      isOpen={isOpenPerfectWeight}
+                      onClose={onClosePerfectWeight}
+                    >
+                      <MenuButton
+                        alignItems="center"
+                        justifyContent="center"
+                        bg={bgButton}
+                        _hover={bgHoverInfoBox}
+                        _focus={bgFocus}
+                        _active={bgFocus}
+                        w="30px"
+                        h="30px"
+                        lineHeight="50%"
+                        onClick={onOpenPerfectWeightAlert}
+                        borderRadius="20px"
+                        ml="10px"
                       >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
+                        <Icon
+                          as={MdOutlineInfo}
+                          color={infoBoxIconColor}
+                          w="24px"
+                          h="24px"
+                        />
+                      </MenuButton>
+                      <MenuList
+                        w="100%"
+                        minW="unset"
+                        ml={{ base: "2%", lg: 0 }}
+                        mr={{ base: "2%", lg: 0 }}
+                        maxW={{ base: "50%", lg: "80%" }}
+                        border="transparent"
+                        backdropFilter="blur(100px)"
+                        bg={bgList}
+                        borderRadius="20px"
+                        p="15px"
+                      >
+                        <Box
+                          transition="0.2s linear"
+                          color={textColor}
+                          p="0px"
+                          maxW={{ base: "80%", lg: "100%" }}
+                          borderRadius="8px"
+                        >
+                          <AlertDialog
+                            isOpen={isOpenPerfectWeightAlert}
+                            leastDestructiveRef={cancelRefPerfectWeightAlert}
+                            onClose={onClosePerfectWeightAlert}
                           >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Перфектното тегло е калкулация, която се определя
-                              по формулата "Дивайн" както следва:
-                            </AlertDialogHeader>
-
-                            <AlertDialogCloseButton borderRadius="20px" />
-
-                            <AlertDialogBody>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
+                            <AlertDialogOverlay>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                                mx={isSmallScreen ? "20px" : "0px"}
+                              >
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
                                 >
-                                  Мъже: 50.0 кг + 2.3 кг за всеки инч (2.54 см)
-                                  над 5 фута (30.48см)
-                                </Text>
-                              </Flex>
-                              <Flex align="center">
-                                <Text
-                                  fontSize="sm"
-                                  fontWeight="400"
-                                  mt="10px"
-                                  mb="5px"
+                                  Перфектното тегло е калкулация, която се
+                                  определя по формулата "Дивайн" както следва:
+                                </AlertDialogHeader>
+
+                                <AlertDialogCloseButton borderRadius="20px" />
+
+                                <AlertDialogBody>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Мъже: 50.0 кг + 2.3 кг за всеки инч (2.54
+                                      см) над 5 фута (30.48см)
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Жени: 45.5 кг + 2.3 кг за всеки инч (2.54
+                                      см) над 5 фута (30.48см)
+                                    </Text>
+                                  </Flex>
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
+                        </Box>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </>
+              ) : (
+                <>
+                  <Flex wrap="nowrap" alignItems="center">
+                    <Text
+                      color={textColor}
+                      fontSize="2xl"
+                      fontWeight="700"
+                      whiteSpace="nowrap"
+                      mr="10px"
+                    >
+                      Колко е вашето перфектно тегло:
+                    </Text>
+                    <Menu
+                      isOpen={isOpenPerfectWeight}
+                      onClose={onClosePerfectWeight}
+                    >
+                      <MenuButton
+                        alignItems="center"
+                        justifyContent="center"
+                        bg={bgButton}
+                        _hover={bgHoverInfoBox}
+                        _focus={bgFocus}
+                        _active={bgFocus}
+                        w="30px"
+                        h="30px"
+                        lineHeight="50%"
+                        onClick={onOpenPerfectWeightAlert}
+                        borderRadius="20px"
+                        ml="10px"
+                      >
+                        <Icon
+                          as={MdOutlineInfo}
+                          color={infoBoxIconColor}
+                          w="24px"
+                          h="24px"
+                        />
+                      </MenuButton>
+                      <MenuList
+                        w="100%"
+                        minW="unset"
+                        ml={{ base: "2%", lg: 0 }}
+                        mr={{ base: "2%", lg: 0 }}
+                        maxW={{ base: "50%", lg: "80%" }}
+                        border="transparent"
+                        backdropFilter="blur(100px)"
+                        bg={bgList}
+                        borderRadius="20px"
+                        p="15px"
+                      >
+                        <Box
+                          transition="0.2s linear"
+                          color={textColor}
+                          p="0px"
+                          maxW={{ base: "80%", lg: "100%" }}
+                          borderRadius="8px"
+                        >
+                          <AlertDialog
+                            isOpen={isOpenPerfectWeightAlert}
+                            leastDestructiveRef={cancelRefPerfectWeightAlert}
+                            onClose={onClosePerfectWeightAlert}
+                          >
+                            <AlertDialogOverlay>
+                              <AlertDialogContent
+                                border="2px"
+                                borderRadius="25px"
+                                borderColor={borderColor}
+                              >
+                                <AlertDialogHeader
+                                  fontSize="lg"
+                                  fontWeight="bold"
                                 >
-                                  Жени: 45.5 кг + 2.3 кг за всеки инч (2.54 см)
-                                  над 5 фута (30.48см)
-                                </Text>
-                              </Flex>
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
-                    </Box>
-                  </MenuList>
-                </Menu>
-              </Flex>
+                                  Перфектното тегло е калкулация, която се
+                                  определя по формулата "Дивайн" както следва:
+                                </AlertDialogHeader>
+
+                                <AlertDialogCloseButton borderRadius="20px" />
+
+                                <AlertDialogBody>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Мъже: 50.0 кг + 2.3 кг за всеки инч (2.54
+                                      см) над 5 фута (30.48см)
+                                    </Text>
+                                  </Flex>
+                                  <Flex align="center">
+                                    <Text
+                                      fontSize="sm"
+                                      fontWeight="400"
+                                      mt="10px"
+                                      mb="5px"
+                                    >
+                                      Жени: 45.5 кг + 2.3 кг за всеки инч (2.54
+                                      см) над 5 фута (30.48см)
+                                    </Text>
+                                  </Flex>
+                                </AlertDialogBody>
+                                <AlertDialogFooter></AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialogOverlay>
+                          </AlertDialog>
+                        </Box>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </>
+              )}
               <SimpleGrid
                 ml={{ sm: "0", lg: "14%" }}
                 columns={{ base: 1, md: 2, lg: 3 }}
@@ -1401,23 +1800,25 @@ export default function WeightStats() {
                     >
                       Вашето тегло (кг.)
                     </Card>
-                    <Card
-                      fontSize="3xl"
-                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                      p="20px" // Add padding to the card
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection="column"
-                    >
-                      Вашият Индекс на Телесна Маса
-                    </Card>
+                    {!isSmallScreen && (
+                      <Card
+                        fontSize="3xl"
+                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                        p="20px" // Add padding to the card
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                      >
+                        Вашият Индекс на Телесна Маса
+                      </Card>
+                    )}
                     <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
                       w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       maxH={{ sm: "100px", md: "300px", lg: "auto" }}
                     >
@@ -1429,12 +1830,25 @@ export default function WeightStats() {
                         color="rgba(67,24,255,1)"
                       />
                     </Card>
+                    {isSmallScreen && (
+                      <Card
+                        fontSize="3xl"
+                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                        p="20px" // Add padding to the card
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                      >
+                        Вашият Индекс на Телесна Маса
+                      </Card>
+                    )}
                     <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
                       w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       maxH={{ sm: "150px", md: "300px", lg: "auto" }}
                     >
@@ -1457,23 +1871,25 @@ export default function WeightStats() {
                     >
                       Вашият % телесни мазнини
                     </Card>
-                    <Card
-                      fontSize="3xl"
-                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                      p="20px" // Add padding to the card
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection="column"
-                    >
-                      Вашата мастна телесна маса (кг.)
-                    </Card>
+                    {!isSmallScreen && (
+                      <Card
+                        fontSize="3xl"
+                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                        p="20px" // Add padding to the card
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                      >
+                        Вашата мастна телесна маса (кг.)
+                      </Card>
+                    )}
                     <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
                       w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       maxH={{ sm: "150px", md: "300px", lg: "auto" }}
                     >
@@ -1485,12 +1901,25 @@ export default function WeightStats() {
                         color="#7c6bff"
                       />
                     </Card>
+                    {isSmallScreen && (
+                      <Card
+                        fontSize="3xl"
+                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                        p="20px" // Add padding to the card
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                      >
+                        Вашата мастна телесна маса (кг.)
+                      </Card>
+                    )}
                     <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
                       w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       maxH={{ sm: "150px", md: "300px", lg: "auto" }}
                     >
@@ -1513,24 +1942,26 @@ export default function WeightStats() {
                     >
                       Вашата чиста телесна маса (кг.)
                     </Card>
-                    <Card
-                      fontSize="3xl"
-                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                      p="20px" // Add padding to the card
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection="column"
-                      fontWeight="500"
-                    >
-                      Теглото ви под/над нормата (кг.)
-                    </Card>
+                    {!isSmallScreen && (
+                      <Card
+                        fontSize="3xl"
+                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                        p="20px" // Add padding to the card
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                        fontWeight="500"
+                      >
+                        Теглото ви под/над нормата (кг.)
+                      </Card>
+                    )}
                     <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
                       w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       maxH={{ sm: "150px", md: "300px", lg: "auto" }}
                     >
@@ -1542,12 +1973,26 @@ export default function WeightStats() {
                         color="#a194ff"
                       />
                     </Card>
+                    {isSmallScreen && (
+                      <Card
+                        fontSize="3xl"
+                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                        p="20px" // Add padding to the card
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                        fontWeight="500"
+                      >
+                        Теглото ви под/над нормата (кг.)
+                      </Card>
+                    )}
                     <Card
                       alignItems="center"
                       flexDirection="column"
                       h="100%"
                       w="100%"
-                      minH={{ sm: "150px", md: "300px", lg: "auto" }}
+                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       maxH={{ sm: "150px", md: "300px", lg: "auto" }}
                     >

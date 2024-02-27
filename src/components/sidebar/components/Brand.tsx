@@ -6,13 +6,9 @@ import { Flex, useColorModeValue, Text } from "@chakra-ui/react";
 import NutriFitLogo from "assets/img/layout/NutriFitLogo.png";
 import { HSeparator } from "components/separator/Separator";
 export function SidebarBrand() {
-  //   Chakra color mode
-  let logoColor = useColorModeValue("navy.700", "white");
-
   return (
     <Flex alignItems="center" flexDirection="column">
-      <img src={NutriFitLogo} />
-      {/* <HorizonLogo h='26px' w='175px' my='32px' color={logoColor} /> */}
+      <img src={NutriFitLogo} style={{ marginTop: "0" }} />
       <HSeparator mb="10px" size="3px" color="rgba(0, 0, 0, 0.3)" />
     </Flex>
   );
