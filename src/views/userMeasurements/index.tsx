@@ -278,9 +278,21 @@ const UserMeasurements = () => {
   // Функция за генериране на статистики
   async function generateStats() {
     setIsLoading(true);
+    const uid = getAuth().currentUser.uid;
 
     // Call this function when you want to trigger fetching and saving all data
     triggerFetchAndSaveAllData();
+
+    // Save additional user data
+    saveAdditionalUserData(
+      uid,
+      userData.height,
+      userData.age,
+      userData.weight,
+      userData.neck,
+      userData.waist,
+      userData.hip
+    );
     setTimeout(() => {
       history.push("/admin/default");
       setIsLoading(false);
@@ -354,18 +366,6 @@ const UserMeasurements = () => {
 
     if (isUserDataValid()) {
       try {
-        const uid = getAuth().currentUser.uid;
-
-        // Save additional user data
-        await saveAdditionalUserData(
-          uid,
-          userData.height,
-          userData.age,
-          userData.weight,
-          userData.neck,
-          userData.waist,
-          userData.hip
-        );
         await generateStats();
         // Save additional user data to the server
         const response = await fetch(
