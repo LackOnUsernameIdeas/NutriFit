@@ -284,7 +284,7 @@ const UserMeasurements = () => {
     setTimeout(() => {
       history.push("/admin/default");
       setIsLoading(false);
-    }, 5000);
+    }, 7000);
   }
 
   React.useEffect(() => {
@@ -510,7 +510,7 @@ const UserMeasurements = () => {
             justifyContent="center"
             mb={{ base: "30px", md: "60px" }}
             px={{ base: "25px", md: "0px" }}
-            mt={{ base: "40px", md: "5%" }}
+            mt={{ base: "40px", md: "1%" }}
             flexDirection="column"
           >
             <Box me="auto">
