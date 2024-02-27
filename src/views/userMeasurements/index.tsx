@@ -237,57 +237,54 @@ const UserMeasurements = () => {
     });
   };
 
-  const goalsToFetch: Goal[] = [
-    "maintain",
-    "mildlose",
-    "weightlose",
-    "extremelose",
-    "mildgain",
-    "weightgain",
-    "extremegain"
-  ];
+  const triggerFetchAndSaveAllData = async () => {
+    const uid = "zaZs3xBP19f1mKk32j9aNCxkeqM2";
+    try {
+      const response = await fetch(
+        `https://nutri-api.noit.eu/fetchAndSaveAllData/${uid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            height: userData["height"],
+            age: userData["age"],
+            weight: userData["weight"],
+            gender: userData["gender"],
+            neck: userData["neck"],
+            waist: userData["waist"],
+            hip: userData["hip"],
+            goalsToFetch: [
+              "maintain",
+              "mildlose",
+              "weightlose",
+              "extremelose",
+              "mildgain",
+              "weightgain",
+              "extremegain"
+            ]
+          })
+        }
+      );
+
+      const result = await response.json();
+      console.log("Server response:", result);
+    } catch (error) {
+      console.error("Error triggering fetch and save:", error);
+    }
+  };
+
   // Функция за генериране на статистики
   async function generateStats() {
-    console.log(
-      userData["age"],
-      userData["height"],
-      userData["gender"],
-      userData["weight"],
-      "before"
-    );
     setIsLoading(true);
-    await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
-    await fetchPerfectWeightData(
-      userData["height"],
-      userData["gender"],
-      userData["weight"]
-    );
-    await fetchBodyFatAndLeanMassData(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      userData["neck"],
-      userData["waist"],
-      userData["hip"]
-    );
+
+    // Call this function when you want to trigger fetching and saving all data
+    triggerFetchAndSaveAllData();
     setTimeout(() => {
       history.push("/admin/default");
-    }, 1000);
-    await fetchCaloriesForActivityLevels(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"]
-    );
-    await fetchMacroNutrients(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      goalsToFetch
-    );
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 5000);
   }
 
   React.useEffect(() => {
