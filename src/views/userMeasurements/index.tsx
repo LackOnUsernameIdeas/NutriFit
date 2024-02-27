@@ -238,7 +238,7 @@ const UserMeasurements = () => {
   };
 
   const triggerFetchAndSaveAllData = async () => {
-    const uid = "zaZs3xBP19f1mKk32j9aNCxkeqM2";
+    const uid = getAuth().currentUser.uid;
     try {
       const response = await fetch(
         `https://nutri-api.noit.eu/fetchAndSaveAllData/${uid}`,
