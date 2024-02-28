@@ -123,46 +123,39 @@ export default function UserReports() {
         <Card>
           <Flex justify="left" mt="1%">
             <Text fontSize="2xl">
-              Нашата цел е да помогнем на нашите потребители да поддържат
-              перфектното тегло с помощта на статистики и диаграми.
+              Бъдете винаги във форма и в оптимално здравословно състояние с
+              помощта на изкуствен интелект!
             </Text>
           </Flex>
-          <Flex justify="left" mt="1%" pt="10px">
-            <ChakraBox
-              animate={{
-                scale: [1.2, 1.2, 1.2],
-                rotate: [0, 0, 0],
-                borderRadius: ["20%", "20%", "20%"]
-              }}
-              transition={{
-                duration: 1.5,
-                ease: "easeInOut",
-                // @ts-ignore
-                repeat: Infinity,
-                repeatType: "loop"
-              }}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              width="100px"
-              height="100px"
-            >
-              <Link href="/#/auth/sign-in">
-                <Button
-                  color="white"
-                  bgColor="#5D4BD7"
-                  variant="brand"
-                  _hover={{ bg: "secondaryGray.900" }}
-                  borderRadius="8px"
-                  px="14px"
-                  ml="30%"
-                  fontSize="sm"
-                  fontWeight="500"
-                >
-                  <Text fontSize="sm">Влезте в профила си!</Text>
-                </Button>
-              </Link>
-            </ChakraBox>
+          <Flex justify="left" pt="10px" gap="20px" mt="30px">
+            <Link href="/#/auth/sign-in">
+              <Button
+                color="white"
+                bgColor="#5D4BD7"
+                variant="brand"
+                _hover={{ bg: "secondaryGray.900" }}
+                borderRadius="15px"
+                px="14px"
+                fontWeight="500"
+                h="50px"
+              >
+                <Text fontSize="lg">Влезте в профила си!</Text>
+              </Button>
+            </Link>
+            <Link href="/#/auth/sign-up">
+              <Button
+                color="white"
+                bgColor="#5D4BD7"
+                variant="brand"
+                _hover={{ bg: "secondaryGray.900" }}
+                borderRadius="15px"
+                px="14px"
+                fontWeight="500"
+                h="50px"
+              >
+                <Text fontSize="lg">Нова регистрация!</Text>
+              </Button>
+            </Link>
           </Flex>
         </Card>
       </SimpleGrid>
