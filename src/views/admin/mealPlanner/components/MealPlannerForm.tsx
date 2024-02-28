@@ -29,7 +29,7 @@ import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
 import { getAuth } from "firebase/auth";
 
-export default function MealPlanner(props: {
+export default function MealPlannerForm(props: {
   chosenCalories: number | null;
   chosenNutrients: {
     name: string;
