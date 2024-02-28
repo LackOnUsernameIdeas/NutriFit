@@ -61,8 +61,8 @@ interface DropdownState {
 
 export default function TopMeals() {
   // Chakra Color Mode
-  const [isMd] = useMediaQuery("(min-width: 48em) and (max-width: 61.99em)");
-  const [isLg] = useMediaQuery("(min-width: 62em)");
+  const [isSm] = useMediaQuery("(max-width: 768px)");
+  const [isMd] = useMediaQuery("(min-width: 769px) and (max-width: 1400px)");
   const chartsColor = useColorModeValue("brand.500", "white");
   const [loading, setLoading] = React.useState(true);
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
