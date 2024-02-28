@@ -627,9 +627,8 @@ export default function WeightStats() {
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
-    const areValuesValid = Object.values(userData).every(
-      (value) => value !== 0
-    );
+    const areValuesValid =
+      Object.values(userData).every((value) => value !== 0) && health !== "";
 
     if (areValuesValid) {
       generateStatsForCalories();
