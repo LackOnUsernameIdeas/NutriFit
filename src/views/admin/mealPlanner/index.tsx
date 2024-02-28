@@ -49,7 +49,7 @@ import Loading from "views/admin/weightStats/components/Loading";
 import MiniStatistics from "components/card/MiniStatistics";
 import { FaFireAlt } from "react-icons/fa";
 import IconBox from "components/icons/IconBox";
-import MealPlanner from "./components/MealPlanner";
+import MealPlannerForm from "./components/MealPlannerForm";
 import { HSeparator } from "components/separator/Separator";
 // Types
 import {
@@ -71,7 +71,7 @@ import { table } from "console";
 import { LineChart } from "components/charts/LineCharts";
 import { parseISO } from "date-fns";
 // Главен компонент
-export default function WeightStats() {
+export default function MealPlanner() {
   // Color values
   const { colorMode } = useColorMode();
   const backgroundImage =
@@ -548,21 +548,21 @@ export default function WeightStats() {
                   const dateData = additionalData[key];
                   orderedAllTimestampObjects.push({
                     date: key,
-                    height: dateData.height,
-                    weight: dateData.weight,
-                    bmi: dateData.BMI ? dateData.BMI.bmi : 0,
-                    bodyFat: dateData.BodyMassData
-                      ? dateData.BodyMassData.bodyFat
+                    height: dateData?.height,
+                    weight: dateData?.weight,
+                    bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
+                    bodyFat: dateData?.BodyMassData
+                      ? dateData?.BodyMassData?.bodyFat
                       : 0,
-                    bodyFatMass: dateData.BodyMassData
-                      ? dateData.BodyMassData.bodyFatMass
+                    bodyFatMass: dateData?.BodyMassData
+                      ? dateData?.BodyMassData?.bodyFatMass
                       : 0,
-                    leanBodyMass: dateData.BodyMassData
-                      ? dateData.BodyMassData.leanBodyMass
+                    leanBodyMass: dateData?.BodyMassData
+                      ? dateData?.BodyMassData?.leanBodyMass
                       : 0,
-                    differenceFromPerfectWeight: dateData.PerfectWeightData
-                      ? dateData.PerfectWeightData.differenceFromPerfectWeight
-                          .difference
+                    differenceFromPerfectWeight: dateData?.PerfectWeightData
+                      ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
+                          ?.difference
                       : 0
                   });
                 }
@@ -572,22 +572,23 @@ export default function WeightStats() {
 
               if (userDataTimestamp?.age) {
                 setUserData({
-                  gender: additionalData.gender,
-                  goal: additionalData.goal,
-                  age: userDataTimestamp.age,
-                  height: userDataTimestamp.height,
-                  waist: userDataTimestamp.waist,
-                  neck: userDataTimestamp.neck,
-                  hip: userDataTimestamp.hip,
-                  weight: userDataTimestamp.weight
+                  gender: additionalData?.gender,
+                  goal: additionalData?.goal,
+                  age: userDataTimestamp?.age,
+                  height: userDataTimestamp?.height,
+                  waist: userDataTimestamp?.waist,
+                  neck: userDataTimestamp?.neck,
+                  hip: userDataTimestamp?.hip,
+                  weight: userDataTimestamp?.weight
                 } as UserData);
                 setPerfectWeight(
-                  userDataTimestamp.PerfectWeightData
-                    ? userDataTimestamp.PerfectWeightData.perfectWeight
+                  userDataTimestamp?.PerfectWeightData
+                    ? userDataTimestamp?.PerfectWeightData?.perfectWeight
                     : 0
                 );
                 setDifferenceFromPerfectWeight(
-                  userDataTimestamp.PerfectWeightData
+                  userDataTimestamp?.PerfectWeightData
+                    ?.differenceFromPerfectWeight
                     ? userDataTimestamp.PerfectWeightData
                         .differenceFromPerfectWeight
                     : {
@@ -595,14 +596,18 @@ export default function WeightStats() {
                         isUnderOrAbove: ""
                       }
                 );
-                setHealth(userDataTimestamp.BMI.health);
+                setHealth(
+                  userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
+                );
                 setDailyCaloryRequirements(
-                  userDataTimestamp.dailyCaloryRequirements
+                  userDataTimestamp?.dailyCaloryRequirements
+                    ? userDataTimestamp?.dailyCaloryRequirements
+                    : []
                 );
                 const macroNutrientsData = Array.isArray(
-                  userDataTimestamp.macroNutrientsData
+                  userDataTimestamp?.macroNutrientsData
                 )
-                  ? userDataTimestamp.macroNutrientsData
+                  ? userDataTimestamp?.macroNutrientsData
                   : [];
 
                 setMacroNutrients(macroNutrientsData);
@@ -1364,6 +1369,7 @@ export default function WeightStats() {
                                       border="2px"
                                       borderRadius="25px"
                                       borderColor={borderColor}
+                                      mx="20px"
                                     >
                                       <AlertDialogHeader
                                         fontSize="lg"
@@ -1782,6 +1788,11 @@ export default function WeightStats() {
                                                     border="2px"
                                                     borderRadius="25px"
                                                     borderColor={borderColor}
+                                                    mx={
+                                                      isSmallScreen
+                                                        ? "20px"
+                                                        : "0px"
+                                                    }
                                                   >
                                                     <AlertDialogHeader
                                                       fontSize="lg"
@@ -1947,7 +1958,7 @@ export default function WeightStats() {
                             </Card>
                           </FadeInWrapper>
                           {clickedValueNutrients.protein !== null && (
-                            <MealPlanner
+                            <MealPlannerForm
                               chosenCalories={clickedValueCalories}
                               chosenNutrients={clickedValueNutrients}
                               // selectedGoal={selectedGoal}

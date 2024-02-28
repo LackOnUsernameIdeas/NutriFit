@@ -7,6 +7,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  useMediaQuery,
   Button,
   Text
 } from "@chakra-ui/react";
@@ -28,7 +29,7 @@ const CustomModal: FC<CustomModalProps> = ({
 
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
-
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
   return (
     <>
       <Button size="lg" bg="#7c6bff" color="white" onClick={onOpen}>
@@ -36,7 +37,7 @@ const CustomModal: FC<CustomModalProps> = ({
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent borderRadius="20px">
+        <ModalContent borderRadius="20px" mx={isSmallScreen ? "20px" : "0px"}>
           <ModalHeader fontSize="2xl">{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

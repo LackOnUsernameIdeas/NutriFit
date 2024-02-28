@@ -30,14 +30,15 @@ import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 // Chakra imports
 import {
   Box,
-  Button,
+  SimpleGrid,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Image
 } from "@chakra-ui/react";
 
 import MeasurementsAlertDialog from "./components/MeasurementsAlertDialog";
@@ -45,6 +46,12 @@ import MeasurementsAlertDialog from "./components/MeasurementsAlertDialog";
 import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/measurements/Default";
 // Assets
+import neckImgDark from "../../assets/img/layout/neck-measurement.png";
+import waistImgDark from "../../assets/img/layout/waist-measurement.png";
+import hipImgDark from "../../assets/img/layout/hip-measurement.png";
+import neckImgWhite from "../../assets/img/layout/neck-measurement-white.png";
+import waistImgWhite from "../../assets/img/layout/waist-measurement-white.png";
+import hipImgWhite from "../../assets/img/layout/hip-measurement-white.png";
 import illustration from "assets/img/auth/auth.png";
 import Loading from "views/admin/weightStats/components/Loading";
 import {
@@ -121,21 +128,6 @@ const UserMeasurements = () => {
       "Body Fat Mass": 0,
       "Lean Body Mass": 0
     });
-  const [userDataForCharts, setUserDataForCharts] = useState([
-    {
-      date: "",
-      height: 0,
-      weight: 0,
-      bmi: 0,
-      bodyFat: 0,
-      bodyFatMass: 0,
-      leanBodyMass: 0,
-      differenceFromPerfectWeight: 0
-    }
-  ]);
-  userDataForCharts.sort((a, b) =>
-    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
-  );
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
   const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
     useState<WeightDifference>({
@@ -169,45 +161,6 @@ const UserMeasurements = () => {
             return { ...prevData, gender: additionalData.gender };
           });
           console.log(additionalData, "additionalData");
-          const userChartData = [];
-
-          for (const key in additionalData) {
-            if (
-              key !== "gender" &&
-              key !== "goal" &&
-              typeof additionalData[key] === "object"
-            ) {
-              const dateData = additionalData[key];
-              userChartData.push({
-                date: key,
-                height: dateData ? dateData.height : 0,
-                weight: dateData ? dateData.weight : 0,
-                bmi: dateData.BMI ? dateData.BMI.bmi : 0,
-                bodyFat: dateData.BodyMassData
-                  ? dateData.BodyMassData.bodyFat
-                  : 0,
-                bodyFatMass: dateData.BodyMassData
-                  ? dateData.BodyMassData.bodyFatMass
-                  : 0,
-                leanBodyMass: dateData.BodyMassData
-                  ? dateData.BodyMassData.leanBodyMass
-                  : 0,
-                differenceFromPerfectWeight: dateData.PerfectWeightData
-                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
-                      .difference
-                  : 0
-              });
-            }
-          }
-
-          setUserDataForCharts(userChartData);
-          console.log(
-            "ID: ",
-            user.uid,
-            "Additional user data:",
-            additionalData
-          );
-          console.log("userChartData:", userChartData);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
@@ -230,57 +183,66 @@ const UserMeasurements = () => {
     });
   };
 
-  const goalsToFetch: Goal[] = [
-    "maintain",
-    "mildlose",
-    "weightlose",
-    "extremelose",
-    "mildgain",
-    "weightgain",
-    "extremegain"
-  ];
+  const triggerFetchAndSaveAllData = async () => {
+    const uid = getAuth().currentUser.uid;
+    try {
+      const response = await fetch(
+        `https://nutri-api.noit.eu/fetchAndSaveAllData/${uid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            height: userData["height"],
+            age: userData["age"],
+            weight: userData["weight"],
+            gender: userData["gender"],
+            neck: userData["neck"],
+            waist: userData["waist"],
+            hip: userData["hip"],
+            goalsToFetch: [
+              "maintain",
+              "mildlose",
+              "weightlose",
+              "extremelose",
+              "mildgain",
+              "weightgain",
+              "extremegain"
+            ]
+          })
+        }
+      );
+
+      const result = await response.json();
+      console.log("Server response:", result);
+    } catch (error) {
+      console.error("Error triggering fetch and save:", error);
+    }
+  };
+
   // Функция за генериране на статистики
   async function generateStats() {
-    console.log(
-      userData["age"],
-      userData["height"],
-      userData["gender"],
-      userData["weight"],
-      "before"
-    );
     setIsLoading(true);
-    await fetchBMIData(userData["age"], userData["height"], userData["weight"]);
-    await fetchPerfectWeightData(
-      userData["height"],
-      userData["gender"],
-      userData["weight"]
-    );
-    await fetchBodyFatAndLeanMassData(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      userData["neck"],
-      userData["waist"],
-      userData["hip"]
+    const uid = getAuth().currentUser.uid;
+
+    // Call this function when you want to trigger fetching and saving all data
+    triggerFetchAndSaveAllData();
+
+    // Save additional user data
+    saveAdditionalUserData(
+      uid,
+      userData.height,
+      userData.age,
+      userData.weight,
+      userData.neck,
+      userData.waist,
+      userData.hip
     );
     setTimeout(() => {
       history.push("/admin/default");
-    }, 1000);
-    await fetchCaloriesForActivityLevels(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"]
-    );
-    await fetchMacroNutrients(
-      userData["age"],
-      userData["gender"],
-      userData["height"],
-      userData["weight"],
-      goalsToFetch
-    );
-    setIsLoading(false);
+      setIsLoading(false);
+    }, 7000);
   }
 
   React.useEffect(() => {
@@ -350,18 +312,6 @@ const UserMeasurements = () => {
 
     if (isUserDataValid()) {
       try {
-        const uid = getAuth().currentUser.uid;
-
-        // Save additional user data
-        await saveAdditionalUserData(
-          uid,
-          userData.height,
-          userData.age,
-          userData.weight,
-          userData.neck,
-          userData.waist,
-          userData.hip
-        );
         await generateStats();
         // Save additional user data to the server
         const response = await fetch(
@@ -484,6 +434,10 @@ const UserMeasurements = () => {
   //     generateStats();
   //   }
   // }, [userData]);
+  const neckImg = useColorModeValue(neckImgDark, neckImgWhite);
+  const waistImg = useColorModeValue(waistImgDark, waistImgWhite);
+  const hipImg = useColorModeValue(hipImgDark, hipImgWhite);
+
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
@@ -502,7 +456,7 @@ const UserMeasurements = () => {
             justifyContent="center"
             mb={{ base: "30px", md: "60px" }}
             px={{ base: "25px", md: "0px" }}
-            mt={{ base: "40px", md: "5%" }}
+            mt={{ base: "40px", md: "1%" }}
             flexDirection="column"
           >
             <Box me="auto">
@@ -539,24 +493,53 @@ const UserMeasurements = () => {
                 {Object.entries(userData).map(([key, value], index) => (
                   <Box key={key} mb="10px">
                     {key !== "gender" && key !== "goal" && (
-                      <FormLabel
-                        display="flex"
-                        ms="4px"
-                        fontSize="sm"
-                        fontWeight="500"
-                        color={textColor}
-                        mb="4px"
-                      >
-                        {userDataPropertiesTranslated[index]
-                          .charAt(0)
-                          .toUpperCase() +
-                          userDataPropertiesTranslated[index].slice(1)}
-                        {key === "age" && (
-                          <Text color={brandStars} ml="1">
-                            *
-                          </Text>
-                        )}
-                      </FormLabel>
+                      <Flex alignItems="center">
+                        <FormLabel
+                          display="flex"
+                          ms="4px"
+                          fontSize="sm"
+                          fontWeight="500"
+                          color={textColor}
+                          mb="4px"
+                        >
+                          {userDataPropertiesTranslated[index]
+                            .charAt(0)
+                            .toUpperCase() +
+                            userDataPropertiesTranslated[index].slice(1)}
+                          {key === "age" && (
+                            <Text color={brandStars} ml="1">
+                              *
+                            </Text>
+                          )}
+                        </FormLabel>
+                        <Flex alignItems="center">
+                          {key === "waist" && (
+                            <Image
+                              src={waistImg}
+                              alt="Waist Measurement"
+                              boxSize="40px"
+                              mb="5px"
+                            />
+                          )}
+                          {key === "hip" && (
+                            <Image
+                              src={hipImg}
+                              alt="Hip Measurement"
+                              boxSize="40px"
+                              mb="5px"
+                            />
+                          )}
+                          {key === "neck" && (
+                            <Image
+                              src={neckImg}
+                              alt="Neck Measurement"
+                              boxSize="40px"
+                              mb="5px"
+                              mt="10px"
+                            />
+                          )}
+                        </Flex>
+                      </Flex>
                     )}
                     {key !== "gender" &&
                       key !== "goal" &&

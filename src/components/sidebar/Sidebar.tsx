@@ -79,10 +79,15 @@ export function SidebarResponsive({ routes }: { routes: RoutesType[] }) {
   // // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-
+  let variantChange = "0.4s cubic-bezier(0.165, 0.84, 0.44, 1)";
   const visibleRoutes = routes.filter((route) => !route.hideInSidebar);
   // let isWindows = navigator.platform.startsWith("Win");
-  //  BRAND
+  const sidebarImageBig = useColorModeValue(wavesLight, wavesDark);
+  const sidebarImageSmall = useColorModeValue(wavesLightSmall, wavesDarkSmall);
+  const sidebarBg = useColorModeValue("white", "navy.800");
+  let sidebarMargins = "0px";
+  const [isSmallHeight] = useMediaQuery("(max-height: 769px)");
+  const sidebarImage = isSmallHeight ? sidebarImageSmall : sidebarImageBig;
 
   return (
     <Flex display={{ sm: "flex", xl: "none" }} alignItems="center">
@@ -104,7 +109,15 @@ export function SidebarResponsive({ routes }: { routes: RoutesType[] }) {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent w="285px" maxW="285px" bg={sidebarBackgroundColor}>
+        <DrawerContent
+          w="285px"
+          maxW="285px"
+          bg={sidebarBg}
+          backgroundImage={sidebarImage}
+          backgroundPosition="bottom"
+          backgroundRepeat="no-repeat"
+          transition={variantChange}
+        >
           <DrawerCloseButton
             zIndex="3"
             onClick={onClose}

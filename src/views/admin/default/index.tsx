@@ -48,6 +48,7 @@ import { GiWeightScale } from "react-icons/gi";
 import { BsPersonFillUp } from "react-icons/bs";
 import { RiWaterPercentFill } from "react-icons/ri";
 import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
+import { HiMiniArrowUturnRight } from "react-icons/hi2";
 import { Meal } from "../../../types/weightStats";
 import { orderMealsByFrequency } from "database/getAdditionalUserData";
 import {
@@ -114,6 +115,7 @@ export default function UserReports() {
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
+  const color = useColorModeValue("#715ffa", "#422afb");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.50" }
@@ -126,82 +128,6 @@ export default function UserReports() {
     {
       name: "Tova",
       count: 2,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
       mealData: {
         totals: {
           calories: 424,
@@ -703,20 +629,16 @@ export default function UserReports() {
                     </Tooltip>
                   </Flex>
                 }
-                author={
-                  <Flex
-                    direction="column"
-                    justify="center"
-                    align="center"
-                    pt="2px"
-                    w="100%"
-                    mt="5px"
-                  ></Flex>
-                }
+                author={<Box></Box>}
                 image={allMeals[0]?.mealData?.image}
                 currentbid={
                   <Box>
-                    <Flex alignItems="center" justifyContent="center" mb="30px">
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      mb="30px"
+                      mt={{ sm: "50px", md: "30px", lg: "10px", xl: "0px" }}
+                    >
                       <Icon
                         as={MdFlatware}
                         boxSize={6}
@@ -836,7 +758,7 @@ export default function UserReports() {
                   h="100%"
                   w="100%"
                   minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "400px", md: "200px", lg: "auto" }}
+                  minW={{ sm: "200px", md: "200px", lg: "auto" }}
                   borderColor={borderColor}
                   borderWidth="3px"
                 >
@@ -1414,10 +1336,9 @@ export default function UserReports() {
                         alignItems="center"
                         flexDirection="column"
                         minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                        minW={{ sm: "400px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
+                        minW={{ sm: "200px", md: "200px", lg: "auto" }}
                         maxH="400px"
                       >
-                        {/* BarChart component with adjusted width */}
                         <LineAvaragesChart
                           lineChartData={maleChartData}
                           lineChartData2={femaleChartData}
@@ -1431,7 +1352,7 @@ export default function UserReports() {
                         alignItems="center"
                         flexDirection="column"
                         minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                        minW={{ sm: "400px", md: "200px", lg: "100%" }} // Adjusted minW for responsiveness
+                        minW={{ sm: "200px", md: "200px", lg: "auto" }}
                         maxH="400px"
                       >
                         <ColumnAvaragesChart
@@ -1467,10 +1388,17 @@ export default function UserReports() {
                       >
                         <Flex pt="5px" w="100%">
                           <LinearGradientText
-                            text={<b>Калкулации за теглото ви ↪</b>}
+                            text={<b>Калкулации за теглото Ви </b>}
                             gradient={gradient}
                             fontSize="xl"
                             mr="2"
+                          />
+                          <Icon
+                            w="20px"
+                            h="20px"
+                            as={HiMiniArrowUturnRight}
+                            color={color}
+                            mt="3px"
                           />
                         </Flex>
                         <Flex justify="center" mt="1%" pt="10px">
@@ -1489,10 +1417,17 @@ export default function UserReports() {
                       >
                         <Flex pt="5px" w="100%">
                           <LinearGradientText
-                            text={<b>Хранителен план ↪</b>}
+                            text={<b>Хранителен план </b>}
                             gradient={gradient}
                             fontSize="xl"
                             mr="2"
+                          />
+                          <Icon
+                            w="20px"
+                            h="20px"
+                            as={HiMiniArrowUturnRight}
+                            color={color}
+                            mt="3px"
                           />
                         </Flex>
                         <Flex justify="center" mt="1%" pt="10px">
@@ -1512,10 +1447,17 @@ export default function UserReports() {
                       >
                         <Flex pt="5px" w="100%">
                           <LinearGradientText
-                            text={<b>Класации ↪</b>}
+                            text={<b>Класации </b>}
                             gradient={gradient}
                             fontSize="xl"
                             mr="2"
+                          />
+                          <Icon
+                            w="20px"
+                            h="20px"
+                            as={HiMiniArrowUturnRight}
+                            color={color}
+                            mt="3px"
                           />
                         </Flex>
                         <Flex justify="center" mt="1%" pt="10px">
@@ -1534,10 +1476,17 @@ export default function UserReports() {
                       >
                         <Flex pt="5px" w="100%">
                           <LinearGradientText
-                            text={<b>Контакт ↪</b>}
+                            text={<b>Контакт </b>}
                             gradient={gradient}
                             fontSize="xl"
                             mr="2"
+                          />
+                          <Icon
+                            w="20px"
+                            h="20px"
+                            as={HiMiniArrowUturnRight}
+                            color={color}
+                            mt="3px"
                           />
                         </Flex>
                         <Flex justify="center" mt="1%" pt="10px">
