@@ -310,57 +310,57 @@ export default function WeightStats() {
                   neck: additionalData[timestampKey].neck,
                   hip: additionalData[timestampKey].hip,
                   weight: additionalData[timestampKey].weight,
-                  bmi: additionalData[timestampKey].BMI
-                    ? additionalData[timestampKey].BMI.bmi
+                  bmi: additionalData[timestampKey]?.BMI
+                    ? additionalData[timestampKey]?.BMI?.bmi
                     : 0,
-                  bodyFat: additionalData[timestampKey].BodyMassData
-                    ? additionalData[timestampKey].BodyMassData.bodyFat
+                  bodyFat: additionalData[timestampKey]?.BodyMassData
+                    ? additionalData[timestampKey]?.BodyMassData?.bodyFat
                     : 0,
-                  bodyFatMass: additionalData[timestampKey].BodyMassData
-                    ? additionalData[timestampKey].BodyMassData.bodyFatMass
+                  bodyFatMass: additionalData[timestampKey]?.BodyMassData
+                    ? additionalData[timestampKey]?.BodyMassData?.bodyFatMass
                     : 0,
-                  leanBodyMass: additionalData[timestampKey].BodyMassData
-                    ? additionalData[timestampKey].BodyMassData.leanBodyMass
+                  leanBodyMass: additionalData[timestampKey]?.BodyMassData
+                    ? additionalData[timestampKey]?.BodyMassData?.leanBodyMass
                     : 0,
                   differenceFromPerfectWeight: additionalData[timestampKey]
-                    .PerfectWeightData
-                    ? additionalData[timestampKey].PerfectWeightData
-                        .differenceFromPerfectWeight.difference
+                    ?.PerfectWeightData
+                    ? additionalData[timestampKey]?.PerfectWeightData
+                        ?.differenceFromPerfectWeight?.difference
                     : 0
                 };
                 const bmiData: BMIInfo = {
-                  bmi: additionalData[timestampKey].BMI
-                    ? additionalData[timestampKey].BMI.bmi
+                  bmi: additionalData[timestampKey]?.BMI
+                    ? additionalData[timestampKey]?.BMI?.bmi
                     : 0,
-                  health: additionalData[timestampKey].BMI
-                    ? additionalData[timestampKey].BMI.health
+                  health: additionalData[timestampKey]?.BMI
+                    ? additionalData[timestampKey]?.BMI?.health
                     : "",
-                  healthy_bmi_range: additionalData[timestampKey].BMI
-                    ? additionalData[timestampKey].BMI.healthy_bmi_range
+                  healthy_bmi_range: additionalData[timestampKey]?.BMI
+                    ? additionalData[timestampKey]?.BMI?.healthy_bmi_range
                     : ""
                 };
                 const bodyMass: BodyMass = {
                   "Body Fat (U.S. Navy Method)": additionalData[timestampKey]
-                    .BodyMassData
-                    ? additionalData[timestampKey].BodyMassData.bodyFat
+                    ?.BodyMassData
+                    ? additionalData[timestampKey]?.BodyMassData?.bodyFat
                     : 0,
-                  "Body Fat Mass": additionalData[timestampKey].BodyMassData
-                    ? additionalData[timestampKey].BodyMassData.bodyFatMass
+                  "Body Fat Mass": additionalData[timestampKey]?.BodyMassData
+                    ? additionalData[timestampKey]?.BodyMassData?.bodyFatMass
                     : 0,
-                  "Lean Body Mass": additionalData[timestampKey].BodyMassData
-                    ? additionalData[timestampKey].BodyMassData.leanBodyMass
+                  "Lean Body Mass": additionalData[timestampKey]?.BodyMassData
+                    ? additionalData[timestampKey]?.BodyMassData?.leanBodyMass
                     : 0
                 };
                 setPerfectWeight(
-                  additionalData[timestampKey].PerfectWeightData
-                    ? additionalData[timestampKey].PerfectWeightData
-                        .perfectWeight
+                  additionalData[timestampKey]?.PerfectWeightData
+                    ? additionalData[timestampKey]?.PerfectWeightData
+                        ?.perfectWeight
                     : 0
                 );
                 setDifferenceFromPerfectWeight(
-                  additionalData[timestampKey].PerfectWeightData
-                    ? additionalData[timestampKey].PerfectWeightData
-                        .differenceFromPerfectWeight
+                  additionalData[timestampKey]?.PerfectWeightData
+                    ? additionalData[timestampKey]?.PerfectWeightData
+                        ?.differenceFromPerfectWeight
                     : {
                         difference: 0,
                         isUnderOrAbove: ""
