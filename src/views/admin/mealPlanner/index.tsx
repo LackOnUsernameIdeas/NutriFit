@@ -595,9 +595,13 @@ export default function WeightStats() {
                         isUnderOrAbove: ""
                       }
                 );
-                setHealth(userDataTimestamp.BMI.health);
+                setHealth(
+                  userDataTimestamp.BMI ? userDataTimestamp.BMI.health : ""
+                );
                 setDailyCaloryRequirements(
                   userDataTimestamp.dailyCaloryRequirements
+                    ? userDataTimestamp.dailyCaloryRequirements
+                    : []
                 );
                 const macroNutrientsData = Array.isArray(
                   userDataTimestamp.macroNutrientsData

@@ -128,21 +128,6 @@ const UserMeasurements = () => {
       "Body Fat Mass": 0,
       "Lean Body Mass": 0
     });
-  const [userDataForCharts, setUserDataForCharts] = useState([
-    {
-      date: "",
-      height: 0,
-      weight: 0,
-      bmi: 0,
-      bodyFat: 0,
-      bodyFatMass: 0,
-      leanBodyMass: 0,
-      differenceFromPerfectWeight: 0
-    }
-  ]);
-  userDataForCharts.sort((a, b) =>
-    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
-  );
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
   const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
     useState<WeightDifference>({
@@ -176,45 +161,6 @@ const UserMeasurements = () => {
             return { ...prevData, gender: additionalData.gender };
           });
           console.log(additionalData, "additionalData");
-          const userChartData = [];
-
-          for (const key in additionalData) {
-            if (
-              key !== "gender" &&
-              key !== "goal" &&
-              typeof additionalData[key] === "object"
-            ) {
-              const dateData = additionalData[key];
-              userChartData.push({
-                date: key,
-                height: dateData ? dateData.height : 0,
-                weight: dateData ? dateData.weight : 0,
-                bmi: dateData.BMI ? dateData.BMI.bmi : 0,
-                bodyFat: dateData.BodyMassData
-                  ? dateData.BodyMassData.bodyFat
-                  : 0,
-                bodyFatMass: dateData.BodyMassData
-                  ? dateData.BodyMassData.bodyFatMass
-                  : 0,
-                leanBodyMass: dateData.BodyMassData
-                  ? dateData.BodyMassData.leanBodyMass
-                  : 0,
-                differenceFromPerfectWeight: dateData.PerfectWeightData
-                  ? dateData.PerfectWeightData.differenceFromPerfectWeight
-                      .difference
-                  : 0
-              });
-            }
-          }
-
-          setUserDataForCharts(userChartData);
-          console.log(
-            "ID: ",
-            user.uid,
-            "Additional user data:",
-            additionalData
-          );
-          console.log("userChartData:", userChartData);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
