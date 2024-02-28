@@ -628,8 +628,9 @@ export default function MealPlanner() {
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
-    const areValuesValid =
-      Object.values(userData).every((value) => value !== 0) && health !== "";
+    const areValuesValid = Object.values(userData).every(
+      (value) => value !== 0
+    );
 
     if (areValuesValid) {
       generateStatsForCalories();
