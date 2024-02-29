@@ -219,7 +219,154 @@ export default function NFT(props: {
                 bg="transparent"
                 minH={{ base: "800px", md: "300px", xl: "180px" }}
               >
-                <SimpleGrid columns={gridColumnCount} mt="60px" gap="20px">
+                <Flex
+                  direction="row" // Align items horizontally
+                  justifyContent="center" // Center items horizontally
+                  alignItems="center" // Align items vertically
+                  onClick={handleDropdownToggle}
+                  mt="60px"
+                >
+                  {isImageSquished && (
+                    <Flex
+                      minW={{ base: "100%", md: "70%" }} // Adjusted width for responsiveness
+                      direction="row" // Align items horizontally
+                      alignItems="center" // Align items vertically
+                      mb="5px" // Added margin top for spacing
+                    >
+                      {rank && (
+                        <Text
+                          fontSize="5xl"
+                          mr="15px"
+                          color={
+                            rank === 1
+                              ? "gold"
+                              : rank === 2
+                              ? "silver"
+                              : rank === 3
+                              ? "#cd7f32"
+                              : textColor
+                          }
+                        >
+                          <b>#{rank}</b>
+                        </Text>
+                      )}
+                      <Text
+                        color={textColor}
+                        fontSize={{ base: "3xl" }}
+                        mb="5px"
+                        fontWeight="bold"
+                        ml="14px" // Added margin left for spacing
+                        mr="14px" // Added margin right for spacing
+                      >
+                        {name}
+                      </Text>
+                      <Text
+                        color="secondaryGray.600"
+                        fontSize={{ base: "xl" }}
+                        fontWeight="400"
+                        ml="14px" // Added margin left for spacing
+                        mr="14px" // Added margin right for spacing
+                      >
+                        {count}
+                      </Text>
+                      <Text
+                        color="secondaryGray.600"
+                        fontSize={{ base: "xl" }}
+                        fontWeight="400"
+                        ml="14px" // Added margin left for spacing
+                        mr="14px" // Added margin right for spacing
+                      >
+                        Грамаж за една порция: {totals.grams}g
+                      </Text>
+                      <Button
+                        onClick={(event) => {
+                          onOpenIngredients();
+                          event.stopPropagation();
+                        }}
+                        borderRadius="20px"
+                        zIndex="2"
+                        size="lg"
+                        bg="#7c6bff"
+                        color="white"
+                        ml="14px" // Added margin left for spacing
+                      >
+                        <Text fontSize="1xl" fontWeight="400">
+                          Вижте продукти
+                        </Text>
+                      </Button>
+                      <AlertDialog
+                        isOpen={isOpenIngredients}
+                        leastDestructiveRef={cancelRefIngredients}
+                        onClose={onCloseIngredients}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent
+                            border="2px"
+                            borderRadius="25px"
+                            borderColor={borderColor}
+                            mx={isPhoneScreen ? "20px" : "0px"}
+                          >
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                              Продукти
+                            </AlertDialogHeader>
+
+                            <AlertDialogCloseButton borderRadius="20px" />
+
+                            <AlertDialogBody>
+                              {ingredients.map((ingredient, index) => (
+                                <Text key={index}>{ingredient}</Text>
+                              ))}
+                            </AlertDialogBody>
+                            <AlertDialogFooter></AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
+                      <Button
+                        onClick={(event) => {
+                          onOpenBMIAlert();
+                          event.stopPropagation();
+                        }}
+                        borderRadius="20px"
+                        size="lg"
+                        zIndex="2"
+                        bg="#7c6bff"
+                        color="white"
+                        ml="14px" // Added margin left for spacing
+                      >
+                        <Text fontSize="1xl" fontWeight="400">
+                          Вижте рецепта
+                        </Text>
+                      </Button>
+                      <AlertDialog
+                        isOpen={isOpenBMIAlert}
+                        leastDestructiveRef={cancelRefBMIAlert}
+                        onClose={onCloseBMIAlert}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent
+                            border="2px"
+                            borderRadius="25px"
+                            borderColor={borderColor}
+                            mx={isPhoneScreen ? "20px" : "0px"}
+                          >
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                              Стъпки за приготвяне
+                            </AlertDialogHeader>
+
+                            <AlertDialogCloseButton borderRadius="20px" />
+                            <AlertDialogBody>
+                              {instructions.map((instruction, index) => (
+                                <Text key={index}>{instruction}</Text>
+                              ))}
+                            </AlertDialogBody>
+                            <AlertDialogFooter></AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
+                    </Flex>
+                  )}
+                </Flex>
+                <SimpleGrid columns={gridColumnCount} gap="20px">
                   <SimpleGrid
                     columns={{
                       base: 1,
@@ -559,152 +706,6 @@ export default function NFT(props: {
                     </Box>
                   </SimpleGrid>
                 </SimpleGrid>
-                <Flex
-                  direction="row" // Align items horizontally
-                  justifyContent="center" // Center items horizontally
-                  alignItems="center" // Align items vertically
-                  onClick={handleDropdownToggle}
-                >
-                  {isImageSquished && (
-                    <Flex
-                      minW={{ base: "100%", md: "70%" }} // Adjusted width for responsiveness
-                      direction="row" // Align items horizontally
-                      alignItems="center" // Align items vertically
-                      mt="20px" // Added margin top for spacing
-                    >
-                      {rank && (
-                        <Text
-                          fontSize="5xl"
-                          mr="15px"
-                          color={
-                            rank === 1
-                              ? "gold"
-                              : rank === 2
-                              ? "silver"
-                              : rank === 3
-                              ? "#cd7f32"
-                              : textColor
-                          }
-                        >
-                          <b>#{rank}</b>
-                        </Text>
-                      )}
-                      <Text
-                        color={textColor}
-                        fontSize={{ base: "3xl" }}
-                        mb="5px"
-                        fontWeight="bold"
-                        ml="14px" // Added margin left for spacing
-                        mr="14px" // Added margin right for spacing
-                      >
-                        {name}
-                      </Text>
-                      <Text
-                        color="secondaryGray.600"
-                        fontSize={{ base: "xl" }}
-                        fontWeight="400"
-                        ml="14px" // Added margin left for spacing
-                        mr="14px" // Added margin right for spacing
-                      >
-                        {count}
-                      </Text>
-                      <Text
-                        color="secondaryGray.600"
-                        fontSize={{ base: "xl" }}
-                        fontWeight="400"
-                        ml="14px" // Added margin left for spacing
-                        mr="14px" // Added margin right for spacing
-                      >
-                        Грамаж за една порция: {totals.grams}g
-                      </Text>
-                      <Button
-                        onClick={(event) => {
-                          onOpenIngredients();
-                          event.stopPropagation();
-                        }}
-                        borderRadius="20px"
-                        zIndex="2"
-                        size="lg"
-                        bg="#7c6bff"
-                        color="white"
-                        ml="14px" // Added margin left for spacing
-                      >
-                        <Text fontSize="1xl" fontWeight="400">
-                          Вижте продукти
-                        </Text>
-                      </Button>
-                      <AlertDialog
-                        isOpen={isOpenIngredients}
-                        leastDestructiveRef={cancelRefIngredients}
-                        onClose={onCloseIngredients}
-                      >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
-                            mx={isPhoneScreen ? "20px" : "0px"}
-                          >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Продукти
-                            </AlertDialogHeader>
-
-                            <AlertDialogCloseButton borderRadius="20px" />
-
-                            <AlertDialogBody>
-                              {ingredients.map((ingredient, index) => (
-                                <Text key={index}>{ingredient}</Text>
-                              ))}
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
-                      <Button
-                        onClick={(event) => {
-                          onOpenBMIAlert();
-                          event.stopPropagation();
-                        }}
-                        borderRadius="20px"
-                        size="lg"
-                        zIndex="2"
-                        bg="#7c6bff"
-                        color="white"
-                        ml="14px" // Added margin left for spacing
-                      >
-                        <Text fontSize="1xl" fontWeight="400">
-                          Вижте рецепта
-                        </Text>
-                      </Button>
-                      <AlertDialog
-                        isOpen={isOpenBMIAlert}
-                        leastDestructiveRef={cancelRefBMIAlert}
-                        onClose={onCloseBMIAlert}
-                      >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
-                            mx={isPhoneScreen ? "20px" : "0px"}
-                          >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Стъпки за приготвяне
-                            </AlertDialogHeader>
-
-                            <AlertDialogCloseButton borderRadius="20px" />
-                            <AlertDialogBody>
-                              {instructions.map((instruction, index) => (
-                                <Text key={index}>{instruction}</Text>
-                              ))}
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
-                    </Flex>
-                  )}
-                </Flex>
               </Card>
             </animated.div>
           )}
