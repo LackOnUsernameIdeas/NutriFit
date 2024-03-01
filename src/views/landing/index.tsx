@@ -27,7 +27,7 @@ import {
   Flex,
   FormLabel,
   Icon,
-  Select,
+  useMediaQuery,
   SimpleGrid,
   useColorModeValue,
   Text,
@@ -97,11 +97,20 @@ export default function UserReports() {
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradientNutri = useColorModeValue(gradientLight, gradientDark);
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
+
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
-    <Box pt="80px">
+    <Box pt="80px" mx="auto">
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
         <Card>
-          <Flex justify="left" alignItems="center">
+          <Flex
+            justify={isSmallScreen && "center"}
+            w="100%"
+            mb="5px"
+            flexWrap="wrap"
+            textAlign={isSmallScreen ? "center" : "start"}
+          >
             <Text fontSize="5xl" mr="2">
               Добре дошли в{" "}
             </Text>
@@ -127,7 +136,13 @@ export default function UserReports() {
               помощта на изкуствен интелект!
             </Text>
           </Flex>
-          <Flex justify="left" pt="10px" gap="20px" mt="30px">
+          <Flex
+            flexDir={{ base: "column", md: "row" }} // Flex direction changes to column on small screens
+            justify={{ base: "center", md: "left" }} // Align items to the center on small screens
+            pt="10px"
+            gap={{ base: "10px", md: "20px" }} // Adjust gap between buttons based on screen size
+            mt={{ base: "30px", md: 0 }} // Adjust margin top based on screen size
+          >
             <Link href="/#/auth/sign-in">
               <Button
                 color="white"
@@ -137,7 +152,10 @@ export default function UserReports() {
                 borderRadius="15px"
                 px="14px"
                 fontWeight="500"
-                h="50px"
+                h={{ base: "50px", md: "50px" }} // Ensure button height remains 50px on larger screens
+                mb={{ sm: "10px", md: 0 }} // Add margin bottom to separate buttons on small screens
+                textAlign="center" // Center align text on small screens
+                width={{ base: "100%", md: "auto" }} // Make button full width on small screens
               >
                 <Text fontSize="lg">Влезте в профила си!</Text>
               </Button>
@@ -151,7 +169,10 @@ export default function UserReports() {
                 borderRadius="15px"
                 px="14px"
                 fontWeight="500"
-                h="50px"
+                h={{ base: "50px", md: "50px" }} // Ensure button height remains 50px on larger screens
+                mb={{ base: 0, md: 0 }} // Add margin bottom to separate buttons on small screens
+                textAlign="center" // Center align text on small screens
+                width={{ base: "100%", md: "auto" }} // Make button full width on small screens
               >
                 <Text fontSize="lg">Нова регистрация!</Text>
               </Button>

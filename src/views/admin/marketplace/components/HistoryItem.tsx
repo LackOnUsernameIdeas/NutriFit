@@ -16,6 +16,7 @@ import {
   useMediaQuery,
   useDisclosure,
   SimpleGrid,
+  Spacer,
   Button
 } from "@chakra-ui/react";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -122,12 +123,12 @@ export default function NFT(props: {
   const [isSmallScreen] = useMediaQuery("(max-width: 1400px)");
   const [isPhoneScreen] = useMediaQuery("(max-width: 767px)");
   const [isImageSquished] = useMediaQuery(
-    "(min-width: 1400px) and (max-width: 1700px)"
+    "(min-width: 1400px) and (max-width: 1850px)"
   );
   const gridColumnCount = isSmallScreen ? 1 : 2;
 
   const imageMinSizeSquishyPrevention = isImageSquished ? "470px" : "0px";
-  const imageMaxSizeSquishyPrevention = isImageSquished ? "620px" : "500px";
+  const imageMaxSizeSquishyPrevention = isImageSquished ? "800px" : "500px";
 
   return (
     <FadeInWrapper>
@@ -221,17 +222,18 @@ export default function NFT(props: {
               >
                 <Flex
                   direction="row" // Align items horizontally
-                  justifyContent="center" // Center items horizontally
+                  justifyContent="space-between" // Ensure buttons are positioned at the right side
                   alignItems="center" // Align items vertically
                   onClick={handleDropdownToggle}
                   mt="60px"
+                  flexWrap="nowrap" // Ensure items are on one row
                 >
                   {isImageSquished && (
                     <Flex
-                      minW={{ base: "100%", md: "70%" }} // Adjusted width for responsiveness
-                      direction="row" // Align items horizontally
-                      alignItems="center" // Align items vertically
-                      mb="5px" // Added margin top for spacing
+                      minW={{ base: "100%", md: "70%" }}
+                      alignItems="center"
+                      mb="5px"
+                      maxW="1850px" // Set max width to 1900px
                     >
                       {rank && (
                         <Text
@@ -255,8 +257,8 @@ export default function NFT(props: {
                         fontSize={{ base: "3xl" }}
                         mb="5px"
                         fontWeight="bold"
-                        ml="14px" // Added margin left for spacing
-                        mr="14px" // Added margin right for spacing
+                        ml="14px"
+                        mr="14px"
                       >
                         {name}
                       </Text>
@@ -264,8 +266,8 @@ export default function NFT(props: {
                         color="secondaryGray.600"
                         fontSize={{ base: "xl" }}
                         fontWeight="400"
-                        ml="14px" // Added margin left for spacing
-                        mr="14px" // Added margin right for spacing
+                        ml="14px"
+                        mr="14px"
                       >
                         {count}
                       </Text>
@@ -273,11 +275,12 @@ export default function NFT(props: {
                         color="secondaryGray.600"
                         fontSize={{ base: "xl" }}
                         fontWeight="400"
-                        ml="14px" // Added margin left for spacing
-                        mr="14px" // Added margin right for spacing
+                        ml="14px"
+                        mr="14px"
                       >
                         Грамаж за една порция: {totals.grams}g
                       </Text>
+                      {/* Buttons */}
                       <Button
                         onClick={(event) => {
                           onOpenIngredients();
@@ -288,39 +291,12 @@ export default function NFT(props: {
                         size="lg"
                         bg="#7c6bff"
                         color="white"
-                        ml="14px" // Added margin left for spacing
+                        ml="14px"
                       >
                         <Text fontSize="1xl" fontWeight="400">
                           Вижте продукти
                         </Text>
                       </Button>
-                      <AlertDialog
-                        isOpen={isOpenIngredients}
-                        leastDestructiveRef={cancelRefIngredients}
-                        onClose={onCloseIngredients}
-                      >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
-                            mx={isPhoneScreen ? "20px" : "0px"}
-                          >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Продукти
-                            </AlertDialogHeader>
-
-                            <AlertDialogCloseButton borderRadius="20px" />
-
-                            <AlertDialogBody>
-                              {ingredients.map((ingredient, index) => (
-                                <Text key={index}>{ingredient}</Text>
-                              ))}
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
                       <Button
                         onClick={(event) => {
                           onOpenBMIAlert();
@@ -331,38 +307,12 @@ export default function NFT(props: {
                         zIndex="2"
                         bg="#7c6bff"
                         color="white"
-                        ml="14px" // Added margin left for spacing
+                        ml="14px"
                       >
                         <Text fontSize="1xl" fontWeight="400">
                           Вижте рецепта
                         </Text>
                       </Button>
-                      <AlertDialog
-                        isOpen={isOpenBMIAlert}
-                        leastDestructiveRef={cancelRefBMIAlert}
-                        onClose={onCloseBMIAlert}
-                      >
-                        <AlertDialogOverlay>
-                          <AlertDialogContent
-                            border="2px"
-                            borderRadius="25px"
-                            borderColor={borderColor}
-                            mx={isPhoneScreen ? "20px" : "0px"}
-                          >
-                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                              Стъпки за приготвяне
-                            </AlertDialogHeader>
-
-                            <AlertDialogCloseButton borderRadius="20px" />
-                            <AlertDialogBody>
-                              {instructions.map((instruction, index) => (
-                                <Text key={index}>{instruction}</Text>
-                              ))}
-                            </AlertDialogBody>
-                            <AlertDialogFooter></AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialogOverlay>
-                      </AlertDialog>
                     </Flex>
                   )}
                 </Flex>

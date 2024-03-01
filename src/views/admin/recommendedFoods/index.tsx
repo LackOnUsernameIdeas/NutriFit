@@ -388,9 +388,9 @@ export default function TopMeals() {
                     userSelect="none"
                   >
                     {dropdownVisible ? (
-                      <b>Най-препоръчани храни от ChatGPT!</b>
+                      <b>Най-препоръчани храни от NutriFit!</b>
                     ) : (
-                      "Най-често препоръчани храни от ChatGPT!"
+                      "Най-често препоръчани храни от NutriFit!"
                     )}
                   </Text>
                   <Icon
@@ -480,7 +480,7 @@ export default function TopMeals() {
                   borderColor={borderColor}
                   borderWidth="3px"
                 >
-                  Сравнение на първите 10 най-препоръчани храни от ChatGPT!
+                  Сравнение на първите 10 най-препоръчани храни от NutriFit!
                 </Card>
               </SimpleGrid>
               <SimpleGrid

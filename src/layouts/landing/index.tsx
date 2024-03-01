@@ -98,7 +98,7 @@ export default function Dashboard(props: { [x: string]: any }) {
           </Box>
         </Portal>
         {getRoute() ? (
-          <Box p={{ base: "20px", md: "40px" }} pe="20px">
+          <Box p={{ base: "20px", md: "40px" }}>
             <Switch>{getRoutes(routes)}</Switch>
           </Box>
         ) : null}
