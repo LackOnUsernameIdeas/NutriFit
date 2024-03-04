@@ -6,7 +6,8 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton
+  AlertDialogCloseButton,
+  useMediaQuery
 } from "@chakra-ui/react";
 import { useDisclosure, Button } from "@chakra-ui/react";
 
@@ -92,6 +93,8 @@ function MeasurementsAlertDialog(props: {
     onClose();
   };
 
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
     <>
       <Button
@@ -112,7 +115,10 @@ function MeasurementsAlertDialog(props: {
         onClose={handleClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent borderRadius="25px">
+          <AlertDialogContent
+            borderRadius="25px"
+            mx={isSmallScreen ? "20px" : 0}
+          >
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Потвърждение
             </AlertDialogHeader>

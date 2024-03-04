@@ -30,13 +30,13 @@ import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 // Chakra imports
 import {
   Box,
-  SimpleGrid,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
   Text,
+  useMediaQuery,
   useColorModeValue,
   Image
 } from "@chakra-ui/react";
@@ -437,6 +437,7 @@ const UserMeasurements = () => {
   const neckImg = useColorModeValue(neckImgDark, neckImgWhite);
   const waistImg = useColorModeValue(waistImgDark, waistImgWhite);
   const hipImg = useColorModeValue(hipImgDark, hipImgWhite);
+  const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
 
   return (
     <Box>
@@ -471,8 +472,9 @@ const UserMeasurements = () => {
                 fontSize="md"
                 style={{ whiteSpace: "pre-line" }}
               >
-                Напишете вашите данни и ние ще направим калкулации, за{"\u00a0"}
-                <br /> да определим
+                Напишете вашите данни и ние ще направим калкулации, за{" "}
+                {!isSmallScreen && <br />} да определим вашето телесно
+                състояние!
               </Text>
             </Box>
             <Flex
