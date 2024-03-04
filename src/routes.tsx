@@ -21,7 +21,7 @@ import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
 import TopMeals from "views/admin/topMeals";
 import RecommendedFoods from "views/admin/recommendedFoods";
-import TopCaloryMeals from "views/admin/individualMealStats";
+import TopCaloryMeals from "views/admin/topCalorieMeals";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -62,14 +62,14 @@ const routes: RoutesType[] = [
     component: RecommendedFoods,
     hideInSidebar: true
   },
-  // {
-  //   name: "Топ калорични храни от chatGPT",
-  //   layout: "/admin",
-  //   path: "/calory",
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: TopCaloryMeals,
-  //   hideInSidebar: true
-  // },
+  {
+    name: "Топ калорични храни от chatGPT",
+    layout: "/admin",
+    path: "/calory",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopCaloryMeals,
+    hideInSidebar: true
+  },
   // {
   //   name: "Топ мазни храни от chatGPT",
   //   layout: "/admin",
@@ -109,15 +109,15 @@ const routes: RoutesType[] = [
         icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
         component: RecommendedFoods,
         hideInSidebar: true
+      },
+      {
+        name: "Топ калорични храни от chatGPT",
+        layout: "/admin",
+        path: "/calory",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopCaloryMeals,
+        hideInSidebar: true
       }
-      // {
-      //   name: "Топ калорични храни от chatGPT",
-      //   layout: "/admin",
-      //   path: "/calory",
-      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-      //   component: TopCaloryMeals,
-      //   hideInSidebar: true
-      // }
       // {
       //   name: "Топ мазни храни от chatGPT",
       //   layout: "/admin",
