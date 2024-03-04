@@ -264,33 +264,27 @@ export default function TopMeals() {
     return () => unsubscribe();
   }, []);
 
-  // React.useEffect(() => {
-  //   const headers = {
-  //     "Content-Type": "application/json"
-  //   };
-  //   const fetchData = () => {
-  //     fetch("https://nutri-api.noit.eu/orderMealsByFrequency", {
-  //       method: "GET",
-  //       headers: headers,
-  //       keepalive: true
-  //     })
-  //       .then((response) => {
-  //         console.log(response);
-  //         if (!response.ok) {
-  //           throw new Error("Failed to fetch data");
-  //         }
-  //         return response.text();
-  //       })
-  //       .then((data) => {
-  //         console.log(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching data:", error);
-  //       });
-  //   };
+  React.useEffect(() => {
+    const fetchData = () => {
+      fetch("https://nutri-api.noit.eu/getMessage", {
+        method: "GET"
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+          return response.text();
+        })
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
