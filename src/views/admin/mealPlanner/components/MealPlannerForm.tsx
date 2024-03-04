@@ -267,13 +267,13 @@ export default function MealPlannerForm(props: {
         async function fetchImage(name: string): Promise<any> {
           try {
             let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyB27VKeq5GAyeI0mNSZprT9nY0ttgkXnFI&cx=10030740e88c842af&q=${encodeURIComponent(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBGskRKof9dkcoXtReamm4-h7UorF1G7yM&cx=10030740e88c842af&q=${encodeURIComponent(
                 name
               )}&searchType=image`
             );
             if (response.status === 429) {
               let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDnNVlA3vZ3LgqNp1-bIr5DHf_de7vvflw&cx=258e213112b4b4492&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBpwC_IdPQ2u-16x_9QwoqJDu-zMhuFKxs&cx=258e213112b4b4492&q=${encodeURIComponent(
                   name
                 )}&searchType=image`
               );
