@@ -15,12 +15,7 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import { HSeparator } from "components/separator/Separator";
 import {
   UserPreferencesForMealPlan,
-  WeightPerServing,
   MealPlan2,
-  Nutrient,
-  NutrientState,
-  SuggestedMaxServings,
-  CustomServings,
   UserIntakes
 } from "../../../../types/weightStats";
 import { saveMealPlan } from "../../../../database/setWeightStatsData";
@@ -158,7 +153,7 @@ export default function MealPlannerForm(props: {
             messages: [
               {
                 role: "system",
-                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is from 
+                content: `You are an experienced nutritionist that supervises patients to eat only edible food that is from
                 ${
                   Array.isArray(userPreferences.Cuisine)
                     ? userPreferences.Cuisine.length === 0
@@ -167,14 +162,13 @@ export default function MealPlannerForm(props: {
                       ? userPreferences.Cuisine[0]
                       : "the following"
                     : userPreferences.Cuisine
-                } cuisine/cuisines.
-                Focus on creating an ACCURATE, diverse and delicious meal plan for the day that is comprised of the following limits: calories({userPreferences.Calories}), protein({userPreferences.Protein}), fat({userPreferences.Fat}) and carbohydrates({userPreferences.Carbohydrates}). Never go above or below the provided limits, and make SURE that the calories and fat are ALWAYS the same as the provided limits. Ensure the accuracy of the quantities. Ensure that the meals you provide differ from meals you have given in previous requests, common meals you provide are Tarator, Banitsa, Cadaif, Cozonac, and Moussaka. Ensure that you refrain from including the specified items. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property in the body of this request without adding 'json' keyword with backticks. The response should only be pure json, nothing else. This means your response should not start with 'json*backticks*{data}*backticks*' or '*backticks*{data}*backticks*'.`
+                } cuisine/cuisines. If you have been given French cuisine, try to avoid ratatouille, creme brulee, apple tart and omelette. Focus on creating an ACCURATE, diverse and delicious meal plan for the day that is comprised of the following limits: calories({userPreferences.Calories}), protein({userPreferences.Protein}), fat({userPreferences.Fat}) and carbohydrates({userPreferences.Carbohydrates}). Never go above or below the provided limits, and make SURE that the calories and fat are ALWAYS the same as the provided limits. Ensure the accuracy of the quantities while keeping true to the limits. Ensure that the meals you provide differ from meals you have given in previous requests, common meals you provide are Tarator, Banitsa, Cadaif, Cozonac, Moussaka and Quinoa. Ensure that you refrain from including the specified items. Export in JSON EXACTLY LIKE THE PROVIDED STRUCTURE in the content property in the body of this request without adding 'json' keyword with backticks. The response should only be pure json, nothing else. This means your response should not start with 'json*backticks*{data}*backticks*' or '*backticks*{data}*backticks*'.`
               },
               {
                 role: "user",
                 content: `Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
                 Менюто трябва стриктно да спазва следните лимити: да съдържа ${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
-                НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати) и ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти. 
+                НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
                 Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
                 Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
                 Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
@@ -268,17 +262,18 @@ export default function MealPlannerForm(props: {
 
         //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
         //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
-        // Now make a request to the "images/generations" endpoint for each meal's name
+        //NutriFit3: cx=527000b0fabcc4dab, key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA
+        // Now make a request to the google images search engine endpoint for each meal's name
         async function fetchImage(name: string): Promise<any> {
           try {
             let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyB27VKeq5GAyeI0mNSZprT9nY0ttgkXnFI&cx=10030740e88c842af&q=${encodeURIComponent(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBGskRKof9dkcoXtReamm4-h7UorF1G7yM&cx=10030740e88c842af&q=${encodeURIComponent(
                 name
               )}&searchType=image`
             );
             if (response.status === 429) {
               let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDnNVlA3vZ3LgqNp1-bIr5DHf_de7vvflw&cx=258e213112b4b4492&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBpwC_IdPQ2u-16x_9QwoqJDu-zMhuFKxs&cx=258e213112b4b4492&q=${encodeURIComponent(
                   name
                 )}&searchType=image`
               );

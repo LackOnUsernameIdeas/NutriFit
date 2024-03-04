@@ -221,19 +221,19 @@ export default function NFT(props: {
                 minH={{ base: "800px", md: "300px", xl: "180px" }}
               >
                 <Flex
-                  direction="row" // Align items horizontally
-                  justifyContent="space-between" // Ensure buttons are positioned at the right side
-                  alignItems="center" // Align items vertically
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
                   onClick={handleDropdownToggle}
                   mt="60px"
-                  flexWrap="nowrap" // Ensure items are on one row
+                  flexWrap="nowrap"
                 >
                   {isImageSquished && (
                     <Flex
                       minW={{ base: "100%", md: "70%" }}
                       alignItems="center"
                       mb="5px"
-                      maxW="1850px" // Set max width to 1900px
+                      maxW="1850px"
                     >
                       {rank && (
                         <Text
@@ -280,7 +280,6 @@ export default function NFT(props: {
                       >
                         Грамаж за една порция: {totals.grams}g
                       </Text>
-                      {/* Buttons */}
                       <Button
                         onClick={(event) => {
                           onOpenIngredients();
