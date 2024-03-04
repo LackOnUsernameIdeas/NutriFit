@@ -130,7 +130,7 @@ export default function UserReports() {
           </Flex>
         </Card>
         <Card>
-          <Flex justify="left" mt="1%">
+          <Flex justify="left">
             <Text fontSize="2xl">
               Бъдете винаги във форма и в оптимално здравословно състояние с
               помощта на изкуствен интелект!
@@ -139,7 +139,7 @@ export default function UserReports() {
           <Flex
             flexDir={{ base: "column", md: "row" }} // Flex direction changes to column on small screens
             justify={{ base: "center", md: "left" }} // Align items to the center on small screens
-            pt="10px"
+            pt="20px"
             gap={{ base: "10px", md: "20px" }} // Adjust gap between buttons based on screen size
             mt={{ base: "30px", md: 0 }} // Adjust margin top based on screen size
           >
