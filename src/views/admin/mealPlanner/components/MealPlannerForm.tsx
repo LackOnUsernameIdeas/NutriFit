@@ -266,24 +266,21 @@ export default function MealPlannerForm(props: {
         // Now make a request to the google images search engine endpoint for each meal's name
         async function fetchImage(name: string): Promise<any> {
           try {
-            const searchQuery = encodeURIComponent(`${name} храна`);
-            let response;
-            response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA&cx=10030740e88c842af&q=${searchQuery}&searchType=image`
+            let response = await fetch(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyB27VKeq5GAyeI0mNSZprT9nY0ttgkXnFI&cx=10030740e88c842af&q=${encodeURIComponent(
+                name
+              )}&searchType=image`
             );
             if (response.status === 429) {
-              // Second condition: Retry with the second search engine
-              response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDnNVlA3vZ3LgqNp1-bIr5DHf_de7vvflw&cx=258e213112b4b4492&q=${searchQuery}&searchType=image`
+              let response = await fetch(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDnNVlA3vZ3LgqNp1-bIr5DHf_de7vvflw&cx=258e213112b4b4492&q=${encodeURIComponent(
+                  name
+                )}&searchType=image`
               );
-              if (response.status === 429) {
-                // Third condition: Retry with the third search engine
-                response = await fetch(
-                  `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA&cx=527000b0fabcc4dab&q=${searchQuery}&searchType=image`
-                );
-              }
+              return response;
+            } else {
+              return response;
             }
-            return response;
           } catch (error) {
             console.error("Error fetching image:", error);
             return null;
