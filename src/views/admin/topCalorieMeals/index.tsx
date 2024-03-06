@@ -16,7 +16,7 @@ import { getTopCalorieMeals } from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
+import LeaderBoardItemSmall from "./components/leaderboardItemSmall";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
@@ -47,11 +47,19 @@ export default function TopMeals() {
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
     currentPage: 0
   });
+  const [dropdownStateLowCalory, setDropdownStateLowCalory] =
+    React.useState<DropdownState>({
+      currentPage: 0
+    });
   const [allMeals, setAllMeals] = React.useState<NutrientMeal[] | []>([]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
 
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+
+  const leastCalorieFoods = allMeals
+    .slice()
+    .sort((a, b) => a.totals.calories - b.totals.calories);
 
   const barChartLabels = allMeals
     .slice(0, 10)
@@ -79,15 +87,25 @@ export default function TopMeals() {
       });
   }, []);
 
-  const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(true);
   const [renderDropdown, setRenderDropdown] = React.useState(true);
 
+  const [miniStatisticsVisibleLowCalory, setMiniStatisticsVisibleLowCalory] =
+    React.useState(true);
+  const [renderDropdownLowCalory, setRenderDropdownLowCalory] =
+    React.useState(true);
+  const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  // State and function for the second dropdown
+  const [dropdownVisibleLowCalory, setDropdownVisibleLowCalory] =
+    React.useState(true);
+  const handleDropdownToggleLowCalory = () => {
+    setDropdownVisibleLowCalory(!dropdownVisibleLowCalory);
+  };
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
     transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
@@ -98,10 +116,21 @@ export default function TopMeals() {
   });
 
   const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? 0 : 0}px)`,
+    transform: `translateY(${
+      dropdownVisible || dropdownVisibleLowCalory ? -50 : 0
+    }px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
+    }
+  });
+
+  const slideAnimationDropLowCalory = useSpring({
+    opacity: miniStatisticsVisibleLowCalory ? 1 : 0,
+    transform: `translateY(${dropdownVisibleLowCalory ? -50 : -90}px)`,
+    config: {
+      tension: dropdownVisibleLowCalory ? 170 : 200,
+      friction: dropdownVisibleLowCalory ? 12 : 20
     }
   });
 
@@ -124,9 +153,33 @@ export default function TopMeals() {
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
 
+  React.useEffect(() => {
+    const handleRestSlidePositionChangeLowCalory = async () => {
+      if (dropdownVisibleLowCalory) {
+        setMiniStatisticsVisibleLowCalory(true);
+        setRenderDropdownLowCalory(true);
+      } else {
+        setMiniStatisticsVisibleLowCalory(false);
+        await new Promise<void>((resolve) =>
+          setTimeout(() => {
+            resolve();
+            setRenderDropdownLowCalory(false);
+          }, 150)
+        );
+      }
+    };
+
+    handleRestSlidePositionChangeLowCalory();
+  }, [dropdownVisibleLowCalory]);
+
   const mealsToShow = allMeals.slice(
     dropdownState.currentPage * ITEMS_PER_PAGE,
     (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
+  );
+
+  const mealsToShowLowCalory = leastCalorieFoods.slice(
+    dropdownStateLowCalory.currentPage * ITEMS_PER_PAGE,
+    (dropdownStateLowCalory.currentPage + 1) * ITEMS_PER_PAGE
   );
 
   return (
@@ -141,110 +194,244 @@ export default function TopMeals() {
             flexDirection="column"
             gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
           >
-            <Card p="0px">
-              <Card
-                onClick={handleDropdownToggle}
-                cursor="pointer"
-                zIndex="1"
-                position="relative"
-                bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
-                borderColor={borderColor}
-                borderWidth="5px"
-              >
-                <Flex
-                  align={{ sm: "flex-start", lg: "center" }}
-                  justify="space-between"
-                  w="100%"
+            <SimpleGrid
+              columns={{ base: 1, md: 2, xl: 2 }}
+              gap="20px"
+              mt="20px"
+            >
+              <Box p="0px">
+                <Card
+                  onClick={handleDropdownToggle}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
+                  borderColor={borderColor}
+                  borderWidth="5px"
                 >
-                  <Text
-                    color={textColor}
-                    fontSize="2xl"
-                    style={
-                      dropdownVisible
-                        ? {
-                            backgroundImage: gradient,
-                            WebkitBackgroundClip: "text",
-                            color: "transparent"
-                          }
-                        : {}
-                    }
-                    userSelect="none"
+                  <Flex
+                    align={{ sm: "flex-start", lg: "center" }}
+                    justify="space-between"
+                    w="100%"
                   >
-                    {dropdownVisible ? (
-                      <b>Най-калорични храни от NutriFit!</b>
-                    ) : (
-                      "Най-калорични храни от NutriFit!"
-                    )}
-                  </Text>
-                  <Icon
-                    as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                    boxSize={6}
-                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                  />
-                </Flex>
-              </Card>
-              {renderDropdown && (
-                <animated.div
-                  style={{ ...slideAnimationDrop, position: "relative" }}
+                    <Text
+                      color={textColor}
+                      fontSize="2xl"
+                      style={
+                        dropdownVisible
+                          ? {
+                              backgroundImage: gradient,
+                              WebkitBackgroundClip: "text",
+                              color: "transparent"
+                            }
+                          : {}
+                      }
+                      userSelect="none"
+                    >
+                      {dropdownVisible ? (
+                        <b>Най-калорични храни от NutriFit!</b>
+                      ) : (
+                        "Най-калорични храни от NutriFit!"
+                      )}
+                    </Text>
+                    <Icon
+                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdown && (
+                  <animated.div
+                    style={{ ...slideAnimationDrop, position: "relative" }}
+                  >
+                    <Card mt="10px">
+                      <Box mt="40px" mb="10px">
+                        {mealsToShow.map(
+                          (meal: NutrientMeal, index: number) => {
+                            return (
+                              <LeaderBoardItemSmall
+                                key={index}
+                                name={meal.name}
+                                instructions={meal?.instructions}
+                                image={meal?.image}
+                                ingredients={meal?.ingredients}
+                                totals={meal?.totals}
+                                topMeals={allMeals}
+                                keepOpen={meal === allMeals[0] ? true : false}
+                              />
+                            );
+                          }
+                        )}
+                        <Flex justify="center" mt="40px">
+                          <IconButton
+                            aria-label="Previous page"
+                            icon={<MdKeyboardArrowLeft />}
+                            onClick={() =>
+                              setDropdownState((prevState) => ({
+                                ...prevState,
+                                currentPage: Math.max(
+                                  0,
+                                  prevState.currentPage - 1
+                                )
+                              }))
+                            }
+                            disabled={dropdownState.currentPage === 0}
+                            variant="unstyled"
+                            _hover={{ bg: "none" }}
+                            boxSize={8}
+                          />
+                          <Text mt="1px" mr="15px" fontSize="xl">
+                            <b>{`Страница ${
+                              dropdownState.currentPage + 1
+                            } от ${totalPages}`}</b>
+                          </Text>
+                          <IconButton
+                            aria-label="Next page"
+                            icon={<MdKeyboardArrowRight />}
+                            onClick={() =>
+                              setDropdownState((prevState) => ({
+                                ...prevState,
+                                currentPage: Math.min(
+                                  prevState.currentPage + 1,
+                                  totalPages - 1
+                                )
+                              }))
+                            }
+                            ml="10px"
+                            disabled={
+                              dropdownState.currentPage === totalPages - 1
+                            }
+                            variant="unstyled"
+                            _hover={{ bg: "none" }}
+                            boxSize={8} // Adjust the box size to match the text size
+                          />
+                        </Flex>
+                      </Box>
+                    </Card>
+                  </animated.div>
+                )}
+              </Box>
+              <Box p="0px">
+                <Card
+                  onClick={handleDropdownToggleLowCalory}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={dropdownVisibleLowCalory ? dropdownBoxBg : dropdownBoxBg}
+                  borderColor={borderColor}
+                  borderWidth="5px"
                 >
-                  <Box mt="50px">
-                    {mealsToShow.map((meal: NutrientMeal, index: number) => {
-                      return (
-                        <HistoryItem
-                          key={index}
-                          name={meal.name}
-                          instructions={meal?.instructions}
-                          image={meal?.image}
-                          ingredients={meal?.ingredients}
-                          totals={meal?.totals}
-                          topMeals={allMeals}
-                          keepOpen={meal === allMeals[0] ? true : false}
-                        />
-                      );
-                    })}
-                    <Flex justify="center" mt="40px">
-                      <IconButton
-                        aria-label="Previous page"
-                        icon={<MdKeyboardArrowLeft />}
-                        onClick={() =>
-                          setDropdownState((prevState) => ({
-                            ...prevState,
-                            currentPage: Math.max(0, prevState.currentPage - 1)
-                          }))
-                        }
-                        disabled={dropdownState.currentPage === 0}
-                        variant="unstyled"
-                        _hover={{ bg: "none" }}
-                        boxSize={8}
-                      />
-                      <Text mt="1px" mr="15px" fontSize="xl">
-                        <b>{`Страница ${
-                          dropdownState.currentPage + 1
-                        } от ${totalPages}`}</b>
-                      </Text>
-                      <IconButton
-                        aria-label="Next page"
-                        icon={<MdKeyboardArrowRight />}
-                        onClick={() =>
-                          setDropdownState((prevState) => ({
-                            ...prevState,
-                            currentPage: Math.min(
-                              prevState.currentPage + 1,
+                  <Flex
+                    align={{ sm: "flex-start", lg: "center" }}
+                    justify="space-between"
+                    w="100%"
+                  >
+                    <Text
+                      color={textColor}
+                      fontSize="2xl"
+                      style={
+                        dropdownVisibleLowCalory
+                          ? {
+                              backgroundImage: gradient,
+                              WebkitBackgroundClip: "text",
+                              color: "transparent"
+                            }
+                          : {}
+                      }
+                      userSelect="none"
+                    >
+                      {dropdownVisibleLowCalory ? (
+                        <b>Най-ниско калорични храни от NutriFit!</b>
+                      ) : (
+                        "Най-ниско калорични храни от NutriFit!"
+                      )}
+                    </Text>
+                    <Icon
+                      as={dropdownVisibleLowCalory ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdownLowCalory && (
+                  <animated.div
+                    style={{
+                      ...slideAnimationDropLowCalory,
+                      position: "relative"
+                    }}
+                  >
+                    <Card mt="10px">
+                      <Box mt="40px" mb="10px">
+                        {mealsToShowLowCalory.map(
+                          (meal: NutrientMeal, index: number) => {
+                            return (
+                              <LeaderBoardItemSmall
+                                key={index}
+                                name={meal.name}
+                                instructions={meal?.instructions}
+                                image={meal?.image}
+                                ingredients={meal?.ingredients}
+                                totals={meal?.totals}
+                                topMeals={leastCalorieFoods}
+                                keepOpen={
+                                  meal === leastCalorieFoods[0] ? true : false
+                                }
+                              />
+                            );
+                          }
+                        )}
+                        <Flex justify="center" mt="40px">
+                          <IconButton
+                            aria-label="Previous page"
+                            icon={<MdKeyboardArrowLeft />}
+                            onClick={() =>
+                              setDropdownStateLowCalory((prevState) => ({
+                                ...prevState,
+                                currentPage: Math.max(
+                                  0,
+                                  prevState.currentPage - 1
+                                )
+                              }))
+                            }
+                            disabled={dropdownStateLowCalory.currentPage === 0}
+                            variant="unstyled"
+                            _hover={{ bg: "none" }}
+                            boxSize={8}
+                          />
+                          <Text mt="1px" mr="15px" fontSize="xl">
+                            <b>{`Страница ${
+                              dropdownStateLowCalory.currentPage + 1
+                            } от ${totalPages}`}</b>
+                          </Text>
+                          <IconButton
+                            aria-label="Next page"
+                            icon={<MdKeyboardArrowRight />}
+                            onClick={() =>
+                              setDropdownStateLowCalory((prevState) => ({
+                                ...prevState,
+                                currentPage: Math.min(
+                                  prevState.currentPage + 1,
+                                  totalPages - 1
+                                )
+                              }))
+                            }
+                            ml="10px"
+                            disabled={
+                              dropdownStateLowCalory.currentPage ===
                               totalPages - 1
-                            )
-                          }))
-                        }
-                        ml="10px"
-                        disabled={dropdownState.currentPage === totalPages - 1}
-                        variant="unstyled"
-                        _hover={{ bg: "none" }}
-                        boxSize={8} // Adjust the box size to match the text size
-                      />
-                    </Flex>
-                  </Box>
-                </animated.div>
-              )}
-            </Card>
+                            }
+                            variant="unstyled"
+                            _hover={{ bg: "none" }}
+                            boxSize={8} // Adjust the box size to match the text size
+                          />
+                        </Flex>
+                      </Box>
+                    </Card>
+                  </animated.div>
+                )}
+              </Box>
+            </SimpleGrid>
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <SimpleGrid
                 columns={{ base: 1, md: 2, xl: 2 }}

@@ -8,9 +8,8 @@ import {
   MdLeaderboard
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
-import { IoMdMail } from "react-icons/io";
-import { FaTrophy } from "react-icons/fa";
-
+import { IoMdMail, IoIosSpeedometer } from "react-icons/io";
+import { FaTrophy, FaFireAlt, FaTint, FaShareAlt } from "react-icons/fa";
 // Admin Imports
 import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
@@ -68,7 +67,7 @@ const routes: RoutesType[] = [
     name: "Топ калорични храни от chatGPT",
     layout: "/admin",
     path: "/calory",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />,
     component: TopCaloryMeals,
     hideInSidebar: true
   },
@@ -84,7 +83,9 @@ const routes: RoutesType[] = [
     name: "Топ въглехидратни храни от chatGPT",
     layout: "/admin",
     path: "/carbs",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    icon: (
+      <Icon as={IoIosSpeedometer} width="20px" height="20px" color="inherit" />
+    ),
     component: TopCarbsMeals,
     hideInSidebar: true
   },
@@ -92,7 +93,7 @@ const routes: RoutesType[] = [
     name: "Топ протеинови храни от chatGPT",
     layout: "/admin",
     path: "/protein",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={FaShareAlt} width="20px" height="20px" color="inherit" />,
     component: TopProteinMeals,
     hideInSidebar: true
   },
@@ -116,7 +117,9 @@ const routes: RoutesType[] = [
         name: "Топ калорични храни от chatGPT",
         layout: "/admin",
         path: "/calory",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        icon: (
+          <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />
+        ),
         component: TopCaloryMeals,
         hideInSidebar: true
       },
@@ -124,7 +127,7 @@ const routes: RoutesType[] = [
         name: "Топ мазни храни от chatGPT",
         layout: "/admin",
         path: "/fat",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        icon: <Icon as={FaTint} width="20px" height="20px" color="inherit" />,
         component: TopFatMeals,
         hideInSidebar: true
       },
@@ -132,7 +135,14 @@ const routes: RoutesType[] = [
         name: "Топ въглехидратни храни от chatGPT",
         layout: "/admin",
         path: "/carbs",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        icon: (
+          <Icon
+            as={IoIosSpeedometer}
+            width="20px"
+            height="20px"
+            color="inherit"
+          />
+        ),
         component: TopCarbsMeals,
         hideInSidebar: true
       },
@@ -140,7 +150,9 @@ const routes: RoutesType[] = [
         name: "Топ протеинови храни от chatGPT",
         layout: "/admin",
         path: "/protein",
-        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        icon: (
+          <Icon as={FaShareAlt} width="20px" height="20px" color="inherit" />
+        ),
         component: TopProteinMeals,
         hideInSidebar: true
       }
