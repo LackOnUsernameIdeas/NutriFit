@@ -1,60 +1,33 @@
 import React from "react";
 // Chakra imports
 import {
-  Avatar,
-  Button,
   Box,
-  Center,
   Flex,
-  FormLabel,
   Icon,
-  Select,
   SimpleGrid,
-  Tooltip,
-  useColorMode,
   useColorModeValue,
-  useBreakpointValue,
   Text,
-  Link,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useMediaQuery,
   IconButton
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { orderMealsByFrequency } from "database/getAdditionalUserData";
+import { getTopCalorieMeals } from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import RecipeWidget from "components/card/NFT";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
-import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { ColumnChart } from "components/charts/BarCharts";
 
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  onSnapshot
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import {
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,
   MdFlatware
 } from "react-icons/md";
-import RecipeModal from "./components/RecipeModal";
-import { Meal } from "../../../types/weightStats";
+import { NutrientMeal } from "../../../types/weightStats";
 interface DropdownState {
   currentPage: number;
 }
@@ -74,216 +47,36 @@ export default function TopMeals() {
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
     currentPage: 0
   });
-  const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
-    {
-      name: "Tova",
-      count: 2,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    },
-    {
-      name: "Tova",
-      count: 1,
-      mealData: {
-        totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
-        },
-        recipeQuantity: 235,
-        image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
-      }
-    }
-  ]);
+  const [allMeals, setAllMeals] = React.useState<NutrientMeal[] | []>([]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
-  // Sorting by calories
-  const sortedByCaloriesDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.calories - a.mealData.totals.calories
-  );
 
-  const sortedByCaloriesAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.calories - b.mealData.totals.calories
-  );
-
-  // Sorting by carbohydrates
-  const sortedByCarbohydratesDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.carbohydrates - a.mealData.totals.carbohydrates
-  );
-
-  const sortedByCarbohydratesAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.carbohydrates - b.mealData.totals.carbohydrates
-  );
-
-  // Sorting by fat
-  const sortedByFatDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.fat - a.mealData.totals.fat
-  );
-
-  const sortedByFatAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.fat - b.mealData.totals.fat
-  );
-
-  // Sorting by protein
-  const sortedByProteinDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.protein - a.mealData.totals.protein
-  );
-
-  const sortedByProteinAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.protein - b.mealData.totals.protein
-  );
-  const barChartNames = allMeals.slice(0, 10).map((entry) => entry.name);
-  const barChartLabels = allMeals
-    .slice(0, 10)
-    .map((_, index) => `#${index + 1}`);
-  const barChartForTopSuggestions = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.count);
-  const barChartForCalories = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.calories);
-  const barChartForProtein = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.protein);
-  const barChartForFat = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.fat);
-  const barChartForCarbohydrates = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.carbohydrates);
-
-  console.log(
-    "Sorted by calories (descending order):",
-    sortedByCaloriesDescending
-  );
-  console.log(
-    "Sorted by carbohydrates (descending order):",
-    sortedByCarbohydratesDescending
-  );
-  console.log("Sorted by fat (descending order):", sortedByFatDescending);
-  console.log(
-    "Sorted by protein (descending order):",
-    sortedByProteinDescending
-  );
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      console.log("NOT FETCHED YET!");
-      const sortedMeals = await orderMealsByFrequency();
-      console.log("Sorted meals by frequency:", sortedMeals);
-      setAllMeals(sortedMeals as Meal[]);
-      setLoading(false);
-      console.log("FETCHED!");
-    };
+  const barChartLabels = allMeals
+    .slice(0, 10)
+    .map((_, index) => `#${index + 1}`);
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData(); // Call fetchData when a snapshot occurs
-      }
-    );
+  const barChartForTopCalorieFoods = allMeals
+    .slice(0, 10)
+    .map((meal, index) => allMeals[index].totals.calories);
 
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
-  }, []);
+  const barChartForLowCalorieFoods = allMeals
+    .slice()
+    .sort((a, b) => a.totals.calories - b.totals.calories)
+    .slice(0, 10)
+    .map((meal) => meal.totals.calories);
 
   React.useEffect(() => {
-    const fetchData = () => {
-      fetch("https://nutri-api.noit.eu/getMessage", {
-        method: "GET"
+    getTopCalorieMeals()
+      .then((meals) => {
+        console.log("Top Calories: ", meals[0].meals);
+        setAllMeals(meals[0].meals as NutrientMeal[]);
+        setLoading(false);
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          }
-          return response.text();
-        })
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-    };
-
-    fetchData();
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
@@ -336,9 +129,6 @@ export default function TopMeals() {
     (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  console.log("all Meals: ", allMeals);
-  console.log("meals to show: ", mealsToShow);
-
   return (
     <FadeInWrapper>
       <Box pt={{ base: "160px", md: "80px", xl: "80px" }}>
@@ -381,9 +171,9 @@ export default function TopMeals() {
                     userSelect="none"
                   >
                     {dropdownVisible ? (
-                      <b>Най-препоръчани храни от NutriFit!</b>
+                      <b>Най-калорични храни от NutriFit!</b>
                     ) : (
-                      "Най-често препоръчани храни от NutriFit!"
+                      "Най-калорични храни от NutriFit!"
                     )}
                   </Text>
                   <Icon
@@ -398,16 +188,15 @@ export default function TopMeals() {
                   style={{ ...slideAnimationDrop, position: "relative" }}
                 >
                   <Box mt="50px">
-                    {mealsToShow.map((meal: Meal, index: number) => {
+                    {mealsToShow.map((meal: NutrientMeal, index: number) => {
                       return (
                         <HistoryItem
                           key={index}
                           name={meal.name}
-                          count={"Брой препоръчвания: " + meal.count.toString()}
-                          instructions={meal?.mealData.instructions}
-                          image={meal?.mealData.image}
-                          ingredients={meal?.mealData.ingredients}
-                          totals={meal?.mealData.totals}
+                          instructions={meal?.instructions}
+                          image={meal?.image}
+                          ingredients={meal?.ingredients}
+                          totals={meal?.totals}
                           topMeals={allMeals}
                           keepOpen={meal === allMeals[0] ? true : false}
                         />
@@ -458,7 +247,7 @@ export default function TopMeals() {
             </Card>
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <SimpleGrid
-                columns={{ base: 1, md: 1, xl: 1 }}
+                columns={{ base: 1, md: 2, xl: 2 }}
                 gap="20px"
                 mt="20px"
               >
@@ -473,11 +262,24 @@ export default function TopMeals() {
                   borderColor={borderColor}
                   borderWidth="3px"
                 >
-                  Сравнение на първите 10 най-препоръчани храни от NutriFit!
+                  Сравнение на първите 10 най-калорични храни от NutriFit!
+                </Card>
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на първите 10 най-ниско калорични храни от NutriFit!
                 </Card>
               </SimpleGrid>
               <SimpleGrid
-                columns={{ base: 1, md: 1, xl: 1 }}
+                columns={{ base: 1, md: 2, xl: 2 }}
                 gap="20px"
                 mt="20px"
                 mb="20px"
@@ -494,8 +296,26 @@ export default function TopMeals() {
                 >
                   <ColumnChart
                     chartLabels={barChartLabels}
-                    chartData={barChartForTopSuggestions}
-                    chartLabelName="Сравнение на препоръчани храни"
+                    chartData={barChartForTopCalorieFoods}
+                    chartLabelName="Сравнение на най-калорични храни (kcal)"
+                    textColor={chartsColor}
+                    color="#472ffb"
+                  />
+                </Card>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForLowCalorieFoods}
+                    chartLabelName="Сравнение на най-ниско калорични храни (kcal)"
                     textColor={chartsColor}
                     color="#472ffb"
                   />

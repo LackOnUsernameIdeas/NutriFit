@@ -9,6 +9,18 @@ export const useCustomColorMode = () => {
 export const barChartOptions: any = {
   maintainAspectRatio: false,
   aspectRatio: 5,
+  animation: {
+    onComplete: () => ({
+      delayed: true
+    }),
+    delay: (context: any) => {
+      let delay = 0;
+      if (context.type === "data" && context.mode === "default") {
+        delay = context.dataIndex * 50;
+      }
+      return delay;
+    }
+  },
   scales: {
     x: {
       ticks: {
@@ -63,6 +75,18 @@ export const barChartOptions: any = {
 export const lineChartOptions: any = {
   maintainAspectRatio: false,
   aspectRatio: 5,
+  animation: {
+    onComplete: () => ({
+      delayed: true
+    }),
+    delay: (context: any) => {
+      let delay = 0;
+      if (context.type === "data" && context.mode === "default") {
+        delay = context.dataIndex * 50;
+      }
+      return delay;
+    }
+  },
   scales: {
     x: {
       ticks: {

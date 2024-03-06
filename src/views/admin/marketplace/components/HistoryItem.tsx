@@ -26,16 +26,16 @@ import IconBox from "components/icons/IconBox";
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import { ColumnChart } from "components/charts/BarCharts";
-import { Meal } from "types/weightStats";
+import { SuggestedMeal, NutrientMeal } from "types/weightStats";
 
 export default function NFT(props: {
   image: string;
   name: string;
-  count: string;
+  count?: string;
   instructions: string[];
   ingredients: string[];
   totals: any;
-  topMeals: Meal[];
+  topMeals: SuggestedMeal[] | NutrientMeal[];
   keepOpen?: boolean;
 }) {
   const {
@@ -540,7 +540,7 @@ export default function NFT(props: {
                           />
                         }
                         name="Калории"
-                        value={totals.calories + " kCal"}
+                        value={totals.calories.toFixed(2) + " kCal"}
                         backgroundColor={boxBg}
                       />
                       <SimpleGrid
@@ -565,7 +565,7 @@ export default function NFT(props: {
                             />
                           }
                           name="Въглехидрати"
-                          value={totals.carbohydrates + " g"}
+                          value={totals.carbohydrates.toFixed(2) + " g"}
                           backgroundColor={boxBg}
                         />
                         <MiniStatistics
@@ -585,7 +585,7 @@ export default function NFT(props: {
                             />
                           }
                           name="Мазнини"
-                          value={totals.fat + " g"}
+                          value={totals.fat.toFixed(2) + " g"}
                           backgroundColor={boxBg}
                         />
                         <MiniStatistics
@@ -605,7 +605,7 @@ export default function NFT(props: {
                             />
                           }
                           name="Протеин"
-                          value={totals.protein + " g"}
+                          value={totals.protein.toFixed(2) + " g"}
                           backgroundColor={boxBg}
                         />
                       </SimpleGrid>

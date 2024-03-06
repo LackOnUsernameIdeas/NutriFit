@@ -19,9 +19,11 @@ import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
-import TopMeals from "views/admin/topMeals";
 import RecommendedFoods from "views/admin/recommendedFoods";
 import TopCaloryMeals from "views/admin/topCalorieMeals";
+import TopProteinMeals from "views/admin/topProteinMeals";
+import TopFatMeals from "views/admin/topFatMeals";
+import TopCarbsMeals from "views/admin/topCarbsMeals";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -70,30 +72,30 @@ const routes: RoutesType[] = [
     component: TopCaloryMeals,
     hideInSidebar: true
   },
-  // {
-  //   name: "Топ мазни храни от chatGPT",
-  //   layout: "/admin",
-  //   path: "/fat",
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: TopMeals,
-  //   hideInSidebar: true
-  // },
-  // {
-  //   name: "Топ въглехидратни храни от chatGPT",
-  //   layout: "/admin",
-  //   path: "/carbs",
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: TopMeals,
-  //   hideInSidebar: true
-  // },
-  // {
-  //   name: "Топ протеинови храни от chatGPT",
-  //   layout: "/admin",
-  //   path: "/protein",
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: TopMeals,
-  //   hideInSidebar: true
-  // },
+  {
+    name: "Топ мазни храни от chatGPT",
+    layout: "/admin",
+    path: "/fat",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopFatMeals,
+    hideInSidebar: true
+  },
+  {
+    name: "Топ въглехидратни храни от chatGPT",
+    layout: "/admin",
+    path: "/carbs",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopCarbsMeals,
+    hideInSidebar: true
+  },
+  {
+    name: "Топ протеинови храни от chatGPT",
+    layout: "/admin",
+    path: "/protein",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: TopProteinMeals,
+    hideInSidebar: true
+  },
   {
     name: "Класации",
     layout: "/admin",
@@ -117,31 +119,31 @@ const routes: RoutesType[] = [
         icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
         component: TopCaloryMeals,
         hideInSidebar: true
+      },
+      {
+        name: "Топ мазни храни от chatGPT",
+        layout: "/admin",
+        path: "/fat",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopFatMeals,
+        hideInSidebar: true
+      },
+      {
+        name: "Топ въглехидратни храни от chatGPT",
+        layout: "/admin",
+        path: "/carbs",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopCarbsMeals,
+        hideInSidebar: true
+      },
+      {
+        name: "Топ протеинови храни от chatGPT",
+        layout: "/admin",
+        path: "/protein",
+        icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+        component: TopProteinMeals,
+        hideInSidebar: true
       }
-      // {
-      //   name: "Топ мазни храни от chatGPT",
-      //   layout: "/admin",
-      //   path: "/fat",
-      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-      //   component: TopMeals,
-      //   hideInSidebar: true
-      // },
-      // {
-      //   name: "Топ въглехидратни храни от chatGPT",
-      //   layout: "/admin",
-      //   path: "/carbs",
-      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-      //   component: TopMeals,
-      //   hideInSidebar: true
-      // },
-      // {
-      //   name: "Топ протеинови храни от chatGPT",
-      //   layout: "/admin",
-      //   path: "/protein",
-      //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-      //   component: TopMeals,
-      //   hideInSidebar: true
-      // }
     ]
   },
   {

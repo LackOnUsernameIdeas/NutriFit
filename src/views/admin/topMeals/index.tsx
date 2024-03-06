@@ -54,7 +54,7 @@ import {
   MdFlatware
 } from "react-icons/md";
 import RecipeModal from "./components/RecipeModal";
-import { Meal } from "../../../types/weightStats";
+import { SuggestedMeal } from "../../../types/weightStats";
 interface DropdownState {
   currentPage: number;
 }
@@ -74,7 +74,7 @@ export default function TopMeals() {
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
     currentPage: 0
   });
-  const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
+  const [allMeals, setAllMeals] = React.useState<SuggestedMeal[] | []>([
     {
       name: "Tova",
       count: 2,
@@ -249,7 +249,7 @@ export default function TopMeals() {
       const sortedMeals = await orderMealsByFrequency();
       console.log("Sorted meals by frequency:", sortedMeals);
       const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+      setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
       setLoading(false);
       console.log("FETCHED!");
     };
@@ -402,7 +402,7 @@ export default function TopMeals() {
                   style={{ ...slideAnimationDrop, position: "relative" }}
                 >
                   <Box mt="50px">
-                    {mealsToShow.map((meal: Meal, index: number) => {
+                    {mealsToShow.map((meal: SuggestedMeal, index: number) => {
                       return (
                         <HistoryItem
                           key={index}

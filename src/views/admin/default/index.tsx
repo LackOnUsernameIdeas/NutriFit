@@ -49,7 +49,7 @@ import { BsPersonFillUp } from "react-icons/bs";
 import { RiWaterPercentFill } from "react-icons/ri";
 import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
 import { HiMiniArrowUturnRight } from "react-icons/hi2";
-import { Meal } from "../../../types/weightStats";
+import { SuggestedMeal } from "../../../types/weightStats";
 import { orderMealsByFrequency } from "database/getAdditionalUserData";
 import {
   getFirestore,
@@ -124,7 +124,7 @@ export default function UserReports() {
     { bg: "secondaryGray.200" },
     { bg: "whiteAlpha.100" }
   );
-  const [allMeals, setAllMeals] = React.useState<Meal[] | []>([
+  const [allMeals, setAllMeals] = React.useState<SuggestedMeal[] | []>([
     {
       name: "Tova",
       count: 2,
@@ -337,7 +337,7 @@ export default function UserReports() {
       const sortedMeals = await orderMealsByFrequency();
       console.log("Sorted meals by frequency:", sortedMeals);
       const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals((mealsSortedByCount as Meal[]).slice(0, 10));
+      setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
       console.log("FETCHED!");
     };
 
