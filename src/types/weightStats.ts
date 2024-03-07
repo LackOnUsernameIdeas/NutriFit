@@ -52,7 +52,11 @@ export interface SuggestedMeal {
 }
 
 export interface NutrientMeal {
+  image: string;
+  ingredients: string[];
+  instructions: string[];
   name: string;
+  recipeQuantity: number;
   totals: {
     calories: number;
     carbohydrates: number;
@@ -60,10 +64,6 @@ export interface NutrientMeal {
     fat: number;
     protein: number;
   };
-  recipeQuantity: number;
-  image: string;
-  ingredients: string[];
-  instructions: string[];
 }
 
 export type UserData = {

@@ -52,14 +52,13 @@ export default function TopMeals() {
       currentPage: 0
     });
   const [allMeals, setAllMeals] = React.useState<NutrientMeal[] | []>([]);
+  const [leastCalorieFoods, setLeastCalorieFoods] = React.useState<
+    NutrientMeal[] | []
+  >([]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
 
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
-
-  const leastCalorieFoods = allMeals
-    .slice()
-    .sort((a, b) => a.totals.calories - b.totals.calories);
 
   const barChartLabels = allMeals
     .slice(0, 10)
@@ -76,15 +75,31 @@ export default function TopMeals() {
     .map((meal) => meal.totals.calories);
 
   React.useEffect(() => {
-    getTopCalorieMeals()
-      .then((meals) => {
-        console.log("Top Calories: ", meals[0].meals);
-        setAllMeals(meals[0].meals as NutrientMeal[]);
+    const fetchData = async () => {
+      try {
+        console.log("fetching...");
+        const meals = await getTopCalorieMeals();
+
+        console.log("Top Calories: ", meals);
+
+        setAllMeals(meals as NutrientMeal[]);
+
+        const lowCaloryMeals = meals
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.calories || 0) - (b.totals.calories || 0)
+          );
+
+        setLeastCalorieFoods(lowCaloryMeals);
         setLoading(false);
-      })
-      .catch((error) => {
+        console.log("FETCHED!");
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
@@ -185,67 +200,63 @@ export default function TopMeals() {
   return (
     <FadeInWrapper>
       <Box pt={{ base: "160px", md: "80px", xl: "80px" }}>
-        {loading ? (
-          <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
-            <Loading />
-          </Box>
-        ) : (
-          <Flex
-            flexDirection="column"
-            gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
-          >
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-              mt="20px"
-            >
-              <Box p="0px">
-                <Card
-                  onClick={handleDropdownToggle}
-                  cursor="pointer"
-                  zIndex="1"
-                  position="relative"
-                  bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
-                  borderColor={borderColor}
-                  borderWidth="5px"
+        <Flex
+          flexDirection="column"
+          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
+        >
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mt="20px">
+            <Box p="0px">
+              <Card
+                onClick={handleDropdownToggle}
+                cursor="pointer"
+                zIndex="1"
+                position="relative"
+                bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
+                borderColor={borderColor}
+                borderWidth="5px"
+              >
+                <Flex
+                  align={{ sm: "flex-start", lg: "center" }}
+                  justify="space-between"
+                  w="100%"
                 >
-                  <Flex
-                    align={{ sm: "flex-start", lg: "center" }}
-                    justify="space-between"
-                    w="100%"
+                  <Text
+                    color={textColor}
+                    fontSize="2xl"
+                    style={
+                      dropdownVisible
+                        ? {
+                            backgroundImage: gradient,
+                            WebkitBackgroundClip: "text",
+                            color: "transparent"
+                          }
+                        : {}
+                    }
+                    userSelect="none"
                   >
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      style={
-                        dropdownVisible
-                          ? {
-                              backgroundImage: gradient,
-                              WebkitBackgroundClip: "text",
-                              color: "transparent"
-                            }
-                          : {}
-                      }
-                      userSelect="none"
-                    >
-                      {dropdownVisible ? (
-                        <b>Най-калорични храни от NutriFit!</b>
-                      ) : (
-                        "Най-калорични храни от NutriFit!"
-                      )}
-                    </Text>
-                    <Icon
-                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Card>
-                {renderDropdown && (
-                  <animated.div
-                    style={{ ...slideAnimationDrop, position: "relative" }}
-                  >
-                    <Card mt="10px">
+                    {dropdownVisible ? (
+                      <b>Най-калорични храни от NutriFit!</b>
+                    ) : (
+                      "Най-калорични храни от NutriFit!"
+                    )}
+                  </Text>
+                  <Icon
+                    as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                    boxSize={6}
+                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  />
+                </Flex>
+              </Card>
+              {renderDropdown && (
+                <animated.div
+                  style={{ ...slideAnimationDrop, position: "relative" }}
+                >
+                  <Card mt="10px">
+                    {loading ? (
+                      <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
+                        <Loading />
+                      </Box>
+                    ) : (
                       <Box mt="40px" mb="10px">
                         {mealsToShow.map(
                           (meal: NutrientMeal, index: number) => {
@@ -308,60 +319,66 @@ export default function TopMeals() {
                           />
                         </Flex>
                       </Box>
-                    </Card>
-                  </animated.div>
-                )}
-              </Box>
-              <Box p="0px">
-                <Card
-                  onClick={handleDropdownToggleLowCalory}
-                  cursor="pointer"
-                  zIndex="1"
-                  position="relative"
-                  bg={dropdownVisibleLowCalory ? dropdownBoxBg : dropdownBoxBg}
-                  borderColor={borderColor}
-                  borderWidth="5px"
+                    )}
+                  </Card>
+                </animated.div>
+              )}
+            </Box>
+            <Box p="0px">
+              <Card
+                onClick={handleDropdownToggleLowCalory}
+                cursor="pointer"
+                zIndex="1"
+                position="relative"
+                bg={dropdownVisibleLowCalory ? dropdownBoxBg : dropdownBoxBg}
+                borderColor={borderColor}
+                borderWidth="5px"
+              >
+                <Flex
+                  align={{ sm: "flex-start", lg: "center" }}
+                  justify="space-between"
+                  w="100%"
                 >
-                  <Flex
-                    align={{ sm: "flex-start", lg: "center" }}
-                    justify="space-between"
-                    w="100%"
+                  <Text
+                    color={textColor}
+                    fontSize="2xl"
+                    style={
+                      dropdownVisibleLowCalory
+                        ? {
+                            backgroundImage: gradient,
+                            WebkitBackgroundClip: "text",
+                            color: "transparent"
+                          }
+                        : {}
+                    }
+                    userSelect="none"
                   >
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      style={
-                        dropdownVisibleLowCalory
-                          ? {
-                              backgroundImage: gradient,
-                              WebkitBackgroundClip: "text",
-                              color: "transparent"
-                            }
-                          : {}
-                      }
-                      userSelect="none"
-                    >
-                      {dropdownVisibleLowCalory ? (
-                        <b>Най-ниско калорични храни от NutriFit!</b>
-                      ) : (
-                        "Най-ниско калорични храни от NutriFit!"
-                      )}
-                    </Text>
-                    <Icon
-                      as={dropdownVisibleLowCalory ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Card>
-                {renderDropdownLowCalory && (
-                  <animated.div
-                    style={{
-                      ...slideAnimationDropLowCalory,
-                      position: "relative"
-                    }}
-                  >
-                    <Card mt="10px">
+                    {dropdownVisibleLowCalory ? (
+                      <b>Най-ниско калорични храни от NutriFit!</b>
+                    ) : (
+                      "Най-ниско калорични храни от NutriFit!"
+                    )}
+                  </Text>
+                  <Icon
+                    as={dropdownVisibleLowCalory ? FaAngleUp : FaAngleDown}
+                    boxSize={6}
+                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  />
+                </Flex>
+              </Card>
+              {renderDropdownLowCalory && (
+                <animated.div
+                  style={{
+                    ...slideAnimationDropLowCalory,
+                    position: "relative"
+                  }}
+                >
+                  <Card mt="10px">
+                    {loading ? (
+                      <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
+                        <Loading />
+                      </Box>
+                    ) : (
                       <Box mt="40px" mb="10px">
                         {mealsToShowLowCalory.map(
                           (meal: NutrientMeal, index: number) => {
@@ -427,90 +444,90 @@ export default function TopMeals() {
                           />
                         </Flex>
                       </Box>
-                    </Card>
-                  </animated.div>
-                )}
-              </Box>
+                    )}
+                  </Card>
+                </animated.div>
+              )}
+            </Box>
+          </SimpleGrid>
+          <animated.div style={{ ...slideAnimation, position: "relative" }}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, xl: 2 }}
+              gap="20px"
+              mt="20px"
+            >
+              <Card
+                fontSize="3xl"
+                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                p="20px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                borderColor={borderColor}
+                borderWidth="3px"
+              >
+                Сравнение на първите 10 най-калорични храни от NutriFit!
+              </Card>
+              <Card
+                fontSize="3xl"
+                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                p="20px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                borderColor={borderColor}
+                borderWidth="3px"
+              >
+                Сравнение на първите 10 най-ниско калорични храни от NutriFit!
+              </Card>
             </SimpleGrid>
-            <animated.div style={{ ...slideAnimation, position: "relative" }}>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
+            <SimpleGrid
+              columns={{ base: 1, md: 2, xl: 2 }}
+              gap="20px"
+              mt="20px"
+              mb="20px"
+            >
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                borderColor={borderColor}
+                borderWidth="3px"
               >
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на първите 10 най-калорични храни от NutriFit!
-                </Card>
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на първите 10 най-ниско калорични храни от NutriFit!
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-                mb="20px"
+                <ColumnChart
+                  chartLabels={barChartLabels}
+                  chartData={barChartForTopCalorieFoods}
+                  chartLabelName="Сравнение на най-калорични храни (kcal)"
+                  textColor={chartsColor}
+                  color="#472ffb"
+                />
+              </Card>
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                borderColor={borderColor}
+                borderWidth="3px"
               >
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForTopCalorieFoods}
-                    chartLabelName="Сравнение на най-калорични храни (kcal)"
-                    textColor={chartsColor}
-                    color="#472ffb"
-                  />
-                </Card>
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForLowCalorieFoods}
-                    chartLabelName="Сравнение на най-ниско калорични храни (kcal)"
-                    textColor={chartsColor}
-                    color="#472ffb"
-                  />
-                </Card>
-              </SimpleGrid>
-            </animated.div>
-          </Flex>
-        )}
+                <ColumnChart
+                  chartLabels={barChartLabels}
+                  chartData={barChartForLowCalorieFoods}
+                  chartLabelName="Сравнение на най-ниско калорични храни (kcal)"
+                  textColor={chartsColor}
+                  color="#472ffb"
+                />
+              </Card>
+            </SimpleGrid>
+          </animated.div>
+        </Flex>
       </Box>
     </FadeInWrapper>
   );

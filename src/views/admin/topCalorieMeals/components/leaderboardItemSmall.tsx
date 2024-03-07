@@ -217,14 +217,14 @@ export default function LeaderBoardItemSmall(props: {
             >
               <Card
                 bg="transparent"
-                minH={{ base: "800px", md: "300px", xl: "180px" }}
+                minH={{ base: "800px", md: "100px", xl: "100px" }}
               >
                 <Flex
                   direction="row"
                   justifyContent="space-between"
                   alignItems="center"
                   onClick={handleDropdownToggle}
-                  mt="60px"
+                  mt="17px"
                   flexWrap="nowrap"
                 >
                   {isImageSquished && (
