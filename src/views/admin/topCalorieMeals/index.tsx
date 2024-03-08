@@ -75,6 +75,7 @@ export default function TopMeals() {
     .map((meal) => meal.totals.calories);
 
   React.useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       try {
         console.log("fetching...");
@@ -100,6 +101,11 @@ export default function TopMeals() {
     };
 
     fetchData();
+
+    return () => {
+      // Cleanup function to be called when component unmounts
+      isMounted = false;
+    };
   }, []);
 
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
@@ -253,9 +259,9 @@ export default function TopMeals() {
                 >
                   <Card mt="10px">
                     {loading ? (
-                      <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
+                      <Flex justify="center" align="center" minH="400px">
                         <Loading />
-                      </Box>
+                      </Flex>
                     ) : (
                       <Box mt="40px" mb="10px">
                         {mealsToShow.map(
@@ -375,9 +381,9 @@ export default function TopMeals() {
                 >
                   <Card mt="10px">
                     {loading ? (
-                      <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
+                      <Flex justify="center" align="center" minH="400px">
                         <Loading />
-                      </Box>
+                      </Flex>
                     ) : (
                       <Box mt="40px" mb="10px">
                         {mealsToShowLowCalory.map(
@@ -499,13 +505,19 @@ export default function TopMeals() {
                 borderColor={borderColor}
                 borderWidth="3px"
               >
-                <ColumnChart
-                  chartLabels={barChartLabels}
-                  chartData={barChartForTopCalorieFoods}
-                  chartLabelName="Сравнение на най-калорични храни (kcal)"
-                  textColor={chartsColor}
-                  color="#472ffb"
-                />
+                {loading ? (
+                  <Flex justify="center" align="center" minH="200px">
+                    <Loading />
+                  </Flex>
+                ) : (
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForTopCalorieFoods}
+                    chartLabelName="Сравнение на най-калорични храни (kcal)"
+                    textColor={chartsColor}
+                    color="#472ffb"
+                  />
+                )}
               </Card>
               <Card
                 alignItems="center"
@@ -517,13 +529,19 @@ export default function TopMeals() {
                 borderColor={borderColor}
                 borderWidth="3px"
               >
-                <ColumnChart
-                  chartLabels={barChartLabels}
-                  chartData={barChartForLowCalorieFoods}
-                  chartLabelName="Сравнение на най-ниско калорични храни (kcal)"
-                  textColor={chartsColor}
-                  color="#472ffb"
-                />
+                {loading ? (
+                  <Flex justify="center" align="center" minH="200px">
+                    <Loading />
+                  </Flex>
+                ) : (
+                  <ColumnChart
+                    chartLabels={barChartLabels}
+                    chartData={barChartForLowCalorieFoods}
+                    chartLabelName="Сравнение на най-ниско калорични храни (kcal)"
+                    textColor={chartsColor}
+                    color="#472ffb"
+                  />
+                )}
               </Card>
             </SimpleGrid>
           </animated.div>

@@ -315,7 +315,7 @@ export default function LeaderBoardItemSmall(props: {
                   )}
                 </Flex>
                 <SimpleGrid columns={1} gap="20px">
-                  <SimpleGrid columns={2} gap="20px">
+                  <SimpleGrid columns={{ sm: 1, md: 2, xl: 2 }} gap="20px">
                     <Flex direction="column" onClick={handleDropdownToggle}>
                       <Image
                         src={image}

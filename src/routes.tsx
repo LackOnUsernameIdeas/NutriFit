@@ -64,7 +64,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ калорични храни от chatGPT",
+    name: "Топ калорични храни от NutriFit",
     layout: "/admin",
     path: "/calory",
     icon: <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />,
@@ -72,7 +72,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ мазни храни от chatGPT",
+    name: "Топ мазни храни от NutriFit",
     layout: "/admin",
     path: "/fat",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
@@ -80,7 +80,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ въглехидратни храни от chatGPT",
+    name: "Топ въглехидратни храни от NutriFit",
     layout: "/admin",
     path: "/carbs",
     icon: (
@@ -90,7 +90,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ протеинови храни от chatGPT",
+    name: "Топ протеинови храни от NutriFit",
     layout: "/admin",
     path: "/protein",
     icon: <Icon as={FaShareAlt} width="20px" height="20px" color="inherit" />,
@@ -114,7 +114,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ калорични храни от chatGPT",
+        name: "Топ калорични храни от NutriFit",
         layout: "/admin",
         path: "/calory",
         icon: (
@@ -124,7 +124,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ мазни храни от chatGPT",
+        name: "Топ мазни храни от NutriFit",
         layout: "/admin",
         path: "/fat",
         icon: <Icon as={FaTint} width="20px" height="20px" color="inherit" />,
@@ -132,7 +132,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ въглехидратни храни от chatGPT",
+        name: "Топ въглехидратни храни от NutriFit",
         layout: "/admin",
         path: "/carbs",
         icon: (
@@ -147,7 +147,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ протеинови храни от chatGPT",
+        name: "Топ протеинови храни от NutriFit",
         layout: "/admin",
         path: "/protein",
         icon: (

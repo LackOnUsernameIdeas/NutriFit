@@ -77,6 +77,8 @@ export default function TopMeals() {
     NutrientMeal[] | []
   >([]);
   React.useEffect(() => {
+    let isMounted = true; // Flag to track if component is mounted
+
     const fetchData = async () => {
       try {
         console.log("fetching...");
@@ -84,24 +86,31 @@ export default function TopMeals() {
 
         console.log("Top Protein: ", meals);
 
-        setAllMeals(meals as NutrientMeal[]);
+        if (isMounted) {
+          setAllMeals(meals as NutrientMeal[]);
 
-        const lowProteinMeals = meals
-          .slice()
-          .sort(
-            (a: NutrientMeal, b: NutrientMeal) =>
-              (a.totals.protein || 0) - (b.totals.protein || 0)
-          );
+          const lowProteinMeals = meals
+            .slice()
+            .sort(
+              (a: NutrientMeal, b: NutrientMeal) =>
+                (a.totals.protein || 0) - (b.totals.protein || 0)
+            );
 
-        setLeastProteinMeals(lowProteinMeals);
-        setLoading(false);
-        console.log("FETCHED!");
+          setLeastProteinMeals(lowProteinMeals);
+          setLoading(false);
+          console.log("FETCHED!");
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
+
+    return () => {
+      // Cleanup function to be called when component unmounts
+      isMounted = false;
+    };
   }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
@@ -202,68 +211,64 @@ export default function TopMeals() {
   return (
     <FadeInWrapper>
       <Box pt={{ base: "160px", md: "80px", xl: "80px" }}>
-        {loading ? (
-          <Box mt="37vh" minH="600px" opacity={loading ? 1 : 0}>
-            <Loading />
-          </Box>
-        ) : (
-          <Flex
-            flexDirection="column"
-            gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
-          >
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-              mt="20px"
-            >
-              <Box p="0px">
-                <Card
-                  onClick={handleDropdownToggle}
-                  cursor="pointer"
-                  zIndex="1"
-                  position="relative"
-                  bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
-                  borderColor={borderColor}
-                  borderWidth="5px"
+        <Flex
+          flexDirection="column"
+          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
+        >
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mt="20px">
+            <Box p="0px">
+              <Card
+                onClick={handleDropdownToggle}
+                cursor="pointer"
+                zIndex="1"
+                position="relative"
+                bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
+                borderColor={borderColor}
+                borderWidth="5px"
+              >
+                <Flex
+                  align={{ sm: "flex-start", lg: "center" }}
+                  justify="space-between"
+                  w="100%"
                 >
-                  <Flex
-                    align={{ sm: "flex-start", lg: "center" }}
-                    justify="space-between"
-                    w="100%"
+                  <Text
+                    color={textColor}
+                    fontSize="2xl"
+                    style={
+                      dropdownVisible
+                        ? {
+                            backgroundImage: gradient,
+                            WebkitBackgroundClip: "text",
+                            color: "transparent"
+                          }
+                        : {}
+                    }
+                    userSelect="none"
                   >
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      style={
-                        dropdownVisible
-                          ? {
-                              backgroundImage: gradient,
-                              WebkitBackgroundClip: "text",
-                              color: "transparent"
-                            }
-                          : {}
-                      }
-                      userSelect="none"
-                    >
-                      {dropdownVisible ? (
-                        <b>Най-богатите на протеин храни от NutriFit!</b>
-                      ) : (
-                        "Най-богатите на протеин храни от NutriFit!"
-                      )}
-                    </Text>
-                    <Icon
-                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Card>
-                {renderDropdown && (
-                  <animated.div
-                    style={{ ...slideAnimationDrop, position: "relative" }}
-                  >
-                    <Card mt="40px">
-                      <Box mt="10px" mb="10px">
+                    {dropdownVisible ? (
+                      <b>Най-богатите на протеин храни от NutriFit!</b>
+                    ) : (
+                      "Най-богатите на протеин храни от NutriFit!"
+                    )}
+                  </Text>
+                  <Icon
+                    as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                    boxSize={6}
+                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  />
+                </Flex>
+              </Card>
+              {renderDropdown && (
+                <animated.div
+                  style={{ ...slideAnimationDrop, position: "relative" }}
+                >
+                  <Card mt="10px">
+                    {loading ? (
+                      <Flex justify="center" align="center" minH="300px">
+                        <Loading />
+                      </Flex>
+                    ) : (
+                      <Box mt="40px" mb="10px">
                         {mealsToShow.map(
                           (meal: NutrientMeal, index: number) => {
                             return (
@@ -325,61 +330,67 @@ export default function TopMeals() {
                           />
                         </Flex>
                       </Box>
-                    </Card>
-                  </animated.div>
-                )}
-              </Box>
-              <Box p="0px">
-                <Card
-                  onClick={handleDropdownToggleLowProtein}
-                  cursor="pointer"
-                  zIndex="1"
-                  position="relative"
-                  bg={dropdownVisibleLowProtein ? dropdownBoxBg : dropdownBoxBg}
-                  borderColor={borderColor}
-                  borderWidth="5px"
+                    )}
+                  </Card>
+                </animated.div>
+              )}
+            </Box>
+            <Box p="0px">
+              <Card
+                onClick={handleDropdownToggleLowProtein}
+                cursor="pointer"
+                zIndex="1"
+                position="relative"
+                bg={dropdownVisibleLowProtein ? dropdownBoxBg : dropdownBoxBg}
+                borderColor={borderColor}
+                borderWidth="5px"
+              >
+                <Flex
+                  align={{ sm: "flex-start", lg: "center" }}
+                  justify="space-between"
+                  w="100%"
                 >
-                  <Flex
-                    align={{ sm: "flex-start", lg: "center" }}
-                    justify="space-between"
-                    w="100%"
+                  <Text
+                    color={textColor}
+                    fontSize="2xl"
+                    style={
+                      dropdownVisibleLowProtein
+                        ? {
+                            backgroundImage: gradient,
+                            WebkitBackgroundClip: "text",
+                            color: "transparent"
+                          }
+                        : {}
+                    }
+                    userSelect="none"
                   >
-                    <Text
-                      color={textColor}
-                      fontSize="2xl"
-                      style={
-                        dropdownVisibleLowProtein
-                          ? {
-                              backgroundImage: gradient,
-                              WebkitBackgroundClip: "text",
-                              color: "transparent"
-                            }
-                          : {}
-                      }
-                      userSelect="none"
-                    >
-                      {dropdownVisibleLowProtein ? (
-                        <b>Най-бедните на протеин храни от NutriFit!</b>
-                      ) : (
-                        "Най-бедните на протеин храни от NutriFit!"
-                      )}
-                    </Text>
-                    <Icon
-                      as={dropdownVisibleLowProtein ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Card>
-                {renderDropdownLowProtein && (
-                  <animated.div
-                    style={{
-                      ...slideAnimationDropLowProtein,
-                      position: "relative"
-                    }}
-                  >
-                    <Card mt="40px">
-                      <Box mt="10px" mb="10px">
+                    {dropdownVisibleLowProtein ? (
+                      <b>Най-бедните на протеин храни от NutriFit!</b>
+                    ) : (
+                      "Най-бедните на протеин храни от NutriFit!"
+                    )}
+                  </Text>
+                  <Icon
+                    as={dropdownVisibleLowProtein ? FaAngleUp : FaAngleDown}
+                    boxSize={6}
+                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  />
+                </Flex>
+              </Card>
+              {renderDropdownLowProtein && (
+                <animated.div
+                  style={{
+                    ...slideAnimationDropLowProtein,
+                    position: "relative"
+                  }}
+                >
+                  <Card mt="10px">
+                    {loading ? (
+                      <Flex justify="center" align="center" minH="300px">
+                        <Loading />
+                      </Flex>
+                    ) : (
+                      <Box mt="40px" mb="10px">
                         {mealsToShowLowProtein.map(
                           (meal: NutrientMeal, index: number) => {
                             return (
@@ -444,62 +455,66 @@ export default function TopMeals() {
                           />
                         </Flex>
                       </Box>
-                    </Card>
-                  </animated.div>
-                )}
-              </Box>
+                    )}
+                  </Card>
+                </animated.div>
+              )}
+            </Box>
+          </SimpleGrid>
+          <animated.div style={{ ...slideAnimation, position: "relative" }}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2, xl: 2 }}
+              gap="20px"
+              mt="20px"
+            >
+              <Card
+                fontSize="3xl"
+                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                p="20px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                borderColor={borderColor}
+                borderWidth="3px"
+              >
+                Сравнение на първите 10 най-богати на протеин храни от NutriFit!
+              </Card>
+              <Card
+                fontSize="3xl"
+                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                p="20px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                borderColor={borderColor}
+                borderWidth="3px"
+              >
+                Сравнение на първите 10 най-бедни на протеин храни от NutriFit!
+              </Card>
             </SimpleGrid>
-            <animated.div style={{ ...slideAnimation, position: "relative" }}>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
+            <SimpleGrid
+              columns={{ base: 1, md: 2, xl: 2 }}
+              gap="20px"
+              mt="20px"
+              mb="20px"
+            >
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                borderColor={borderColor}
+                borderWidth="3px"
               >
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на първите 10 най-богати на протеин храни от
-                  NutriFit!
-                </Card>
-                <Card
-                  fontSize="3xl"
-                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                  p="20px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
-                  Сравнение на първите 10 най-бедни на протеин храни от
-                  NutriFit!
-                </Card>
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, xl: 2 }}
-                gap="20px"
-                mt="20px"
-                mb="20px"
-              >
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
+                {loading ? (
+                  <Flex justify="center" align="center" minH="200px">
+                    <Loading />
+                  </Flex>
+                ) : (
                   <ColumnChart
                     chartLabels={barChartLabels}
                     chartData={barChartForTopProteinFoods}
@@ -507,17 +522,23 @@ export default function TopMeals() {
                     textColor={chartsColor}
                     color="#472ffb"
                   />
-                </Card>
-                <Card
-                  alignItems="center"
-                  flexDirection="column"
-                  h="100%"
-                  w="100%"
-                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                  minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                  borderColor={borderColor}
-                  borderWidth="3px"
-                >
+                )}
+              </Card>
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                borderColor={borderColor}
+                borderWidth="3px"
+              >
+                {loading ? (
+                  <Flex justify="center" align="center" minH="200px">
+                    <Loading />
+                  </Flex>
+                ) : (
                   <ColumnChart
                     chartLabels={barChartLabels}
                     chartData={barChartForLowProteinFoods}
@@ -525,11 +546,11 @@ export default function TopMeals() {
                     textColor={chartsColor}
                     color="#472ffb"
                   />
-                </Card>
-              </SimpleGrid>
-            </animated.div>
-          </Flex>
-        )}
+                )}
+              </Card>
+            </SimpleGrid>
+          </animated.div>
+        </Flex>
       </Box>
     </FadeInWrapper>
   );
