@@ -138,7 +138,7 @@ export default function TopMeals() {
 
   const slideAnimation = useSpring({
     transform: `translateY(${
-      dropdownVisible || dropdownVisibleLowCalory ? -50 : 0
+      dropdownVisible || dropdownVisibleLowCalory ? -50 : -20
     }px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
@@ -202,6 +202,8 @@ export default function TopMeals() {
     dropdownStateLowCalory.currentPage * ITEMS_PER_PAGE,
     (dropdownStateLowCalory.currentPage + 1) * ITEMS_PER_PAGE
   );
+
+  const [isPhoneScreen] = useMediaQuery("(max-width: 767px)");
 
   return (
     <FadeInWrapper>
@@ -330,7 +332,7 @@ export default function TopMeals() {
                 </animated.div>
               )}
             </Box>
-            <Box p="0px">
+            <Box p="0px" mb={dropdownVisibleLowCalory ? "0px" : "20px"}>
               <Card
                 onClick={handleDropdownToggleLowCalory}
                 cursor="pointer"
@@ -464,7 +466,7 @@ export default function TopMeals() {
             >
               <Card
                 fontSize="3xl"
-                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                maxH={{ sm: "200px", md: "200px", lg: "150px" }}
                 p="20px"
                 display="flex"
                 alignItems="center"
@@ -475,26 +477,21 @@ export default function TopMeals() {
               >
                 Сравнение на първите 10 най-калорични храни от NutriFit!
               </Card>
-              <Card
-                fontSize="3xl"
-                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                p="20px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                borderColor={borderColor}
-                borderWidth="3px"
-              >
-                Сравнение на първите 10 най-ниско калорични храни от NutriFit!
-              </Card>
-            </SimpleGrid>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-              mt="20px"
-              mb="20px"
-            >
+              {!isPhoneScreen && (
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "200px", md: "200px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на първите 10 най-ниско калорични храни от NutriFit!
+                </Card>
+              )}
               <Card
                 alignItems="center"
                 flexDirection="column"
@@ -519,6 +516,21 @@ export default function TopMeals() {
                   />
                 )}
               </Card>
+              {isPhoneScreen && (
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "200px", md: "200px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на първите 10 най-ниско калорични храни от NutriFit!
+                </Card>
+              )}
               <Card
                 alignItems="center"
                 flexDirection="column"

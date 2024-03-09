@@ -152,7 +152,7 @@ export default function TopMeals() {
 
   const slideAnimation = useSpring({
     transform: `translateY(${
-      dropdownVisible || dropdownVisibleLowProtein ? -50 : 0
+      dropdownVisible || dropdownVisibleLowProtein ? -50 : -20
     }px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
@@ -208,6 +208,8 @@ export default function TopMeals() {
     (dropdownStateLowProtein.currentPage + 1) * ITEMS_PER_PAGE
   );
 
+  const [isPhoneScreen] = useMediaQuery("(max-width: 767px)");
+
   return (
     <FadeInWrapper>
       <Box pt={{ base: "160px", md: "80px", xl: "80px" }}>
@@ -215,7 +217,7 @@ export default function TopMeals() {
           flexDirection="column"
           gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
         >
-          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mt="20px">
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
             <Box p="0px">
               <Card
                 onClick={handleDropdownToggle}
@@ -335,7 +337,7 @@ export default function TopMeals() {
                 </animated.div>
               )}
             </Box>
-            <Box p="0px">
+            <Box p="0px" mb={dropdownVisibleLowProtein ? "0px" : "20px"}>
               <Card
                 onClick={handleDropdownToggleLowProtein}
                 cursor="pointer"
@@ -466,10 +468,11 @@ export default function TopMeals() {
               columns={{ base: 1, md: 2, xl: 2 }}
               gap="20px"
               mt="20px"
+              mb={isPhoneScreen ? "20px" : "0px"}
             >
               <Card
                 fontSize="3xl"
-                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                maxH={{ sm: "200px", md: "200px", lg: "150px" }}
                 p="20px"
                 display="flex"
                 alignItems="center"
@@ -480,26 +483,22 @@ export default function TopMeals() {
               >
                 Сравнение на първите 10 най-богати на протеин храни от NutriFit!
               </Card>
-              <Card
-                fontSize="3xl"
-                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                p="20px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                borderColor={borderColor}
-                borderWidth="3px"
-              >
-                Сравнение на първите 10 най-бедни на протеин храни от NutriFit!
-              </Card>
-            </SimpleGrid>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-              mt="20px"
-              mb="20px"
-            >
+              {!isPhoneScreen && (
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "200px", md: "200px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на първите 10 най-бедни на протеин храни от
+                  NutriFit!
+                </Card>
+              )}
               <Card
                 alignItems="center"
                 flexDirection="column"
@@ -524,6 +523,22 @@ export default function TopMeals() {
                   />
                 )}
               </Card>
+              {isPhoneScreen && (
+                <Card
+                  fontSize="3xl"
+                  maxH={{ sm: "200px", md: "150px", lg: "150px" }}
+                  p="20px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  Сравнение на първите 10 най-бедни на протеин храни от
+                  NutriFit!
+                </Card>
+              )}
               <Card
                 alignItems="center"
                 flexDirection="column"

@@ -143,7 +143,7 @@ export default function TopMeals() {
 
   const slideAnimation = useSpring({
     transform: `translateY(${
-      dropdownVisible || dropdownVisibleLowFat ? -50 : 0
+      dropdownVisible || dropdownVisibleLowFat ? -50 : -20
     }px)`,
     config: {
       tension: dropdownVisible || dropdownVisibleLowFat ? 170 : 200,
@@ -326,7 +326,7 @@ export default function TopMeals() {
                 </animated.div>
               )}
             </Box>
-            <Box p="0px">
+            <Box p="0px" mb={dropdownVisibleLowFat ? "0px" : "20px"}>
               <Card
                 onClick={handleDropdownToggleLowFat}
                 cursor="pointer"
@@ -468,7 +468,7 @@ export default function TopMeals() {
                 (g.)
               </Card>
             </SimpleGrid>
-            <SimpleGrid columns={1} gap="20px" mt="20px" mb="20px">
+            <SimpleGrid columns={1} gap="20px" mt="20px">
               <Card
                 alignItems="center"
                 flexDirection="column"
