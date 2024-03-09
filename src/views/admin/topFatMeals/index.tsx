@@ -68,11 +68,6 @@ export default function TopMeals() {
     .slice(0, 10)
     .map((meal, index) => allMeals[index].totals.fat);
 
-  const barChartForLowFatFoods = allMeals
-    .slice()
-    .sort((a, b) => a.totals.fat - b.totals.fat)
-    .slice(0, 10)
-    .map((meal) => meal.totals.fat);
   React.useEffect(() => {
     let isMounted = true; // Flag to track if component is mounted
 
@@ -457,11 +452,7 @@ export default function TopMeals() {
             </Box>
           </SimpleGrid>
           <animated.div style={{ ...slideAnimation, position: "relative" }}>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-              mt="20px"
-            >
+            <SimpleGrid columns={1} gap="20px" mt="20px">
               <Card
                 fontSize="3xl"
                 maxH={{ sm: "200px", md: "150px", lg: "150px" }}
@@ -476,27 +467,8 @@ export default function TopMeals() {
                 Сравнение на първите 10 най-богати на мазнини храни от NutriFit!
                 (g.)
               </Card>
-              <Card
-                fontSize="3xl"
-                maxH={{ sm: "200px", md: "150px", lg: "150px" }}
-                p="20px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-                borderColor={borderColor}
-                borderWidth="3px"
-              >
-                Сравнение на първите 10 най-бедни на мазнини храни от NutriFit!
-                (g.)
-              </Card>
             </SimpleGrid>
-            <SimpleGrid
-              columns={{ base: 1, md: 2, xl: 2 }}
-              gap="20px"
-              mt="20px"
-              mb="20px"
-            >
+            <SimpleGrid columns={1} gap="20px" mt="20px" mb="20px">
               <Card
                 alignItems="center"
                 flexDirection="column"
@@ -516,30 +488,6 @@ export default function TopMeals() {
                     chartLabels={barChartLabels}
                     chartData={barChartForTopFatFoods}
                     chartLabelName="Сравнение на най-богатите на мазнини храни (g.)"
-                    textColor={chartsColor}
-                    color="#472ffb"
-                  />
-                )}
-              </Card>
-              <Card
-                alignItems="center"
-                flexDirection="column"
-                h="100%"
-                w="100%"
-                minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                borderColor={borderColor}
-                borderWidth="3px"
-              >
-                {loading ? (
-                  <Flex justify="center" align="center" minH="200px">
-                    <Loading />
-                  </Flex>
-                ) : (
-                  <ColumnChart
-                    chartLabels={barChartLabels}
-                    chartData={barChartForLowFatFoods}
-                    chartLabelName="Сравнение на най-бедните на мазнини храни (g.)"
                     textColor={chartsColor}
                     color="#472ffb"
                   />
