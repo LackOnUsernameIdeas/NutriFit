@@ -145,20 +145,14 @@ export default function NFT(props: {
       >
         <Flex direction={{ base: "column" }} justify="center">
           <Flex position="relative" align="center" zIndex="1">
-            <Icon
-              as={renderDropdown ? FaAngleDown : FaAngleRight}
-              mr={renderDropdown ? "auto" : undefined}
-              ml={renderDropdown ? undefined : "auto"}
-              mt={renderDropdown ? "25px" : undefined}
-              fontSize="lg"
-              color={textColorDate}
-            />
             {!renderDropdown && (
               <>
                 <Image
                   src={image}
-                  w="66px"
-                  h="66px"
+                  minW="66px"
+                  maxW="66px"
+                  minH="66px"
+                  maxH="66px"
                   borderRadius="20px"
                   mx="16px"
                 />
@@ -211,6 +205,14 @@ export default function NFT(props: {
                 </Flex>
               </>
             )}
+            <Icon
+              as={renderDropdown ? FaAngleDown : FaAngleRight}
+              mr={renderDropdown ? undefined : "auto"} // Remove margin on right side if not rendering dropdown
+              ml={renderDropdown ? "auto" : undefined} // Remove margin on left side if rendering dropdown
+              mt={renderDropdown ? "25px" : undefined} // Adjust top margin only if rendering dropdown
+              fontSize="lg"
+              color={textColorDate}
+            />
           </Flex>
           {renderDropdown && (
             <animated.div
@@ -278,7 +280,7 @@ export default function NFT(props: {
                         ml="14px"
                         mr="14px"
                       >
-                        Грамаж за една порция: {totals.grams}g
+                        Крайно количество от рецептата: {totals.grams}g
                       </Text>
                       <Button
                         onClick={(event) => {

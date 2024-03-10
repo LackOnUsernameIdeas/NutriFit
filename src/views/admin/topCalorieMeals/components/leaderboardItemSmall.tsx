@@ -37,6 +37,7 @@ export default function LeaderBoardItemSmall(props: {
   totals: any;
   topMeals: SuggestedMeal[] | NutrientMeal[];
   keepOpen?: boolean;
+  type?: string;
 }) {
   const {
     image,
@@ -59,14 +60,32 @@ export default function LeaderBoardItemSmall(props: {
   const [dropdownVisible, setDropdownVisible] = React.useState(
     keepOpen || false
   );
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
+  const [miniStatisticsVisible, setMiniStatisticsVisible] = React.useState(
+    keepOpen || false
+  );
+  const [renderDropdown, setRenderDropdown] = React.useState(keepOpen || false);
   const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
   const rank = topMeals
     ? topMeals.findIndex((meal) => meal.name === name) + 1
     : null;
+  let valueToShow;
 
+  switch (props.type) {
+    case "Калории":
+      valueToShow = totals.calories.toFixed(2) + " kCal";
+      break;
+    case "Въглехидрати":
+      valueToShow = totals.carbohydrates.toFixed(2) + " g";
+      break;
+    case "Мазнини":
+      valueToShow = totals.fat.toFixed(2) + " g";
+      break;
+    case "Протеини":
+      valueToShow = totals.protein.toFixed(2) + " g";
+      break;
+    default:
+      valueToShow = "Invalid type";
+  }
   const cancelRefBMIAlert = React.useRef();
   const {
     isOpen: isOpenBMIAlert,
@@ -146,20 +165,14 @@ export default function LeaderBoardItemSmall(props: {
       >
         <Flex direction={{ base: "column" }} justify="center">
           <Flex position="relative" align="center" zIndex="1">
-            <Icon
-              as={renderDropdown ? FaAngleDown : FaAngleRight}
-              mr={renderDropdown ? "auto" : undefined}
-              ml={renderDropdown ? undefined : "auto"}
-              mt={renderDropdown ? "25px" : undefined}
-              fontSize="lg"
-              color={textColorDate}
-            />
             {!renderDropdown && (
               <>
                 <Image
                   src={image}
-                  w="66px"
-                  h="66px"
+                  minW="66px"
+                  maxW="66px"
+                  minH="66px"
+                  maxH="66px"
                   borderRadius="20px"
                   mx="16px"
                 />
@@ -207,11 +220,19 @@ export default function LeaderBoardItemSmall(props: {
                     fontWeight="400"
                     me="14px"
                   >
-                    {count}
+                    {props.type}: {valueToShow}
                   </Text>
                 </Flex>
               </>
             )}
+            <Icon
+              as={renderDropdown ? FaAngleDown : FaAngleRight}
+              mr={renderDropdown ? undefined : "auto"} // Remove margin on right side if not rendering dropdown
+              ml={renderDropdown ? "auto" : undefined} // Remove margin on left side if rendering dropdown
+              mt={renderDropdown ? "25px" : undefined} // Adjust top margin only if rendering dropdown
+              fontSize="lg"
+              color={textColorDate}
+            />
           </Flex>
           {renderDropdown && (
             <animated.div
@@ -346,7 +367,7 @@ export default function LeaderBoardItemSmall(props: {
                           mr="14px"
                           mb="20px"
                         >
-                          Грамаж за една порция: {totals.grams}g
+                          Крайно количество от рецептата: {totals.grams}g
                         </Text>
                         <Button
                           onClick={(event) => {

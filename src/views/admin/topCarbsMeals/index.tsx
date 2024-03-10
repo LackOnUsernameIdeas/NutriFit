@@ -281,6 +281,7 @@ export default function TopMeals() {
                                 totals={meal?.totals}
                                 topMeals={allMeals}
                                 keepOpen={meal === allMeals[0] ? true : false}
+                                type="Въглехидрати"
                               />
                             );
                           }
@@ -405,6 +406,7 @@ export default function TopMeals() {
                                 keepOpen={
                                   meal === leastCarbsFoods[0] ? true : false
                                 }
+                                type="Въглехидрати"
                               />
                             );
                           }

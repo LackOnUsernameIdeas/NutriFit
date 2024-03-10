@@ -283,6 +283,7 @@ export default function TopMeals() {
                                 totals={meal?.totals}
                                 topMeals={allMeals}
                                 keepOpen={meal === allMeals[0] ? true : false}
+                                type="Протеини"
                               />
                             );
                           }
@@ -407,6 +408,7 @@ export default function TopMeals() {
                                 keepOpen={
                                   meal === leastProteinMeals[0] ? true : false
                                 }
+                                type="Протеини"
                               />
                             );
                           }
