@@ -12,7 +12,10 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { getTopProteinMeals } from "database/getAdditionalUserData";
+import {
+  getTopMealsByCollection,
+  getFirst10TopMealsByCollection
+} from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
@@ -77,19 +80,37 @@ export default function TopMeals() {
     NutrientMeal[] | []
   >([]);
   React.useEffect(() => {
-    let isMounted = true; // Flag to track if component is mounted
+    let isMounted = true;
 
     const fetchData = async () => {
       try {
-        console.log("fetching...");
-        const meals = await getTopProteinMeals();
+        console.log("Fetching first 10 meals...");
+        const first10MealsPromise =
+          getFirst10TopMealsByCollection("topProteinMeals");
 
-        console.log("Top Protein: ", meals);
+        const first10Meals = await first10MealsPromise;
 
-        if (isMounted) {
-          setAllMeals(meals as NutrientMeal[]);
+        console.log("First 10 Meals: ", first10Meals);
 
-          const lowProteinMeals = meals
+        // Display the first 10 meals
+        setAllMeals(first10Meals as NutrientMeal[]);
+
+        const initialLowProteinMeals = first10Meals
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.protein || 0) - (b.totals.protein || 0)
+          );
+
+        setLeastProteinMeals(initialLowProteinMeals);
+        setLoading(false);
+        // Fetch all meals in the background
+        console.log("Fetching remaining meals...");
+        getTopMealsByCollection("topProteinMeals").then((allMeals) => {
+          console.log("All Meals: ", allMeals);
+          // Update state to include the remaining meals
+          setAllMeals(allMeals as NutrientMeal[]);
+          const lowProteinMeals = allMeals
             .slice()
             .sort(
               (a: NutrientMeal, b: NutrientMeal) =>
@@ -97,9 +118,8 @@ export default function TopMeals() {
             );
 
           setLeastProteinMeals(lowProteinMeals);
-          setLoading(false);
           console.log("FETCHED!");
-        }
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }

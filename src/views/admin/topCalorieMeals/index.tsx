@@ -12,7 +12,10 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { getTopCalorieMeals } from "database/getAdditionalUserData";
+import {
+  getTopMealsByCollection,
+  getFirst10TopMealsByCollection
+} from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
@@ -76,25 +79,45 @@ export default function TopMeals() {
 
   React.useEffect(() => {
     let isMounted = true;
+
     const fetchData = async () => {
       try {
-        console.log("fetching...");
-        const meals = await getTopCalorieMeals();
+        console.log("Fetching first 10 meals...");
+        const first10MealsPromise =
+          getFirst10TopMealsByCollection("topCalorieMeals");
 
-        console.log("Top Calories: ", meals);
+        const first10Meals = await first10MealsPromise;
 
-        setAllMeals(meals as NutrientMeal[]);
+        console.log("First 10 Meals: ", first10Meals);
 
-        const lowCaloryMeals = meals
+        // Display the first 10 meals
+        setAllMeals(first10Meals as NutrientMeal[]);
+
+        const initialLowCaloryMeals = first10Meals
           .slice()
           .sort(
             (a: NutrientMeal, b: NutrientMeal) =>
               (a.totals.calories || 0) - (b.totals.calories || 0)
           );
 
-        setLeastCalorieFoods(lowCaloryMeals);
+        setLeastCalorieFoods(initialLowCaloryMeals);
         setLoading(false);
-        console.log("FETCHED!");
+        // Fetch all meals in the background
+        console.log("Fetching remaining meals...");
+        getTopMealsByCollection("topCalorieMeals").then((allMeals) => {
+          console.log("All Meals: ", allMeals);
+          // Update state to include the remaining meals
+          setAllMeals(allMeals as NutrientMeal[]);
+          const lowCaloryMeals = allMeals
+            .slice()
+            .sort(
+              (a: NutrientMeal, b: NutrientMeal) =>
+                (a.totals.calories || 0) - (b.totals.calories || 0)
+            );
+
+          setLeastCalorieFoods(lowCaloryMeals);
+          console.log("FETCHED!");
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
