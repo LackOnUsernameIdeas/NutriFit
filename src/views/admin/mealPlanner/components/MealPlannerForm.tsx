@@ -135,7 +135,7 @@ export default function MealPlannerForm(props: {
 
   console.log(userPreferences);
   const openAIKey = process.env.REACT_APP_API_KEY;
-  const generatePlan = async () => {
+  const generatePlanWithOpenAI = async () => {
     try {
       setIsSubmitted(true);
       setIsLoading(true);
@@ -345,6 +345,36 @@ export default function MealPlannerForm(props: {
     }
   };
 
+  const generatePlanWithBgGPT = async () => {
+    try {
+      setIsSubmitted(true);
+      setIsLoading(true);
+
+      const response = await fetch("https://nutri-api.noit.eu/fetchChat", {
+        method: "GET", // Since you're not sending any data, you can use GET method
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        setRequestFailed(true);
+        setIsLoading(false);
+        throw new Error("Failed to generate meal plan");
+      }
+
+      // Get the response data
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
+
+      // Your further processing code here...
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error generating meal plan:", error);
+    }
+  };
+
   console.log("mealPlan: ", mealPlan);
   console.log("mealPlanImages: ", mealPlanImages);
   // const filteredArr = Object.keys(mealPlan).map((mealType: any, index) => {
@@ -438,7 +468,8 @@ export default function MealPlannerForm(props: {
                         userPreferences={userPreferences}
                         handleInputChange={handleInputChange}
                         handleCheckboxChange={handleCheckboxChange}
-                        generatePlan={generatePlan}
+                        generatePlanWithOpenAI={generatePlanWithOpenAI}
+                        generatePlanWithBgGPT={generatePlanWithBgGPT}
                       />
                     </SimpleGrid>
                     <MealLoading />
@@ -450,7 +481,8 @@ export default function MealPlannerForm(props: {
                         userPreferences={userPreferences}
                         handleInputChange={handleInputChange}
                         handleCheckboxChange={handleCheckboxChange}
-                        generatePlan={generatePlan}
+                        generatePlanWithOpenAI={generatePlanWithOpenAI}
+                        generatePlanWithBgGPT={generatePlanWithBgGPT}
                       />
                     </SimpleGrid>
                     {(mealPlan.lunch !== null && mealPlan.dinner !== null) ||
@@ -486,7 +518,8 @@ export default function MealPlannerForm(props: {
                   userPreferences={userPreferences}
                   handleInputChange={handleInputChange}
                   handleCheckboxChange={handleCheckboxChange}
-                  generatePlan={generatePlan}
+                  generatePlanWithOpenAI={generatePlanWithOpenAI}
+                  generatePlanWithBgGPT={generatePlanWithBgGPT}
                 />
               </SimpleGrid>
             )}
