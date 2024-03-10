@@ -9,7 +9,14 @@ import {
 } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
 import { IoMdMail, IoIosSpeedometer } from "react-icons/io";
-import { FaTrophy, FaFireAlt, FaTint, FaShareAlt } from "react-icons/fa";
+import {
+  FaTrophy,
+  FaFireAlt,
+  FaTint,
+  FaBreadSlice,
+  FaFish
+} from "react-icons/fa";
+import { GiChickenOven, GiWheat } from "react-icons/gi";
 // Admin Imports
 import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
@@ -83,9 +90,7 @@ const routes: RoutesType[] = [
     name: "Топ въглехидратни храни от NutriFit",
     layout: "/admin",
     path: "/carbs",
-    icon: (
-      <Icon as={IoIosSpeedometer} width="20px" height="20px" color="inherit" />
-    ),
+    icon: <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />,
     component: TopCarbsMeals,
     hideInSidebar: true
   },
@@ -93,7 +98,7 @@ const routes: RoutesType[] = [
     name: "Топ протеинови храни от NutriFit",
     layout: "/admin",
     path: "/protein",
-    icon: <Icon as={FaShareAlt} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
     component: TopProteinMeals,
     hideInSidebar: true
   },
@@ -136,12 +141,7 @@ const routes: RoutesType[] = [
         layout: "/admin",
         path: "/carbs",
         icon: (
-          <Icon
-            as={IoIosSpeedometer}
-            width="20px"
-            height="20px"
-            color="inherit"
-          />
+          <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />
         ),
         component: TopCarbsMeals,
         hideInSidebar: true
@@ -150,9 +150,7 @@ const routes: RoutesType[] = [
         name: "Топ протеинови храни от NutriFit",
         layout: "/admin",
         path: "/protein",
-        icon: (
-          <Icon as={FaShareAlt} width="20px" height="20px" color="inherit" />
-        ),
+        icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
         component: TopProteinMeals,
         hideInSidebar: true
       }
