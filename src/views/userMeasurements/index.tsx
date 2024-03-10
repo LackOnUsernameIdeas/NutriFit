@@ -94,8 +94,8 @@ const UserMeasurements = () => {
   const [isFilledOut, setIsFilledOut] = useState(false);
   const [userDataForToday, setUserDataForToday] = useState(null);
   const [userDataLastSavedDate, setUserDataLastSavedDate] = useState(null);
-  const [isTodaysDataFetched, setIsTodaysDataFetched] =
-    useState<boolean>(false);
+  const [isTodaysDataFetched, setIsTodaysDataFetched] = useState<boolean>(true);
+  // TODO: ^^^^^^^^^^^^^  SET THIS TO FALSE!!!!!!!!!
   const isMounted = useRef(true);
   const [user, setUser] = useState(null);
 
@@ -135,41 +135,41 @@ const UserMeasurements = () => {
       isUnderOrAbove: ""
     });
 
-  React.useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+  // React.useEffect(() => {
+  //   const auth = getAuth();
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     setUser(user);
 
-      if (user) {
-        try {
-          const timestampKey = new Date().toISOString().slice(0, 10);
+  //     if (user) {
+  //       try {
+  //         const timestampKey = new Date().toISOString().slice(0, 10);
 
-          const additionalData = await fetchAdditionalUserData(user.uid);
-          console.log("gender for state: ", additionalData.gender);
-          if (additionalData?.[timestampKey]?.age) {
-            setUserData({
-              goal: additionalData.goal || 0,
-              age: additionalData[timestampKey].age || 0,
-              height: additionalData[timestampKey].height || 0,
-              waist: additionalData[timestampKey].waist || 0,
-              neck: additionalData[timestampKey].neck || 0,
-              hip: additionalData[timestampKey].hip || 0,
-              weight: additionalData[timestampKey].weight || 0
-            } as any);
-          }
-          setUserData((prevData) => {
-            return { ...prevData, gender: additionalData.gender };
-          });
-          console.log(additionalData, "additionalData");
-        } catch (error) {
-          console.error("Error fetching additional user data:", error);
-        }
-      }
-    });
+  //         const additionalData = await fetchAdditionalUserData(user.uid);
+  //         console.log("gender for state: ", additionalData.gender);
+  //         if (additionalData?.[timestampKey]?.age) {
+  //           setUserData({
+  //             goal: additionalData.goal || 0,
+  //             age: additionalData[timestampKey].age || 0,
+  //             height: additionalData[timestampKey].height || 0,
+  //             waist: additionalData[timestampKey].waist || 0,
+  //             neck: additionalData[timestampKey].neck || 0,
+  //             hip: additionalData[timestampKey].hip || 0,
+  //             weight: additionalData[timestampKey].weight || 0
+  //           } as any);
+  //         }
+  //         setUserData((prevData) => {
+  //           return { ...prevData, gender: additionalData.gender };
+  //         });
+  //         console.log(additionalData, "additionalData");
+  //       } catch (error) {
+  //         console.error("Error fetching additional user data:", error);
+  //       }
+  //     }
+  //   });
 
-    // Cleanup the subscription when the component unmounts
-    return () => unsubscribe();
-  }, []);
+  //   // Cleanup the subscription when the component unmounts
+  //   return () => unsubscribe();
+  // }, []);
 
   // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,66 +183,66 @@ const UserMeasurements = () => {
     });
   };
 
-  const triggerFetchAndSaveAllData = async () => {
-    const uid = getAuth().currentUser.uid;
-    try {
-      const response = await fetch(
-        `https://nutri-api.noit.eu/fetchAndSaveAllData/${uid}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            height: userData["height"],
-            age: userData["age"],
-            weight: userData["weight"],
-            gender: userData["gender"],
-            neck: userData["neck"],
-            waist: userData["waist"],
-            hip: userData["hip"],
-            goalsToFetch: [
-              "maintain",
-              "mildlose",
-              "weightlose",
-              "extremelose",
-              "mildgain",
-              "weightgain",
-              "extremegain"
-            ]
-          })
-        }
-      );
+  // const triggerFetchAndSaveAllData = async () => {
+  //   const uid = getAuth().currentUser.uid;
+  //   try {
+  //     const response = await fetch(
+  //       `https://nutri-api.noit.eu/fetchAndSaveAllData/${uid}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json"
+  //         },
+  //         body: JSON.stringify({
+  //           height: userData["height"],
+  //           age: userData["age"],
+  //           weight: userData["weight"],
+  //           gender: userData["gender"],
+  //           neck: userData["neck"],
+  //           waist: userData["waist"],
+  //           hip: userData["hip"],
+  //           goalsToFetch: [
+  //             "maintain",
+  //             "mildlose",
+  //             "weightlose",
+  //             "extremelose",
+  //             "mildgain",
+  //             "weightgain",
+  //             "extremegain"
+  //           ]
+  //         })
+  //       }
+  //     );
 
-      const result = await response.json();
-      console.log("Server response:", result);
-    } catch (error) {
-      console.error("Error triggering fetch and save:", error);
-    }
-  };
+  //     const result = await response.json();
+  //     console.log("Server response:", result);
+  //   } catch (error) {
+  //     console.error("Error triggering fetch and save:", error);
+  //   }
+  // };
 
   // Функция за генериране на статистики
   async function generateStats() {
-    setIsLoading(true);
-    const uid = getAuth().currentUser.uid;
+    //   setIsLoading(true);
+    //   const uid = getAuth().currentUser.uid;
 
-    // Call this function when you want to trigger fetching and saving all data
-    triggerFetchAndSaveAllData();
+    //   // Call this function when you want to trigger fetching and saving all data
+    //   triggerFetchAndSaveAllData();
 
-    // Save additional user data
-    saveAdditionalUserData(
-      uid,
-      userData.height,
-      userData.age,
-      userData.weight,
-      userData.neck,
-      userData.waist,
-      userData.hip
-    );
-    setTimeout(() => {
-      history.push("/admin/default");
-      setIsLoading(false);
-    }, 7000);
+    //   // Save additional user data
+    //   saveAdditionalUserData(
+    //     uid,
+    //     userData.height,
+    //     userData.age,
+    //     userData.weight,
+    //     userData.neck,
+    //     userData.waist,
+    //     userData.hip
+    //   );
+    //   setTimeout(() => {
+    history.push("/admin/default");
+    //     setIsLoading(false);
+    //   }, 7000);
   }
 
   React.useEffect(() => {
@@ -310,87 +310,87 @@ const UserMeasurements = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (isUserDataValid()) {
-      try {
-        await generateStats();
-        // Save additional user data to the server
-        const response = await fetch(
-          "https://nutri-api.noit.eu/processUserData",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(userData)
-          }
-        );
-        if (response.ok) {
-          // Log the response data to the console
-          const responseData = await response.json();
-          console.log("Server response:", responseData);
+    // if (isUserDataValid()) {
+    //   try {
+    await generateStats();
+    //     // Save additional user data to the server
+    //     const response = await fetch(
+    //       "https://nutri-api.noit.eu/processUserData",
+    //       {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify(userData)
+    //       }
+    //     );
+    //     if (response.ok) {
+    //       // Log the response data to the console
+    //       const responseData = await response.json();
+    //       console.log("Server response:", responseData);
 
-          // Data processed successfully
-          setIsFilledOut(true);
-        } else {
-          // Handle server error
-          console.error("Server error:", response.statusText);
-          setError("Failed to process data on the server.");
-        }
-      } catch (error) {
-        console.error("Error saving additional user data:", error);
-      }
-    }
+    //       // Data processed successfully
+    setIsFilledOut(true);
+    //     } else {
+    //       // Handle server error
+    //       console.error("Server error:", response.statusText);
+    //       setError("Failed to process data on the server.");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error saving additional user data:", error);
+    //   }
+    // }
   };
 
-  React.useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (isMounted.current) {
-        setUser(user);
-      }
+  // React.useEffect(() => {
+  //   const auth = getAuth();
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     if (isMounted.current) {
+  //       setUser(user);
+  //     }
 
-      if (user) {
-        try {
-          setIsLoading(true);
+  //     if (user) {
+  //       try {
+  //         setIsLoading(true);
 
-          const additionalData = await fetchAdditionalUserData(user.uid);
+  //         const additionalData = await fetchAdditionalUserData(user.uid);
 
-          // Extract date keys from additionalData
-          const dateKeys = Object.keys(additionalData).filter((key) =>
-            /^\d{4}-\d{2}-\d{2}$/.test(key)
-          );
+  //         // Extract date keys from additionalData
+  //         const dateKeys = Object.keys(additionalData).filter((key) =>
+  //           /^\d{4}-\d{2}-\d{2}$/.test(key)
+  //         );
 
-          // Sort date keys in descending order
-          dateKeys.sort(
-            (a, b) => new Date(b).getTime() - new Date(a).getTime()
-          );
+  //         // Sort date keys in descending order
+  //         dateKeys.sort(
+  //           (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  //         );
 
-          // Find the first date before today
-          const today = new Date().toISOString().slice(0, 10);
-          const lastSavedDate = dateKeys.find((date) => date < today);
-          const rawUserDataForToday = additionalData[today];
-          const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
+  //         // Find the first date before today
+  //         const today = new Date().toISOString().slice(0, 10);
+  //         const lastSavedDate = dateKeys.find((date) => date < today);
+  //         const rawUserDataForToday = additionalData[today];
+  //         const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
 
-          if (isMounted.current) {
-            setUserDataLastSavedDate(rawUserDataForLastSavedDate);
-            setUserDataForToday(rawUserDataForToday);
-            setIsTodaysDataFetched(true);
-          }
+  //         if (isMounted.current) {
+  //           setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+  //           setUserDataForToday(rawUserDataForToday);
+  //           setIsTodaysDataFetched(true);
+  //         }
 
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 1000);
-        } catch (error) {
-          console.error("Error fetching additional user data:", error);
-        }
-      }
-    });
+  //         setTimeout(() => {
+  //           setIsLoading(false);
+  //         }, 1000);
+  //       } catch (error) {
+  //         console.error("Error fetching additional user data:", error);
+  //       }
+  //     }
+  //   });
 
-    return () => {
-      isMounted.current = false;
-      unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     isMounted.current = false;
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
   const [updateWithNewData, setUpdateWithNewData] = useState<boolean>(false);

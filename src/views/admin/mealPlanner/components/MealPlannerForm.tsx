@@ -18,7 +18,7 @@ import {
   MealPlan2,
   UserIntakes
 } from "../../../../types/weightStats";
-import { saveMealPlan } from "../../../../database/setWeightStatsData";
+// import { saveMealPlan } from "../../../../database/setWeightStatsData";
 import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
 import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";
@@ -366,9 +366,142 @@ export default function MealPlannerForm(props: {
       // Get the response data
       const responseData = await response.json();
       console.log("Response Data:", responseData);
+      console.log(responseData.response);
+      const escapedJSON = responseData.response;
+      const jsonString = escapedJSON.replace(/\\n/g, "").replace(/\\"/g, '"');
 
-      // Your further processing code here...
+      // Ensure that JSON string doesn't contain trailing commas
+      const fixedJsonString = jsonString.replace(/,\s*]/g, "]");
 
+      // Parse the fixed JSON string
+      try {
+        const jsonObject = JSON.parse(fixedJsonString);
+        console.log(jsonObject);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+
+      // Parse the JSON string
+      const jsonObject = JSON.parse(jsonString);
+
+      console.log(jsonObject);
+
+      const mealPlanImagesData: {
+        breakfast: {
+          main: string;
+        };
+        lunch: {
+          appetizer: string;
+          main: string;
+          dessert: string;
+        };
+        dinner: {
+          main: string;
+          dessert: string;
+        };
+      } = {
+        breakfast: {
+          main: ""
+        },
+        lunch: {
+          appetizer: "",
+          main: "",
+          dessert: ""
+        },
+        dinner: {
+          main: "",
+          dessert: ""
+        }
+      };
+
+      // Iterate over each meal and make a separate image generation request
+      for (const mealKey of Object.keys(jsonObject)) {
+        const mealAppetizer = (jsonObject as any)[mealKey].appetizer;
+        const mealMain = (jsonObject as any)[mealKey].main;
+        const mealDessert = (jsonObject as any)[mealKey].dessert;
+
+        // console.log("meal: ", meal);
+        // console.log("meal name: ", meal.name);
+
+        //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
+        //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
+        //NutriFit3: cx=527000b0fabcc4dab, key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA
+        // Now make a request to the google images search engine endpoint for each meal's name
+        async function fetchImage(name: string): Promise<any> {
+          try {
+            let response = await fetch(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBGskRKof9dkcoXtReamm4-h7UorF1G7yM&cx=10030740e88c842af&q=${encodeURIComponent(
+                name
+              )}&searchType=image`
+            );
+            if (response.status === 429) {
+              let response = await fetch(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBpwC_IdPQ2u-16x_9QwoqJDu-zMhuFKxs&cx=258e213112b4b4492&q=${encodeURIComponent(
+                  name
+                )}&searchType=image`
+              );
+              return response;
+            } else {
+              return response;
+            }
+          } catch (error) {
+            console.error("Error fetching image:", error);
+            return null;
+          }
+        }
+
+        const imageAppetizer =
+          mealKey === "lunch" ? await fetchImage(mealAppetizer.name) : null;
+
+        const imageMain = await fetchImage(mealMain.name);
+
+        const imageDessert =
+          mealKey === "lunch" || mealKey === "dinner"
+            ? await fetchImage(mealDessert.name)
+            : null;
+
+        const imageAppetizerResponseData =
+          imageAppetizer !== null ? await imageAppetizer.json() : null;
+        const imageMainResponseData = await imageMain.json();
+        const imageDessertResponseData =
+          imageDessert !== null ? await imageDessert.json() : null;
+
+        console.log("imageDessert: ", imageDessert, mealKey);
+        // console.log(
+        //   `Image Generation Response for ${mealAppetizer.name}: `,
+        //   imageAppetizerResponseData.items[0].link
+        // );
+        if (
+          imageAppetizerResponseData !== null &&
+          imageAppetizerResponseData?.items?.[0]?.link
+        ) {
+          (mealPlanImagesData as any)[mealKey].appetizer =
+            imageAppetizerResponseData.items[0].link;
+        }
+
+        if (imageMainResponseData?.items?.[0]?.link) {
+          (mealPlanImagesData as any)[mealKey].main =
+            imageMainResponseData.items[0].link;
+        }
+
+        if (
+          imageDessertResponseData !== null &&
+          imageDessertResponseData?.items?.[0]?.link
+        ) {
+          (mealPlanImagesData as any)[mealKey].dessert =
+            imageDessertResponseData.items[0].link;
+        }
+      }
+
+      console.log("mealPlanImagesData:", mealPlanImagesData);
+
+      setMealPlanImages(mealPlanImagesData);
+
+      setMealPlan({
+        breakfast: jsonObject.breakfast,
+        lunch: jsonObject.lunch,
+        dinner: jsonObject.dinner
+      });
       setIsLoading(false);
     } catch (error) {
       console.error("Error generating meal plan:", error);
@@ -382,18 +515,18 @@ export default function MealPlannerForm(props: {
   // });
   // console.log("filteredArr: ", filteredArr);
 
-  useEffect(() => {
-    const saveMealPlanData = async () => {
-      try {
-        const userId = getAuth().currentUser.uid;
-        await Promise.all([saveMealPlan(userId, mealPlan, mealPlanImages)]);
-      } catch (error) {
-        console.error("Error saving meal plan:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const saveMealPlanData = async () => {
+  //     try {
+  //       const userId = getAuth().currentUser.uid;
+  //       await Promise.all([saveMealPlan(userId, mealPlan, mealPlanImages)]);
+  //     } catch (error) {
+  //       console.error("Error saving meal plan:", error);
+  //     }
+  //   };
 
-    saveMealPlanData();
-  }, [mealPlan, mealPlanImages]);
+  //   saveMealPlanData();
+  // }, [mealPlan, mealPlanImages]);
 
   interface LinearGradientTextProps {
     text: any;

@@ -17,8 +17,8 @@ import {
   UserData
 } from "../../../../types/weightStats";
 import { useState, useEffect } from "react";
-import { saveGoal } from "database/setGoalUserData";
-import { getAuth } from "firebase/auth";
+// import { saveGoal } from "database/setGoalUserData";
+// import { getAuth } from "firebase/auth";
 export default function CalorieRequirements(props: {
   calorieRequirements: DailyCaloryRequirements[];
   selectedActivityLevel: number;
@@ -47,7 +47,7 @@ export default function CalorieRequirements(props: {
   useEffect(() => {
     setDailyCaloryRequirement(props.calorieRequirements);
   }, [props.calorieRequirements, props.selectedActivityLevel]);
-  const uid = getAuth().currentUser.uid;
+  // const uid = getAuth().currentUser.uid;
   const selectedLevelData =
     dailyCaloryRequirements[props.selectedActivityLevel - 1];
 
@@ -110,7 +110,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("mildlose");
-              saveGoal(uid, "mildlose");
+              //saveGoal(uid, "mildlose");
               setUserData((prevState) => ({ ...prevState, goal: "mildlose" }));
             }}
             backgroundColor={
@@ -158,7 +158,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("weightlose");
-              saveGoal(uid, "weightlose");
+              //saveGoal(uid, "weightlose");
               setUserData((prevState) => ({
                 ...prevState,
                 goal: "weightlose"
@@ -219,7 +219,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("extremelose");
-              saveGoal(uid, "extremelose");
+              //saveGoal(uid, "extremelose");
               setUserData((prevState) => ({
                 ...prevState,
                 goal: "extremelose"
@@ -268,7 +268,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("maintain");
-              saveGoal(uid, "maintain");
+              //saveGoal(uid, "maintain");
               setUserData((prevState) => ({ ...prevState, goal: "maintain" }));
             }}
             backgroundColor={
@@ -320,7 +320,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("mildgain");
-              saveGoal(uid, "mildgain");
+              //saveGoal(uid, "mildgain");
               setUserData((prevState) => ({ ...prevState, goal: "mildgain" }));
             }}
             backgroundColor={
@@ -368,7 +368,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("weightgain");
-              saveGoal(uid, "weightgain");
+              //saveGoal(uid, "weightgain");
               setUserData((prevState) => ({
                 ...prevState,
                 goal: "weightgain"
@@ -424,7 +424,7 @@ export default function CalorieRequirements(props: {
                 )
               );
               setSelectedGoal("extremegain");
-              saveGoal(uid, "extremegain");
+              //saveGoal(uid, "extremegain");
               setUserData((prevState) => ({
                 ...prevState,
                 goal: "extremegain"

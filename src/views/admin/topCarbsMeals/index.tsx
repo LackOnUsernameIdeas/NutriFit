@@ -14,7 +14,7 @@ import {
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import {
   getTopMealsByCollection,
-  getFirst10TopMealsByCollection
+  getFirst50TopMealsByCollection
 } from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
@@ -84,7 +84,7 @@ export default function TopMeals() {
     const fetchData = async () => {
       try {
         console.log("Fetching first 10 meals...");
-        const first10MealsPromise = getFirst10TopMealsByCollection(
+        const first10MealsPromise = getFirst50TopMealsByCollection(
           "topCarbohydratesMeals"
         );
 
