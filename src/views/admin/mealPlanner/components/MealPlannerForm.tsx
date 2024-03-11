@@ -179,16 +179,16 @@ export default function MealPlannerForm(props: {
                 Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
                 Форматирай ЦЯЛАТА информация в JSON точно така: '{
                 breakfast':{
-                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
                 },
                 'lunch':{
-                  'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
-                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
-                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+                  'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
                 }, 
                 'dinner':{
-                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
-                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+                  'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+                  'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
                 }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
                 Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
                 Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
@@ -345,28 +345,65 @@ export default function MealPlannerForm(props: {
     }
   };
 
-  function sanitizeJsonString(jsonString: string) {
-    return jsonString
-      .replace(/\\"/g, '"')
-      .replace(/\\'/g, "'")
-      .replace(/\\\\/g, "\\")
-      .replace(/\\n/g, "\n")
-      .replace(/\\r/g, "\r")
-      .replace(/\\t/g, "\t")
-      .replace(/\\b/g, "\b")
-      .replace(/\\f/g, "\f");
-  }
-
   const generatePlanWithBgGPT = async () => {
     try {
       setIsSubmitted(true);
       setIsLoading(true);
 
+      const requestBody = {
+        inputs: `ВСИЧКИ РЕЦЕПТИ, КОИТО ЩЕ ИСКАМ, КАКТО И ИМЕНАТА, КАКТО И СЪСТАВКИТЕ ДА НА БЪЛГАРСКИ, НО НЕ И ПРОПЪРТИТАТА ИМ, САМО СТОЙНОСТИТЕ НА ПРОПЪРТИТАТА!!!!
+        ИСКАМ ДА СЕ СЪОБРАЗЯВАШ С МОИТЕ ЛИМИТИ НА ВСЯКА ЦЕНА!!!
+        Вие сте опитен диетолог, който наблюдава пациентите си дали консумират само ядлива храна от ${
+          Array.isArray(userPreferences.Cuisine)
+            ? userPreferences.Cuisine.length === 0
+              ? "каквато и да е кухня"
+              : userPreferences.Cuisine.length === 1
+              ? userPreferences.Cuisine[0]
+              : `следните кухни: ${userPreferences.Cuisine}, които са написани на английски, но искам всичко, което даваш ТИ да е на БЪЛГАРСКИ ЕЗИК.`
+            : userPreferences.Cuisine
+        }. Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
+        ПРЕДУПРЕЖДАВАМ, ХРАНИТЕ ТРЯБВА ДА СА НА БЪЛГАРСКИ!!
+        Менюто трябва стриктно да спазва следните лимити: да съдържа ${
+          userPreferences.Calories
+        } калории, ${userPreferences.Protein} грама протеин, ${
+          userPreferences.Fat
+        } грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
+        НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити. 
+        ДАВАЙТЕ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти. Включвай само съществуващи в реалния свят храни в хранителния план. 
+        Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо.
+        Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. 
+        Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече или по-малко от това. Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш 
+        следните елементи в менюто на храните: ${
+          userPreferences.Exclude
+        }. Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва. 
+        Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. Форматирай общата информацията за калориите, протеина, въглехидратите и 
+        мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 
+        'totals: {'calories': число,'protein': число,'fat': число,'carbohydrates': число,'grams':число}'. 
+        Форматирай сумираните стойности ТОЧНО ТАКА: 'totals: {'calories': число,'protein': число,'fat': число,'carbohydrates': число}'. 
+        Форматирай ЦЯЛАТА информация в JSON ТОЧНО ТАКА, БЕЗ НИЩО ПОВЕЧЕ: 
+        '{
+          breakfast':{
+            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+          },
+          'lunch':{
+            'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+            'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+          }, 
+          'dinner':{
+            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+            'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient','quantity(можете да дадете както грамове, така и по другия начин с дробно число, ако искате) ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+          }' 
+        `,
+        id: "ad16ac5b-1c22-465c-9210-5f561473b88b"
+      };
+
       const response = await fetch("https://nutri-api.noit.eu/fetchChat", {
-        method: "GET", // Since you're not sending any data, you can use GET method
+        method: "POST",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify(requestBody)
       });
 
       if (!response.ok) {
@@ -382,18 +419,18 @@ export default function MealPlannerForm(props: {
       const escapedJSON = responseData.response;
       const jsonString = escapedJSON.replace(/\\n/g, "").replace(/\\"/g, '"');
 
-      // Ensure that JSON string doesn't contain trailing commas
-      const fixedJsonString = jsonString.replace(/,\s*]/g, "]");
+      // Ensure that JSON стринг doesn't contain trailing commas
+      const fixedjsonString = jsonString.replace(/,\s*]/g, "]");
 
-      // Parse the fixed JSON string
+      // Parse the fixed JSON стринг
       try {
-        const jsonObject = JSON.parse(fixedJsonString);
+        const jsonObject = JSON.parse(fixedjsonString);
         console.log(jsonObject);
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
 
-      // Parse the JSON string
+      // Parse the JSON стринг
       const jsonObject = JSON.parse(jsonString);
 
       console.log(jsonObject);
