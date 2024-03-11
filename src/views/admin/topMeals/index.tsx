@@ -245,24 +245,29 @@ export default function TopMeals() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      console.log("NOT FETCHED YET!");
-      const sortedMeals = await orderMealsByFrequency();
-      console.log("Sorted meals by frequency:", sortedMeals);
-      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
-      setLoading(false);
-      console.log("FETCHED!");
+      try {
+        console.log("NOT FETCHED YET!");
+        const sortedMeals = await orderMealsByFrequency();
+        console.log("Sorted meals by frequency:", sortedMeals);
+        // Filter out meals with count equal to 1
+        const filteredMeals = sortedMeals.filter((meal) => meal.count !== 1);
+        // Sort the filtered meals
+        const mealsSortedByCount = filteredMeals.sort(
+          (a, b) => b.count - a.count
+        );
+        // Set only the top 10 meals
+        setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
+        setLoading(false);
+        console.log("FETCHED!");
+      } catch (error) {
+        console.error("Error fetching meals:", error);
+        setLoading(false);
+      }
     };
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData(); // Call fetchData when a snapshot occurs
-      }
-    );
+    fetchData(); // Call fetchData when component mounts
 
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
+    // No need for unsubscribe since we're not using onSnapshot
   }, []);
 
   // React.useEffect(() => {
