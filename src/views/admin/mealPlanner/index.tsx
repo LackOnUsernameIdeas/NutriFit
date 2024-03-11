@@ -59,13 +59,13 @@ import {
   DailyCaloryRequirements,
   WeightDifference
 } from "../../../types/weightStats";
-// import { onSnapshot, doc, getFirestore } from "firebase/firestore";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
-// import {
-//   savePreferences,
-//   saveIntakes
-// } from "../../../database/setWeightStatsData";
+import { onSnapshot, doc, getFirestore } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
+import {
+  savePreferences,
+  saveIntakes
+} from "../../../database/setWeightStatsData";
 import { table } from "console";
 
 import { LineChart } from "components/charts/LineCharts";
@@ -138,33 +138,7 @@ export default function MealPlanner() {
     }))
   );
 
-  const [macroNutrients, setMacroNutrients] = useState<any>([
-    {
-      name: "Балансирана",
-      protein: 2,
-      fat: 2,
-      carbs: 2
-    },
-    {
-      name: "Ниско съдържание на мазнини",
-      protein: 2,
-      fat: 2,
-      carbs: 2
-    },
-    {
-      name: "Ниско съдържание на въглехидрати",
-      protein: 2,
-      fat: 2,
-      carbs: 2
-    },
-    {
-      name: "Високо съдържание на Протеин",
-      protein: 2,
-      fat: 2,
-      carbs: 2
-    }
-  ]);
-  // TODO: THIS SHOULD BE AN EMPTY ARRAY ^^^^^^^^^^^^^^^^^^
+  const [macroNutrients, setMacroNutrients] = useState<any>([]);
 
   // State за избрани стойности
   const [clickedValueNutrients, setClickedValueNutrients] = useState({
@@ -188,10 +162,8 @@ export default function MealPlanner() {
   const [selectedGoal, setSelectedGoal] = useState("");
 
   // State за избрано ниво на натовареност
-  const [activityLevel, setActivityLevel] = useState<number>(2);
-  // TODO: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SET THIS TO NULL
-  const [isDietTableDataReady, setIsDietTableDataReady] = useState(true);
-  // TODO: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SET THIS TO FALSE
+  const [activityLevel, setActivityLevel] = useState<number>(null);
+  const [isDietTableDataReady, setIsDietTableDataReady] = useState(false);
   // State за зареждане на страницата
   const [isLoadingForCalories, setIsLoadingForCalories] = useState(false);
   const [isLoadingForMacroNutrients, setIsLoadingForMacroNutrients] =
@@ -301,8 +273,7 @@ export default function MealPlanner() {
   const [
     isGenerateStatsForCaloriesCalled,
     setIsGenerateStatsForCaloriesCalled
-  ] = useState<boolean>(true);
-  // TODO: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SET THIS TO FALSE
+  ] = useState<boolean>(false);
 
   const [
     isGenerateStatsForMacroNutrientsCalled,
@@ -364,24 +335,24 @@ export default function MealPlanner() {
     }
   };
 
-  // const saveUserPreferencesAndIntakes = () => {
-  //   const uid = getAuth().currentUser.uid;
-  //   savePreferences(uid, clickedValueCalories, clickedValueNutrients);
-  //   if (
-  //     (userIntakes.Calories !== 0,
-  //     userIntakes.Protein !== 0,
-  //     userIntakes.Fat !== 0,
-  //     userIntakes.Carbohydrates !== 0)
-  //   ) {
-  //     saveIntakes(
-  //       uid,
-  //       userIntakes.Calories,
-  //       userIntakes.Protein,
-  //       userIntakes.Fat,
-  //       userIntakes.Carbohydrates
-  //     );
-  //   }
-  // };
+  const saveUserPreferencesAndIntakes = () => {
+    const uid = getAuth().currentUser.uid;
+    savePreferences(uid, clickedValueCalories, clickedValueNutrients);
+    if (
+      (userIntakes.Calories !== 0,
+      userIntakes.Protein !== 0,
+      userIntakes.Fat !== 0,
+      userIntakes.Carbohydrates !== 0)
+    ) {
+      saveIntakes(
+        uid,
+        userIntakes.Calories,
+        userIntakes.Protein,
+        userIntakes.Fat,
+        userIntakes.Carbohydrates
+      );
+    }
+  };
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
       case "maintain":
@@ -530,142 +501,142 @@ export default function MealPlanner() {
     calculatePerfectWeightChange();
   }, [perfectWeight]);
 
-  // React.useEffect(() => {
-  //   const auth = getAuth();
-  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
-  //     setUser(user);
+  React.useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
 
-  //     if (user) {
-  //       try {
-  //         const userId = user.uid;
-  //         const additionalDataRef = doc(
-  //           getFirestore(),
-  //           "additionalUserData",
-  //           userId
-  //         );
+      if (user) {
+        try {
+          const userId = user.uid;
+          const additionalDataRef = doc(
+            getFirestore(),
+            "additionalUserData",
+            userId
+          );
 
-  //         // Subscribe to real-time updates using onSnapshot
-  //         const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-  //           if (doc.exists()) {
-  //             const additionalData = doc.data();
-  //             const timestampKey = new Date().toISOString().slice(0, 10);
-  //             const userDataTimestamp = additionalData[timestampKey];
+          // Subscribe to real-time updates using onSnapshot
+          const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
+            if (doc.exists()) {
+              const additionalData = doc.data();
+              const timestampKey = new Date().toISOString().slice(0, 10);
+              const userDataTimestamp = additionalData[timestampKey];
 
-  //             const timestampedObjects = Object.entries(additionalData)
-  //               .filter(
-  //                 ([key, value]) =>
-  //                   typeof value === "object" &&
-  //                   value.hasOwnProperty("Preferences")
-  //               )
-  //               .map(([key, value]) => ({ date: key, ...value.Preferences }));
+              const timestampedObjects = Object.entries(additionalData)
+                .filter(
+                  ([key, value]) =>
+                    typeof value === "object" &&
+                    value.hasOwnProperty("Preferences")
+                )
+                .map(([key, value]) => ({ date: key, ...value.Preferences }));
 
-  //             const orderedTimestampObjects = [...timestampedObjects].sort(
-  //               (a, b) => {
-  //                 const keyA = a.key;
-  //                 const keyB = b.key;
-  //                 return new Date(keyB).getTime() - new Date(keyA).getTime();
-  //               }
-  //             );
-  //             const orderedAllTimestampObjects = [];
+              const orderedTimestampObjects = [...timestampedObjects].sort(
+                (a, b) => {
+                  const keyA = a.key;
+                  const keyB = b.key;
+                  return new Date(keyB).getTime() - new Date(keyA).getTime();
+                }
+              );
+              const orderedAllTimestampObjects = [];
 
-  //             for (const key in additionalData) {
-  //               if (
-  //                 key !== "gender" &&
-  //                 key !== "goal" &&
-  //                 typeof additionalData[key] === "object"
-  //               ) {
-  //                 const dateData = additionalData[key];
-  //                 orderedAllTimestampObjects.push({
-  //                   date: key,
-  //                   height: dateData?.height,
-  //                   weight: dateData?.weight,
-  //                   bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
-  //                   bodyFat: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.bodyFat
-  //                     : 0,
-  //                   bodyFatMass: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.bodyFatMass
-  //                     : 0,
-  //                   leanBodyMass: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.leanBodyMass
-  //                     : 0,
-  //                   differenceFromPerfectWeight: dateData?.PerfectWeightData
-  //                     ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
-  //                         ?.difference
-  //                     : 0
-  //                 });
-  //               }
-  //             }
-  //             setAllOrderedObjects(orderedAllTimestampObjects);
-  //             setAllUsersPreferences(orderedTimestampObjects);
+              for (const key in additionalData) {
+                if (
+                  key !== "gender" &&
+                  key !== "goal" &&
+                  typeof additionalData[key] === "object"
+                ) {
+                  const dateData = additionalData[key];
+                  orderedAllTimestampObjects.push({
+                    date: key,
+                    height: dateData?.height,
+                    weight: dateData?.weight,
+                    bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
+                    bodyFat: dateData?.BodyMassData
+                      ? dateData?.BodyMassData?.bodyFat
+                      : 0,
+                    bodyFatMass: dateData?.BodyMassData
+                      ? dateData?.BodyMassData?.bodyFatMass
+                      : 0,
+                    leanBodyMass: dateData?.BodyMassData
+                      ? dateData?.BodyMassData?.leanBodyMass
+                      : 0,
+                    differenceFromPerfectWeight: dateData?.PerfectWeightData
+                      ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
+                          ?.difference
+                      : 0
+                  });
+                }
+              }
+              setAllOrderedObjects(orderedAllTimestampObjects);
+              setAllUsersPreferences(orderedTimestampObjects);
 
-  //             if (userDataTimestamp?.age) {
-  //               setUserData({
-  //                 gender: additionalData?.gender,
-  //                 goal: additionalData?.goal,
-  //                 age: userDataTimestamp?.age,
-  //                 height: userDataTimestamp?.height,
-  //                 waist: userDataTimestamp?.waist,
-  //                 neck: userDataTimestamp?.neck,
-  //                 hip: userDataTimestamp?.hip,
-  //                 weight: userDataTimestamp?.weight
-  //               } as UserData);
-  //               setPerfectWeight(
-  //                 userDataTimestamp?.PerfectWeightData
-  //                   ? userDataTimestamp?.PerfectWeightData?.perfectWeight
-  //                   : 0
-  //               );
-  //               setDifferenceFromPerfectWeight(
-  //                 userDataTimestamp?.PerfectWeightData
-  //                   ?.differenceFromPerfectWeight
-  //                   ? userDataTimestamp.PerfectWeightData
-  //                       .differenceFromPerfectWeight
-  //                   : {
-  //                       difference: 0,
-  //                       isUnderOrAbove: ""
-  //                     }
-  //               );
-  //               setHealth(
-  //                 userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
-  //               );
-  //               setDailyCaloryRequirements(
-  //                 userDataTimestamp?.dailyCaloryRequirements
-  //                   ? userDataTimestamp?.dailyCaloryRequirements
-  //                   : []
-  //               );
-  //               const macroNutrientsData = Array.isArray(
-  //                 userDataTimestamp?.macroNutrientsData
-  //               )
-  //                 ? userDataTimestamp?.macroNutrientsData
-  //                 : [];
+              if (userDataTimestamp?.age) {
+                setUserData({
+                  gender: additionalData?.gender,
+                  goal: additionalData?.goal,
+                  age: userDataTimestamp?.age,
+                  height: userDataTimestamp?.height,
+                  waist: userDataTimestamp?.waist,
+                  neck: userDataTimestamp?.neck,
+                  hip: userDataTimestamp?.hip,
+                  weight: userDataTimestamp?.weight
+                } as UserData);
+                setPerfectWeight(
+                  userDataTimestamp?.PerfectWeightData
+                    ? userDataTimestamp?.PerfectWeightData?.perfectWeight
+                    : 0
+                );
+                setDifferenceFromPerfectWeight(
+                  userDataTimestamp?.PerfectWeightData
+                    ?.differenceFromPerfectWeight
+                    ? userDataTimestamp.PerfectWeightData
+                        .differenceFromPerfectWeight
+                    : {
+                        difference: 0,
+                        isUnderOrAbove: ""
+                      }
+                );
+                setHealth(
+                  userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
+                );
+                setDailyCaloryRequirements(
+                  userDataTimestamp?.dailyCaloryRequirements
+                    ? userDataTimestamp?.dailyCaloryRequirements
+                    : []
+                );
+                const macroNutrientsData = Array.isArray(
+                  userDataTimestamp?.macroNutrientsData
+                )
+                  ? userDataTimestamp?.macroNutrientsData
+                  : [];
 
-  //               setMacroNutrients(macroNutrientsData);
-  //             }
-  //           }
-  //         });
+                setMacroNutrients(macroNutrientsData);
+              }
+            }
+          });
 
-  //         // Cleanup the subscription when the component unmounts
-  //         return () => {
-  //           unsubscribeData();
-  //         };
-  //       } catch (error) {
-  //         console.error("Error fetching additional user data:", error);
-  //       }
-  //     }
-  //   });
-  // }, []);
+          // Cleanup the subscription when the component unmounts
+          return () => {
+            unsubscribeData();
+          };
+        } catch (error) {
+          console.error("Error fetching additional user data:", error);
+        }
+      }
+    });
+  }, []);
 
-  // React.useEffect(() => {
-  //   // Check if numeric values in userData are different from 0 and not null
-  //   const areValuesValid = Object.values(userData).every(
-  //     (value) => value !== 0
-  //   );
+  React.useEffect(() => {
+    // Check if numeric values in userData are different from 0 and not null
+    const areValuesValid = Object.values(userData).every(
+      (value) => value !== 0
+    );
 
-  //   if (areValuesValid) {
-  //     generateStatsForCalories();
-  //     setIsGenerateStatsForCaloriesCalled(true);
-  //   }
-  // }, [userData]);
+    if (areValuesValid) {
+      generateStatsForCalories();
+      setIsGenerateStatsForCaloriesCalled(true);
+    }
+  }, [userData]);
 
   React.useEffect(() => {
     if (isGenerateStatsForCaloriesCalled && userData.goal) {
@@ -674,57 +645,55 @@ export default function MealPlanner() {
     }
   }, [isGenerateStatsForCaloriesCalled, userData.goal]);
 
-  // let tableData: any = [];
-  let tableData: any = macroNutrients;
+  let tableData: any = [];
+  if (macroNutrients[activityLevel - 1]) {
+    macroNutrients[activityLevel - 1].goals.forEach((item: any) => {
+      const { goal, calorie, balanced, highprotein, lowcarbs, lowfat } = item;
 
-  // if (macroNutrients[activityLevel - 1]) {
-  //   macroNutrients[activityLevel - 1].goals.forEach((item: any) => {
-  //     const { goal, calorie, balanced, highprotein, lowcarbs, lowfat } = item;
+      if (goal === selectedGoal) {
+        const savedData = [
+          {
+            name: "Балансирана",
+            protein: balanced.protein.toFixed(2),
+            fat: balanced.fat.toFixed(2),
+            carbs: balanced.carbs.toFixed(2)
+          },
+          {
+            name: "Ниско съдържание на мазнини",
+            protein: lowfat.protein.toFixed(2),
+            fat: lowfat.fat.toFixed(2),
+            carbs: lowfat.carbs.toFixed(2)
+          },
+          {
+            name: "Ниско съдържание на въглехидрати",
+            protein: lowcarbs.protein.toFixed(2),
+            fat: lowcarbs.fat.toFixed(2),
+            carbs: lowcarbs.carbs.toFixed(2)
+          },
+          {
+            name: "Високо съдържание на Протеин",
+            protein: highprotein.protein.toFixed(2),
+            fat: highprotein.fat.toFixed(2),
+            carbs: highprotein.carbs.toFixed(2)
+          }
+        ];
 
-  //     if (goal === selectedGoal) {
-  //       const savedData = [
-  //         {
-  //           name: "Балансирана",
-  //           protein: balanced.protein.toFixed(2),
-  //           fat: balanced.fat.toFixed(2),
-  //           carbs: balanced.carbs.toFixed(2)
-  //         },
-  //         {
-  //           name: "Ниско съдържание на мазнини",
-  //           protein: lowfat.protein.toFixed(2),
-  //           fat: lowfat.fat.toFixed(2),
-  //           carbs: lowfat.carbs.toFixed(2)
-  //         },
-  //         {
-  //           name: "Ниско съдържание на въглехидрати",
-  //           protein: lowcarbs.protein.toFixed(2),
-  //           fat: lowcarbs.fat.toFixed(2),
-  //           carbs: lowcarbs.carbs.toFixed(2)
-  //         },
-  //         {
-  //           name: "Високо съдържание на Протеин",
-  //           protein: highprotein.protein.toFixed(2),
-  //           fat: highprotein.fat.toFixed(2),
-  //           carbs: highprotein.carbs.toFixed(2)
-  //         }
-  //       ];
+        tableData = savedData;
+        // You can use or save the 'savedData' object as needed.
+      }
+    });
+  }
 
-  //       tableData = savedData;
-  //       // You can use or save the 'savedData' object as needed.
-  //     }
-  //   });
-  // }
-
-  //console.log("tableData: ", tableData);
-  // React.useEffect(() => {
-  //   // Check if both clickedValueCalories and clickedValueNutrients are set
-  //   if (
-  //     clickedValueCalories !== null &&
-  //     clickedValueNutrients.protein !== null
-  //   ) {
-  //     saveUserPreferencesAndIntakes();
-  //   }
-  // }, [clickedValueCalories, clickedValueNutrients]);
+  console.log("tableData: ", tableData);
+  React.useEffect(() => {
+    // Check if both clickedValueCalories and clickedValueNutrients are set
+    if (
+      clickedValueCalories !== null &&
+      clickedValueNutrients.protein !== null
+    ) {
+      saveUserPreferencesAndIntakes();
+    }
+  }, [clickedValueCalories, clickedValueNutrients]);
 
   console.log("userIntakes: ", userIntakes);
 
