@@ -15,7 +15,8 @@ import {
   Tooltip,
   useColorModeValue
 } from "@chakra-ui/react";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import OpenAIImage from "../../../../assets/img/layout/openai.png";
+import BgGPTImage from "../../../../assets/img/layout/bggpt.png";
 import { UserPreferencesForMealPlan } from "../../../../types/weightStats";
 import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
@@ -308,7 +309,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
           </animated.div>
         </Box>
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }}>
+      <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap={4}>
         <Button
           onClick={handleSubmitWithOpenAI}
           minH="60px"
@@ -316,7 +317,10 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
           backgroundColor={bgButton}
           color={brandColor}
         >
-          Създайте хранителен план с OpenAI
+          Създайте хранителен план с OpenAI{" "}
+          <Box boxSize="30px" ml="10px">
+            <Image src={OpenAIImage} />
+          </Box>
         </Button>
         <Button
           onClick={handleSubmitWithBgGPT}
@@ -326,6 +330,9 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
           color={brandColor}
         >
           Създайте хранителен план с BgGPT
+          <Box boxSize="70px" mt="30px">
+            <Image src={BgGPTImage} />
+          </Box>
         </Button>
       </SimpleGrid>
     </Card>
