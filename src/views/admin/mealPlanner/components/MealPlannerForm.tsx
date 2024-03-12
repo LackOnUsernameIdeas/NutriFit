@@ -44,6 +44,10 @@ export default function MealPlannerForm(props: {
   const gradientFit = useColorModeValue(gradientDark, gradientLight);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isPlanGeneratedWithOpenAI, setIsPlanGeneratedWithOpenAI] =
+    useState(false);
+  const [isPlanGeneratedWithBgGPT, setIsPlanGeneratedWithBgGPT] =
+    useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [requestFailed, setRequestFailed] = useState(false);
 
@@ -95,6 +99,7 @@ export default function MealPlannerForm(props: {
       }));
     }
   };
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
     setUserPreferences((prevState) => {
@@ -122,6 +127,7 @@ export default function MealPlannerForm(props: {
       };
     });
   };
+
   useEffect(() => {
     setUserPreferences({
       Calories: chosenCalories,
@@ -138,6 +144,7 @@ export default function MealPlannerForm(props: {
   const generatePlanWithOpenAI = async () => {
     try {
       setIsSubmitted(true);
+      setIsPlanGeneratedWithOpenAI(true);
       setIsLoading(true);
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
@@ -348,6 +355,7 @@ export default function MealPlannerForm(props: {
   const generatePlanWithBgGPT = async () => {
     try {
       setIsSubmitted(true);
+      setIsPlanGeneratedWithBgGPT(true);
       setIsLoading(true);
 
       const requestBody = {
@@ -678,6 +686,9 @@ export default function MealPlannerForm(props: {
                             mealPlan={mealPlan}
                             mealPlanImages={mealPlanImages}
                             userPreferences={userPreferences}
+                            isPlanGeneratedWithOpenAI={
+                              isPlanGeneratedWithOpenAI
+                            }
                           />
                         </SimpleGrid>
                       </Flex>
