@@ -175,7 +175,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
 
   React.useEffect(() => {
     // Function to check if any value in the deviations state is empty string or zero
-    const isNotEmpty = (value: number | string) => value !== "" && value !== 0;
+    const isNotEmpty = (value: number | string) => value !== "";
 
     // Check if any value in initialDeviations is not empty string or zero
     const hasNonEmptyValues = Object.values(initialDeviations.current).some(
