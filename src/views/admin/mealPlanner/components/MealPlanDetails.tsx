@@ -2174,7 +2174,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на $
+                            Отклонение на{" "}
                             {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
                             цифри:
                           </Text>
@@ -2191,7 +2191,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на $
+                              Процент на отклонение на{" "}
                               {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
                             </Text>
                             (
@@ -2209,7 +2209,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на $
+                          Няма отклонение от страна на{" "}
                           {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
                         </Text>
                       )}
@@ -2235,7 +2235,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на $
+                            Отклонение на{" "}
                             {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
                             цифри:
                           </Text>
@@ -2251,7 +2251,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на $
+                              Процент на отклонение на{" "}
                               {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
                             </Text>
                             (
@@ -2269,7 +2269,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на $
+                          Няма отклонение от страна на{" "}
                           {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
                         </Text>
                       )}
@@ -2297,7 +2297,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на $
+                            Отклонение на{" "}
                             {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
                             цифри:
                           </Text>
@@ -2314,7 +2314,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на $
+                              Процент на отклонение на{" "}
                               {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
                             </Text>
                             (
@@ -2332,7 +2332,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на $
+                          Няма отклонение от страна на{" "}
                           {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
                         </Text>
                       )}
@@ -2357,7 +2357,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       {calculatedTotals.fat - userPreferences.Fat !== 0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на $
+                            Отклонение на{" "}
                             {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
                             цифри:
                           </Text>
@@ -2372,7 +2372,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на $
+                              Процент на отклонение на{" "}
                               {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
                             </Text>
                             (
@@ -2388,7 +2388,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на $
+                          Няма отклонение от страна на{" "}
                           {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
                         </Text>
                       )}
