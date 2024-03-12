@@ -48,6 +48,7 @@ export default function MealPlannerForm(props: {
     useState(false);
   const [isPlanGeneratedWithBgGPT, setIsPlanGeneratedWithBgGPT] =
     useState(false);
+  const aiUsed = isPlanGeneratedWithOpenAI ? "mealPlanOpenAI" : "mealPlanBgGPT";
   const [isLoading, setIsLoading] = useState(false);
   const [requestFailed, setRequestFailed] = useState(false);
 
@@ -573,9 +574,15 @@ export default function MealPlannerForm(props: {
     const saveMealPlanData = async () => {
       try {
         // Check if mealPlan and mealPlanImages are not null
-        if (mealPlan.breakfast !== null && mealPlanImages.breakfast !== null) {
+        if (
+          mealPlan.breakfast !== null &&
+          mealPlanImages.breakfast !== null &&
+          mealPlanImages.breakfast !== null
+        ) {
           const userId = getAuth().currentUser.uid;
-          await Promise.all([saveMealPlan(userId, mealPlan, mealPlanImages)]);
+          await Promise.all([
+            saveMealPlan(userId, aiUsed, mealPlan, mealPlanImages)
+          ]);
         }
       } catch (error) {
         console.error("Error saving meal plan:", error);

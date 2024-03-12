@@ -50,6 +50,28 @@ export interface SuggestedMeal {
     instructions: string[];
   };
 }
+export interface Deviations {
+  calories: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  protein: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  carbohydrates: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  fat: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+}
 
 export interface NutrientMeal {
   image: string;

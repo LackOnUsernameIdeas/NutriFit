@@ -1,6 +1,7 @@
 import React from "react";
 import {
   MealPlan2,
+  Deviations,
   UserPreferencesForMealPlan
 } from "../../../../types/weightStats";
 import {
@@ -30,6 +31,8 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdFlatware
 } from "react-icons/md";
+import { saveDeviations } from "database/setWeightStatsData";
+import { getAuth } from "firebase/auth";
 interface MealPlanDetailsProps {
   mealPlan: MealPlan2;
   mealPlanImages: {
@@ -93,7 +96,6 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   const [showMainInstructions, setShowMainInstructions] = React.useState(false);
   const [showAppetizerInstructions, setShowAppetizerInstructions] =
     React.useState(false);
-
   const toggleDessertInstructions = () => {
     setShowDessertInstructions(!showDessertInstructions);
   };
@@ -127,6 +129,69 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   console.log("calculatedTotals: ", calculatedTotals);
 
   const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+  const [deviations, setDeviations] = React.useState<Deviations>({
+    calories: {
+      deviation: calculatedTotals.calories - userPreferences.Calories,
+      deviationPercentage:
+        (
+          ((calculatedTotals.calories - userPreferences.Calories) /
+            userPreferences.Calories) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Calories
+    },
+    protein: {
+      deviation: calculatedTotals.protein - userPreferences.Protein,
+      deviationPercentage:
+        (
+          ((calculatedTotals.protein - userPreferences.Protein) /
+            userPreferences.Protein) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Protein
+    },
+    carbohydrates: {
+      deviation: calculatedTotals.carbohydrates - userPreferences.Carbohydrates,
+      deviationPercentage:
+        (
+          ((calculatedTotals.carbohydrates - userPreferences.Carbohydrates) /
+            userPreferences.Carbohydrates) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Carbohydrates
+    },
+    fat: {
+      deviation: calculatedTotals.fat - userPreferences.Fat,
+      deviationPercentage:
+        (
+          ((calculatedTotals.fat - userPreferences.Fat) / userPreferences.Fat) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Fat
+    }
+  });
+
+  const initialDeviations = React.useRef(deviations);
+
+  React.useEffect(() => {
+    // Function to check if any value in the deviations state is empty string or zero
+    const isNotEmpty = (value: number | string) => value !== "" && value !== 0;
+
+    // Check if any value in initialDeviations is not empty string or zero
+    const hasNonEmptyValues = Object.values(initialDeviations.current).some(
+      (nutrient) =>
+        isNotEmpty(nutrient.deviation) || isNotEmpty(nutrient.userLimit)
+    );
+
+    // If there are non-empty values, call saveDeviations function
+    if (hasNonEmptyValues) {
+      const uid = getAuth().currentUser.uid;
+      const aiUsed = isPlanGeneratedWithOpenAI
+        ? "mealPlanOpenAI"
+        : "mealPlanBgGPT";
+      saveDeviations(uid, aiUsed, initialDeviations.current);
+    }
+  }, []);
 
   return (
     <FadeInWrapper>

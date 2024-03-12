@@ -33,6 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "jws": "^4.0.0",
     "ldrs": "^1.0.1",
+    "lodash": "^4.17.21",
     "node-polyfill-webpack-plugin": "^3.0.0",
     "react": "^17.0.2",
     "react-apexcharts": "^1.4.0",
