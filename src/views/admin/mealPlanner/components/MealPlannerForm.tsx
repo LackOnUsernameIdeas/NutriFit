@@ -146,6 +146,7 @@ export default function MealPlannerForm(props: {
     try {
       setIsSubmitted(true);
       setIsPlanGeneratedWithOpenAI(true);
+      setIsPlanGeneratedWithBgGPT(false);
       setIsLoading(true);
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
@@ -357,6 +358,7 @@ export default function MealPlannerForm(props: {
     try {
       setIsSubmitted(true);
       setIsPlanGeneratedWithBgGPT(true);
+      setIsPlanGeneratedWithOpenAI(false);
       setIsLoading(true);
 
       const requestBody = {
