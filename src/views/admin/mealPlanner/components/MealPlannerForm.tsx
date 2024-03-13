@@ -350,6 +350,8 @@ export default function MealPlannerForm(props: {
       });
       setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
+      setRequestFailed(true);
       console.error("Error generating meal plan:", error);
     }
   };
@@ -561,6 +563,8 @@ export default function MealPlannerForm(props: {
       });
       setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
+      setRequestFailed(true);
       console.error("Error generating meal plan:", error);
     }
   };
