@@ -401,7 +401,7 @@ export default function MealPlannerForm(props: {
             'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
           }'. 
         Имената на храните, съставките и стъпките за приготвяне трябва да са на БЪЛГАРСКИ ЕЗИК!`,
-        id: "ad16ac5b-1c22-465c-9210-5f561473b88b"
+        id: "5a0eac10-8c60-4c33-9490-5c59b841f2e3"
       };
 
       const response = await fetch("https://nutri-api.noit.eu/fetchChat", {
