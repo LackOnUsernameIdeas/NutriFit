@@ -400,8 +400,8 @@ export default function MealPlannerForm(props: {
             'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
             'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
           }'. 
-        Имената на храните, съставките и стъпките за приготвяне трябва да са на БЪЛГАРСКИ ЕЗИК!`,
-        id: "5a0eac10-8c60-4c33-9490-5c59b841f2e3"
+          Имената на храните, съставките и стъпките за приготвяне трябва да са на БЪЛГАРСКИ ЕЗИК! В "instructions", инструкциите трябва да са отделни стрингове, които да са номерирани. "recipeQuantity" трябва да е просто number за грамове, а не string. Стойността на "recipeQuantity" всъщо трябва винаги да е само и единствено число без никакви мерни единици. Стойността на "recipeQuantity" е крайното количество получено от рецептата за ястието. Стойността на "grams" е количеството, което потребителя трябва да изяде и НИКОГА не трябва да е под 150. Препоръчвай всеки път различни ястия от миналият ти отговор.`,
+        id: "06f93d4c-02d7-4702-9b6f-c8a9eff1d390"
       };
 
       const response = await fetch("https://nutri-api.noit.eu/fetchChat", {
