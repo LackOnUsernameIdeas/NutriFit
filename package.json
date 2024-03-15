@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.3.0",
     "@fluentui/react": "^8.114.3",
     "@fluentui/react-components": "^9.44.3",
+    "@google/generative-ai": "^0.3.0",
     "@tanstack/react-table": "^8.5.13",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
