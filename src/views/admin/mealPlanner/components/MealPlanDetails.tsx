@@ -1,7 +1,7 @@
 import React from "react";
 import {
   MealPlan2,
-  Deviations,
+  SaveableDeviations,
   UserPreferencesForMealPlan
 } from "../../../../types/weightStats";
 import {
@@ -129,7 +129,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   console.log("calculatedTotals: ", calculatedTotals);
 
   const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
-  const [deviations, setDeviations] = React.useState<Deviations>({
+  const [deviations, setDeviations] = React.useState<SaveableDeviations>({
     calories: {
       deviation: calculatedTotals.calories - userPreferences.Calories,
       deviationPercentage:

@@ -64,7 +64,7 @@ import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haik
 import { getTotalUsers } from "database/getMeanUsersData";
 
 // Types
-import { GenderAverageStats } from "../../../types/weightStats";
+import { GenderAverageStats, Deviations } from "../../../types/weightStats";
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
@@ -167,6 +167,7 @@ export default function UserReports() {
       averageBodyFatPercentage: 0
     }
   });
+  const [deviations, setDeviations] = React.useState<Deviations>();
 
   const maleChartData = [
     averageStats.male.averageCalories,
@@ -352,6 +353,43 @@ export default function UserReports() {
     // Cleanup function to unsubscribe from snapshot listener
     return () => unsubscribe();
   }, []);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://nutri-api.noit.eu/getAllDeviations"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const { openAI, bgGPT } = await response.json();
+
+        console.log("openAI: ", openAI, "bgGPT: ", bgGPT);
+        // Set your state variables accordingly
+        setDeviations({
+          openAI: {
+            averageDeviation: openAI.averageDeviation,
+            maxDeviation: openAI.maxDeviation,
+            averageDeviationPercentage: openAI.averageDeviationPercentage
+          },
+          bgGPT: {
+            averageDeviation: bgGPT.averageDeviation,
+            maxDeviation: bgGPT.maxDeviation,
+            averageDeviationPercentage: bgGPT.averageDeviationPercentage
+          }
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log("deviations: ", deviations);
 
   React.useEffect(() => {
     const unsubscribe = onSnapshot(

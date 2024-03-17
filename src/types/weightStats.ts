@@ -50,7 +50,7 @@ export interface SuggestedMeal {
     instructions: string[];
   };
 }
-export interface Deviations {
+export interface SaveableDeviations {
   calories: {
     deviation: number;
     deviationPercentage: string;
@@ -342,4 +342,17 @@ export type GenderStatistics = {
 export type GenderAverageStats = {
   male: GenderStatistics;
   female: GenderStatistics;
+};
+
+export type Deviations = {
+  openAI: {
+    averageDeviation: number; // Define the type for average deviation
+    maxDeviation: number; // Define the type for max deviation
+    averageDeviationPercentage: string; // Define the type for average deviation percentage
+  };
+  bgGPT: {
+    averageDeviation: number; // Define the type for average deviation
+    maxDeviation: number; // Define the type for max deviation
+    averageDeviationPercentage: string; // Define the type for average deviation percentage
+  };
 };
