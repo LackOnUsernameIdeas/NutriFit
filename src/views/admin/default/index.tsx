@@ -50,7 +50,10 @@ import { RiWaterPercentFill } from "react-icons/ri";
 import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
 import { HiMiniArrowUturnRight } from "react-icons/hi2";
 import { SuggestedMeal } from "../../../types/weightStats";
-import { orderMealsByFrequency } from "database/getAdditionalUserData";
+import {
+  orderMealsByFrequency,
+  getAllHealthStatus
+} from "database/getAdditionalUserData";
 import {
   getFirestore,
   collection,
@@ -169,6 +172,11 @@ export default function UserReports() {
   });
   const [deviations, setDeviations] = React.useState<Deviations>();
 
+  const [allUsersHealthStatesLabels, setAllUsersHealthStatesLabels] =
+    React.useState<string[]>([]);
+  const [allUsersHealthStatesData, setAllUsersHealthStatesData] =
+    React.useState<number[]>([]);
+
   const maleChartData = [
     averageStats.male.averageCalories,
     averageStats.male.averageProtein,
@@ -187,7 +195,7 @@ export default function UserReports() {
     averageStats.female.averageBodyFatPercentage
   ];
 
-  const chartLabels = [
+  const allUsersStatsLabels = [
     "Калории",
     "Протеин",
     "Въглехидрати",
@@ -390,6 +398,29 @@ export default function UserReports() {
   }, []);
 
   console.log("deviations: ", deviations);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const {
+        labels: healthStatuses,
+        counts: healthStatusesCount
+      }: { labels: string[]; counts: number[] } = await getAllHealthStatus();
+
+      setAllUsersHealthStatesLabels(healthStatuses);
+      setAllUsersHealthStatesData(healthStatusesCount);
+    };
+
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      async (querySnapshot) => {
+        await fetchData();
+        setLoading(false); // Call fetchData when a snapshot occurs
+      }
+    );
+
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
+  }, []);
 
   React.useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -808,6 +839,157 @@ export default function UserReports() {
                     chartLabels={barChartLabels}
                     chartData={barChartForTopSuggestions}
                     chartLabelName="Сравнение на препоръчани храни"
+                    textColor={chartsColor}
+                    color="#523bff"
+                  />
+                )}
+              </Card>
+            </Box>
+          </SimpleGrid>
+          <SimpleGrid
+            columns={{ base: 1, md: 2, lg: 2, "2xl": 2 }}
+            gap="20px"
+            mb="20px"
+          >
+            <Card borderColor={borderColor} borderWidth="3px">
+              <Text
+                fontSize="3xl"
+                alignContent="center"
+                textAlign="center"
+                style={{
+                  backgroundImage: gradient,
+                  WebkitBackgroundClip: "text",
+                  color: "transparent"
+                }}
+              >
+                <b>Сравнение между OpenAI и Gemini</b>
+              </Text>
+            </Card>
+            {!isSmallScreen && (
+              <Card
+                borderColor={borderColor}
+                borderWidth="3px"
+                maxH={{ sm: "400px", md: "600px", lg: "530px" }}
+              >
+                <Text
+                  fontSize="3xl"
+                  alignContent="center"
+                  textAlign="center"
+                  style={{
+                    backgroundImage: gradient,
+                    WebkitBackgroundClip: "text",
+                    color: "transparent"
+                  }}
+                >
+                  <b>Състояния на всички потребители</b>
+                </Text>
+              </Card>
+            )}
+            {loading ? (
+              <Card borderColor={borderColor} borderWidth="3px">
+                <Flex justify="center" align="center" minH="400px">
+                  <Loading />
+                </Flex>
+              </Card>
+            ) : (
+              <Box maxH={{ sm: "400px", md: "595px", lg: "530px" }}>
+                <Card
+                  alignItems="center"
+                  flexDirection="column"
+                  h="100%"
+                  w="100%"
+                  minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                  minW={{ sm: "200px", md: "200px", lg: "auto" }}
+                  borderColor={borderColor}
+                  borderWidth="3px"
+                >
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2 }}
+                    gap="20px"
+                    mb="10px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="28px"
+                              h="28px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      value="zrd"
+                      loading={loading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="28px"
+                              h="28px"
+                              as={FaFireAlt}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      value="zrd"
+                      loading={loading}
+                    />
+                  </SimpleGrid>
+                </Card>
+              </Box>
+            )}
+            {isSmallScreen && (
+              <Card
+                borderColor={borderColor}
+                borderWidth="3px"
+                maxH={{ sm: "400px", md: "600px", lg: "530px" }}
+              >
+                <Text
+                  fontSize="3xl"
+                  alignContent="center"
+                  textAlign="center"
+                  style={{
+                    backgroundImage: gradient,
+                    WebkitBackgroundClip: "text",
+                    color: "transparent"
+                  }}
+                >
+                  <b>Топ 5 най-препоръчвани ястия от NutriFit</b>
+                </Text>
+              </Card>
+            )}
+            <Box maxH={{ sm: "400px", md: "595px", lg: "530px" }}>
+              <Card
+                alignItems="center"
+                flexDirection="column"
+                h="100%"
+                w="100%"
+                minH={{ sm: "400px", md: "300px", lg: "auto" }}
+                minW={{ sm: "200px", md: "200px", lg: "auto" }}
+                borderColor={borderColor}
+                borderWidth="3px"
+              >
+                {loading ? (
+                  <Flex justify="center" align="center" minH="400px">
+                    <Loading />
+                  </Flex>
+                ) : (
+                  <ColumnChart
+                    chartLabels={allUsersHealthStatesLabels}
+                    chartData={allUsersHealthStatesData}
+                    chartLabelName="Състояния на всички потребители"
                     textColor={chartsColor}
                     color="#523bff"
                   />
@@ -1373,7 +1555,7 @@ export default function UserReports() {
                       <LineAvaragesChart
                         lineChartData={maleChartData}
                         lineChartData2={femaleChartData}
-                        lineChartLabels={chartLabels}
+                        lineChartLabels={allUsersStatsLabels}
                         lineChartLabelName={"Мъже"}
                         lineChartLabelName2={"Жени"}
                         textColor={chartsColor}
@@ -1389,7 +1571,7 @@ export default function UserReports() {
                       <ColumnAvaragesChart
                         chartData={maleChartData}
                         chartData2={femaleChartData}
-                        chartLabels={chartLabels}
+                        chartLabels={allUsersStatsLabels}
                         chartLabelName={"Мъже"}
                         chartLabelName2={"Жени"}
                         textColor={chartsColor}
