@@ -600,14 +600,14 @@ export default function MealPlanner() {
                   userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
                 );
                 setDailyCaloryRequirements(
-                  userDataTimestamp?.dailyCaloryRequirements
-                    ? userDataTimestamp?.dailyCaloryRequirements
+                  additionalData?.dailyCaloryRequirements
+                    ? additionalData?.dailyCaloryRequirements
                     : []
                 );
                 const macroNutrientsData = Array.isArray(
-                  userDataTimestamp?.macroNutrientsData
+                  additionalData?.macroNutrientsData
                 )
-                  ? userDataTimestamp?.macroNutrientsData
+                  ? additionalData?.macroNutrientsData
                   : [];
 
                 setMacroNutrients(macroNutrientsData);
