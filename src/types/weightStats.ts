@@ -346,13 +346,13 @@ export type GenderAverageStats = {
 
 export type Deviations = {
   openAI: {
-    averageDeviation: number; // Define the type for average deviation
-    maxDeviation: number; // Define the type for max deviation
-    averageDeviationPercentage: string; // Define the type for average deviation percentage
+    averageDeviation: any; // Define the type for average deviation
+    maxDeviation: any; // Define the type for max deviation
+    averageDeviationPercentage: any; // Define the type for average deviation percentage
   };
   bgGPT: {
-    averageDeviation: number; // Define the type for average deviation
-    maxDeviation: number; // Define the type for max deviation
-    averageDeviationPercentage: string; // Define the type for average deviation percentage
+    averageDeviation: any; // Define the type for average deviation
+    maxDeviation: any; // Define the type for max deviation
+    averageDeviationPercentage: any; // Define the type for average deviation percentage
   };
 };
