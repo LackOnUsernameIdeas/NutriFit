@@ -19,7 +19,7 @@ import {
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import LeaderBoardItemSmall from "./components/leaderboardItemSmall";
+import LeaderBoardItemSmall from "../topCalorieMeals/components/leaderboardItemSmall";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
@@ -50,12 +50,8 @@ export default function TopMeals() {
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
     currentPage: 0
   });
-  const [dropdownStateLowCalory, setDropdownStateLowCalory] =
-    React.useState<DropdownState>({
-      currentPage: 0
-    });
   const [allMeals, setAllMeals] = React.useState<NutrientMeal[] | []>([]);
-  const [leastCalorieFoods, setLeastCalorieFoods] = React.useState<
+  const [leastCarbsFoods, setLeastCarbsFoods] = React.useState<
     NutrientMeal[] | []
   >([]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
@@ -67,15 +63,20 @@ export default function TopMeals() {
     .slice(0, 10)
     .map((_, index) => `#${index + 1}`);
 
-  const barChartForTopCalorieFoods = allMeals
+  const barChartForTopCarbohydratesFoods = allMeals
     .slice(0, 10)
-    .map((meal, index) => allMeals[index].totals.calories);
+    .map((meal, index) => allMeals[index].totals.carbohydrates);
 
-  const barChartForLowCalorieFoods = allMeals
+  const barChartForLowCarbohydratesFoods = allMeals
     .slice()
-    .sort((a, b) => a.totals.calories - b.totals.calories)
+    .sort((a, b) => a.totals.carbohydrates - b.totals.carbohydrates)
     .slice(0, 10)
-    .map((meal) => meal.totals.calories);
+    .map((meal) => meal.totals.carbohydrates);
+
+  const [dropdownStateLowCarbs, setDropdownStateLowCarbs] =
+    React.useState<DropdownState>({
+      currentPage: 0
+    });
 
   React.useEffect(() => {
     let isMounted = true;
@@ -83,8 +84,9 @@ export default function TopMeals() {
     const fetchData = async () => {
       try {
         console.log("Fetching first 50 meals...");
-        const first50MealsPromise =
-          getFirst50TopMealsByCollection("topCalorieMeals");
+        const first50MealsPromise = getFirst50TopMealsByCollection(
+          "topCarbohydratesMeals"
+        );
 
         const first50Meals = await first50MealsPromise;
 
@@ -93,29 +95,29 @@ export default function TopMeals() {
         // Display the first 50 meals
         setAllMeals(first50Meals as NutrientMeal[]);
 
-        const initialLowCaloryMeals = first50Meals
+        const initialLowCarbsMeals = first50Meals
           .slice()
           .sort(
             (a: NutrientMeal, b: NutrientMeal) =>
-              (a.totals.calories || 0) - (b.totals.calories || 0)
+              (a.totals.carbohydrates || 0) - (b.totals.carbohydrates || 0)
           );
 
-        setLeastCalorieFoods(initialLowCaloryMeals);
+        setLeastCarbsFoods(initialLowCarbsMeals);
         setLoading(false);
         // Fetch all meals in the background
         console.log("Fetching remaining meals...");
-        getTopMealsByCollection("topCalorieMeals").then((allMeals) => {
+        getTopMealsByCollection("topCarbohydratesMeals").then((allMeals) => {
           console.log("All Meals: ", allMeals);
           // Update state to include the remaining meals
           setAllMeals(allMeals as NutrientMeal[]);
-          const lowCaloryMeals = allMeals
+          const lowCarbsMeals = allMeals
             .slice()
             .sort(
               (a: NutrientMeal, b: NutrientMeal) =>
-                (a.totals.calories || 0) - (b.totals.calories || 0)
+                (a.totals.carbohydrates || 0) - (b.totals.carbohydrates || 0)
             );
 
-          setLeastCalorieFoods(lowCaloryMeals);
+          setLeastCarbsFoods(lowCarbsMeals);
           console.log("FETCHED!");
         });
       } catch (error) {
@@ -133,11 +135,10 @@ export default function TopMeals() {
 
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
-
-  const [miniStatisticsVisibleLowCalory, setMiniStatisticsVisibleLowCalory] =
+  const [miniStatisticsVisibleLowCarbs, setMiniStatisticsVisibleLowCarbs] =
     React.useState(true);
-  const [renderDropdownLowCalory, setRenderDropdownLowCalory] =
+  const [renderDropdown, setRenderDropdown] = React.useState(true);
+  const [renderDropdownLowCarbs, setRenderDropdownLowCarbs] =
     React.useState(true);
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const handleDropdownToggle = () => {
@@ -145,10 +146,10 @@ export default function TopMeals() {
   };
 
   // State and function for the second dropdown
-  const [dropdownVisibleLowCalory, setDropdownVisibleLowCalory] =
+  const [dropdownVisibleLowCarbs, setDropdownVisibleLowCarbs] =
     React.useState(true);
-  const handleDropdownToggleLowCalory = () => {
-    setDropdownVisibleLowCalory(!dropdownVisibleLowCalory);
+  const handleDropdownToggleLowCarbs = () => {
+    setDropdownVisibleLowCarbs(!dropdownVisibleLowCarbs);
   };
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
@@ -161,7 +162,7 @@ export default function TopMeals() {
 
   const slideAnimation = useSpring({
     transform: `translateY(${
-      dropdownVisible || dropdownVisibleLowCalory ? -50 : -20
+      dropdownVisible || dropdownVisibleLowCarbs ? -50 : -20
     }px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
@@ -169,12 +170,12 @@ export default function TopMeals() {
     }
   });
 
-  const slideAnimationDropLowCalory = useSpring({
-    opacity: miniStatisticsVisibleLowCalory ? 1 : 0,
-    transform: `translateY(${dropdownVisibleLowCalory ? -50 : -90}px)`,
+  const slideAnimationDropLowCarbs = useSpring({
+    opacity: miniStatisticsVisibleLowCarbs ? 1 : 0,
+    transform: `translateY(${dropdownVisibleLowCarbs ? -50 : -90}px)`,
     config: {
-      tension: dropdownVisibleLowCalory ? 170 : 200,
-      friction: dropdownVisibleLowCalory ? 12 : 20
+      tension: dropdownVisibleLowCarbs ? 170 : 200,
+      friction: dropdownVisibleLowCarbs ? 12 : 20
     }
   });
 
@@ -198,32 +199,32 @@ export default function TopMeals() {
   }, [dropdownVisible]);
 
   React.useEffect(() => {
-    const handleRestSlidePositionChangeLowCalory = async () => {
-      if (dropdownVisibleLowCalory) {
-        setMiniStatisticsVisibleLowCalory(true);
-        setRenderDropdownLowCalory(true);
+    const handleRestSlidePositionChangeLowCarbs = async () => {
+      if (dropdownVisibleLowCarbs) {
+        setMiniStatisticsVisibleLowCarbs(true);
+        setRenderDropdownLowCarbs(true);
       } else {
-        setMiniStatisticsVisibleLowCalory(false);
+        setMiniStatisticsVisibleLowCarbs(false);
         await new Promise<void>((resolve) =>
           setTimeout(() => {
             resolve();
-            setRenderDropdownLowCalory(false);
+            setRenderDropdownLowCarbs(false);
           }, 150)
         );
       }
     };
 
-    handleRestSlidePositionChangeLowCalory();
-  }, [dropdownVisibleLowCalory]);
+    handleRestSlidePositionChangeLowCarbs();
+  }, [dropdownVisibleLowCarbs]);
 
   const mealsToShow = allMeals.slice(
     dropdownState.currentPage * ITEMS_PER_PAGE,
     (dropdownState.currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  const mealsToShowLowCalory = leastCalorieFoods.slice(
-    dropdownStateLowCalory.currentPage * ITEMS_PER_PAGE,
-    (dropdownStateLowCalory.currentPage + 1) * ITEMS_PER_PAGE
+  const mealsToShowLowCarbs = leastCarbsFoods.slice(
+    dropdownStateLowCarbs.currentPage * ITEMS_PER_PAGE,
+    (dropdownStateLowCarbs.currentPage + 1) * ITEMS_PER_PAGE
   );
 
   const [isPhoneScreen] = useMediaQuery("(max-width: 767px)");
@@ -266,9 +267,9 @@ export default function TopMeals() {
                     userSelect="none"
                   >
                     {dropdownVisible ? (
-                      <b>Най-калорични храни от NutriFit!</b>
+                      <b>Най-богатите на въглехидрати храни от NutriFit!</b>
                     ) : (
-                      "Най-калорични храни от NutriFit!"
+                      "Най-богатите на въглехидрати храни от NutriFit!"
                     )}
                   </Text>
                   <Icon
@@ -301,7 +302,7 @@ export default function TopMeals() {
                                 totals={meal?.totals}
                                 topMeals={allMeals}
                                 keepOpen={meal === allMeals[0] ? true : false}
-                                type="Калории"
+                                type="Въглехидрати"
                               />
                             );
                           }
@@ -356,13 +357,13 @@ export default function TopMeals() {
                 </animated.div>
               )}
             </Box>
-            <Box p="0px" mb={dropdownVisibleLowCalory ? "0px" : "20px"}>
+            <Box p="0px" mb={dropdownVisibleLowCarbs ? "0px" : "20px"}>
               <Card
-                onClick={handleDropdownToggleLowCalory}
+                onClick={handleDropdownToggleLowCarbs}
                 cursor="pointer"
                 zIndex="1"
                 position="relative"
-                bg={dropdownVisibleLowCalory ? dropdownBoxBg : dropdownBoxBg}
+                bg={dropdownVisibleLowCarbs ? dropdownBoxBg : dropdownBoxBg}
                 borderColor={borderColor}
                 borderWidth="5px"
               >
@@ -375,7 +376,7 @@ export default function TopMeals() {
                     color={textColor}
                     fontSize="2xl"
                     style={
-                      dropdownVisibleLowCalory
+                      dropdownVisibleLowCarbs
                         ? {
                             backgroundImage: gradient,
                             WebkitBackgroundClip: "text",
@@ -385,23 +386,23 @@ export default function TopMeals() {
                     }
                     userSelect="none"
                   >
-                    {dropdownVisibleLowCalory ? (
-                      <b>Най-ниско калорични храни от NutriFit!</b>
+                    {dropdownVisibleLowCarbs ? (
+                      <b>Най-бедните на въглехидрати храни от NutriFit!</b>
                     ) : (
-                      "Най-ниско калорични храни от NutriFit!"
+                      "Най-беднитена въглехидрати храни от NutriFit!"
                     )}
                   </Text>
                   <Icon
-                    as={dropdownVisibleLowCalory ? FaAngleUp : FaAngleDown}
+                    as={dropdownVisibleLowCarbs ? FaAngleUp : FaAngleDown}
                     boxSize={6}
                     color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
                   />
                 </Flex>
               </Card>
-              {renderDropdownLowCalory && (
+              {renderDropdownLowCarbs && (
                 <animated.div
                   style={{
-                    ...slideAnimationDropLowCalory,
+                    ...slideAnimationDropLowCarbs,
                     position: "relative"
                   }}
                 >
@@ -412,7 +413,7 @@ export default function TopMeals() {
                       </Flex>
                     ) : (
                       <Box mt="40px" mb="10px">
-                        {mealsToShowLowCalory.map(
+                        {mealsToShowLowCarbs.map(
                           (meal: NutrientMeal, index: number) => {
                             return (
                               <LeaderBoardItemSmall
@@ -422,11 +423,11 @@ export default function TopMeals() {
                                 image={meal?.image}
                                 ingredients={meal?.ingredients}
                                 totals={meal?.totals}
-                                topMeals={leastCalorieFoods}
+                                topMeals={leastCarbsFoods}
                                 keepOpen={
-                                  meal === leastCalorieFoods[0] ? true : false
+                                  meal === leastCarbsFoods[0] ? true : false
                                 }
-                                type="Калории"
+                                type="Въглехидрати"
                               />
                             );
                           }
@@ -436,7 +437,7 @@ export default function TopMeals() {
                             aria-label="Previous page"
                             icon={<MdKeyboardArrowLeft />}
                             onClick={() =>
-                              setDropdownStateLowCalory((prevState) => ({
+                              setDropdownStateLowCarbs((prevState) => ({
                                 ...prevState,
                                 currentPage: Math.max(
                                   0,
@@ -444,21 +445,21 @@ export default function TopMeals() {
                                 )
                               }))
                             }
-                            disabled={dropdownStateLowCalory.currentPage === 0}
+                            disabled={dropdownStateLowCarbs.currentPage === 0}
                             variant="unstyled"
                             _hover={{ bg: "none" }}
                             boxSize={8}
                           />
                           <Text mt="1px" mr="15px" fontSize="xl">
                             <b>{`Страница ${
-                              dropdownStateLowCalory.currentPage + 1
+                              dropdownStateLowCarbs.currentPage + 1
                             } от ${totalPages}`}</b>
                           </Text>
                           <IconButton
                             aria-label="Next page"
                             icon={<MdKeyboardArrowRight />}
                             onClick={() =>
-                              setDropdownStateLowCalory((prevState) => ({
+                              setDropdownStateLowCarbs((prevState) => ({
                                 ...prevState,
                                 currentPage: Math.min(
                                   prevState.currentPage + 1,
@@ -468,7 +469,7 @@ export default function TopMeals() {
                             }
                             ml="10px"
                             disabled={
-                              dropdownStateLowCalory.currentPage ===
+                              dropdownStateLowCarbs.currentPage ===
                               totalPages - 1
                             }
                             variant="unstyled"
@@ -491,7 +492,7 @@ export default function TopMeals() {
             >
               <Card
                 fontSize="3xl"
-                maxH={{ sm: "200px", md: "200px", lg: "150px" }}
+                maxH={{ sm: "250px", md: "250px", lg: "150px" }}
                 p="20px"
                 display="flex"
                 alignItems="center"
@@ -500,12 +501,13 @@ export default function TopMeals() {
                 borderColor={borderColor}
                 borderWidth="3px"
               >
-                Сравнение на първите 10 най-калорични храни от NutriFit!
+                Сравнение на първите 10 най-богати на въглехидрати храни от
+                NutriFit!
               </Card>
               {!isPhoneScreen && (
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "200px", md: "200px", lg: "150px" }}
+                  maxH={{ sm: "250px", md: "250px", lg: "150px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -514,7 +516,8 @@ export default function TopMeals() {
                   borderColor={borderColor}
                   borderWidth="3px"
                 >
-                  Сравнение на първите 10 най-ниско калорични храни от NutriFit!
+                  Сравнение на първите 10 най-бедни на въглехидрати храни от
+                  NutriFit!
                 </Card>
               )}
               <Card
@@ -534,8 +537,8 @@ export default function TopMeals() {
                 ) : (
                   <ColumnChart
                     chartLabels={barChartLabels}
-                    chartData={barChartForTopCalorieFoods}
-                    chartLabelName="Сравнение на най-калорични храни (kcal)"
+                    chartData={barChartForTopCarbohydratesFoods}
+                    chartLabelName="Сравнение на най-богатите на въглехидрати храни (g.)"
                     textColor={chartsColor}
                     color="#472ffb"
                   />
@@ -544,7 +547,7 @@ export default function TopMeals() {
               {isPhoneScreen && (
                 <Card
                   fontSize="3xl"
-                  maxH={{ sm: "200px", md: "200px", lg: "150px" }}
+                  maxH={{ sm: "250px", md: "250px", lg: "150px" }}
                   p="20px"
                   display="flex"
                   alignItems="center"
@@ -553,7 +556,8 @@ export default function TopMeals() {
                   borderColor={borderColor}
                   borderWidth="3px"
                 >
-                  Сравнение на първите 10 най-ниско калорични храни от NutriFit!
+                  Сравнение на първите 10 най-бедни на въглехидрати храни от
+                  NutriFit!
                 </Card>
               )}
               <Card
@@ -573,8 +577,8 @@ export default function TopMeals() {
                 ) : (
                   <ColumnChart
                     chartLabels={barChartLabels}
-                    chartData={barChartForLowCalorieFoods}
-                    chartLabelName="Сравнение на най-ниско калорични храни (kcal)"
+                    chartData={barChartForLowCarbohydratesFoods}
+                    chartLabelName="Сравнение на най-бедните на въглехидрати храни (g.)"
                     textColor={chartsColor}
                     color="#472ffb"
                   />

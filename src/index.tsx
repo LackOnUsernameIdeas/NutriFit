@@ -60,7 +60,8 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      const uid = auth.currentUser.uid;
+      const uid = auth?.currentUser?.uid;
+
       const cookie = Cookies.get(btoa(uid));
       console.log("admin ---->", cookie);
       const firebasePersistence = cookie
@@ -127,7 +128,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      const uid = auth.currentUser.uid;
+      const uid = auth?.currentUser?.uid;
       const cookie = Cookies.get(btoa(uid));
       console.log("private ---->", cookie);
       const firebasePersistence = cookie

@@ -15,7 +15,8 @@ import {
   Tooltip,
   useColorModeValue
 } from "@chakra-ui/react";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import OpenAIImage from "../../../../assets/img/layout/openai.png";
+import BgGPTImage from "../../../../assets/img/layout/bggpt.png";
 import { UserPreferencesForMealPlan } from "../../../../types/weightStats";
 import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
@@ -24,7 +25,8 @@ interface UserPreferencesInputProps {
   userPreferences: UserPreferencesForMealPlan;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  generatePlan: () => void;
+  generatePlanWithOpenAI: () => void;
+  generatePlanWithBgGPT: () => void;
 }
 const fieldName: string[] = [
   "калории",
@@ -39,7 +41,8 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   userPreferences,
   handleInputChange,
   handleCheckboxChange,
-  generatePlan
+  generatePlanWithOpenAI,
+  generatePlanWithBgGPT
 }) => {
   const textColor = useColorModeValue("#1a202c", "white");
   const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.100");
@@ -92,11 +95,19 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmitWithOpenAI = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (isNutrientDataValid()) {
-      generatePlan();
+      generatePlanWithOpenAI();
+    }
+  };
+
+  const handleSubmitWithBgGPT = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (isNutrientDataValid()) {
+      generatePlanWithBgGPT();
     }
   };
 
@@ -298,15 +309,32 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
           </animated.div>
         </Box>
       </SimpleGrid>
-      <Button
-        onClick={handleSubmit}
-        minH="60px"
-        minW="100%"
-        backgroundColor={bgButton}
-        color={brandColor}
-      >
-        Създайте хранителен план
-      </Button>
+      <SimpleGrid columns={{ base: 2, md: 2, xl: 2 }} gap={4}>
+        <Button
+          onClick={handleSubmitWithOpenAI}
+          minH="60px"
+          minW="100%"
+          backgroundColor={bgButton}
+          color={brandColor}
+        >
+          Създайте хранителен план с OpenAI{" "}
+          <Box boxSize="30px" ml="10px">
+            <Image src={OpenAIImage} />
+          </Box>
+        </Button>
+        <Button
+          onClick={handleSubmitWithBgGPT}
+          minH="60px"
+          minW="100%"
+          backgroundColor={bgButton}
+          color={brandColor}
+        >
+          Създайте хранителен план с BgGPT
+          <Box boxSize="70px" mt="30px">
+            <Image src={BgGPTImage} />
+          </Box>
+        </Button>
+      </SimpleGrid>
     </Card>
   );
 };

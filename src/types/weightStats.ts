@@ -32,7 +32,7 @@ export interface Recipe {
   suggestedMaxServing?: number;
 }
 
-export interface Meal {
+export interface SuggestedMeal {
   name: string;
   count: number;
   mealData: {
@@ -48,6 +48,43 @@ export interface Meal {
     ingredients: string[];
     name: string;
     instructions: string[];
+  };
+}
+export interface SaveableDeviations {
+  calories: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  protein: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  carbohydrates: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  fat: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+}
+
+export interface NutrientMeal {
+  image: string;
+  ingredients: string[];
+  instructions: string[];
+  name: string;
+  recipeQuantity: number;
+  totals: {
+    calories: number;
+    carbohydrates: number;
+    grams: number;
+    fat: number;
+    protein: number;
   };
 }
 
@@ -305,4 +342,17 @@ export type GenderStatistics = {
 export type GenderAverageStats = {
   male: GenderStatistics;
   female: GenderStatistics;
+};
+
+export type Deviations = {
+  openAI: {
+    averageDeviation: number; // Define the type for average deviation
+    maxDeviation: number; // Define the type for max deviation
+    averageDeviationPercentage: string; // Define the type for average deviation percentage
+  };
+  bgGPT: {
+    averageDeviation: number; // Define the type for average deviation
+    maxDeviation: number; // Define the type for max deviation
+    averageDeviationPercentage: string; // Define the type for average deviation percentage
+  };
 };
