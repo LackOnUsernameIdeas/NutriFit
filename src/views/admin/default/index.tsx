@@ -369,7 +369,7 @@ export default function UserReports() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://nutri-api.noit.eu/getAllDeviations"
+          "https://nutri-api.noit.eu/getAllDeviations"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
