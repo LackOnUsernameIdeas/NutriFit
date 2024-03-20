@@ -49,7 +49,9 @@ export default function MealPlannerForm(props: {
     useState(false);
   const [isPlanGeneratedWithGemini, setIsPlanGeneratedWithGemini] =
     useState(false);
-  const aiUsed = isPlanGeneratedWithOpenAI ? "mealPlanOpenAI" : "mealPlanBgGPT";
+  const aiUsed = isPlanGeneratedWithOpenAI
+    ? "mealPlanOpenAI"
+    : "mealPlanGemini";
   const [isLoading, setIsLoading] = useState(false);
   const [requestFailed, setRequestFailed] = useState(false);
 
