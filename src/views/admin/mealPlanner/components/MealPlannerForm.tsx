@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { VertexAI } from "@google-cloud/vertexai";
 
 // Chakra imports
 import {
@@ -571,6 +571,40 @@ export default function MealPlannerForm(props: {
       console.error("Error generating meal plan:", error);
     }
   };
+
+  const vertex_ai = new VertexAI({
+    project: "nutrifit-ed16d",
+    location: "europe-west2"
+  });
+  const model = "gemini-1.0-pro-001";
+
+  // Instantiate the models
+  const generativeModel = vertex_ai.preview.getGenerativeModel({
+    model: model,
+    generation_config: {
+      max_output_tokens: 2048,
+      temperature: 0.9,
+      top_p: 1
+    },
+    safety_settings: [
+      {
+        category: "HARM_CATEGORY_HATE_SPEECH",
+        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+      },
+      {
+        category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+      },
+      {
+        category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+      },
+      {
+        category: "HARM_CATEGORY_HARASSMENT",
+        threshold: "BLOCK_MEDIUM_AND_ABOVE"
+      }
+    ]
+  });
 
   const generatePlanWithGemini = async () => {
     try {
