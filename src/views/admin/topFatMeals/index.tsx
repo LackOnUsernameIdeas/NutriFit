@@ -125,6 +125,61 @@ export default function TopMeals() {
     };
   }, []);
 
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getFirst50TopMealsByCollection/topFatMeals"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const first50res = await response.json();
+        const first50 = first50res.first50meals;
+        console.log("First 50 Meals: ", first50);
+        setAllMeals(first50 as NutrientMeal[]);
+
+        const initialLowFatMeals = first50
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.fat || 0) - (b.totals.fat || 0)
+          );
+
+        setLeastFatFoods(initialLowFatMeals);
+        setLoading(false);
+        // Fetch all meals in the background
+        console.log("Fetching remaining meals...");
+        const responseAll = await fetch(
+          "https://nutri-api.noit.eu/getTopMealsByCollection/topFatMeals"
+        );
+        if (!responseAll.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const allTopMealsRes = await responseAll.json();
+        const allTopMeals = allTopMealsRes.topmeals;
+        // Use the fetched data directly instead of invoking getTopMealsByCollection function
+        console.log("All Meals: ", allTopMeals);
+        // Update state to include the remaining meals
+        setAllMeals(allTopMeals as NutrientMeal[]);
+        const lowFatMeals = allTopMeals
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.fat || 0) - (b.totals.fat || 0)
+          );
+
+        setLeastFatFoods(lowFatMeals);
+        console.log("FETCHED!");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(true);
