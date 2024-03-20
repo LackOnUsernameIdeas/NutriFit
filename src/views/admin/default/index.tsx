@@ -344,28 +344,6 @@ export default function UserReports() {
       });
   }, []);
 
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     console.log("NOT FETCHED YET!");
-  //     const sortedMeals = await orderMealsByFrequency();
-  //     console.log("Sorted meals by frequency:", sortedMeals);
-  //     const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-  //     setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
-  //     console.log("FETCHED!");
-  //   };
-
-  //   const unsubscribe = onSnapshot(
-  //     collection(getFirestore(), "additionalUserData"),
-  //     async (querySnapshot) => {
-  //       await fetchData();
-  //       setLoading(false); // Call fetchData when a snapshot occurs
-  //     }
-  //   );
-
-  //   // Cleanup function to unsubscribe from snapshot listener
-  //   return () => unsubscribe();
-  // }, []);
-
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -375,9 +353,9 @@ export default function UserReports() {
         }
         const top10meals = await response.json();
 
-        console.log("top10meals: ", top10meals);
+        console.log("top10meals: ", top10meals.top10meals);
         // Set your state variables accordingly
-        setAllMeals(top10meals);
+        setAllMeals(top10meals.top10meals);
         setMealLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -616,6 +594,7 @@ export default function UserReports() {
     return undefined;
   };
 
+  console.log("allMeals: ", allMeals);
   const barChartLabels = allMeals.slice(0, 5).map((entry) => {
     const words = entry.name.split(" ");
     const wordGroups = [];
