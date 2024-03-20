@@ -350,7 +350,7 @@ export type Deviations = {
     maxDeviation: any; // Define the type for max deviation
     averageDeviationPercentage: any; // Define the type for average deviation percentage
   };
-  bgGPT: {
+  gemini: {
     averageDeviation: any; // Define the type for average deviation
     maxDeviation: any; // Define the type for max deviation
     averageDeviationPercentage: any; // Define the type for average deviation percentage

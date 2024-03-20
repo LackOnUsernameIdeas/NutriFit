@@ -66,7 +66,7 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import ChatGPT from "../../../assets/img/layout/openai.png";
-import BgGPT from "../../../assets/img/layout/bggpt.png";
+import Gemini from "../../../assets/img/layout/bggpt.png";
 import { getTotalUsers } from "database/getMeanUsersData";
 
 // Types
@@ -152,6 +152,7 @@ export default function UserReports() {
     }
   ]);
   const [loading, setLoading] = React.useState(true);
+  const [mealLoading, setMealLoading] = React.useState(true);
   const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
@@ -343,26 +344,48 @@ export default function UserReports() {
       });
   }, []);
 
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     console.log("NOT FETCHED YET!");
+  //     const sortedMeals = await orderMealsByFrequency();
+  //     console.log("Sorted meals by frequency:", sortedMeals);
+  //     const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
+  //     setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
+  //     console.log("FETCHED!");
+  //   };
+
+  //   const unsubscribe = onSnapshot(
+  //     collection(getFirestore(), "additionalUserData"),
+  //     async (querySnapshot) => {
+  //       await fetchData();
+  //       setLoading(false); // Call fetchData when a snapshot occurs
+  //     }
+  //   );
+
+  //   // Cleanup function to unsubscribe from snapshot listener
+  //   return () => unsubscribe();
+  // }, []);
+
   React.useEffect(() => {
     const fetchData = async () => {
-      console.log("NOT FETCHED YET!");
-      const sortedMeals = await orderMealsByFrequency();
-      console.log("Sorted meals by frequency:", sortedMeals);
-      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
-      console.log("FETCHED!");
+      try {
+        const response = await fetch("https://nutri-api.noit.eu/getTop10Meals");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data for top 10 meals");
+        }
+        const top10meals = await response.json();
+
+        console.log("top10meals: ", top10meals);
+        // Set your state variables accordingly
+        setAllMeals(top10meals);
+        setMealLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setMealLoading(false);
+      }
     };
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData();
-        setLoading(false); // Call fetchData when a snapshot occurs
-      }
-    );
-
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
+    fetchData();
   }, []);
 
   React.useEffect(() => {
@@ -374,9 +397,9 @@ export default function UserReports() {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
-        const { openAI, bgGPT } = await response.json();
+        const { openAI, gemini } = await response.json();
 
-        console.log("openAI: ", openAI, "bgGPT: ", bgGPT);
+        console.log("openAI: ", openAI, "gemini: ", gemini);
         // Set your state variables accordingly
         setDeviations({
           openAI: {
@@ -384,10 +407,10 @@ export default function UserReports() {
             maxDeviation: openAI.maxDeviation,
             averageDeviationPercentage: openAI.averageDeviationPercentage
           },
-          bgGPT: {
-            averageDeviation: bgGPT.averageDeviation,
-            maxDeviation: bgGPT.maxDeviation,
-            averageDeviationPercentage: bgGPT.averageDeviationPercentage
+          gemini: {
+            averageDeviation: gemini.averageDeviation,
+            maxDeviation: gemini.maxDeviation,
+            averageDeviationPercentage: gemini.averageDeviationPercentage
           }
         });
         setLoading(false);
@@ -404,25 +427,40 @@ export default function UserReports() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const {
-        labels: healthStatuses,
-        counts: healthStatusesCount
-      }: { labels: string[]; counts: number[] } = await getAllHealthStatus();
+      try {
+        // Make a GET request to your API endpoint
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getAllHealthStatuses"
+        );
 
-      setAllUsersHealthStatesLabels(healthStatuses);
-      setAllUsersHealthStatesData(healthStatusesCount);
+        // Check if the request was successful (status code 200)
+        if (response.ok) {
+          const { labels: healthStatuses, counts: healthStatusesCount } =
+            await response.json();
+
+          console.log(
+            "healthStatuses: ",
+            healthStatuses,
+            "healthStatusesCount: ",
+            healthStatusesCount
+          );
+          setAllUsersHealthStatesLabels(healthStatuses);
+          setAllUsersHealthStatesData(healthStatusesCount);
+        } else {
+          // Handle the error if the request fails
+          console.error("Failed to fetch data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // Regardless of success or failure, stop loading
+      }
     };
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData();
-        setLoading(false); // Call fetchData when a snapshot occurs
-      }
-    );
+    // Call fetchData once when the component mounts
+    fetchData();
 
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
+    // No cleanup is needed for this effect
   }, []);
 
   React.useEffect(() => {
@@ -676,7 +714,7 @@ export default function UserReports() {
                 </Text>
               </Card>
             )}
-            {loading ? (
+            {mealLoading ? (
               <Card borderColor={borderColor} borderWidth="3px">
                 <Flex justify="center" align="center" minH="400px">
                   <Loading />
@@ -833,7 +871,7 @@ export default function UserReports() {
                 borderColor={borderColor}
                 borderWidth="3px"
               >
-                {loading ? (
+                {mealLoading ? (
                   <Flex justify="center" align="center" minH="400px">
                     <Loading />
                   </Flex>
@@ -924,7 +962,7 @@ export default function UserReports() {
                       vs
                     </Text>
 
-                    {/* BgGPT */}
+                    {/* gemini */}
                     <Box textAlign="center">
                       <Text
                         mb="4"
@@ -932,11 +970,11 @@ export default function UserReports() {
                         textColor="#00A67E"
                         fontWeight="500"
                       >
-                        BgGPT
+                        gemini
                       </Text>
                       <Image
-                        src={BgGPT}
-                        alt="BgGPT"
+                        src={Gemini}
+                        alt="gemini"
                         boxSize="100px"
                         w="200px"
                       />
@@ -947,7 +985,7 @@ export default function UserReports() {
                         fontWeight="500"
                       >
                         {deviations &&
-                          deviations.bgGPT.averageDeviationPercentage
+                          deviations.gemini.averageDeviationPercentage
                             ?.overallAverage}
                       </Text>
                     </Box>
@@ -974,7 +1012,7 @@ export default function UserReports() {
                         gap="20px"
                         mb="10px"
                       >
-                        {/* MiniStatistics components for BgGPT average deviation */}
+                        {/* MiniStatistics components for gemini average deviation */}
                         <MiniStatistics
                           startContent={
                             <IconBox
@@ -1203,7 +1241,7 @@ export default function UserReports() {
                         />
                       </SimpleGrid>
                     </Box>
-                    {/* BgGPT Deviation Stats */}
+                    {/* gemini Deviation Stats */}
                     <Box>
                       <Text
                         fontSize="4xl"
@@ -1218,7 +1256,7 @@ export default function UserReports() {
                         gap="20px"
                         mb="10px"
                       >
-                        {/* MiniStatistics components for BgGPT average deviation */}
+                        {/* MiniStatistics components for gemini average deviation */}
                         <MiniStatistics
                           startContent={
                             <IconBox
@@ -1238,14 +1276,14 @@ export default function UserReports() {
                           name="Калории"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.averageDeviation?.calories.toFixed(
+                            deviations.gemini.averageDeviation?.calories.toFixed(
                               2
                             )
                           } g `}
                           loading={loading}
                           growth={`(${
                             deviations &&
-                            deviations.bgGPT.averageDeviationPercentage
+                            deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.calories
                           }%)`}
                         />
@@ -1268,14 +1306,14 @@ export default function UserReports() {
                           name="Протеин"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.averageDeviation?.protein.toFixed(
+                            deviations.gemini.averageDeviation?.protein.toFixed(
                               2
                             )
                           } g `}
                           loading={loading}
                           growth={`(${
                             deviations &&
-                            deviations.bgGPT.averageDeviationPercentage
+                            deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.protein
                           }%)`}
                         />
@@ -1298,14 +1336,14 @@ export default function UserReports() {
                           name="Въглехидрати"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.averageDeviation?.carbohydrates.toFixed(
+                            deviations.gemini.averageDeviation?.carbohydrates.toFixed(
                               2
                             )
                           } g `}
                           loading={loading}
                           growth={`(${
                             deviations &&
-                            deviations.bgGPT.averageDeviationPercentage
+                            deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.carbohydrates
                           }%)`}
                         />
@@ -1328,12 +1366,12 @@ export default function UserReports() {
                           name="Мазнини"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.averageDeviation?.fat.toFixed(2)
+                            deviations.gemini.averageDeviation?.fat.toFixed(2)
                           } g `}
                           loading={loading}
                           growth={`(${
                             deviations &&
-                            deviations.bgGPT.averageDeviationPercentage
+                            deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.fat
                           }%)`}
                         />
@@ -1351,7 +1389,7 @@ export default function UserReports() {
                         gap="20px"
                         mb="10px"
                       >
-                        {/* MiniStatistics components for BgGPT max deviation */}
+                        {/* MiniStatistics components for gemini max deviation */}
                         <MiniStatistics
                           startContent={
                             <IconBox
@@ -1371,7 +1409,7 @@ export default function UserReports() {
                           name="Калории"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.maxDeviation?.calories.toFixed(2)
+                            deviations.gemini.maxDeviation?.calories.toFixed(2)
                           } kCal`}
                           loading={loading}
                         />
@@ -1394,7 +1432,7 @@ export default function UserReports() {
                           name="Протеин"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.maxDeviation?.protein.toFixed(2)
+                            deviations.gemini.maxDeviation?.protein.toFixed(2)
                           } g`}
                           loading={loading}
                         />
@@ -1417,7 +1455,7 @@ export default function UserReports() {
                           name="Въглехидрати"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.maxDeviation?.carbohydrates.toFixed(
+                            deviations.gemini.maxDeviation?.carbohydrates.toFixed(
                               2
                             )
                           } g`}
@@ -1442,7 +1480,7 @@ export default function UserReports() {
                           name="Мазнини"
                           value={`${
                             deviations &&
-                            deviations.bgGPT.maxDeviation?.fat.toFixed(2)
+                            deviations.gemini.maxDeviation?.fat.toFixed(2)
                           } g`}
                           loading={loading}
                         />
