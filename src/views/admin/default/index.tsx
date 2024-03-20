@@ -52,10 +52,6 @@ import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
 import { HiMiniArrowUturnRight } from "react-icons/hi2";
 import { SuggestedMeal } from "../../../types/weightStats";
 import {
-  orderMealsByFrequency,
-  getAllHealthStatus
-} from "database/getAdditionalUserData";
-import {
   getFirestore,
   collection,
   getDocs,
@@ -65,8 +61,8 @@ import {
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import ChatGPT from "../../../assets/img/layout/openai.png";
-import Gemini from "../../../assets/img/layout/bggpt.png";
+import ChatGPT from "../../../assets/img/layout/chatlogo.png";
+import Gemini from "../../../assets/img/layout/gemini.png";
 import { getTotalUsers } from "database/getMeanUsersData";
 
 // Types
@@ -910,18 +906,11 @@ export default function UserReports() {
                   >
                     {/* ChatGPT */}
                     <Box textAlign="center">
-                      <Text
-                        mb="4"
-                        fontSize="2xl"
-                        textColor="#00A67E"
-                        fontWeight="500"
-                      >
-                        ChatGPT
-                      </Text>
                       <Image
                         src={ChatGPT}
                         alt="ChatGPT"
                         boxSize="100px"
+                        w="200px"
                         ml="24.5%"
                       />
                       <Text
@@ -943,14 +932,6 @@ export default function UserReports() {
 
                     {/* gemini */}
                     <Box textAlign="center">
-                      <Text
-                        mb="4"
-                        fontSize="2xl"
-                        textColor="#00A67E"
-                        fontWeight="500"
-                      >
-                        gemini
-                      </Text>
                       <Image
                         src={Gemini}
                         alt="gemini"
@@ -960,7 +941,7 @@ export default function UserReports() {
                       <Text
                         mt="4"
                         fontSize="2xl"
-                        textColor="#00A67E"
+                        textColor="#4992e6"
                         fontWeight="500"
                       >
                         {deviations &&
@@ -1020,7 +1001,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
                               ?.categoryAverages?.calories
-                          }%)`}
+                          })`}
                         />
                         <MiniStatistics
                           startContent={
@@ -1050,7 +1031,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
                               ?.categoryAverages?.protein
-                          }%)`}
+                          })`}
                         />
                         <MiniStatistics
                           startContent={
@@ -1080,7 +1061,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
                               ?.categoryAverages?.carbohydrates
-                          }%)`}
+                          })`}
                         />
                         <MiniStatistics
                           startContent={
@@ -1108,7 +1089,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
                               ?.categoryAverages?.fat
-                          }%)`}
+                          })`}
                         />
                       </SimpleGrid>
                       <Text
@@ -1264,7 +1245,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.calories
-                          }%)`}
+                          })`}
                         />
                         <MiniStatistics
                           startContent={
@@ -1294,7 +1275,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.protein
-                          }%)`}
+                          })`}
                         />
                         <MiniStatistics
                           startContent={
@@ -1324,7 +1305,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.carbohydrates
-                          }%)`}
+                          })`}
                         />
                         <MiniStatistics
                           startContent={
@@ -1352,7 +1333,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
                               ?.categoryAverages?.fat
-                          }%)`}
+                          })`}
                         />
                       </SimpleGrid>
                       <Text

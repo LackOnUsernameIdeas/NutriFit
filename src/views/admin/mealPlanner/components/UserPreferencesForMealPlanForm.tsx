@@ -16,7 +16,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import OpenAIImage from "../../../../assets/img/layout/openai.png";
-import BgGPTImage from "../../../../assets/img/layout/bggpt.png";
+import GeminiImage from "../../../../assets/img/layout/geminiStar.png";
 import { UserPreferencesForMealPlan } from "../../../../types/weightStats";
 import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
@@ -329,9 +329,9 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
           backgroundColor={bgButton}
           color={brandColor}
         >
-          Създайте хранителен план с BgGPT
-          <Box boxSize="70px" mt="30px">
-            <Image src={BgGPTImage} />
+          Създайте хранителен план с Gemini
+          <Box boxSize="40px" mb="7px" ml="5px">
+            <Image src={GeminiImage} />
           </Box>
         </Button>
       </SimpleGrid>
