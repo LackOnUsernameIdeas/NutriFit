@@ -357,219 +357,6 @@ export default function MealPlannerForm(props: {
     }
   };
 
-  const generatePlanWithBgGPT = async () => {
-    try {
-      setIsSubmitted(true);
-      setIsPlanGeneratedWithBgGPT(true);
-      setIsPlanGeneratedWithOpenAI(false);
-      setIsLoading(true);
-
-      const requestBody = {
-        inputs: `Вие сте опитен диетолог, който наблюдава пациентите си дали консумират само ядлива храна от ${
-          Array.isArray(userPreferences.Cuisine)
-            ? userPreferences.Cuisine.length === 0
-              ? "каквато и да е кухня"
-              : userPreferences.Cuisine.length === 1
-              ? userPreferences.Cuisine[0]
-              : `следните кухни: ${userPreferences.Cuisine}, които са написани на английски, но искам всичко, което даваш ТИ да е на БЪЛГАРСКИ ЕЗИК.`
-            : userPreferences.Cuisine
-        }. Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт).
-        Менюто трябва стриктно да спазва следните лимити: да съдържа ${
-          userPreferences.Calories
-        } калории, ${userPreferences.Protein} грама протеин, ${
-          userPreferences.Fat
-        } грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
-        НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (2000 калории, 200 грама протеин, 70 грама мазнини и 300 грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини.
-        ДАВАЙТЕ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти. Включвай само съществуващи в реалния свят храни в хранителния план. 
-        Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо.
-        Включете само реалистични храни за консумация. Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. 
-        Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече или по-малко от това. Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш 
-        следните елементи в менюто на храните: ${
-          userPreferences.Exclude
-        }. Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва. 
-        Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. Форматирай общата информацията за калориите, протеина, въглехидратите и 
-        мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 
-        'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
-        Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
-        Форматирай ЦЯЛАТА информация в JSON точно така: 
-        '{
-          breakfast':{
-            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
-          },
-          'lunch':{
-            'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
-            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
-            'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
-          }, 
-          'dinner':{
-            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
-            'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
-          }'. 
-          Имената на храните, съставките и стъпките за приготвяне трябва да са на БЪЛГАРСКИ ЕЗИК! В "instructions", инструкциите трябва да са отделни стрингове, които да са номерирани. "recipeQuantity" трябва да е просто number за грамове, а не string. Стойността на "recipeQuantity" всъщо трябва винаги да е само и единствено число без никакви мерни единици. Стойността на "recipeQuantity" е крайното количество получено от рецептата за ястието. Стойността на "grams" е количеството, което потребителя трябва да изяде и НИКОГА не трябва да е под 150. Препоръчвай всеки път различни ястия от миналият ти отговор.`,
-        id: "1b29f1e8-b189-4e34-bb98-65ad3c7c1182"
-      };
-
-      const response = await fetch("https://nutri-api.noit.eu/fetchChat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      if (!response.ok) {
-        setRequestFailed(true);
-        setIsLoading(false);
-        throw new Error("Failed to generate meal plan");
-      }
-
-      // Get the response data
-      const responseData = await response.json();
-      console.log("Response Data:", responseData);
-      console.log(responseData.response);
-      const escapedJSON = responseData.response;
-      const jsonString = escapedJSON.replace(/\\n/g, "").replace(/\\"/g, '"');
-
-      // Ensure that JSON стринг doesn't contain trailing commas
-      const fixedjsonString = jsonString.replace(/,\s*]/g, "]");
-
-      // Parse the fixed JSON стринг
-      try {
-        const jsonObject = JSON.parse(fixedjsonString);
-        console.log(jsonObject);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-
-      // Parse the JSON стринг
-      const jsonObject = JSON.parse(jsonString);
-
-      console.log(jsonObject);
-
-      const mealPlanImagesData: {
-        breakfast: {
-          main: string;
-        };
-        lunch: {
-          appetizer: string;
-          main: string;
-          dessert: string;
-        };
-        dinner: {
-          main: string;
-          dessert: string;
-        };
-      } = {
-        breakfast: {
-          main: ""
-        },
-        lunch: {
-          appetizer: "",
-          main: "",
-          dessert: ""
-        },
-        dinner: {
-          main: "",
-          dessert: ""
-        }
-      };
-
-      // Iterate over each meal and make a separate image generation request
-      for (const mealKey of Object.keys(jsonObject)) {
-        const mealAppetizer = (jsonObject as any)[mealKey].appetizer;
-        const mealMain = (jsonObject as any)[mealKey].main;
-        const mealDessert = (jsonObject as any)[mealKey].dessert;
-
-        // console.log("meal: ", meal);
-        // console.log("meal name: ", meal.name);
-
-        //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
-        //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
-        //NutriFit3: cx=527000b0fabcc4dab, key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA
-        // Now make a request to the google images search engine endpoint for each meal's name
-        async function fetchImage(name: string): Promise<any> {
-          try {
-            let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBGskRKof9dkcoXtReamm4-h7UorF1G7yM&cx=10030740e88c842af&q=${encodeURIComponent(
-                name
-              )}&searchType=image`
-            );
-            if (response.status === 429) {
-              let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBpwC_IdPQ2u-16x_9QwoqJDu-zMhuFKxs&cx=258e213112b4b4492&q=${encodeURIComponent(
-                  name
-                )}&searchType=image`
-              );
-              return response;
-            } else {
-              return response;
-            }
-          } catch (error) {
-            console.error("Error fetching image:", error);
-            return null;
-          }
-        }
-
-        const imageAppetizer =
-          mealKey === "lunch" ? await fetchImage(mealAppetizer.name) : null;
-
-        const imageMain = await fetchImage(mealMain.name);
-
-        const imageDessert =
-          mealKey === "lunch" || mealKey === "dinner"
-            ? await fetchImage(mealDessert.name)
-            : null;
-
-        const imageAppetizerResponseData =
-          imageAppetizer !== null ? await imageAppetizer.json() : null;
-        const imageMainResponseData = await imageMain.json();
-        const imageDessertResponseData =
-          imageDessert !== null ? await imageDessert.json() : null;
-
-        console.log("imageDessert: ", imageDessert, mealKey);
-        // console.log(
-        //   `Image Generation Response for ${mealAppetizer.name}: `,
-        //   imageAppetizerResponseData.items[0].link
-        // );
-        if (
-          imageAppetizerResponseData !== null &&
-          imageAppetizerResponseData?.items?.[0]?.link
-        ) {
-          (mealPlanImagesData as any)[mealKey].appetizer =
-            imageAppetizerResponseData.items[0].link;
-        }
-
-        if (imageMainResponseData?.items?.[0]?.link) {
-          (mealPlanImagesData as any)[mealKey].main =
-            imageMainResponseData.items[0].link;
-        }
-
-        if (
-          imageDessertResponseData !== null &&
-          imageDessertResponseData?.items?.[0]?.link
-        ) {
-          (mealPlanImagesData as any)[mealKey].dessert =
-            imageDessertResponseData.items[0].link;
-        }
-      }
-
-      console.log("mealPlanImagesData:", mealPlanImagesData);
-
-      setMealPlanImages(mealPlanImagesData);
-
-      setMealPlan({
-        breakfast: jsonObject.breakfast,
-        lunch: jsonObject.lunch,
-        dinner: jsonObject.dinner
-      });
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setRequestFailed(true);
-      console.error("Error generating meal plan:", error);
-    }
-  };
-
   const generatePlanWithGemini = async () => {
     try {
       setIsSubmitted(true);
@@ -577,252 +364,61 @@ export default function MealPlannerForm(props: {
       setIsPlanGeneratedWithOpenAI(false);
       setIsLoading(true);
 
-      // Fetch your API key from a secure location
-      const API_KEY = "AIzaSyABczafdONRkfzzbKXHMpnwCFnuV4-xLUs";
+      const prompt = `Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
+      Менюто трябва стриктно да спазва следните лимити: да съдържа ${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
+      НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
+      Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
+      Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
+      Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
+      Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${userPreferences.Exclude}. 
+      Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
+      Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
+      Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
+      Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
+      Форматирай ЦЯЛАТА информация в JSON точно така: '{
+      breakfast':{
+        'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+      },
+      'lunch':{
+        'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+        'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+        'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+      }, 
+      'dinner':{
+        'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}, 
+        'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+      }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
+      Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
+      Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
+      Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
+      Името на ястието е ЗАДЪЛЖИТЕЛНО на български`;
 
-      // Initialize GoogleGenerativeAI with your API key
-      const genAI = new GoogleGenerativeAI(API_KEY);
-
-      // Get the Generative Model for your use case (replace "MODEL_NAME" with the desired model)
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-      const prompt = `Вие сте опитен диетолог, който наблюдава пациентите си дали консумират само ядлива храна от ${
-        Array.isArray(userPreferences.Cuisine)
-          ? userPreferences.Cuisine.length === 0
-            ? "каквато и да е кухня"
-            : userPreferences.Cuisine.length === 1
-            ? userPreferences.Cuisine[0]
-            : `следните кухни: ${userPreferences.Cuisine}, които са написани на английски, но искам всичко, което даваш ТИ да е на БЪЛГАРСКИ ЕЗИК.`
-          : userPreferences.Cuisine
-      }. Винаги се съобразявай с подадените кухни когато препоръчваш храни! Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт).
-        Менюто трябва стриктно да спазва следните лимити: да съдържа ${
-          userPreferences.Calories
-        } калории, ${userPreferences.Protein} грама протеин, ${
-        userPreferences.Fat
-      } грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати.
-        НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${
-          userPreferences.Calories
-        } калории, ${userPreferences.Protein} грама протеин, ${
-        userPreferences.Fat
-      } грама мазнини и ${
-        userPreferences.Carbohydrates
-      } грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини.
-        ДАВАЙТЕ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти. Включвай само съществуващи в реалния свят храни в хранителния план.
-        Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо.
-        Включете само реалистични храни за консумация. Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие.
-        Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече или по-малко от това. Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш
-        следните елементи в менюто на храните: ${
-          userPreferences.Exclude
-        }. Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
-        Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. Форматирай общата информацията за калориите, протеина, въглехидратите и
-        мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА:
-        'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'.
-        Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'.
-        Форматирай ЦЯЛАТА информация в JSON точно така:
-        '{
-          breakfast':{
-            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
+      // Make a request to your backend endpoint to generate a response
+      const response = await fetch(
+        "https://nutri-api.noit.eu/geminiGenerateResponse",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
           },
-          'lunch':{
-            'appetizer':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'},
-            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'},
-            'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
-          },
-          'dinner':{
-            'main':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'},
-            'dessert':{'name':'string','totals':{'calories':'number','protein':'number','fat':'number','carbohydrates':'number','grams':'number'}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': 'number grams'}
-          },
-          'totals': {
-            'calories': number,'protein': number,'fat': number,'carbohydrates': number
-          }
-        }'. Не пропускай запетаи или каквото и да е от даденото, както и не добавяй повече от необходимото.
-        Имената на храните, съставките и стъпките за приготвяне трябва да са на БЪЛГАРСКИ ЕЗИК!
-        Разбира се, накрая дай цялата информация, която ми трябва така, както ти казах, че я искам!
-        В 'instructions', инструкциите трябва да са отделни стрингове, които да са номерирани.
-        'recipeQuantity' трябва да е просто number за грамове, а не string.
-        Стойността на 'recipeQuantity' всъщо трябва винаги да е само и единствено число без никакви мерни единици.
-        Стойността на 'recipeQuantity' е крайното количество получено от рецептата за ястието.
-        Стойността на 'grams' е количеството, което потребителя трябва да изяде и НИКОГА не трябва да е под 100.
-        Стойността на 'recipeQuantity' и 'grams' трябва да е различна. Съобрази се с дефинициите за двете property-та и ВИНАГИ ги връщай като number!
-        Препоръчвай всеки път различни ястия от миналият ти отговор, пробвайки се да направиш едно разнобразно меню. Осигури че сумата на всички 'grams' property-та съвпада с подадените от потребителя лимити!`;
+          body: JSON.stringify({ text: prompt }) // Send the prompt as the text in the request body
+        }
+      );
 
-      const result = await model.generateContent(prompt);
+      // Parse the response from the backend
+      const responseData = await response.json();
 
-      const response = result.response;
-      const text = response.text();
-      console.log("text: ", text);
+      // Handle the response data as needed
+      console.log("Response from backend:", responseData.aiResponse);
 
-      const stringToRepair = text
+      const stringToRepair = responseData.aiResponse
         .replace(/^```json([\s\S]*?)```$/, "$1")
         .replace(/^```JSON([\s\S]*?)```$/, "$1")
         .replace(/^'|'$/g, "") // Remove single quotes at the beginning and end
         .trim();
-      console.log("stringToRepair: ", stringToRepair);
+
       const jsonObject = JSON.parse(stringToRepair);
-
       console.log("jsonObject: ", jsonObject);
-
-      // //Testing:
-      // const text = `{
-      //     "breakfast": {
-      //         "main": {
-      //             "name": "Овесени ядки с плодове и ядки",
-      //             "totals": {
-      //                 "calories": 300,
-      //                 "protein": 12,
-      //                 "fat": 10,
-      //                 "carbohydrates": 50,
-      //                 "grams": 200
-      //             },
-      //             "ingredients": [
-      //                 "100 г овесени ядки",
-      //                 "10 г ядки",
-      //                 "100 г плодове",
-      //                 "200 мл мляко",
-      //                 "10 мл мед"
-      //             ],
-      //             "instructions": [
-      //                 "1. Смесете овесените ядки, плодовете, ядките и млякото в тенджера.",
-      //                 "2. Оставете да заври на среден огън, като бъркате непрекъснато.",
-      //                 "3. Намалете котлона и оставете да къкри за около 5 минути.",
-      //                 "4. Разпределете в купички и подсладете с мед, ако желаете."
-      //             ],
-      //             "recipeQuantity": 200
-      //         }
-      //     },
-      //     "lunch": {
-      //         "appetizer": {
-      //             "name": "Салата със скариди",
-      //             "totals": {
-      //                 "calories": 200,
-      //                 "protein": 20,
-      //                 "fat": 10,
-      //                 "carbohydrates": 10,
-      //                 "grams": 200
-      //             },
-      //             "ingredients": [
-      //                 "100 г скариди",
-      //                 "100 г смесена зелена салата",
-      //                 "50 г краставица",
-      //                 "20 г червен лук",
-      //                 "20 мл зехтин за дресинг"
-      //             ],
-      //             "instructions": [
-      //                 "1. Сварете скаридите във вряща подсолена вода за около 3 минути.",
-      //                 "2. Изцедете и охладете.",
-      //                 "3. Нарежете краставицата и червения лук на ситно.",
-      //                 "4. Смесете зеленчуците, скаридите и дресинга в купа."
-      //             ],
-      //             "recipeQuantity": 200
-      //         },
-      //         "main": {
-      //             "name": "Пиле на скара със сладки картофи",
-      //             "totals": {
-      //                 "calories": 600,
-      //                 "protein": 50,
-      //                 "fat": 20,
-      //                 "carbohydrates": 70,
-      //                 "grams": 300
-      //             },
-      //             "ingredients": [
-      //                 "150 г пилешки гърди без кожа",
-      //                 "100 г сладки картофи",
-      //                 "50 г броколи",
-      //                 "50 г моркови",
-      //                 "20 мл зехтин"
-      //             ],
-      //             "instructions": [
-      //                 "1. Загрейте фурната до 180 градуса С.",
-      //                 "2. Подправете пилешките гърди със сол и черен пипер.",
-      //                 "3. Печете във фурната за около 20-25 минути.",
-      //                 "4. Обелете и нарежете сладките картофи на кубчета.",
-      //                 "5. Запържете сладките картофи в зехтин за около 10 минути.",
-      //                 "6. Запарете броколите и морковите за около 5-7 минути.",
-      //                 "7. Сервирайте пилето със сладките картофи и зеленчуците."
-      //             ],
-      //             "recipeQuantity": 300
-      //         },
-      //         "dessert": {
-      //             "name": "Плодов сорбет",
-      //             "totals": {
-      //                 "calories": 200,
-      //                 "protein": 2,
-      //                 "fat": 0,
-      //                 "carbohydrates": 50,
-      //                 "grams": 200
-      //             },
-      //             "ingredients": [
-      //                 "200 г замразени плодове",
-      //                 "50 мл портокалов сок",
-      //                 "50 мл вода"
-      //             ],
-      //             "instructions": [
-      //                 "1. Сложете всички съставки в блендер и пасирайте до гладкост.",
-      //                 "2. Прехвърлете сместа в съд и замразете за поне 4 часа.",
-      //                 "3. Сервирайте замразено."
-      //             ],
-      //             "recipeQuantity": 200
-      //         }
-      //     },
-      //     "dinner": {
-      //       "main": {
-      //           "name": "Риба на пара с кафяв ориз",
-      //           "totals": {
-      //               "calories": 400,
-      //               "protein": 30,
-      //               "fat": 10,
-      //               "carbohydrates": 60,
-      //               "grams": 250
-      //           },
-      //           "ingredients": [
-      //               "150 г риба (треска или сьомга)",
-      //               "100 г кафяв ориз",
-      //               "50 г аспержи",
-      //               "50 г броколи",
-      //               "20 мл лимонов сок"
-      //           ],
-      //           "instructions": [
-      //               "1. Загрейте пароварка.",
-      //               "2. Сложете ориза в пароварка и гответе според указанията на опаковката.",
-      //               "3. Поставете зеленчуците в кошницата за пара и гответе за около 5-7 минути.",
-      //               "4. Поставете рибата в кошницата за пара и гответе за около 10-12 минути.",
-      //               "5. Сервирайте рибата с ориза и зеленчуците, полята с лимонов сок."
-      //           ],
-      //           "recipeQuantity": 250
-      //       },
-      //       "dessert": {
-      //           "name": "Бананов пудинг",
-      //           "totals": {
-      //               "calories": 269.25,
-      //               "protein": 9.1,
-      //               "fat": 8.46,
-      //               "carbohydrates": 45.67,
-      //               "grams": 200
-      //           },
-      //           "ingredients": [
-      //               "200 г банани",
-      //               "100 мл обезмаслено мляко",
-      //               "50 г ванилов пудинг на прах",
-      //               "50 г бисквити",
-      //               "20 мл сметана"
-      //           ],
-      //           "instructions": [
-      //               "1. Намачкайте бананите в купа.",
-      //               "2. Добавете млякото, пудинга на прах и бисквитите и разбъркайте добре.",
-      //               "3. Разпределете сместа в чаши.",
-      //               "4. Залейте със сметана и оставете в хладилник за поне 2 часа."
-      //           ],
-      //           "recipeQuantity": 200
-      //       }
-      //   },
-      //   "totals": {
-      //       "calories": 1969.25,
-      //       "protein": 105.1,
-      //       "fat": 35.46,
-      //       "carbohydrates": 219.23
-      //   }
-      // }`;
-      // const jsonObject = JSON.parse(text);
 
       const mealPlanImagesData: {
         breakfast: {
@@ -892,7 +488,7 @@ export default function MealPlannerForm(props: {
           const imageAppetizer =
             mealKey === "lunch" ? await fetchImage(mealAppetizer.name) : null;
 
-          const imageMain = await fetchImage(mealMain?.name);
+          const imageMain = await fetchImage(mealMain.name);
 
           const imageDessert =
             mealKey === "lunch" || mealKey === "dinner"
@@ -905,8 +501,11 @@ export default function MealPlannerForm(props: {
           const imageDessertResponseData =
             imageDessert !== null ? await imageDessert.json() : null;
 
-          console.log("mealPlanImagesData: ", mealPlanImagesData);
-
+          console.log("imageDessert: ", imageDessert, mealKey);
+          // console.log(
+          //   `Image Generation Response for ${mealAppetizer.name}: `,
+          //   imageAppetizerResponseData.items[0].link
+          // );
           if (
             imageAppetizerResponseData !== null &&
             imageAppetizerResponseData?.items?.[0]?.link
@@ -916,7 +515,6 @@ export default function MealPlannerForm(props: {
           }
 
           if (imageMainResponseData?.items?.[0]?.link) {
-            console.log("(mealPlanImagesData as any)[mealKey].main: ", mealKey);
             (mealPlanImagesData as any)[mealKey].main =
               imageMainResponseData.items[0].link;
           }
@@ -929,16 +527,18 @@ export default function MealPlannerForm(props: {
               imageDessertResponseData.items[0].link;
           }
         }
+
+        console.log("mealPlanImagesData:", mealPlanImagesData);
+
+        setMealPlanImages(mealPlanImagesData);
+
+        setMealPlan({
+          breakfast: jsonObject.breakfast,
+          lunch: jsonObject.lunch,
+          dinner: jsonObject.dinner
+        });
+        setIsLoading(false);
       }
-
-      setMealPlanImages(mealPlanImagesData);
-
-      setMealPlan({
-        breakfast: jsonObject.breakfast,
-        lunch: jsonObject.lunch,
-        dinner: jsonObject.dinner
-      });
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       setRequestFailed(true);
