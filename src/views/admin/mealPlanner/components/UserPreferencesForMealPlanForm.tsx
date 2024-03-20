@@ -26,7 +26,7 @@ interface UserPreferencesInputProps {
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   generatePlanWithOpenAI: () => void;
-  generatePlanWithBgGPT: () => void;
+  generatePlanWithGemini: () => void;
 }
 const fieldName: string[] = [
   "калории",
@@ -42,7 +42,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
   handleInputChange,
   handleCheckboxChange,
   generatePlanWithOpenAI,
-  generatePlanWithBgGPT
+  generatePlanWithGemini
 }) => {
   const textColor = useColorModeValue("#1a202c", "white");
   const bgButton = useColorModeValue("secondaryGray.200", "whiteAlpha.100");
@@ -107,7 +107,7 @@ const UserPreferencesForMealPlanForm: React.FC<UserPreferencesInputProps> = ({
     event.preventDefault();
 
     if (isNutrientDataValid()) {
-      generatePlanWithBgGPT();
+      generatePlanWithGemini();
     }
   };
 

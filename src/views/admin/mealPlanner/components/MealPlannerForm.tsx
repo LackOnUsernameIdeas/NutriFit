@@ -47,7 +47,7 @@ export default function MealPlannerForm(props: {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isPlanGeneratedWithOpenAI, setIsPlanGeneratedWithOpenAI] =
     useState(false);
-  const [isPlanGeneratedWithBgGPT, setIsPlanGeneratedWithBgGPT] =
+  const [isPlanGeneratedWithGemini, setIsPlanGeneratedWithGemini] =
     useState(false);
   const aiUsed = isPlanGeneratedWithOpenAI ? "mealPlanOpenAI" : "mealPlanBgGPT";
   const [isLoading, setIsLoading] = useState(false);
@@ -147,7 +147,7 @@ export default function MealPlannerForm(props: {
     try {
       setIsSubmitted(true);
       setIsPlanGeneratedWithOpenAI(true);
-      setIsPlanGeneratedWithBgGPT(false);
+      setIsPlanGeneratedWithGemini(false);
       setIsLoading(true);
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
@@ -360,7 +360,7 @@ export default function MealPlannerForm(props: {
   const generatePlanWithGemini = async () => {
     try {
       setIsSubmitted(true);
-      setIsPlanGeneratedWithBgGPT(true);
+      setIsPlanGeneratedWithGemini(true);
       setIsPlanGeneratedWithOpenAI(false);
       setIsLoading(true);
 
@@ -649,7 +649,7 @@ export default function MealPlannerForm(props: {
                         handleInputChange={handleInputChange}
                         handleCheckboxChange={handleCheckboxChange}
                         generatePlanWithOpenAI={generatePlanWithOpenAI}
-                        generatePlanWithBgGPT={generatePlanWithGemini}
+                        generatePlanWithGemini={generatePlanWithGemini}
                       />
                     </SimpleGrid>
                     <MealLoading />
@@ -662,7 +662,7 @@ export default function MealPlannerForm(props: {
                         handleInputChange={handleInputChange}
                         handleCheckboxChange={handleCheckboxChange}
                         generatePlanWithOpenAI={generatePlanWithOpenAI}
-                        generatePlanWithBgGPT={generatePlanWithGemini}
+                        generatePlanWithGemini={generatePlanWithGemini}
                       />
                     </SimpleGrid>
                     {(mealPlan.lunch !== null && mealPlan.dinner !== null) ||
@@ -702,7 +702,7 @@ export default function MealPlannerForm(props: {
                   handleInputChange={handleInputChange}
                   handleCheckboxChange={handleCheckboxChange}
                   generatePlanWithOpenAI={generatePlanWithOpenAI}
-                  generatePlanWithBgGPT={generatePlanWithGemini}
+                  generatePlanWithGemini={generatePlanWithGemini}
                 />
               </SimpleGrid>
             )}
