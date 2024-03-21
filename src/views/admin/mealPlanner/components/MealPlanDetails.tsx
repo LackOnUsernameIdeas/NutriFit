@@ -31,7 +31,8 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdFlatware
 } from "react-icons/md";
-import { saveDeviations } from "database/setWeightStatsData";
+import { saveDeviations, saveMealPlan } from "database/setWeightStatsData";
+
 import { getAuth } from "firebase/auth";
 interface MealPlanDetailsProps {
   mealPlan: MealPlan2;
@@ -174,24 +175,52 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   const initialDeviations = React.useRef(deviations);
 
   React.useEffect(() => {
-    // Function to check if any value in the deviations state is empty string or zero
-    const isNotEmpty = (value: number | string) => value !== "";
+    const uid = getAuth().currentUser.uid;
+    const aiUsed = isPlanGeneratedWithOpenAI
+      ? "mealPlanOpenAI"
+      : "mealPlanGemini";
 
-    // Check if any value in initialDeviations is not empty string or zero
-    const hasNonEmptyValues = Object.values(initialDeviations.current).some(
-      (nutrient) =>
-        isNotEmpty(nutrient.deviation) || isNotEmpty(nutrient.userLimit)
-    );
+    const saveMealPlanData = async () => {
+      try {
+        // Check if mealPlan and mealPlanImages are not null
+        if (
+          mealPlan.breakfast !== null &&
+          mealPlanImages.breakfast !== null &&
+          mealPlanImages.breakfast !== null
+        ) {
+          await Promise.all([
+            saveMealPlan(uid, aiUsed, mealPlan, mealPlanImages)
+          ]);
+        }
+      } catch (error) {
+        console.error("Error saving meal plan:", error);
+      }
+    };
 
-    // If there are non-empty values, call saveDeviations function
-    if (hasNonEmptyValues) {
-      const uid = getAuth().currentUser.uid;
-      const aiUsed = isPlanGeneratedWithOpenAI
-        ? "mealPlanOpenAI"
-        : "mealPlanBgGPT";
-      saveDeviations(uid, aiUsed, initialDeviations.current);
-    }
-  }, []);
+    saveMealPlanData();
+
+    const saveDeviationsData = async () => {
+      try {
+        // Function to check if any value in the deviations state is empty string or zero
+        const isNotEmpty = (value: number | string) => value !== "";
+
+        // Check if any value in initialDeviations is not empty string or zero
+        const hasNonEmptyValues = Object.values(initialDeviations.current).some(
+          (nutrient) =>
+            isNotEmpty(nutrient.deviation) || isNotEmpty(nutrient.userLimit)
+        );
+
+        // If there are non-empty values, call saveDeviations function
+        if (hasNonEmptyValues) {
+          await saveDeviations(uid, aiUsed, initialDeviations.current);
+        }
+      } catch (error) {
+        console.error("Error saving deviations:", error);
+      }
+    };
+
+    saveDeviationsData();
+  }, [mealPlan, mealPlanImages]);
 
   return (
     <FadeInWrapper>
