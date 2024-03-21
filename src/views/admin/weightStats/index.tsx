@@ -184,6 +184,7 @@ export default function WeightStats() {
       isUnderOrAbove: ""
     }
   ]);
+
   userDataForCharts.sort((a, b) =>
     a.date < b.date ? -1 : a.date > b.date ? 1 : 0
   );
@@ -508,9 +509,6 @@ export default function WeightStats() {
     calculateBMIChange();
   }, [userDataForCharts]);
 
-  React.useEffect(() => {
-    console.log("Current userData:", userData);
-  }, [userData]);
   // Функция за генериране на статистики
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
@@ -639,6 +637,7 @@ export default function WeightStats() {
   // }, [userDataForToday, userDataLastSavedDate]);
 
   // Масиви с преведени имена
+
   const bmiData: string[] = [
     "ИТМ(Индекс на телесната маса)",
     "Състояние",
