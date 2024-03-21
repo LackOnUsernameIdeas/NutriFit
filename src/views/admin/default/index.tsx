@@ -1002,7 +1002,7 @@ export default function UserReports() {
                               2
                             )
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
@@ -1032,7 +1032,7 @@ export default function UserReports() {
                               2
                             )
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
@@ -1062,7 +1062,7 @@ export default function UserReports() {
                               2
                             )
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
@@ -1090,7 +1090,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.averageDeviation?.fat.toFixed(2)
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.openAI.averageDeviationPercentage
@@ -1132,7 +1132,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.maxDeviation?.calories.toFixed(2)
                           } kCal`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                         <MiniStatistics
                           startContent={
@@ -1155,7 +1155,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.maxDeviation?.protein.toFixed(2)
                           } g`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                         <MiniStatistics
                           startContent={
@@ -1180,7 +1180,7 @@ export default function UserReports() {
                               2
                             )
                           } g`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                         <MiniStatistics
                           startContent={
@@ -1203,7 +1203,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.openAI.maxDeviation?.fat.toFixed(2)
                           } g`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                       </SimpleGrid>
                     </Box>
@@ -1246,7 +1246,7 @@ export default function UserReports() {
                               2
                             )
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
@@ -1276,7 +1276,7 @@ export default function UserReports() {
                               2
                             )
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
@@ -1306,7 +1306,7 @@ export default function UserReports() {
                               2
                             )
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
@@ -1334,7 +1334,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.averageDeviation?.fat.toFixed(2)
                           } g `}
-                          loading={loading}
+                          loading={deviationsLoading}
                           growth={`(${
                             deviations &&
                             deviations.gemini.averageDeviationPercentage
@@ -1377,7 +1377,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.maxDeviation?.calories.toFixed(2)
                           } kCal`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                         <MiniStatistics
                           startContent={
@@ -1400,7 +1400,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.maxDeviation?.protein.toFixed(2)
                           } g`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                         <MiniStatistics
                           startContent={
@@ -1425,7 +1425,7 @@ export default function UserReports() {
                               2
                             )
                           } g`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                         <MiniStatistics
                           startContent={
@@ -1448,7 +1448,7 @@ export default function UserReports() {
                             deviations &&
                             deviations.gemini.maxDeviation?.fat.toFixed(2)
                           } g`}
-                          loading={loading}
+                          loading={deviationsLoading}
                         />
                       </SimpleGrid>
                     </Box>
