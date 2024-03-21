@@ -246,14 +246,12 @@ export default function TopMeals() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("tryyy");
         const response = await fetch("https://nutri-api.noit.eu/orderedMeals");
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const orderedMeals = await response.json();
 
-        console.log("Sorted meals by frequency:", orderedMeals);
         // Set only the top 10 meals
         setAllMeals(orderedMeals);
         setLoading(false);
