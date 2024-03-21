@@ -172,125 +172,42 @@ export default function TopMeals() {
     }
   ]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
-  // Sorting by calories
-  const sortedByCaloriesDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.calories - a.mealData.totals.calories
-  );
 
-  const sortedByCaloriesAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.calories - b.mealData.totals.calories
-  );
-
-  // Sorting by carbohydrates
-  const sortedByCarbohydratesDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.carbohydrates - a.mealData.totals.carbohydrates
-  );
-
-  const sortedByCarbohydratesAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.carbohydrates - b.mealData.totals.carbohydrates
-  );
-
-  // Sorting by fat
-  const sortedByFatDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.fat - a.mealData.totals.fat
-  );
-
-  const sortedByFatAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.fat - b.mealData.totals.fat
-  );
-
-  // Sorting by protein
-  const sortedByProteinDescending = [...allMeals].sort(
-    (a, b) => b.mealData.totals.protein - a.mealData.totals.protein
-  );
-
-  const sortedByProteinAscending = [...allMeals].sort(
-    (a, b) => a.mealData.totals.protein - b.mealData.totals.protein
-  );
-  const barChartNames = allMeals.slice(0, 10).map((entry) => entry.name);
   const barChartLabels = allMeals
     .slice(0, 10)
     .map((_, index) => `#${index + 1}`);
   const barChartForTopSuggestions = allMeals
     .slice(0, 10)
     .map((entry) => entry.count);
-  const barChartForCalories = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.calories);
-  const barChartForProtein = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.protein);
-  const barChartForFat = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.fat);
-  const barChartForCarbohydrates = allMeals
-    .slice(0, 10)
-    .map((entry) => entry.mealData.totals.carbohydrates);
 
-  console.log(
-    "Sorted by calories (descending order):",
-    sortedByCaloriesDescending
-  );
-  console.log(
-    "Sorted by carbohydrates (descending order):",
-    sortedByCarbohydratesDescending
-  );
-  console.log("Sorted by fat (descending order):", sortedByFatDescending);
-  console.log(
-    "Sorted by protein (descending order):",
-    sortedByProteinDescending
-  );
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
   React.useEffect(() => {
     const fetchData = async () => {
-      console.log("NOT FETCHED YET!");
-      const sortedMeals = await orderMealsByFrequency();
-      console.log("Sorted meals by frequency:", sortedMeals);
-      setAllMeals(sortedMeals as SuggestedMeal[]);
-      setLoading(false);
-      console.log("FETCHED!");
+      try {
+        console.log("tryyy");
+        const response = await fetch("https://nutri-api.noit.eu/orderedMeals");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const orderedMeals = await response.json();
+
+        console.log("Sorted meals by frequency:", orderedMeals);
+        // Set only the top 10 meals
+        setAllMeals(orderedMeals);
+        setLoading(false);
+        console.log("FETCHED!");
+      } catch (error) {
+        console.error("Error fetching meals:", error);
+        setLoading(false);
+      }
     };
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData(); // Call fetchData when a snapshot occurs
-      }
-    );
+    fetchData(); // Call fetchData when component mounts
 
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
+    // No need for unsubscribe since we're not using onSnapshot
   }, []);
-
-  // React.useEffect(() => {
-  //   const headers = {
-  //     "Content-Type": "application/json"
-  //   };
-  //   const fetchData = () => {
-  //     fetch("https://nutri-api.noit.eu/orderMealsByFrequency", {
-  //       method: "GET",
-  //       headers: headers,
-  //       keepalive: true
-  //     })
-  //       .then((response) => {
-  //         console.log(response);
-  //         if (!response.ok) {
-  //           throw new Error("Failed to fetch data");
-  //         }
-  //         return response.text();
-  //       })
-  //       .then((data) => {
-  //         console.log(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching data:", error);
-  //       });
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =

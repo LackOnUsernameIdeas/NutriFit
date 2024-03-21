@@ -246,17 +246,14 @@ export default function TopMeals() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("NOT FETCHED YET!");
-        const sortedMeals = await orderMealsByFrequency();
-        console.log("Sorted meals by frequency:", sortedMeals);
-        // Filter out meals with count equal to 1
-        const filteredMeals = sortedMeals.filter((meal) => meal.count !== 1);
-        // Sort the filtered meals
-        const mealsSortedByCount = filteredMeals.sort(
-          (a, b) => b.count - a.count
-        );
+        const response = await fetch("https://nutri-api.noit.eu/orderedMeals");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const orderedMeals = await response.json();
+
         // Set only the top 10 meals
-        setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
+        setAllMeals(orderedMeals);
         setLoading(false);
         console.log("FETCHED!");
       } catch (error) {
@@ -269,34 +266,6 @@ export default function TopMeals() {
 
     // No need for unsubscribe since we're not using onSnapshot
   }, []);
-
-  // React.useEffect(() => {
-  //   const headers = {
-  //     "Content-Type": "application/json"
-  //   };
-  //   const fetchData = () => {
-  //     fetch("https://nutri-api.noit.eu/orderMealsByFrequency", {
-  //       method: "GET",
-  //       headers: headers,
-  //       keepalive: true
-  //     })
-  //       .then((response) => {
-  //         console.log(response);
-  //         if (!response.ok) {
-  //           throw new Error("Failed to fetch data");
-  //         }
-  //         return response.text();
-  //       })
-  //       .then((data) => {
-  //         console.log(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching data:", error);
-  //       });
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
