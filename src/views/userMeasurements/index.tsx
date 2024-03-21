@@ -242,7 +242,7 @@ const UserMeasurements = () => {
     setTimeout(() => {
       history.push("/admin/default");
       setIsLoading(false);
-    }, 7000);
+    }, 5000);
   }
 
   React.useEffect(() => {

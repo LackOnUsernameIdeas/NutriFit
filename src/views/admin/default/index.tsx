@@ -149,6 +149,8 @@ export default function UserReports() {
   ]);
   const [loading, setLoading] = React.useState(true);
   const [mealLoading, setMealLoading] = React.useState(true);
+  const [deviationsLoading, setDeviationsLoading] = React.useState(true);
+  const [healthLoading, setHealthLoading] = React.useState(true);
   const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
@@ -387,10 +389,10 @@ export default function UserReports() {
             averageDeviationPercentage: gemini.averageDeviationPercentage
           }
         });
-        setLoading(false);
+        setDeviationsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setLoading(false);
+        setDeviationsLoading(false);
       }
     };
 
@@ -427,7 +429,7 @@ export default function UserReports() {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setLoading(false); // Regardless of success or failure, stop loading
+        setHealthLoading(false); // Regardless of success or failure, stop loading
       }
     };
 
@@ -438,6 +440,8 @@ export default function UserReports() {
   }, []);
 
   React.useEffect(() => {
+    setLoading(true);
+
     const unsubscribe = onSnapshot(
       collection(getFirestore(), "additionalUserData"),
       (querySnapshot) => {
@@ -566,6 +570,8 @@ export default function UserReports() {
             averageBodyFatPercentage: meanBodyFatPercentageFemale
           }
         });
+
+        setLoading(false);
       }
     );
 
@@ -881,7 +887,7 @@ export default function UserReports() {
                 <b>Сравнение между OpenAI и Gemini</b>
               </Text>
             </Card>
-            {loading ? (
+            {deviationsLoading ? (
               <Card borderColor={borderColor} borderWidth="3px">
                 <Flex justify="center" align="center" minH="400px">
                   <Loading />
@@ -1479,7 +1485,7 @@ export default function UserReports() {
                 borderColor={borderColor}
                 borderWidth="3px"
               >
-                {loading ? (
+                {healthLoading ? (
                   <Flex justify="center" align="center" minH="400px">
                     <Loading />
                   </Flex>
