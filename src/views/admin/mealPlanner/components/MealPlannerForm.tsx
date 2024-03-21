@@ -359,6 +359,38 @@ export default function MealPlannerForm(props: {
     }
   };
 
+  const cuisineTranslation: { [key: string]: string } = {
+    Italian: "Италианска",
+    Bulgarian: "Българска",
+    Spanish: "Испанска",
+    French: "Френска"
+  };
+
+  function translateCuisine(
+    englishCuisine: string | string[]
+  ): string | string[] {
+    if (Array.isArray(englishCuisine)) {
+      return englishCuisine.map(
+        (cuisine) => cuisineTranslation[cuisine] || cuisine
+      );
+    } else {
+      return cuisineTranslation[englishCuisine] || englishCuisine; // Return Bulgarian translation if available, otherwise return original cuisine name
+    }
+  }
+
+  const translatedCuisine: string | string[] = translateCuisine(
+    userPreferences.Cuisine
+  );
+  let promptCuisine: string;
+
+  if (Array.isArray(translatedCuisine)) {
+    promptCuisine = translatedCuisine.join(", "); // Join multiple translated cuisine names with commas
+  } else {
+    promptCuisine = translatedCuisine as string; // Use the translated cuisine name
+  }
+
+  console.log("TRANSLATED --->", promptCuisine);
+
   const generatePlanWithGemini = async () => {
     try {
       setIsSubmitted(true);
@@ -367,9 +399,9 @@ export default function MealPlannerForm(props: {
       setIsLoading(true);
 
       const prompt = `Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
-      Менюто трябва стриктно да спазва следните лимити: да съдържа ${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
-      НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
-      Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
+      Избирай само храни от следните кухни: ${promptCuisine}, но ВИНАГИ ПРЕВЕЖДАЙ ВСИЧКО НА БЪЛГАРСКИ ЕЗИК! Менюто трябва стриктно да спазва следните лимити: да съдържа ${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
+      НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${userPreferences.Calories} калории, ${userPreferences.Protein} грама протеин, ${userPreferences.Fat} грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. Винаги давай количество храна, което да се съобразява с лимитите!! ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
+      Включвай само съществуващи в реалния свят храни в хранителния план. Когато включваш храни в хранителният режим, давай винаги различни храни от миналият ти отговор! Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
       Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
       Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
       Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${userPreferences.Exclude}. 
@@ -389,7 +421,7 @@ export default function MealPlannerForm(props: {
         'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
         'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
       }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК).  
-      Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals.`;
+      Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Съобрази се с подадените калории: ${userPreferences.Calories} и НЕ СЕ ОТДАЛЕЧАВАЙ ОТ ТЯХ! Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. Направи менюто по начин, който всеки път когато се генерира да бъде уникално и ново от минали пъти. Също избягвай често препоръчани от теб ястия като овесени ядки и сьомга. ВИНАГИ СЕ СЪОБРАЗЯВАЙ СЪС ПОДАДЕНИТЕ ЛИМИТИ! Не се отклонявай от тях! ВСИЧКО ТРЯБВА ДА Е НА БЪЛГАРСКИ!`;
 
       // Make a request to your backend endpoint to generate a response
       const response = await fetch(
