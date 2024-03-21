@@ -2269,7 +2269,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         <Box>
                           <Text fontSize="lg">
                             Отклонение на{" "}
-                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
                             цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -2286,7 +2286,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
                               Процент на отклонение на{" "}
-                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.calories -
@@ -2304,7 +2304,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
                           Няма отклонение от страна на{" "}
-                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
@@ -2330,7 +2330,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         <Box>
                           <Text fontSize="lg">
                             Отклонение на{" "}
-                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
                             цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -2346,7 +2346,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
                               Процент на отклонение на{" "}
-                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.protein -
@@ -2364,7 +2364,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
                           Няма отклонение от страна на{" "}
-                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
@@ -2392,7 +2392,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         <Box>
                           <Text fontSize="lg">
                             Отклонение на{" "}
-                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
                             цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -2409,7 +2409,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
                               Процент на отклонение на{" "}
-                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.carbohydrates -
@@ -2427,7 +2427,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
                           Няма отклонение от страна на{" "}
-                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
@@ -2452,7 +2452,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         <Box>
                           <Text fontSize="lg">
                             Отклонение на{" "}
-                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"} в
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
                             цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
@@ -2467,7 +2467,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
                               Процент на отклонение на{" "}
-                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}:
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.fat - userPreferences.Fat > 0 &&
@@ -2483,7 +2483,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
                           Няма отклонение от страна на{" "}
-                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "BgGPT"}!
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
