@@ -543,6 +543,8 @@ export default function MealPlanner() {
                 if (
                   key !== "gender" &&
                   key !== "goal" &&
+                  key !== "dailyCaloryRequirements" &&
+                  key !== "macroNutrientsData" &&
                   typeof additionalData[key] === "object"
                 ) {
                   const dateData = additionalData[key];
