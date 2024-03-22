@@ -250,7 +250,6 @@ const UserMeasurements = () => {
             height: userData["height"],
             age: userData["age"],
             weight: userData["weight"],
-            gender: userData["gender"],
             neck: userData["neck"],
             waist: userData["waist"],
             hip: userData["hip"]
