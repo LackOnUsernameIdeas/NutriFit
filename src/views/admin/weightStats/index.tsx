@@ -281,16 +281,19 @@ export default function WeightStats() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://nutri-api.noit.eu/weightStats", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            uid: "zaZs3xBP19f1mKk32j9aNCxkeqM2", // Assuming user is defined somewhere in your component
-            date: "2024-03-22" // Get today's date in YYYY-MM-DD format
-          })
-        });
+        const response = await fetch(
+          "https://nutri-api.noit.eu/weightStatsAndMealPlannerData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              uid: "zaZs3xBP19f1mKk32j9aNCxkeqM2", // Assuming user is defined somewhere in your component
+              date: "2024-03-22" // Get today's date in YYYY-MM-DD format
+            })
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch weight stats");

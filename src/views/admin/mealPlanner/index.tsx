@@ -502,128 +502,62 @@ export default function MealPlanner() {
   }, [perfectWeight]);
 
   React.useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://nutri-api.noit.eu/weightStatsAndMealPlannerData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              uid: "zaZs3xBP19f1mKk32j9aNCxkeqM2", // Assuming user is defined somewhere in your component
+              date: "2024-03-22" // Get today's date in YYYY-MM-DD format
+            })
+          }
+        );
 
-      if (user) {
-        try {
-          const userId = user.uid;
-          const additionalDataRef = doc(
-            getFirestore(),
-            "additionalUserData",
-            userId
-          );
-
-          // Subscribe to real-time updates using onSnapshot
-          const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-            if (doc.exists()) {
-              const additionalData = doc.data();
-              const timestampKey = new Date().toISOString().slice(0, 10);
-              const userDataTimestamp = additionalData[timestampKey];
-
-              const timestampedObjects = Object.entries(additionalData)
-                .filter(
-                  ([key, value]) =>
-                    typeof value === "object" &&
-                    value.hasOwnProperty("Preferences")
-                )
-                .map(([key, value]) => ({ date: key, ...value.Preferences }));
-
-              const orderedTimestampObjects = [...timestampedObjects].sort(
-                (a, b) => {
-                  const keyA = a.key;
-                  const keyB = b.key;
-                  return new Date(keyB).getTime() - new Date(keyA).getTime();
-                }
-              );
-              const orderedAllTimestampObjects = [];
-
-              for (const key in additionalData) {
-                if (
-                  key !== "gender" &&
-                  key !== "goal" &&
-                  typeof additionalData[key] === "object"
-                ) {
-                  const dateData = additionalData[key];
-                  orderedAllTimestampObjects.push({
-                    date: key,
-                    height: dateData?.height,
-                    weight: dateData?.weight,
-                    bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
-                    bodyFat: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.bodyFat
-                      : 0,
-                    bodyFatMass: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.bodyFatMass
-                      : 0,
-                    leanBodyMass: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.leanBodyMass
-                      : 0,
-                    differenceFromPerfectWeight: dateData?.PerfectWeightData
-                      ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
-                          ?.difference
-                      : 0
-                  });
-                }
-              }
-              setAllOrderedObjects(orderedAllTimestampObjects);
-              setAllUsersPreferences(orderedTimestampObjects);
-
-              if (userDataTimestamp?.age) {
-                setUserData({
-                  gender: additionalData?.gender,
-                  goal: additionalData?.goal,
-                  age: userDataTimestamp?.age,
-                  height: userDataTimestamp?.height,
-                  waist: userDataTimestamp?.waist,
-                  neck: userDataTimestamp?.neck,
-                  hip: userDataTimestamp?.hip,
-                  weight: userDataTimestamp?.weight
-                } as UserData);
-                setPerfectWeight(
-                  userDataTimestamp?.PerfectWeightData
-                    ? userDataTimestamp?.PerfectWeightData?.perfectWeight
-                    : 0
-                );
-                setDifferenceFromPerfectWeight(
-                  userDataTimestamp?.PerfectWeightData
-                    ?.differenceFromPerfectWeight
-                    ? userDataTimestamp.PerfectWeightData
-                        .differenceFromPerfectWeight
-                    : {
-                        difference: 0,
-                        isUnderOrAbove: ""
-                      }
-                );
-                setHealth(
-                  userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
-                );
-                setDailyCaloryRequirements(
-                  additionalData?.dailyCaloryRequirements
-                    ? additionalData?.dailyCaloryRequirements
-                    : []
-                );
-                const macroNutrientsData = Array.isArray(
-                  additionalData?.macroNutrientsData
-                )
-                  ? additionalData?.macroNutrientsData
-                  : [];
-
-                setMacroNutrients(macroNutrientsData);
-              }
-            }
-          });
-
-          // Cleanup the subscription when the component unmounts
-          return () => {
-            unsubscribeData();
-          };
-        } catch (error) {
-          console.error("Error fetching additional user data:", error);
+        if (!response.ok) {
+          throw new Error("Failed to fetch weight stats");
         }
+
+        const weightStatsData = await response.json();
+
+        // Set the states accordingly
+        setPerfectWeight(weightStatsData.perfectWeight || 0);
+        setDifferenceFromPerfectWeight(
+          {
+            difference: weightStatsData.differenceFromPerfectWeight.difference,
+            isUnderOrAbove:
+              weightStatsData.differenceFromPerfectWeight.isUnderOrAbove
+          } || {
+            difference: 0,
+            isUnderOrAbove: ""
+          }
+        );
+
+        setAllOrderedObjects(weightStatsData.userDataForCharts || []);
+        setAllUsersPreferences(
+          weightStatsData.orderedTimestampObjectsWithPreferences || []
+        );
+
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          ...weightStatsData.userDataSaveable
+        }));
+
+        setHealth(weightStatsData.bmiIndex.health);
+
+        setDailyCaloryRequirements(weightStatsData.dailyCaloryRequirements);
+
+        setMacroNutrients(weightStatsData.macroNutrientsData);
+      } catch (error) {
+        console.error("Error fetching weight stats:", error);
       }
-    });
+    };
+
+    fetchData();
   }, []);
 
   React.useEffect(() => {
