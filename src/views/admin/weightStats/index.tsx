@@ -279,167 +279,64 @@ export default function WeightStats() {
   }, [dropdownVisible]);
 
   React.useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://nutri-api.noit.eu/weightStats", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            uid: "zaZs3xBP19f1mKk32j9aNCxkeqM2", // Assuming user is defined somewhere in your component
+            date: "2024-03-22" // Get today's date in YYYY-MM-DD format
+          })
+        });
 
-      if (user) {
-        try {
-          const userId = user.uid;
-          const additionalDataRef = doc(
-            getFirestore(),
-            "additionalUserData",
-            userId
-          );
-
-          // Subscribe to real-time updates using onSnapshot
-          const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-            if (doc.exists()) {
-              const additionalData = doc.data();
-              const timestampKey = new Date().toISOString().slice(0, 10);
-
-              if (
-                additionalData[timestampKey]?.age &&
-                additionalData[timestampKey]?.BMI?.bmi &&
-                additionalData[timestampKey]?.BodyMassData?.bodyFat
-              ) {
-                const userDataSaveable: UserData = {
-                  gender: additionalData.gender,
-                  goal: additionalData.goal,
-                  age: additionalData[timestampKey].age,
-                  height: additionalData[timestampKey].height,
-                  waist: additionalData[timestampKey].waist,
-                  neck: additionalData[timestampKey].neck,
-                  hip: additionalData[timestampKey].hip,
-                  weight: additionalData[timestampKey].weight,
-                  bmi: additionalData[timestampKey]?.BMI
-                    ? additionalData[timestampKey]?.BMI?.bmi
-                    : 0,
-                  bodyFat: additionalData[timestampKey]?.BodyMassData
-                    ? additionalData[timestampKey]?.BodyMassData?.bodyFat
-                    : 0,
-                  bodyFatMass: additionalData[timestampKey]?.BodyMassData
-                    ? additionalData[timestampKey]?.BodyMassData?.bodyFatMass
-                    : 0,
-                  leanBodyMass: additionalData[timestampKey]?.BodyMassData
-                    ? additionalData[timestampKey]?.BodyMassData?.leanBodyMass
-                    : 0,
-                  differenceFromPerfectWeight: additionalData[timestampKey]
-                    ?.PerfectWeightData
-                    ? additionalData[timestampKey]?.PerfectWeightData
-                        ?.differenceFromPerfectWeight?.difference
-                    : 0
-                };
-                const bmiData: BMIInfo = {
-                  bmi: additionalData[timestampKey]?.BMI
-                    ? additionalData[timestampKey]?.BMI?.bmi
-                    : 0,
-                  health: additionalData[timestampKey]?.BMI
-                    ? additionalData[timestampKey]?.BMI?.health
-                    : "",
-                  healthy_bmi_range: additionalData[timestampKey]?.BMI
-                    ? additionalData[timestampKey]?.BMI?.healthy_bmi_range
-                    : ""
-                };
-                const bodyMass: BodyMass = {
-                  "Body Fat (U.S. Navy Method)": additionalData[timestampKey]
-                    ?.BodyMassData
-                    ? additionalData[timestampKey]?.BodyMassData?.bodyFat
-                    : 0,
-                  "Body Fat Mass": additionalData[timestampKey]?.BodyMassData
-                    ? additionalData[timestampKey]?.BodyMassData?.bodyFatMass
-                    : 0,
-                  "Lean Body Mass": additionalData[timestampKey]?.BodyMassData
-                    ? additionalData[timestampKey]?.BodyMassData?.leanBodyMass
-                    : 0
-                };
-                setPerfectWeight(
-                  additionalData[timestampKey]?.PerfectWeightData
-                    ? additionalData[timestampKey]?.PerfectWeightData
-                        ?.perfectWeight
-                    : 0
-                );
-                setDifferenceFromPerfectWeight(
-                  additionalData[timestampKey]?.PerfectWeightData
-                    ? additionalData[timestampKey]?.PerfectWeightData
-                        ?.differenceFromPerfectWeight
-                    : {
-                        difference: 0,
-                        isUnderOrAbove: ""
-                      }
-                );
-                setBMIIndex(bmiData);
-                setBodyFatMassAndLeanMass(bodyMass);
-                setUserData((prevUserData) => ({
-                  ...prevUserData,
-                  ...userDataSaveable
-                }));
-
-                // Log the updated state in the callback
-                setUserData((updatedUserData) => {
-                  console.log("Updated userData:", updatedUserData);
-                  return updatedUserData;
-                });
-                console.log("i hate myserlf ----->", userDataSaveable);
-                console.log("USERDATA ----> ", userData);
-
-                const userChartData = [];
-
-                for (const key in additionalData) {
-                  if (
-                    key !== "gender" &&
-                    key !== "goal" &&
-                    typeof additionalData[key] === "object"
-                  ) {
-                    const dateData = additionalData[key];
-                    userChartData.push({
-                      date: key,
-                      height: dateData.height,
-                      weight: dateData.weight,
-                      bmi: dateData.BMI ? dateData.BMI.bmi : undefined,
-                      bodyFat: dateData.BodyMassData
-                        ? dateData.BodyMassData.bodyFat
-                        : undefined,
-                      bodyFatMass: dateData.BodyMassData
-                        ? dateData.BodyMassData.bodyFatMass
-                        : undefined,
-                      leanBodyMass: dateData.BodyMassData
-                        ? dateData.BodyMassData.leanBodyMass
-                        : undefined,
-                      differenceFromPerfectWeight: dateData.PerfectWeightData
-                        ? dateData.PerfectWeightData.differenceFromPerfectWeight
-                            .difference
-                        : undefined,
-                      isUnderOrAbove: dateData.PerfectWeightData
-                        ? dateData.PerfectWeightData.differenceFromPerfectWeight
-                            .isUnderOrAbove
-                        : undefined
-                    });
-                  }
-                }
-
-                setUserDataForCharts(userChartData);
-                setIsLoading(false);
-                console.log(
-                  "ID: ",
-                  user.uid,
-                  "Additional user data:",
-                  additionalData
-                );
-                console.log("userChartData:", userChartData);
-              }
-            }
-          });
-
-          // Cleanup the subscription when the component unmounts
-          return () => {
-            unsubscribeData();
-          };
-        } catch (error) {
-          console.error("Error fetching additional user data:", error);
+        if (!response.ok) {
+          throw new Error("Failed to fetch weight stats");
         }
+
+        const weightStatsData = await response.json();
+
+        // Set the states accordingly
+        setPerfectWeight(weightStatsData.perfectWeight || 0);
+        setDifferenceFromPerfectWeight(
+          {
+            difference: weightStatsData.differenceFromPerfectWeight.difference,
+            isUnderOrAbove:
+              weightStatsData.differenceFromPerfectWeight.isUnderOrAbove
+          } || {
+            difference: 0,
+            isUnderOrAbove: ""
+          }
+        );
+        setBMIIndex(
+          weightStatsData.bmiIndex || {
+            bmi: 0,
+            health: "",
+            healthy_bmi_range: ""
+          }
+        );
+        setBodyFatMassAndLeanMass(
+          weightStatsData.bodyFatMassAndLeanMass || {
+            "Body Fat (U.S. Navy Method)": 0,
+            "Body Fat Mass": 0,
+            "Lean Body Mass": 0
+          }
+        );
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          ...weightStatsData.userDataSaveable
+        }));
+        setUserDataForCharts(weightStatsData.userDataForCharts || []);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching weight stats:", error);
+        setIsLoading(false);
       }
-    });
+    };
+
+    fetchData();
   }, []);
 
   const calculateChange = (sortedData: any[], property: string) => {
