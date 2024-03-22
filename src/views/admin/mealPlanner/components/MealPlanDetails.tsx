@@ -1,6 +1,7 @@
 import React from "react";
 import {
   MealPlan2,
+  SaveableDeviations,
   UserPreferencesForMealPlan
 } from "../../../../types/weightStats";
 import {
@@ -30,6 +31,9 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdFlatware
 } from "react-icons/md";
+import { saveDeviations, saveMealPlan } from "database/setWeightStatsData";
+
+import { getAuth } from "firebase/auth";
 interface MealPlanDetailsProps {
   mealPlan: MealPlan2;
   mealPlanImages: {
@@ -48,6 +52,7 @@ interface MealPlanDetailsProps {
   };
   userPreferences: UserPreferencesForMealPlan;
   isForLoading?: boolean;
+  isPlanGeneratedWithOpenAI: boolean;
 }
 
 const bulgarianMealType: string[] = ["Закуска", "Обяд", "Вечеря"];
@@ -83,7 +88,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   mealPlan,
   mealPlanImages,
   userPreferences,
-  isForLoading
+  isForLoading,
+  isPlanGeneratedWithOpenAI
 }) => {
   const [currentPage, setCurrentPage] = React.useState("закуска");
   const [showDessertInstructions, setShowDessertInstructions] =
@@ -91,7 +97,6 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   const [showMainInstructions, setShowMainInstructions] = React.useState(false);
   const [showAppetizerInstructions, setShowAppetizerInstructions] =
     React.useState(false);
-
   const toggleDessertInstructions = () => {
     setShowDessertInstructions(!showDessertInstructions);
   };
@@ -125,6 +130,97 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
   console.log("calculatedTotals: ", calculatedTotals);
 
   const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
+  const [deviations, setDeviations] = React.useState<SaveableDeviations>({
+    calories: {
+      deviation: calculatedTotals.calories - userPreferences.Calories,
+      deviationPercentage:
+        (
+          ((calculatedTotals.calories - userPreferences.Calories) /
+            userPreferences.Calories) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Calories
+    },
+    protein: {
+      deviation: calculatedTotals.protein - userPreferences.Protein,
+      deviationPercentage:
+        (
+          ((calculatedTotals.protein - userPreferences.Protein) /
+            userPreferences.Protein) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Protein
+    },
+    carbohydrates: {
+      deviation: calculatedTotals.carbohydrates - userPreferences.Carbohydrates,
+      deviationPercentage:
+        (
+          ((calculatedTotals.carbohydrates - userPreferences.Carbohydrates) /
+            userPreferences.Carbohydrates) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Carbohydrates
+    },
+    fat: {
+      deviation: calculatedTotals.fat - userPreferences.Fat,
+      deviationPercentage:
+        (
+          ((calculatedTotals.fat - userPreferences.Fat) / userPreferences.Fat) *
+          100
+        ).toFixed(2) + "%",
+      userLimit: userPreferences.Fat
+    }
+  });
+
+  const initialDeviations = React.useRef(deviations);
+
+  React.useEffect(() => {
+    const uid = getAuth().currentUser.uid;
+    const aiUsed = isPlanGeneratedWithOpenAI
+      ? "mealPlanOpenAI"
+      : "mealPlanGemini";
+
+    const saveMealPlanData = async () => {
+      try {
+        // Check if mealPlan and mealPlanImages are not null
+        if (
+          mealPlan.breakfast !== null &&
+          mealPlanImages.breakfast !== null &&
+          mealPlanImages.breakfast !== null
+        ) {
+          await Promise.all([
+            saveMealPlan(uid, aiUsed, mealPlan, mealPlanImages)
+          ]);
+        }
+      } catch (error) {
+        console.error("Error saving meal plan:", error);
+      }
+    };
+
+    saveMealPlanData();
+
+    const saveDeviationsData = async () => {
+      try {
+        // Function to check if any value in the deviations state is empty string or zero
+        const isNotEmpty = (value: number | string) => value !== "";
+
+        // Check if any value in initialDeviations is not empty string or zero
+        const hasNonEmptyValues = Object.values(initialDeviations.current).some(
+          (nutrient) =>
+            isNotEmpty(nutrient.deviation) || isNotEmpty(nutrient.userLimit)
+        );
+
+        // If there are non-empty values, call saveDeviations function
+        if (hasNonEmptyValues) {
+          await saveDeviations(uid, aiUsed, initialDeviations.current);
+        }
+      } catch (error) {
+        console.error("Error saving deviations:", error);
+      }
+    };
+
+    saveDeviationsData();
+  }, [mealPlan, mealPlanImages]);
 
   return (
     <FadeInWrapper>
@@ -2172,7 +2268,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на chatGPT в цифри:
+                            Отклонение на{" "}
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
+                            цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             (
@@ -2187,7 +2285,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на chatGPT:
+                              Процент на отклонение на{" "}
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.calories -
@@ -2204,7 +2303,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на chatGPT!
+                          Няма отклонение от страна на{" "}
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
@@ -2229,7 +2329,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на chatGPT в цифри:
+                            Отклонение на{" "}
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
+                            цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             (
@@ -2243,7 +2345,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на chatGPT:
+                              Процент на отклонение на{" "}
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.protein -
@@ -2260,7 +2363,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на chatGPT!
+                          Няма отклонение от страна на{" "}
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
@@ -2287,7 +2391,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на chatGPT в цифри:
+                            Отклонение на{" "}
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
+                            цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             (
@@ -2302,7 +2408,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на chatGPT:
+                              Процент на отклонение на{" "}
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.carbohydrates -
@@ -2319,7 +2426,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на chatGPT!
+                          Няма отклонение от страна на{" "}
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
@@ -2343,7 +2451,9 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                       {calculatedTotals.fat - userPreferences.Fat !== 0 ? (
                         <Box>
                           <Text fontSize="lg">
-                            Отклонение на chatGPT в цифри:
+                            Отклонение на{" "}
+                            {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"} в
+                            цифри:
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             (
@@ -2356,7 +2466,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           </Text>
                           <Text fontSize="lg" color="rgba(67,24,255,1)">
                             <Text fontSize="lg">
-                              Процент на отклонение на chatGPT:
+                              Процент на отклонение на{" "}
+                              {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}:
                             </Text>
                             (
                             {calculatedTotals.fat - userPreferences.Fat > 0 &&
@@ -2371,7 +2482,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                         </Box>
                       ) : (
                         <Text fontSize="lg" color="#03AC13">
-                          Няма отклонение от страна на chatGPT!
+                          Няма отклонение от страна на{" "}
+                          {isPlanGeneratedWithOpenAI ? "OpenAI" : "Gemini"}!
                         </Text>
                       )}
                     </Box>
