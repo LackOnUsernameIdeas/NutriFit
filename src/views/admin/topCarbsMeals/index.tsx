@@ -12,7 +12,10 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { getTopCarbohydratesMeals } from "database/getAdditionalUserData";
+import {
+  getTopMealsByCollection,
+  getFirst50TopMealsByCollection
+} from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
@@ -76,19 +79,38 @@ export default function TopMeals() {
     });
 
   React.useEffect(() => {
-    let isMounted = true; // Flag to track if component is mounted
+    let isMounted = true;
 
     const fetchData = async () => {
       try {
-        console.log("fetching...");
-        const meals = await getTopCarbohydratesMeals();
+        console.log("Fetching first 50 meals...");
+        const first50MealsPromise = getFirst50TopMealsByCollection(
+          "topCarbohydratesMeals"
+        );
 
-        console.log("Top Carbs: ", meals);
+        const first50Meals = await first50MealsPromise;
 
-        if (isMounted) {
-          setAllMeals(meals as NutrientMeal[]);
+        console.log("First 50 Meals: ", first50Meals);
 
-          const lowCarbsMeals = meals
+        // Display the first 50 meals
+        setAllMeals(first50Meals as NutrientMeal[]);
+
+        const initialLowCarbsMeals = first50Meals
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.carbohydrates || 0) - (b.totals.carbohydrates || 0)
+          );
+
+        setLeastCarbsFoods(initialLowCarbsMeals);
+        setLoading(false);
+        // Fetch all meals in the background
+        console.log("Fetching remaining meals...");
+        getTopMealsByCollection("topCarbohydratesMeals").then((allMeals) => {
+          console.log("All Meals: ", allMeals);
+          // Update state to include the remaining meals
+          setAllMeals(allMeals as NutrientMeal[]);
+          const lowCarbsMeals = allMeals
             .slice()
             .sort(
               (a: NutrientMeal, b: NutrientMeal) =>
@@ -96,9 +118,8 @@ export default function TopMeals() {
             );
 
           setLeastCarbsFoods(lowCarbsMeals);
-          setLoading(false);
           console.log("FETCHED!");
-        }
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -110,6 +131,61 @@ export default function TopMeals() {
       // Cleanup function to be called when component unmounts
       isMounted = false;
     };
+  }, []);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getFirst50TopMealsByCollection/topCarbohydratesMeals"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const first50res = await response.json();
+        const first50 = first50res.first50meals;
+        console.log("First 50 Meals: ", first50);
+        setAllMeals(first50 as NutrientMeal[]);
+
+        const initialLowCarbsMeals = first50
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.carbohydrates || 0) - (b.totals.carbohydrates || 0)
+          );
+
+        setLeastCarbsFoods(initialLowCarbsMeals);
+        setLoading(false);
+        // Fetch all meals in the background
+        console.log("Fetching remaining meals...");
+        const responseAll = await fetch(
+          "https://nutri-api.noit.eu/getTopMealsByCollection/topCarbohydratesMeals"
+        );
+        if (!responseAll.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const allTopMealsRes = await responseAll.json();
+        const allTopMeals = allTopMealsRes.topmeals;
+        // Use the fetched data directly instead of invoking getTopMealsByCollection function
+        console.log("All Meals: ", allTopMeals);
+        // Update state to include the remaining meals
+        setAllMeals(allTopMeals as NutrientMeal[]);
+        const lowCarbohydratesMeals = allTopMeals
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.carbohydrates || 0) - (b.totals.carbohydrates || 0)
+          );
+
+        setLeastCarbsFoods(lowCarbohydratesMeals);
+        console.log("FETCHED!");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const [miniStatisticsVisible, setMiniStatisticsVisible] =

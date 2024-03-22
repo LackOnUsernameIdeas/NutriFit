@@ -356,7 +356,9 @@ export default function MealPlannerForm(props: {
     const saveMealPlanData = async () => {
       try {
         const userId = getAuth().currentUser.uid;
-        await Promise.all([saveMealPlan(userId, mealPlan, mealPlanImages)]);
+        await Promise.all([
+          saveMealPlan(userId, "OpenAI", mealPlan, mealPlanImages)
+        ]);
       } catch (error) {
         console.error("Error saving meal plan:", error);
       }

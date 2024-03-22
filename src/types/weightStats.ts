@@ -321,3 +321,39 @@ export type GenderAverageStats = {
   male: GenderStatistics;
   female: GenderStatistics;
 };
+
+export type Deviations = {
+  openAI: {
+    averageDeviation: any; // Define the type for average deviation
+    maxDeviation: any; // Define the type for max deviation
+    averageDeviationPercentage: any; // Define the type for average deviation percentage
+  };
+  gemini: {
+    averageDeviation: any; // Define the type for average deviation
+    maxDeviation: any; // Define the type for max deviation
+    averageDeviationPercentage: any; // Define the type for average deviation percentage
+  };
+};
+
+export interface SaveableDeviations {
+  calories: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  protein: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  carbohydrates: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+  fat: {
+    deviation: number;
+    deviationPercentage: string;
+    userLimit: number;
+  };
+}

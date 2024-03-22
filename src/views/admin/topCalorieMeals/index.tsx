@@ -12,7 +12,10 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { getTopCalorieMeals } from "database/getAdditionalUserData";
+import {
+  getTopMealsByCollection,
+  getFirst50TopMealsByCollection
+} from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
@@ -75,17 +78,43 @@ export default function TopMeals() {
     .map((meal) => meal.totals.calories);
 
   React.useEffect(() => {
-    let isMounted = true;
     const fetchData = async () => {
       try {
-        console.log("fetching...");
-        const meals = await getTopCalorieMeals();
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getFirst50TopMealsByCollection/topCalorieMeals"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const first50res = await response.json();
+        const first50 = first50res.first50meals;
+        console.log("First 50 Meals: ", first50);
+        setAllMeals(first50 as NutrientMeal[]);
 
-        console.log("Top Calories: ", meals);
+        const initialLowCaloryMeals = first50
+          .slice()
+          .sort(
+            (a: NutrientMeal, b: NutrientMeal) =>
+              (a.totals.calories || 0) - (b.totals.calories || 0)
+          );
 
-        setAllMeals(meals as NutrientMeal[]);
-
-        const lowCaloryMeals = meals
+        setLeastCalorieFoods(initialLowCaloryMeals);
+        setLoading(false);
+        // Fetch all meals in the background
+        console.log("Fetching remaining meals...");
+        const responseAll = await fetch(
+          "https://nutri-api.noit.eu/getTopMealsByCollection/topCalorieMeals"
+        );
+        if (!responseAll.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const allTopMealsRes = await responseAll.json();
+        const allTopMeals = allTopMealsRes.topmeals;
+        // Use the fetched data directly instead of invoking getTopMealsByCollection function
+        console.log("All Meals: ", allTopMeals);
+        // Update state to include the remaining meals
+        setAllMeals(allTopMeals as NutrientMeal[]);
+        const lowCaloryMeals = allTopMeals
           .slice()
           .sort(
             (a: NutrientMeal, b: NutrientMeal) =>
@@ -93,19 +122,14 @@ export default function TopMeals() {
           );
 
         setLeastCalorieFoods(lowCaloryMeals);
-        setLoading(false);
         console.log("FETCHED!");
       } catch (error) {
         console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
 
     fetchData();
-
-    return () => {
-      // Cleanup function to be called when component unmounts
-      isMounted = false;
-    };
   }, []);
 
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
