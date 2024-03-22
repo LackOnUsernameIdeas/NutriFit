@@ -275,7 +275,7 @@ const UserMeasurements = () => {
     setTimeout(() => {
       history.push("/admin/default");
       setIsLoading(false);
-    }, 5000);
+    }, 2000);
   }
 
   React.useEffect(() => {
@@ -387,7 +387,10 @@ const UserMeasurements = () => {
           setIsLoading(true);
 
           const additionalData = await fetchUserData();
-
+          setTimeout(() => {
+            setIsLoading(false);
+            history.push("/admin/default");
+          }, 1000);
           // Extract date keys from additionalData
           const dateKeys = Object.keys(additionalData).filter((key) =>
             /^\d{4}-\d{2}-\d{2}$/.test(key)
@@ -409,10 +412,6 @@ const UserMeasurements = () => {
             setUserDataForToday(rawUserDataForToday);
             setIsTodaysDataFetched(true);
           }
-
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 1000);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
