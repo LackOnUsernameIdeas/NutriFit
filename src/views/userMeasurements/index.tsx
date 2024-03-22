@@ -26,7 +26,6 @@ import { useHistory } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { saveAdditionalUserData } from "database/setAdditionalUserData";
-import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 // Chakra imports
 import {
   Box,
@@ -135,6 +134,22 @@ const UserMeasurements = () => {
       isUnderOrAbove: ""
     });
 
+  const fetchUserData = async () => {
+    const uid = getAuth().currentUser.uid;
+    try {
+      const response = await fetch(
+        `https://nutri-api.noit.eu/getUserData/${uid}`
+      );
+
+      const result = await response.json();
+
+      console.log("User Data from fetch function:", result.userData);
+      return result.userData;
+    } catch (error) {
+      console.error("Error triggering fetch and save:", error);
+    }
+  };
+
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -144,7 +159,7 @@ const UserMeasurements = () => {
         try {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
-          const additionalData = await fetchAdditionalUserData(user.uid);
+          const additionalData = await fetchUserData();
           console.log("gender for state: ", additionalData.gender);
           if (additionalData?.[timestampKey]?.age) {
             setUserData({
@@ -221,24 +236,43 @@ const UserMeasurements = () => {
     }
   };
 
+  const saveUserData = async () => {
+    const uid = getAuth().currentUser.uid;
+    try {
+      const response = await fetch(
+        `https://nutri-api.noit.eu/saveUserData/${uid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            height: userData["height"],
+            age: userData["age"],
+            weight: userData["weight"],
+            gender: userData["gender"],
+            neck: userData["neck"],
+            waist: userData["waist"],
+            hip: userData["hip"]
+          })
+        }
+      );
+
+      const result = await response.json();
+      console.log("Server response SAVING:", result);
+    } catch (error) {
+      console.error("Error triggering fetch and save:", error);
+    }
+  };
   // Функция за генериране на статистики
   async function generateStats() {
     setIsLoading(true);
     const uid = getAuth().currentUser.uid;
 
-    // Call this function when you want to trigger fetching and saving all data
+    saveUserData();
+
     triggerFetchAndSaveAllData();
 
-    // Save additional user data
-    saveAdditionalUserData(
-      uid,
-      userData.height,
-      userData.age,
-      userData.weight,
-      userData.neck,
-      userData.waist,
-      userData.hip
-    );
     setTimeout(() => {
       history.push("/admin/default");
       setIsLoading(false);
@@ -353,7 +387,7 @@ const UserMeasurements = () => {
         try {
           setIsLoading(true);
 
-          const additionalData = await fetchAdditionalUserData(user.uid);
+          const additionalData = await fetchUserData();
 
           // Extract date keys from additionalData
           const dateKeys = Object.keys(additionalData).filter((key) =>
