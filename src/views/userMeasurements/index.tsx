@@ -150,6 +150,7 @@ const UserMeasurements = () => {
     }
   };
 
+  //---------------------
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -344,6 +345,7 @@ const UserMeasurements = () => {
     }
   };
 
+  //---------------------
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -396,7 +398,8 @@ const UserMeasurements = () => {
 
   const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
   const [updateWithNewData, setUpdateWithNewData] = useState<boolean>(false);
-  useEffect(() => {
+
+  React.useEffect(() => {
     if (userDataLastSavedDate) {
       const commonKeys = Object.keys(userData).filter((key) =>
         Object.keys(userDataLastSavedDate).includes(key)

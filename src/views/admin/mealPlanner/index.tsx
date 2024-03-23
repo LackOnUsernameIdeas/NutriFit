@@ -502,19 +502,27 @@ export default function MealPlanner() {
     calculatePerfectWeightChange();
   }, [perfectWeight]);
 
+  console.log("outside");
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      console.log("user", user);
 
       if (user) {
         try {
+          console.log("user2", user);
+
           const userId = user.uid;
           const additionalDataRef = doc(db, "additionalUserData", userId);
 
           // Subscribe to real-time updates using onSnapshot
           const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
+            console.log("additionalDataRef", additionalDataRef);
+
             if (doc.exists()) {
+              console.log("doc.exists()", doc.exists());
+
               const additionalData = doc.data();
               const timestampKey = new Date().toISOString().slice(0, 10);
               const userDataTimestamp = additionalData[timestampKey];

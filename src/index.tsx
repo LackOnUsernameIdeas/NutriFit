@@ -53,6 +53,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
   const [userDataForToday, setUserDataForToday] = useState(null);
   const isMounted = useRef(true);
 
+  //---------------------
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -121,6 +122,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const [userDataForToday, setUserDataForToday] = useState(null);
   const isMounted = useRef(true);
 
+  //---------------------
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
