@@ -290,7 +290,7 @@ export default function WeightStats() {
             },
             body: JSON.stringify({
               uid: "zaZs3xBP19f1mKk32j9aNCxkeqM2", // Assuming user is defined somewhere in your component
-              date: "2024-03-22" // Get today's date in YYYY-MM-DD format
+              date: "2024-03-23" // Get today's date in YYYY-MM-DD format
             })
           }
         );

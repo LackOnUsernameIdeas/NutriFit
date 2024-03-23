@@ -79,59 +79,6 @@ export default function TopMeals() {
   const [leastProteinMeals, setLeastProteinMeals] = React.useState<
     NutrientMeal[] | []
   >([]);
-  React.useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      try {
-        console.log("Fetching first 50 meals...");
-        const first50MealsPromise =
-          getFirst50TopMealsByCollection("topProteinMeals");
-
-        const first50Meals = await first50MealsPromise;
-
-        console.log("First 50 Meals: ", first50Meals);
-
-        // Display the first 50 meals
-        setAllMeals(first50Meals as NutrientMeal[]);
-
-        const initialLowProteinMeals = first50Meals
-          .slice()
-          .sort(
-            (a: NutrientMeal, b: NutrientMeal) =>
-              (a.totals.protein || 0) - (b.totals.protein || 0)
-          );
-
-        setLeastProteinMeals(initialLowProteinMeals);
-        setLoading(false);
-        // Fetch all meals in the background
-        console.log("Fetching remaining meals...");
-        getTopMealsByCollection("topProteinMeals").then((allMeals) => {
-          console.log("All Meals: ", allMeals);
-          // Update state to include the remaining meals
-          setAllMeals(allMeals as NutrientMeal[]);
-          const lowProteinMeals = allMeals
-            .slice()
-            .sort(
-              (a: NutrientMeal, b: NutrientMeal) =>
-                (a.totals.protein || 0) - (b.totals.protein || 0)
-            );
-
-          setLeastProteinMeals(lowProteinMeals);
-          console.log("FETCHED!");
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      // Cleanup function to be called when component unmounts
-      isMounted = false;
-    };
-  }, []);
 
   React.useEffect(() => {
     const fetchData = async () => {
