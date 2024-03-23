@@ -241,18 +241,6 @@ const UserMeasurements = () => {
     setIsLoading(true);
     // Call this function when you want to trigger fetching and saving all data
     triggerFetchAndSaveAllData();
-    const uid = getAuth().currentUser.uid;
-
-    saveAdditionalUserData(
-      uid,
-      userData.height,
-      userData.age,
-      userData.weight,
-      userData.neck,
-      userData.waist,
-      userData.hip
-    );
-
     setTimeout(() => {
       history.push("/admin/default");
       setIsLoading(false);

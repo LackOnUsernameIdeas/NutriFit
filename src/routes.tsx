@@ -25,11 +25,11 @@ import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
 import Contact from "views/admin/contact";
-import RecommendedFoods from "views/admin/recommendedFoods";
-import TopCaloryMeals from "views/admin/topCalorieMeals";
-import TopProteinMeals from "views/admin/topProteinMeals";
-import TopFatMeals from "views/admin/topFatMeals";
-import TopCarbsMeals from "views/admin/topCarbsMeals";
+// import RecommendedFoods from "views/admin/recommendedFoods";
+// import TopCaloryMeals from "views/admin/topCalorieMeals";
+// import TopProteinMeals from "views/admin/topProteinMeals";
+// import TopFatMeals from "views/admin/topFatMeals";
+// import TopCarbsMeals from "views/admin/topCarbsMeals";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -62,100 +62,100 @@ const routes: RoutesType[] = [
     ),
     component: MealPlanner
   },
-  {
-    name: "Най-препоръчвани храни",
-    layout: "/admin",
-    path: "/suggested",
-    icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
-    component: RecommendedFoods,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ калорични храни от NutriFit",
-    layout: "/admin",
-    path: "/calory",
-    icon: <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />,
-    component: TopCaloryMeals,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ мазни храни от NutriFit",
-    layout: "/admin",
-    path: "/fat",
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: TopFatMeals,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ въглехидратни храни от NutriFit",
-    layout: "/admin",
-    path: "/carbs",
-    icon: <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />,
-    component: TopCarbsMeals,
-    hideInSidebar: true
-  },
-  {
-    name: "Топ протеинови храни от NutriFit",
-    layout: "/admin",
-    path: "/protein",
-    icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
-    component: TopProteinMeals,
-    hideInSidebar: true
-  },
-  {
-    name: "Класации",
-    layout: "/admin",
-    path: "/parent",
-    icon: (
-      <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
-    ),
-    collapseRoutes: [
-      {
-        name: "Най-препоръчвани храни",
-        layout: "/admin",
-        path: "/suggested",
-        icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
-        component: RecommendedFoods,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ калорични храни от NutriFit",
-        layout: "/admin",
-        path: "/calory",
-        icon: (
-          <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />
-        ),
-        component: TopCaloryMeals,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ мазни храни от NutriFit",
-        layout: "/admin",
-        path: "/fat",
-        icon: <Icon as={FaTint} width="20px" height="20px" color="inherit" />,
-        component: TopFatMeals,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ въглехидратни храни от NutriFit",
-        layout: "/admin",
-        path: "/carbs",
-        icon: (
-          <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />
-        ),
-        component: TopCarbsMeals,
-        hideInSidebar: true
-      },
-      {
-        name: "Топ протеинови храни от NutriFit",
-        layout: "/admin",
-        path: "/protein",
-        icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
-        component: TopProteinMeals,
-        hideInSidebar: true
-      }
-    ]
-  },
+  // {
+  //   name: "Най-препоръчвани храни",
+  //   layout: "/admin",
+  //   path: "/suggested",
+  //   icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
+  //   component: RecommendedFoods,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ калорични храни от NutriFit",
+  //   layout: "/admin",
+  //   path: "/calory",
+  //   icon: <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />,
+  //   component: TopCaloryMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ мазни храни от NutriFit",
+  //   layout: "/admin",
+  //   path: "/fat",
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: TopFatMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ въглехидратни храни от NutriFit",
+  //   layout: "/admin",
+  //   path: "/carbs",
+  //   icon: <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />,
+  //   component: TopCarbsMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Топ протеинови храни от NutriFit",
+  //   layout: "/admin",
+  //   path: "/protein",
+  //   icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
+  //   component: TopProteinMeals,
+  //   hideInSidebar: true
+  // },
+  // {
+  //   name: "Класации",
+  //   layout: "/admin",
+  //   path: "/parent",
+  //   icon: (
+  //     <Icon as={MdLeaderboard} width="20px" height="20px" color="inherit" />
+  //   ),
+  //   collapseRoutes: [
+  //     {
+  //       name: "Най-препоръчвани храни",
+  //       layout: "/admin",
+  //       path: "/suggested",
+  //       icon: <Icon as={FaTrophy} width="20px" height="20px" color="inherit" />,
+  //       component: RecommendedFoods,
+  //       hideInSidebar: true
+  //     },
+  //     {
+  //       name: "Топ калорични храни от NutriFit",
+  //       layout: "/admin",
+  //       path: "/calory",
+  //       icon: (
+  //         <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />
+  //       ),
+  //       component: TopCaloryMeals,
+  //       hideInSidebar: true
+  //     },
+  //     {
+  //       name: "Топ мазни храни от NutriFit",
+  //       layout: "/admin",
+  //       path: "/fat",
+  //       icon: <Icon as={FaTint} width="20px" height="20px" color="inherit" />,
+  //       component: TopFatMeals,
+  //       hideInSidebar: true
+  //     },
+  //     {
+  //       name: "Топ въглехидратни храни от NutriFit",
+  //       layout: "/admin",
+  //       path: "/carbs",
+  //       icon: (
+  //         <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />
+  //       ),
+  //       component: TopCarbsMeals,
+  //       hideInSidebar: true
+  //     },
+  //     {
+  //       name: "Топ протеинови храни от NutriFit",
+  //       layout: "/admin",
+  //       path: "/protein",
+  //       icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
+  //       component: TopProteinMeals,
+  //       hideInSidebar: true
+  //     }
+  //   ]
+  // },
   {
     name: "За контакт",
     layout: "/admin",
