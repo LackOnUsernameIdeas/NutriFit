@@ -68,6 +68,7 @@ import { GenderAverageStats } from "../../../types/weightStats";
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
+import { db } from "database/connection";
 
 interface LinearGradientTextProps {
   text: any;
@@ -342,7 +343,7 @@ export default function UserReports() {
     };
 
     const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
+      collection(db, "additionalUserData"),
       async (querySnapshot) => {
         await fetchData();
         setLoading(false); // Call fetchData when a snapshot occurs
@@ -355,7 +356,7 @@ export default function UserReports() {
 
   React.useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
+      collection(db, "additionalUserData"),
       (querySnapshot) => {
         let totalCaloriesMale = 0;
         let totalProteinMale = 0;

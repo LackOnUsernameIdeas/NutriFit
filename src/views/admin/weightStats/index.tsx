@@ -59,7 +59,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { onSnapshot, doc, getFirestore } from "firebase/firestore";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { parseISO } from "date-fns";
-import { firebaseStore } from "database/connection";
+import { db } from "database/connection";
 
 // Главен компонент
 export default function WeightStats() {
@@ -287,11 +287,7 @@ export default function WeightStats() {
       if (user) {
         try {
           const userId = user.uid;
-          const additionalDataRef = doc(
-            firebaseStore,
-            "additionalUserData",
-            userId
-          );
+          const additionalDataRef = doc(db, "additionalUserData", userId);
 
           // Subscribe to real-time updates using onSnapshot
           const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {

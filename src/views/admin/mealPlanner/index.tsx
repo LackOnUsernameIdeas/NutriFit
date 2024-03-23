@@ -70,6 +70,7 @@ import { table } from "console";
 
 import { LineChart } from "components/charts/LineCharts";
 import { parseISO } from "date-fns";
+import { db } from "database/connection";
 // Главен компонент
 export default function MealPlanner() {
   // Color values
@@ -509,11 +510,7 @@ export default function MealPlanner() {
       if (user) {
         try {
           const userId = user.uid;
-          const additionalDataRef = doc(
-            getFirestore(),
-            "additionalUserData",
-            userId
-          );
+          const additionalDataRef = doc(db, "additionalUserData", userId);
 
           // Subscribe to real-time updates using onSnapshot
           const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {

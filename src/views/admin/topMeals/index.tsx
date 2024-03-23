@@ -55,6 +55,7 @@ import {
 } from "react-icons/md";
 import RecipeModal from "./components/RecipeModal";
 import { SuggestedMeal } from "../../../types/weightStats";
+import { db } from "database/connection";
 interface DropdownState {
   currentPage: number;
 }
@@ -255,7 +256,7 @@ export default function TopMeals() {
     };
 
     const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
+      collection(db, "additionalUserData"),
       async (querySnapshot) => {
         await fetchData(); // Call fetchData when a snapshot occurs
       }
