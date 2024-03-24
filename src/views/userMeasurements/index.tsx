@@ -25,7 +25,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { saveAdditionalUserData } from "database/setAdditionalUserData";
+import { fetchAdditionalUserData } from "database/getAdditionalUserData";
 // Chakra imports
 import {
   Box,
@@ -134,22 +134,6 @@ const UserMeasurements = () => {
       isUnderOrAbove: ""
     });
 
-  const fetchUserData = async () => {
-    const uid = getAuth().currentUser.uid;
-    try {
-      const response = await fetch(
-        `https://nutri-api.noit.eu/getUserData/${uid}`
-      );
-
-      const result = await response.json();
-
-      console.log("User Data from fetch function:", result.userData);
-      return result.userData;
-    } catch (error) {
-      console.error("Error triggering fetch and save:", error);
-    }
-  };
-
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -159,7 +143,9 @@ const UserMeasurements = () => {
         try {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
-          const additionalData = await fetchUserData();
+          const additionalData = await fetchAdditionalUserData(
+            auth.currentUser.uid
+          );
           console.log("gender for state: ", additionalData.gender);
           if (additionalData?.[timestampKey]?.age) {
             setUserData({
@@ -202,7 +188,7 @@ const UserMeasurements = () => {
     const uid = getAuth().currentUser.uid;
     try {
       const response = await fetch(
-        `https://nutri-api.noit.eu/fetchAndSaveAllData/${uid}`,
+        `https://nutri-api.noit.eu/fetchAndSaveAllDataNewStructure/${uid}`,
         {
           method: "POST",
           headers: {
@@ -240,7 +226,7 @@ const UserMeasurements = () => {
     const uid = getAuth().currentUser.uid;
     try {
       const response = await fetch(
-        `https://nutri-api.noit.eu/saveUserData/${uid}`,
+        `https://nutri-api.noit.eu/saveUserDataNewStructure/${uid}`,
         {
           method: "POST",
           headers: {
@@ -266,16 +252,13 @@ const UserMeasurements = () => {
   // Функция за генериране на статистики
   async function generateStats() {
     setIsLoading(true);
-    const uid = getAuth().currentUser.uid;
 
-    saveUserData();
+    await saveUserData();
 
     triggerFetchAndSaveAllData();
 
-    setTimeout(() => {
-      history.push("/admin/default");
-      setIsLoading(false);
-    }, 2000);
+    history.push("/admin/default");
+    setIsLoading(false);
   }
 
   React.useEffect(() => {
@@ -386,11 +369,10 @@ const UserMeasurements = () => {
         try {
           setIsLoading(true);
 
-          const additionalData = await fetchUserData();
-          setTimeout(() => {
-            setIsLoading(false);
-            history.push("/admin/default");
-          }, 1000);
+          const additionalData = await fetchAdditionalUserData(
+            auth.currentUser.uid
+          );
+
           // Extract date keys from additionalData
           const dateKeys = Object.keys(additionalData).filter((key) =>
             /^\d{4}-\d{2}-\d{2}$/.test(key)
@@ -411,6 +393,7 @@ const UserMeasurements = () => {
             setUserDataLastSavedDate(rawUserDataForLastSavedDate);
             setUserDataForToday(rawUserDataForToday);
             setIsTodaysDataFetched(true);
+            setIsLoading(false);
           }
         } catch (error) {
           console.error("Error fetching additional user data:", error);
