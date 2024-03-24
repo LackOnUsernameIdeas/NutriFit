@@ -278,69 +278,89 @@ export default function WeightStats() {
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://nutri-api.noit.eu/weightStatsAndMealPlannerData",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              uid: "zaZs3xBP19f1mKk32j9aNCxkeqM2", // Assuming user is defined somewhere in your component
-              date: "2024-03-23" // Get today's date in YYYY-MM-DD format
-            })
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch weight stats");
-        }
-
-        const weightStatsData = await response.json();
-
-        // Set the states accordingly
-        setPerfectWeight(weightStatsData.perfectWeight || 0);
-        setDifferenceFromPerfectWeight(
-          {
-            difference: weightStatsData.differenceFromPerfectWeight.difference,
-            isUnderOrAbove:
-              weightStatsData.differenceFromPerfectWeight.isUnderOrAbove
-          } || {
-            difference: 0,
-            isUnderOrAbove: ""
-          }
-        );
-        setBMIIndex(
-          weightStatsData.bmiIndex || {
-            bmi: 0,
-            health: "",
-            healthy_bmi_range: ""
-          }
-        );
-        setBodyFatMassAndLeanMass(
-          weightStatsData.bodyFatMassAndLeanMass || {
-            "Body Fat (U.S. Navy Method)": 0,
-            "Body Fat Mass": 0,
-            "Lean Body Mass": 0
-          }
-        );
-        setUserData((prevUserData) => ({
-          ...prevUserData,
-          ...weightStatsData.userDataSaveable
-        }));
-        setUserDataForCharts(weightStatsData.userDataForCharts || []);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching weight stats:", error);
-        setIsLoading(false);
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
       }
-    };
+    });
 
-    fetchData();
+    return unsubscribe;
   }, []);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      const fetchData = async () => {
+        try {
+          const uid = currentUser.uid;
+          const date = new Date().toISOString().slice(0, 10);
+          const response = await fetch(
+            "https://nutri-api.noit.eu/weightStatsAndMealPlannerData",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                uid: uid, // Assuming user is defined somewhere in your component
+                date: date // Get today's date in YYYY-MM-DD format
+              })
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch weight stats");
+          }
+
+          const weightStatsData = await response.json();
+
+          // Set the states accordingly
+          setPerfectWeight(weightStatsData.perfectWeight || 0);
+          setDifferenceFromPerfectWeight(
+            {
+              difference:
+                weightStatsData.differenceFromPerfectWeight.difference,
+              isUnderOrAbove:
+                weightStatsData.differenceFromPerfectWeight.isUnderOrAbove
+            } || {
+              difference: 0,
+              isUnderOrAbove: ""
+            }
+          );
+          setBMIIndex(
+            weightStatsData.bmiIndex || {
+              bmi: 0,
+              health: "",
+              healthy_bmi_range: ""
+            }
+          );
+          setBodyFatMassAndLeanMass(
+            weightStatsData.bodyFatMassAndLeanMass || {
+              "Body Fat (U.S. Navy Method)": 0,
+              "Body Fat Mass": 0,
+              "Lean Body Mass": 0
+            }
+          );
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            ...weightStatsData.userDataSaveable
+          }));
+          setUserDataForCharts(weightStatsData.userDataForCharts || []);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching weight stats:", error);
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [currentUser]);
 
   const calculateChange = (sortedData: any[], property: string) => {
     const latestValue = sortedData[0][property];
