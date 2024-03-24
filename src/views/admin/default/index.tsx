@@ -65,6 +65,11 @@ import ChatGPT from "../../../assets/img/layout/chatlogo.png";
 import Gemini from "../../../assets/img/layout/gemini.png";
 import { getTotalUsers } from "database/getMeanUsersData";
 
+import {
+  orderMealsByFrequency,
+  getAllHealthStatus
+} from "database/getAdditionalUserData";
+
 // Types
 import { GenderAverageStats, Deviations } from "../../../types/weightStats";
 
@@ -129,29 +134,39 @@ export default function UserReports() {
   );
   const [allMeals, setAllMeals] = React.useState<SuggestedMeal[] | []>([
     {
-      name: "Tova",
-      count: 2,
+      name: "Шопска салата",
+      count: 11,
       mealData: {
         totals: {
-          calories: 424,
-          carbohydrates: 2135432,
-          grams: 1233412,
-          fat: 124,
-          protein: 124
+          calories: 200,
+          carbohydrates: 12,
+          grams: 200,
+          fat: 16,
+          protein: 4
         },
-        recipeQuantity: 235,
+        name: "Шопска салата",
+        recipeQuantity: 200,
         image:
-          "https://recepti.gotvach.bg/files/lib/250x250/vitaminozna-salata-pecheni-orehi.webp",
-        ingredients: ["wfwfwf", "fgwfwfwf"],
-        name: "string",
-        instructions: ["wfwfwf", "fgwfwfwf"]
+          "https://upload.wikimedia.org/wikipedia/commons/0/09/Chopska.jpg",
+        ingredients: [
+          "100 г домати",
+          "100 г краставици",
+          "30 г сирене",
+          "1 ч.л. олио",
+          "Магданоз"
+        ],
+        instructions: [
+          "1.Нарежете краставиците и доматите.",
+          "2.Сложете ги в чиния и поръсете с натрошено сирене и магданоз.",
+          "3.Полейте с олио."
+        ]
       }
     }
   ]);
   const [loading, setLoading] = React.useState(true);
-  const [mealLoading, setMealLoading] = React.useState(true);
+  const [mealLoading, setMealLoading] = React.useState(false);
   const [deviationsLoading, setDeviationsLoading] = React.useState(true);
-  const [healthLoading, setHealthLoading] = React.useState(true);
+  const [healthLoading, setHealthLoading] = React.useState(false);
   const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
@@ -345,24 +360,24 @@ export default function UserReports() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch("https://nutri-api.noit.eu/getTop10Meals");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data for top 10 meals");
-        }
-        const top10meals = await response.json();
-
-        console.log("top10meals: ", top10meals.top10meals);
-        // Set your state variables accordingly
-        setAllMeals(top10meals.top10meals);
-        setMealLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setMealLoading(false);
-      }
+      console.log("NOT FETCHED YET!");
+      const sortedMeals = await orderMealsByFrequency();
+      console.log("Sorted meals by frequency:", sortedMeals);
+      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
+      setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
+      console.log("FETCHED!");
     };
 
-    fetchData();
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      async (querySnapshot) => {
+        await fetchData();
+        setLoading(false); // Call fetchData when a snapshot occurs
+      }
+    );
+
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
   }, []);
 
   React.useEffect(() => {
@@ -404,40 +419,25 @@ export default function UserReports() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Make a GET request to your API endpoint
-        const response = await fetch(
-          "https://nutri-api.noit.eu/getAllHealthStatuses"
-        );
+      const {
+        labels: healthStatuses,
+        counts: healthStatusesCount
+      }: { labels: string[]; counts: number[] } = await getAllHealthStatus();
 
-        // Check if the request was successful (status code 200)
-        if (response.ok) {
-          const { labels: healthStatuses, counts: healthStatusesCount } =
-            await response.json();
-
-          console.log(
-            "healthStatuses: ",
-            healthStatuses,
-            "healthStatusesCount: ",
-            healthStatusesCount
-          );
-          setAllUsersHealthStatesLabels(healthStatuses);
-          setAllUsersHealthStatesData(healthStatusesCount);
-        } else {
-          // Handle the error if the request fails
-          console.error("Failed to fetch data:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setHealthLoading(false); // Regardless of success or failure, stop loading
-      }
+      setAllUsersHealthStatesLabels(healthStatuses);
+      setAllUsersHealthStatesData(healthStatusesCount);
     };
 
-    // Call fetchData once when the component mounts
-    fetchData();
+    const unsubscribe = onSnapshot(
+      collection(getFirestore(), "additionalUserData"),
+      async (querySnapshot) => {
+        await fetchData();
+        setLoading(false); // Call fetchData when a snapshot occurs
+      }
+    );
 
-    // No cleanup is needed for this effect
+    // Cleanup function to unsubscribe from snapshot listener
+    return () => unsubscribe();
   }, []);
 
   React.useEffect(() => {
