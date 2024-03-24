@@ -75,7 +75,7 @@ import { GenderAverageStats, Deviations } from "../../../types/weightStats";
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
-import { firebaseStore } from "database/connection";
+import { db } from "database/connection";
 
 interface LinearGradientTextProps {
   text: any;
@@ -444,7 +444,7 @@ export default function UserReports() {
     setLoading(true);
 
     const unsubscribe = onSnapshot(
-      collection(firebaseStore, "additionalUserData"),
+      collection(db, "additionalUserData"),
       (querySnapshot) => {
         let totalCaloriesMale = 0;
         let totalProteinMale = 0;

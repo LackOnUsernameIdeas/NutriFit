@@ -62,7 +62,7 @@ import {
 import { onSnapshot, doc, getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
-import { firebaseStore } from "database/connection";
+import { db } from "database/connection";
 
 import {
   savePreferences,
@@ -512,11 +512,7 @@ export default function MealPlanner() {
       if (user) {
         try {
           const userId = user.uid;
-          const additionalDataRef = doc(
-            firebaseStore,
-            "additionalUserData",
-            userId
-          );
+          const additionalDataRef = doc(db, "additionalUserData", userId);
 
           // Subscribe to real-time updates using onSnapshot
           const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
