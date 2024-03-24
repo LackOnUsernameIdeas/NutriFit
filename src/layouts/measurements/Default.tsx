@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 // Assets
 import { FaChevronLeft } from "react-icons/fa";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 
 function MeasurementsIllustration(props: {
   children: JSX.Element | string;
@@ -14,18 +14,10 @@ function MeasurementsIllustration(props: {
 }) {
   const { children, illustrationBackground } = props;
   const handleLogOut = async () => {
-    const key = Object.keys(sessionStorage).filter((obj) =>
-      obj.startsWith("firebase:authUser")
-    );
-
-    const rememberedKey = Object.keys(localStorage).filter((obj) =>
-      obj.startsWith("firebase:authUser")
-    );
-
-    sessionStorage.removeItem(key[0]);
-    localStorage.removeItem(rememberedKey[0]);
-    const uid = getAuth().currentUser.uid;
+    const auth = getAuth();
+    const uid = auth.currentUser.uid;
     Cookies.remove(btoa(uid));
+    signOut(auth);
   };
 
   return (

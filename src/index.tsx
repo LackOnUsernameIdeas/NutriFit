@@ -37,6 +37,22 @@ interface PrivateRouteProps extends RouteProps {
 interface AdminRouteProps extends RouteProps {
   component: ComponentType<any>;
 }
+const fetchUserData = async () => {
+  const uid = getAuth().currentUser.uid;
+  try {
+    const response = await fetch(
+      `https://nutri-api.noit.eu/getUserData/${uid}`
+    );
+
+    const result = await response.json();
+
+    console.log("User Data from fetch function:", result.userData);
+    return result.userData;
+  } catch (error) {
+    console.error("Error triggering fetch and save:", error);
+  }
+};
+
 const AdminRoute: React.FC<AdminRouteProps> = ({
   component: Component,
   ...rest
@@ -75,7 +91,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({
       if (user) {
         try {
           const timestampKey = new Date().toISOString().slice(0, 10);
-          const additionalData = await fetchAdditionalUserData(user.uid);
+          const additionalData = await fetchUserData();
           const userDataForToday = additionalData[timestampKey];
           if (isMounted.current) {
             setUserDataForToday(userDataForToday);
@@ -144,7 +160,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
         try {
           const timestampKey = new Date().toISOString().slice(0, 10);
 
-          const additionalData = await fetchAdditionalUserData(user.uid);
+          const additionalData = await fetchUserData();
           const userDataForToday = additionalData[timestampKey];
           if (isMounted.current) {
             setUserDataForToday(userDataForToday);

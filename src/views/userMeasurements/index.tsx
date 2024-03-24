@@ -198,6 +198,34 @@ const UserMeasurements = () => {
     });
   };
 
+  const saveUserData = async () => {
+    const uid = getAuth().currentUser.uid;
+    try {
+      const response = await fetch(
+        `https://nutri-api.noit.eu/saveUserData/${uid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            height: userData["height"],
+            age: userData["age"],
+            weight: userData["weight"],
+            neck: userData["neck"],
+            waist: userData["waist"],
+            hip: userData["hip"]
+          })
+        }
+      );
+
+      const result = await response.json();
+      console.log("Server response SAVING:", result);
+    } catch (error) {
+      console.error("Error triggering fetch and save:", error);
+    }
+  };
+
   const triggerFetchAndSaveAllData = async () => {
     const uid = getAuth().currentUser.uid;
     try {
@@ -238,13 +266,10 @@ const UserMeasurements = () => {
   // Функция за генериране на статистики
   async function generateStats() {
     setIsLoading(true);
-
+    await saveUserData();
     triggerFetchAndSaveAllData();
-
-    setTimeout(() => {
-      history.push("/admin/default");
-      setIsLoading(false);
-    }, 5000);
+    history.push("/admin/default");
+    setIsLoading(false);
   }
 
   React.useEffect(() => {
