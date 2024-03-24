@@ -386,6 +386,8 @@ export default function WeightStats() {
                   if (
                     key !== "gender" &&
                     key !== "goal" &&
+                    key !== "macroNutrientsData" &&
+                    key !== "dailyCaloryRequirements" &&
                     typeof additionalData[key] === "object"
                   ) {
                     const dateData = additionalData[key];

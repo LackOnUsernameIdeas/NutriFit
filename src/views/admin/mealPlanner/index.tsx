@@ -61,7 +61,6 @@ import {
 } from "../../../types/weightStats";
 import { onSnapshot, doc, getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { db } from "database/connection";
 
 import {
@@ -542,6 +541,8 @@ export default function MealPlanner() {
                 if (
                   key !== "gender" &&
                   key !== "goal" &&
+                  key !== "macroNutrientsData" &&
+                  key !== "dailyCaloryRequirements" &&
                   typeof additionalData[key] === "object"
                 ) {
                   const dateData = additionalData[key];
