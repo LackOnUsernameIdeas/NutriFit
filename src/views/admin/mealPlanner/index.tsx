@@ -59,7 +59,7 @@ import {
   DailyCaloryRequirements,
   WeightDifference
 } from "../../../types/weightStats";
-import { onSnapshot, doc, getFirestore } from "firebase/firestore";
+import { onSnapshot, doc, collection, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "database/connection";
 
@@ -503,6 +503,129 @@ export default function MealPlanner() {
     calculatePerfectWeightChange();
   }, [perfectWeight]);
 
+  // React.useEffect(() => {
+  //   const auth = getAuth();
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     setUser(user);
+
+  //     if (user) {
+  //       try {
+  //         const userId = user.uid;
+  //         const additionalDataRef = doc(db, "additionalData2", userId);
+
+  //         // Subscribe to real-time updates using onSnapshot
+  //         const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
+  //           if (doc.exists()) {
+  //             const additionalData = doc.data();
+  //             const timestampKey = new Date().toISOString().slice(0, 10);
+  //             const userDataTimestamp = additionalData[timestampKey];
+
+  //             const timestampedObjects = Object.entries(additionalData)
+  //               .filter(
+  //                 ([key, value]) =>
+  //                   typeof value === "object" &&
+  //                   value.hasOwnProperty("Preferences")
+  //               )
+  //               .map(([key, value]) => ({ date: key, ...value.Preferences }));
+
+  //             const orderedTimestampObjects = [...timestampedObjects].sort(
+  //               (a, b) => {
+  //                 const keyA = a.key;
+  //                 const keyB = b.key;
+  //                 return new Date(keyB).getTime() - new Date(keyA).getTime();
+  //               }
+  //             );
+  //             const orderedAllTimestampObjects = [];
+
+  //             for (const key in additionalData) {
+  //               if (
+  //                 key !== "gender" &&
+  //                 key !== "goal" &&
+  //                 key !== "macroNutrientsData" &&
+  //                 key !== "dailyCaloryRequirements" &&
+  //                 typeof additionalData[key] === "object"
+  //               ) {
+  //                 const dateData = additionalData[key];
+  //                 orderedAllTimestampObjects.push({
+  //                   date: key,
+  //                   height: dateData?.height,
+  //                   weight: dateData?.weight,
+  //                   bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
+  //                   bodyFat: dateData?.BodyMassData
+  //                     ? dateData?.BodyMassData?.bodyFat
+  //                     : 0,
+  //                   bodyFatMass: dateData?.BodyMassData
+  //                     ? dateData?.BodyMassData?.bodyFatMass
+  //                     : 0,
+  //                   leanBodyMass: dateData?.BodyMassData
+  //                     ? dateData?.BodyMassData?.leanBodyMass
+  //                     : 0,
+  //                   differenceFromPerfectWeight: dateData?.PerfectWeightData
+  //                     ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
+  //                         ?.difference
+  //                     : 0
+  //                 });
+  //               }
+  //             }
+  //             setAllOrderedObjects(orderedAllTimestampObjects);
+  //             setAllUsersPreferences(orderedTimestampObjects);
+
+  //             if (userDataTimestamp?.age) {
+  //               setUserData({
+  //                 gender: additionalData?.gender,
+  //                 goal: additionalData?.goal,
+  //                 age: userDataTimestamp?.age,
+  //                 height: userDataTimestamp?.height,
+  //                 waist: userDataTimestamp?.waist,
+  //                 neck: userDataTimestamp?.neck,
+  //                 hip: userDataTimestamp?.hip,
+  //                 weight: userDataTimestamp?.weight
+  //               } as UserData);
+  //               setPerfectWeight(
+  //                 userDataTimestamp?.PerfectWeightData
+  //                   ? userDataTimestamp?.PerfectWeightData?.perfectWeight
+  //                   : 0
+  //               );
+  //               setDifferenceFromPerfectWeight(
+  //                 userDataTimestamp?.PerfectWeightData
+  //                   ?.differenceFromPerfectWeight
+  //                   ? userDataTimestamp.PerfectWeightData
+  //                       .differenceFromPerfectWeight
+  //                   : {
+  //                       difference: 0,
+  //                       isUnderOrAbove: ""
+  //                     }
+  //               );
+  //               setHealth(
+  //                 userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
+  //               );
+  //               setDailyCaloryRequirements(
+  //                 additionalData?.dailyCaloryRequirements
+  //                   ? additionalData?.dailyCaloryRequirements
+  //                   : []
+  //               );
+  //               const macroNutrientsData = Array.isArray(
+  //                 additionalData?.macroNutrientsData
+  //               )
+  //                 ? additionalData?.macroNutrientsData
+  //                 : [];
+
+  //               setMacroNutrients(macroNutrientsData);
+  //             }
+  //           }
+  //         });
+
+  //         // Cleanup the subscription when the component unmounts
+  //         return () => {
+  //           unsubscribeData();
+  //         };
+  //       } catch (error) {
+  //         console.error("Error fetching additional user data:", error);
+  //       }
+  //     }
+  //   });
+  // }, []);
+
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -511,109 +634,61 @@ export default function MealPlanner() {
       if (user) {
         try {
           const userId = user.uid;
-          const additionalDataRef = doc(db, "additionalUserData", userId);
+          const additionalDataRef = doc(db, "additionalData2", userId);
 
           // Subscribe to real-time updates using onSnapshot
-          const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-            if (doc.exists()) {
-              const additionalData = doc.data();
-              const timestampKey = new Date().toISOString().slice(0, 10);
-              const userDataTimestamp = additionalData[timestampKey];
+          const unsubscribeData = onSnapshot(
+            additionalDataRef,
+            async (document) => {
+              if (document.exists()) {
+                const additionalData = document.data();
 
-              const timestampedObjects = Object.entries(additionalData)
-                .filter(
-                  ([key, value]) =>
-                    typeof value === "object" &&
-                    value.hasOwnProperty("Preferences")
-                )
-                .map(([key, value]) => ({ date: key, ...value.Preferences }));
+                if (additionalData) {
+                  // Extracting gender and goal
+                  const { gender, goal } = additionalData;
 
-              const orderedTimestampObjects = [...timestampedObjects].sort(
-                (a, b) => {
-                  const keyA = a.key;
-                  const keyB = b.key;
-                  return new Date(keyB).getTime() - new Date(keyA).getTime();
+                  // Fetching dailyCaloryRequirementsData and macroNutrientsData
+                  const dataEntriesRef = collection(
+                    document.ref,
+                    "dataEntries"
+                  );
+
+                  const dailyCaloryRequirements = [];
+                  const macroNutrientsData = [];
+
+                  for (let i = 1; i <= 6; i++) {
+                    const dailyCalRef = doc(
+                      dataEntriesRef,
+                      `dailyCaloryRequirementsData_${i}`
+                    );
+                    const macroNutRef = doc(
+                      dataEntriesRef,
+                      `macroNutrientsData_${i}`
+                    );
+
+                    const dailyCalSnapshot = await getDoc(dailyCalRef);
+                    const macroNutSnapshot = await getDoc(macroNutRef);
+
+                    if (dailyCalSnapshot.exists()) {
+                      dailyCaloryRequirements.push(
+                        dailyCalSnapshot.data() as DailyCaloryRequirements
+                      );
+                    }
+
+                    if (macroNutSnapshot.exists()) {
+                      macroNutrientsData.push(macroNutSnapshot.data());
+                    }
+                  }
+
+                  // Setting state with extracted data
+                  setDailyCaloryRequirements(dailyCaloryRequirements);
+                  setMacroNutrients(macroNutrientsData);
+
+                  // Rest of the data extraction remains the same...
                 }
-              );
-              const orderedAllTimestampObjects = [];
-
-              for (const key in additionalData) {
-                if (
-                  key !== "gender" &&
-                  key !== "goal" &&
-                  key !== "macroNutrientsData" &&
-                  key !== "dailyCaloryRequirements" &&
-                  typeof additionalData[key] === "object"
-                ) {
-                  const dateData = additionalData[key];
-                  orderedAllTimestampObjects.push({
-                    date: key,
-                    height: dateData?.height,
-                    weight: dateData?.weight,
-                    bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
-                    bodyFat: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.bodyFat
-                      : 0,
-                    bodyFatMass: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.bodyFatMass
-                      : 0,
-                    leanBodyMass: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.leanBodyMass
-                      : 0,
-                    differenceFromPerfectWeight: dateData?.PerfectWeightData
-                      ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
-                          ?.difference
-                      : 0
-                  });
-                }
-              }
-              setAllOrderedObjects(orderedAllTimestampObjects);
-              setAllUsersPreferences(orderedTimestampObjects);
-
-              if (userDataTimestamp?.age) {
-                setUserData({
-                  gender: additionalData?.gender,
-                  goal: additionalData?.goal,
-                  age: userDataTimestamp?.age,
-                  height: userDataTimestamp?.height,
-                  waist: userDataTimestamp?.waist,
-                  neck: userDataTimestamp?.neck,
-                  hip: userDataTimestamp?.hip,
-                  weight: userDataTimestamp?.weight
-                } as UserData);
-                setPerfectWeight(
-                  userDataTimestamp?.PerfectWeightData
-                    ? userDataTimestamp?.PerfectWeightData?.perfectWeight
-                    : 0
-                );
-                setDifferenceFromPerfectWeight(
-                  userDataTimestamp?.PerfectWeightData
-                    ?.differenceFromPerfectWeight
-                    ? userDataTimestamp.PerfectWeightData
-                        .differenceFromPerfectWeight
-                    : {
-                        difference: 0,
-                        isUnderOrAbove: ""
-                      }
-                );
-                setHealth(
-                  userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
-                );
-                setDailyCaloryRequirements(
-                  additionalData?.dailyCaloryRequirements
-                    ? additionalData?.dailyCaloryRequirements
-                    : []
-                );
-                const macroNutrientsData = Array.isArray(
-                  additionalData?.macroNutrientsData
-                )
-                  ? additionalData?.macroNutrientsData
-                  : [];
-
-                setMacroNutrients(macroNutrientsData);
               }
             }
-          });
+          );
 
           // Cleanup the subscription when the component unmounts
           return () => {
