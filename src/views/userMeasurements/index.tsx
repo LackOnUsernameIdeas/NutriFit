@@ -245,20 +245,30 @@ const UserMeasurements = () => {
 
       const result = await response.json();
       console.log("Server response SAVING:", result);
+      return result; // Return the result to indicate completion
     } catch (error) {
       console.error("Error triggering fetch and save:", error);
+      throw error; // Rethrow the error to indicate failure
     }
   };
   // Функция за генериране на статистики
   async function generateStats() {
     setIsLoading(true);
 
-    await saveUserData();
+    try {
+      const saveResult = await saveUserData(); // Wait for saveUserData to finish
 
-    triggerFetchAndSaveAllData();
-
-    history.push("/admin/default");
-    setIsLoading(false);
+      // Only proceed if saveUserData is successful
+      if (saveResult) {
+        triggerFetchAndSaveAllData();
+        history.push("/admin/default");
+      }
+    } catch (error) {
+      // Handle error
+      console.error("Error generating stats:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   React.useEffect(() => {
