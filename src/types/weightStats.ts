@@ -114,13 +114,11 @@ export type UserIntakes = {
 
 export type AllUsersPreferences = {
   date: string;
-  calories: number;
-  nutrients: {
-    protein: number;
-    fat: number;
-    carbs: number;
-    name: string;
-  };
+  Calories: number;
+  Protein: number;
+  Fat: number;
+  Carbohydrates: number;
+  Diet: string;
 };
 
 export type WeightDifference = {
