@@ -59,14 +59,17 @@ import {
   DailyCaloryRequirements,
   WeightDifference
 } from "../../../types/weightStats";
-import { onSnapshot, doc, getFirestore } from "firebase/firestore";
+import {
+  onSnapshot,
+  doc,
+  getFirestore,
+  getDoc,
+  collection
+} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "database/connection";
 
-import {
-  savePreferences,
-  saveIntakes
-} from "../../../database/setWeightStatsData";
+import { savePreferences } from "../../../database/setWeightStatsData";
 import { table } from "console";
 
 import { LineChart } from "components/charts/LineCharts";
@@ -190,13 +193,11 @@ export default function MealPlanner() {
   >([
     {
       date: "",
-      calories: 0,
-      nutrients: {
-        protein: 0,
-        fat: 0,
-        carbs: 0,
-        name: ""
-      }
+      Calories: 0,
+      Protein: 0,
+      Fat: 0,
+      Carbohydrates: 0,
+      Diet: ""
     }
   ]);
   allUsersPreferences.sort((a, b) =>
@@ -340,20 +341,6 @@ export default function MealPlanner() {
   const saveUserPreferencesAndIntakes = () => {
     const uid = getAuth().currentUser.uid;
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
-    if (
-      (userIntakes.Calories !== 0,
-      userIntakes.Protein !== 0,
-      userIntakes.Fat !== 0,
-      userIntakes.Carbohydrates !== 0)
-    ) {
-      saveIntakes(
-        uid,
-        userIntakes.Calories,
-        userIntakes.Protein,
-        userIntakes.Fat,
-        userIntakes.Carbohydrates
-      );
-    }
   };
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
@@ -398,16 +385,12 @@ export default function MealPlanner() {
 
   const lineChartLabels = allUsersPreferences.map((entry) => entry.date);
   const lineChartForCalories = allUsersPreferences.map(
-    (entry) => entry.calories
+    (entry) => entry.Calories
   );
-  const lineChartForProtein = allUsersPreferences.map(
-    (entry) => entry.nutrients.protein
-  );
-  const lineChartForFat = allUsersPreferences.map(
-    (entry) => entry.nutrients.fat
-  );
+  const lineChartForProtein = allUsersPreferences.map((entry) => entry.Protein);
+  const lineChartForFat = allUsersPreferences.map((entry) => entry.Fat);
   const lineChartForCarbs = allUsersPreferences.map(
-    (entry) => entry.nutrients.carbs
+    (entry) => entry.Carbohydrates
   );
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
@@ -511,109 +494,105 @@ export default function MealPlanner() {
       if (user) {
         try {
           const userId = user.uid;
-          const additionalDataRef = doc(db, "additionalUserData", userId);
+
+          // Fetch user document separately to get gender and goal fields
+          const userDocRef = doc(db, "additionalData2", userId);
+          const userDocSnapshot = await getDoc(userDocRef);
+          const userBasicData = userDocSnapshot.data();
 
           // Subscribe to real-time updates using onSnapshot
-          const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-            if (doc.exists()) {
-              const additionalData = doc.data();
-              const timestampKey = new Date().toISOString().slice(0, 10);
-              const userDataTimestamp = additionalData[timestampKey];
+          const additionalDataRef = collection(
+            db,
+            "additionalData2",
+            userId,
+            "dataEntries"
+          );
+          const unsubscribeData = onSnapshot(
+            additionalDataRef,
+            (querySnapshot) => {
+              const orderedTimestampObjects: any[] = [];
+              const allUsersPreferencesObjects: any[] = [];
+              const dailyCaloryRequirements: any[] = [];
+              const macroNutrientsData: any[] = [];
 
-              const timestampedObjects = Object.entries(additionalData)
-                .filter(
-                  ([key, value]) =>
-                    typeof value === "object" &&
-                    value.hasOwnProperty("Preferences")
-                )
-                .map(([key, value]) => ({ date: key, ...value.Preferences }));
+              querySnapshot.forEach((doc) => {
+                const key = doc.id; // Assuming the key is the document ID
 
-              const orderedTimestampObjects = [...timestampedObjects].sort(
-                (a, b) => {
-                  const keyA = a.key;
-                  const keyB = b.key;
-                  return new Date(keyB).getTime() - new Date(keyA).getTime();
-                }
-              );
-              const orderedAllTimestampObjects = [];
+                const macroNutrients_number = Array.from(
+                  { length: 6 },
+                  (_, i) => `macroNutrients_${i + 1}`
+                );
+                const dailyCaloryRequirements_number = Array.from(
+                  { length: 6 },
+                  (_, i) => `dailyCaloryRequirements_${i + 1}`
+                );
 
-              for (const key in additionalData) {
                 if (
-                  key !== "gender" &&
-                  key !== "goal" &&
-                  key !== "macroNutrientsData" &&
-                  key !== "dailyCaloryRequirements" &&
-                  typeof additionalData[key] === "object"
+                  !macroNutrients_number.includes(key) &&
+                  !dailyCaloryRequirements_number.includes(key)
                 ) {
-                  const dateData = additionalData[key];
-                  orderedAllTimestampObjects.push({
-                    date: key,
-                    height: dateData?.height,
-                    weight: dateData?.weight,
-                    bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
-                    bodyFat: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.bodyFat
-                      : 0,
-                    bodyFatMass: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.bodyFatMass
-                      : 0,
-                    leanBodyMass: dateData?.BodyMassData
-                      ? dateData?.BodyMassData?.leanBodyMass
-                      : 0,
-                    differenceFromPerfectWeight: dateData?.PerfectWeightData
-                      ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
-                          ?.difference
-                      : 0
+                  const userDataTimestamp = doc.data();
+                  // Set user data fetched from user document
+                  setUserData({
+                    gender: userBasicData.gender,
+                    goal: userBasicData.goal,
+                    age: userDataTimestamp.age,
+                    height: userDataTimestamp.height,
+                    waist: userDataTimestamp.waist,
+                    neck: userDataTimestamp.neck,
+                    hip: userDataTimestamp.hip,
+                    weight: userDataTimestamp.weight
                   });
+
+                  // Example of processing data for each document
+                  const orderedObject = {
+                    date: key,
+                    height: userDataTimestamp?.height || 0,
+                    weight: userDataTimestamp?.weight || 0,
+                    bmi: userDataTimestamp?.BMI ? userDataTimestamp.BMI.bmi : 0,
+                    bodyFat: userDataTimestamp?.BodyMassData?.bodyFat || 0,
+                    bodyFatMass:
+                      userDataTimestamp?.BodyMassData?.bodyFatMass || 0,
+                    leanBodyMass:
+                      userDataTimestamp?.BodyMassData?.leanBodyMass || 0,
+                    differenceFromPerfectWeight:
+                      userDataTimestamp?.PerfectWeightData
+                        ?.differenceFromPerfectWeight?.difference || 0
+                  };
+
+                  orderedTimestampObjects.push(orderedObject);
+
+                  // If Preferences exist, add them to allUsersPreferencesObjects
+                  if (userDataTimestamp?.Preferences) {
+                    allUsersPreferencesObjects.push({
+                      date: key,
+                      ...userDataTimestamp.Preferences
+                    });
+                  }
+                } else {
+                  const additionalData = doc.data();
+                  dailyCaloryRequirements_number.includes(key) &&
+                    dailyCaloryRequirements.push(additionalData || []);
+                  macroNutrients_number.includes(key) &&
+                    macroNutrientsData.push(additionalData || []);
+
+                  // If Preferences exist, add them to allUsersPreferences
+                  if (additionalData?.Preferences) {
+                    allUsersPreferences.push({
+                      date: key,
+                      ...additionalData.Preferences
+                    });
+                  }
                 }
-              }
-              setAllOrderedObjects(orderedAllTimestampObjects);
-              setAllUsersPreferences(orderedTimestampObjects);
+              });
 
-              if (userDataTimestamp?.age) {
-                setUserData({
-                  gender: additionalData?.gender,
-                  goal: additionalData?.goal,
-                  age: userDataTimestamp?.age,
-                  height: userDataTimestamp?.height,
-                  waist: userDataTimestamp?.waist,
-                  neck: userDataTimestamp?.neck,
-                  hip: userDataTimestamp?.hip,
-                  weight: userDataTimestamp?.weight
-                } as UserData);
-                setPerfectWeight(
-                  userDataTimestamp?.PerfectWeightData
-                    ? userDataTimestamp?.PerfectWeightData?.perfectWeight
-                    : 0
-                );
-                setDifferenceFromPerfectWeight(
-                  userDataTimestamp?.PerfectWeightData
-                    ?.differenceFromPerfectWeight
-                    ? userDataTimestamp.PerfectWeightData
-                        .differenceFromPerfectWeight
-                    : {
-                        difference: 0,
-                        isUnderOrAbove: ""
-                      }
-                );
-                setHealth(
-                  userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
-                );
-                setDailyCaloryRequirements(
-                  additionalData?.dailyCaloryRequirements
-                    ? additionalData?.dailyCaloryRequirements
-                    : []
-                );
-                const macroNutrientsData = Array.isArray(
-                  additionalData?.macroNutrientsData
-                )
-                  ? additionalData?.macroNutrientsData
-                  : [];
-
-                setMacroNutrients(macroNutrientsData);
-              }
+              // Set state with extracted data
+              setAllOrderedObjects(orderedTimestampObjects);
+              setAllUsersPreferences(allUsersPreferencesObjects);
+              setDailyCaloryRequirements(dailyCaloryRequirements);
+              setMacroNutrients(macroNutrientsData);
             }
-          });
+          );
 
           // Cleanup the subscription when the component unmounts
           return () => {
@@ -625,6 +604,7 @@ export default function MealPlanner() {
       }
     });
   }, []);
+  console.log("kalatatest allUsersPreferences: ", allUsersPreferences);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
@@ -1961,7 +1941,6 @@ export default function MealPlanner() {
                             <MealPlannerForm
                               chosenCalories={clickedValueCalories}
                               chosenNutrients={clickedValueNutrients}
-                              // selectedGoal={selectedGoal}
                               userIntakes={userIntakes}
                               setUserIntakes={setUserIntakes}
                             />
