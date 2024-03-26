@@ -360,24 +360,24 @@ export default function UserReports() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      console.log("NOT FETCHED YET!");
-      const sortedMeals = await orderMealsByFrequency();
-      console.log("Sorted meals by frequency:", sortedMeals);
-      const mealsSortedByCount = sortedMeals.sort((a, b) => b.count - a.count);
-      setAllMeals((mealsSortedByCount as SuggestedMeal[]).slice(0, 10));
-      console.log("FETCHED!");
+      try {
+        const response = await fetch("https://nutri-api.noit.eu/getTop10Meals");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data for top 10 meals");
+        }
+        const top10meals = await response.json();
+
+        console.log("top10meals: ", top10meals.top10meals);
+        // Set your state variables accordingly
+        setAllMeals(top10meals.top10meals);
+        setMealLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setMealLoading(false);
+      }
     };
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData();
-        setLoading(false); // Call fetchData when a snapshot occurs
-      }
-    );
-
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
+    fetchData();
   }, []);
 
   React.useEffect(() => {
@@ -419,183 +419,64 @@ export default function UserReports() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const {
-        labels: healthStatuses,
-        counts: healthStatusesCount
-      }: { labels: string[]; counts: number[] } = await getAllHealthStatus();
+      try {
+        // Make a GET request to your API endpoint
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getAllHealthStatuses"
+        );
 
-      setAllUsersHealthStatesLabels(healthStatuses);
-      setAllUsersHealthStatesData(healthStatusesCount);
+        // Check if the request was successful (status code 200)
+        if (response.ok) {
+          const { labels: healthStatuses, counts: healthStatusesCount } =
+            await response.json();
+
+          console.log(
+            "healthStatuses: ",
+            healthStatuses,
+            "healthStatusesCount: ",
+            healthStatusesCount
+          );
+          setAllUsersHealthStatesLabels(healthStatuses);
+          setAllUsersHealthStatesData(healthStatusesCount);
+        } else {
+          // Handle the error if the request fails
+          console.error("Failed to fetch data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setHealthLoading(false); // Regardless of success or failure, stop loading
+      }
     };
 
-    const unsubscribe = onSnapshot(
-      collection(getFirestore(), "additionalUserData"),
-      async (querySnapshot) => {
-        await fetchData();
-        setLoading(false); // Call fetchData when a snapshot occurs
-      }
-    );
-
-    // Cleanup function to unsubscribe from snapshot listener
-    return () => unsubscribe();
+    // Call fetchData once when the component mounts
+    fetchData();
   }, []);
 
   React.useEffect(() => {
-    setLoading(true);
+    const fetchData = async () => {
+      try {
+        // Make a GET request to your API endpoint
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getAverageStats"
+        );
 
-    const unsubscribe = onSnapshot(
-      collection(db, "additionalUserData"),
-      (querySnapshot) => {
-        let totalCaloriesMale = 0;
-        let totalProteinMale = 0;
-        let totalCarbsMale = 0;
-        let totalFatMale = 0;
-        let totalWeightMale = 0;
-        let totalBodyFatPercentageMale = 0;
-
-        let totalCaloriesFemale = 0;
-        let totalProteinFemale = 0;
-        let totalCarbsFemale = 0;
-        let totalFatFemale = 0;
-        let totalWeightFemale = 0;
-        let totalBodyFatPercentageFemale = 0;
-
-        let malesCount = 0;
-        let femalesCount = 0;
-
-        let malesWithData = 0;
-        let femalesWithData = 0;
-
-        let malesWithNutrients = 0;
-        let femalesWithNutrients = 0;
-
-        querySnapshot.forEach((userDoc) => {
-          const userData = userDoc.data();
-          const gender = userData.gender;
-
-          if (gender === "male") {
-            malesCount++;
-          } else if (gender === "female") {
-            femalesCount++;
-          }
-
-          const latestTimestampData = getLatestTimestampData(userData);
-          if (latestTimestampData !== undefined) {
-            if (gender === "male") {
-              malesWithData++;
-              if (latestTimestampData.Preferences) {
-                malesWithNutrients++;
-                totalCaloriesMale +=
-                  latestTimestampData.Preferences.calories || 0;
-                totalProteinMale +=
-                  latestTimestampData.Preferences.nutrients.protein || 0;
-                totalCarbsMale +=
-                  latestTimestampData.Preferences.nutrients.carbs || 0;
-                totalFatMale +=
-                  latestTimestampData.Preferences.nutrients.fat || 0;
-              }
-              totalWeightMale += latestTimestampData.weight || 0;
-              totalBodyFatPercentageMale +=
-                latestTimestampData.BodyMassData.bodyFat || 0;
-            } else if (gender === "female") {
-              femalesWithData++;
-              if (latestTimestampData.Preferences) {
-                femalesWithNutrients++;
-                totalCaloriesFemale +=
-                  latestTimestampData.Preferences.calories || 0;
-                totalProteinFemale +=
-                  latestTimestampData.Preferences.nutrients.protein || 0;
-                totalCarbsFemale +=
-                  latestTimestampData.Preferences.nutrients.carbs || 0;
-                totalFatFemale +=
-                  latestTimestampData.Preferences.nutrients.fat || 0;
-              }
-              totalWeightFemale += latestTimestampData.weight || 0;
-              totalBodyFatPercentageFemale +=
-                latestTimestampData.BodyMassData.bodyFat || 0;
-            }
-          }
-        });
-
-        const meanCaloriesMale =
-          malesWithNutrients > 0 ? totalCaloriesMale / malesWithNutrients : 0;
-        const meanProteinMale =
-          malesWithNutrients > 0 ? totalProteinMale / malesWithNutrients : 0;
-        const meanCarbsMale =
-          malesWithNutrients > 0 ? totalCarbsMale / malesWithNutrients : 0;
-        const meanFatMale =
-          malesWithNutrients > 0 ? totalFatMale / malesWithNutrients : 0;
-        const meanWeightMale =
-          malesWithData > 0 ? totalWeightMale / malesWithData : 0;
-        const meanBodyFatPercentageMale =
-          malesWithData > 0 ? totalBodyFatPercentageMale / malesWithData : 0;
-
-        const meanCaloriesFemale =
-          femalesWithNutrients > 0
-            ? totalCaloriesFemale / femalesWithNutrients
-            : 0;
-        const meanProteinFemale =
-          femalesWithNutrients > 0
-            ? totalProteinFemale / femalesWithNutrients
-            : 0;
-        const meanCarbsFemale =
-          femalesWithNutrients > 0
-            ? totalCarbsFemale / femalesWithNutrients
-            : 0;
-        const meanFatFemale =
-          femalesWithNutrients > 0 ? totalFatFemale / femalesWithNutrients : 0;
-        const meanWeightFemale =
-          femalesWithData > 0 ? totalWeightFemale / femalesWithData : 0;
-        const meanBodyFatPercentageFemale =
-          femalesWithData > 0
-            ? totalBodyFatPercentageFemale / femalesWithData
-            : 0;
-
-        setAverageStats({
-          male: {
-            totalUsers: malesCount,
-            averageCalories: meanCaloriesMale,
-            averageProtein: meanProteinMale,
-            averageCarbs: meanCarbsMale,
-            averageFat: meanFatMale,
-            averageWeight: meanWeightMale,
-            averageBodyFatPercentage: meanBodyFatPercentageMale
-          },
-          female: {
-            totalUsers: femalesCount,
-            averageCalories: meanCaloriesFemale,
-            averageProtein: meanProteinFemale,
-            averageCarbs: meanCarbsFemale,
-            averageFat: meanFatFemale,
-            averageWeight: meanWeightFemale,
-            averageBodyFatPercentage: meanBodyFatPercentageFemale
-          }
-        });
-
-        setLoading(false);
+        // Check if the request was successful (status code 200)
+        if (response.ok) {
+          const averageStats = await response.json();
+          setAverageStats(averageStats);
+        } else {
+          // Handle the error if the request fails
+          console.error("Failed to fetch data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    );
+    };
 
-    return () => unsubscribe(); // Cleanup function to unsubscribe from snapshot listener
+    // Call fetchData once when the component mounts
+    fetchData();
   }, []);
-
-  // Function to get the latest timestamp data
-  const getLatestTimestampData = (userData: {
-    [key: string]: any;
-  }): { [key: string]: any } | undefined => {
-    const timestampedObjects = Object.entries(userData)
-      .filter(([key, value]) => typeof value === "object")
-      .map(([key, value]) => ({ key, ...value }));
-    const orderedTimestampObjects = [...timestampedObjects].sort(
-      (a, b) => new Date(b.key).getTime() - new Date(a.key).getTime()
-    );
-    for (const obj of orderedTimestampObjects) {
-      if (obj.weight && obj.BodyMassData) {
-        return obj;
-      }
-    }
-    return undefined;
-  };
 
   console.log("allMeals: ", allMeals);
   const barChartLabels = allMeals.slice(0, 5).map((entry) => {
