@@ -465,6 +465,7 @@ export default function UserReports() {
         if (response.ok) {
           const averageStats = await response.json();
           setAverageStats(averageStats);
+          setLoading(false);
         } else {
           // Handle the error if the request fails
           console.error("Failed to fetch data:", response.statusText);
@@ -478,7 +479,7 @@ export default function UserReports() {
     fetchData();
   }, []);
 
-  console.log("allMeals: ", allMeals);
+  console.log("averageStats: ", averageStats);
   const barChartLabels = allMeals.slice(0, 5).map((entry) => {
     const words = entry.name.split(" ");
     const wordGroups = [];
