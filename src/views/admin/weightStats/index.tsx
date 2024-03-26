@@ -57,7 +57,13 @@ import {
 import { LineChart } from "components/charts/LineCharts";
 
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc, getDocs, collection } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+  onSnapshot
+} from "firebase/firestore";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { parseISO } from "date-fns";
 import { db } from "database/connection";
@@ -233,7 +239,12 @@ export default function WeightStats() {
   const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
     useState<boolean>(false);
 
-  const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
+  const [
+    userDataLastSavedDateBeforeCurrentDate,
+    setUserDataLastSavedDateBeforeCurrentDate
+  ] = useState("");
+
+  const [isUserDataForTodaySaved, setIsUserDataForTodaySaved] = useState(false);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
@@ -442,6 +453,27 @@ export default function WeightStats() {
     return () => {
       isMounted = false; // Set isMounted to false when unmounting
     };
+  }, [isUserDataForTodaySaved]);
+
+  React.useEffect(() => {
+    const currentDay = new Date().toISOString().slice(0, 10);
+
+    const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
+      onSnapshot(
+        doc(db, "additionalData2", user.uid, "dataEntries", currentDay),
+        (doc) => {
+          if (doc.exists()) {
+            setIsUserDataForTodaySaved(true);
+          } else {
+            // Document doesn't exist, handle the case if needed
+            console.log("Today's document doesn't exist.");
+          }
+        }
+      );
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
   }, []);
 
   React.useEffect(() => {
@@ -464,7 +496,7 @@ export default function WeightStats() {
     const latestValue = sortedData[0][property];
     const previousValue = sortedData[1][property];
     const change = latestValue - previousValue;
-    setUserDataLastSavedDate(sortedData[1].date);
+    setUserDataLastSavedDateBeforeCurrentDate(sortedData[1].date);
     return change;
   };
 
@@ -583,7 +615,7 @@ export default function WeightStats() {
   // TODO: Make this work
 
   // const [userDataForToday, setUserDataForToday] = useState(null);
-  // const [userDataLastSavedDate, setUserDataLastSavedDate] = useState(null);
+  // const [userDataLastSavedDateBeforeCurrentDate, setUserDataLastSavedDateBeforeCurrentDate] = useState(null);
   // const [isTodaysDataFetched, setIsTodaysDataFetched] =
   //   useState<boolean>(false);
   // const isMounted = useRef(true);
@@ -617,7 +649,7 @@ export default function WeightStats() {
   //         const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
 
   //         if (isMounted.current) {
-  //           setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+  //           setUserDataLastSavedDateBeforeCurrentDate(rawUserDataForLastSavedDate);
   //           setUserDataForToday(rawUserDataForToday);
   //           setIsTodaysDataFetched(true);
   //         }
@@ -639,20 +671,20 @@ export default function WeightStats() {
 
   // const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
   // React.useEffect(() => {
-  //   if (userDataForToday && userDataLastSavedDate) {
+  //   if (userDataForToday && userDataLastSavedDateBeforeCurrentDate) {
   //     const commonKeys = Object.keys(userDataForToday).filter((key) =>
-  //       Object.keys(userDataLastSavedDate).includes(key)
+  //       Object.keys(userDataLastSavedDateBeforeCurrentDate).includes(key)
   //     );
 
   //     const differentFields = commonKeys.filter(
-  //       (key) => userDataForToday[key] !== userDataLastSavedDate[key]
+  //       (key) => userDataForToday[key] !== userDataLastSavedDateBeforeCurrentDate[key]
   //     );
 
   //     setHighlightedFields(
   //       differentFields.map((field) => `${field}Highlighted`)
   //     );
   //   }
-  // }, [userDataForToday, userDataLastSavedDate]);
+  // }, [userDataForToday, userDataLastSavedDateBeforeCurrentDate]);
 
   // Масиви с преведени имена
 
@@ -1331,7 +1363,7 @@ export default function WeightStats() {
                           : null
                         : null
                     }
-                    subtext={`в сравнение с ${userDataLastSavedDate}`}
+                    subtext={`в сравнение с ${userDataLastSavedDateBeforeCurrentDate}`}
                     value={value}
                   />
                 ))}
@@ -1641,7 +1673,7 @@ export default function WeightStats() {
                         : null
                       : null
                   }
-                  subtext={`в сравнение с ${userDataLastSavedDate}`}
+                  subtext={`в сравнение с ${userDataLastSavedDateBeforeCurrentDate}`}
                 />
               </SimpleGrid>
             </Card>
@@ -1730,7 +1762,7 @@ export default function WeightStats() {
                             : null
                           : null
                       }
-                      subtext={`в сравнение с ${userDataLastSavedDate}`}
+                      subtext={`в сравнение с ${userDataLastSavedDateBeforeCurrentDate}`}
                     />
                   )
                 )}

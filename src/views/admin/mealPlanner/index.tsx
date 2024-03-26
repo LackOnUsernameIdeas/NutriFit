@@ -213,7 +213,7 @@ export default function MealPlanner() {
       bodyFat: 0,
       bodyFatMass: 0,
       leanBodyMass: 0,
-      differenceFromPerfectWeight: 0
+      differenceFromPerfectWeight: { difference: 0, isUnderOrAbove: "" }
     }
   ]);
   allOrderedObjects.sort((a, b) =>
@@ -251,6 +251,8 @@ export default function MealPlanner() {
   const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
 
   const [showITM, setShowITM] = useState(false);
+
+  const [isUserDataForTodaySaved, setIsUserDataForTodaySaved] = useState(false);
 
   // Function to toggle the display of raw data
   const toggleITM = (e: React.MouseEvent) => {
@@ -299,9 +301,13 @@ export default function MealPlanner() {
     }, 1000);
   }
 
-  const calculateChange = (sortedData: any[], property: string) => {
-    const latestValue = sortedData[0][property];
-    const previousValue = sortedData[1][property];
+  const calculateChange = (
+    sortedData: any[],
+    property: string,
+    subproperty?: string
+  ) => {
+    const latestValue = sortedData[0][property]?.[subproperty];
+    const previousValue = sortedData[1][property]?.[subproperty];
     const change = latestValue - previousValue;
     setUserDataLastSavedDate(sortedData[1].date);
     return change;
@@ -313,13 +319,21 @@ export default function MealPlanner() {
     console.log("called");
     allOrderedObjects.forEach((entry) => {
       if (
-        entry.differenceFromPerfectWeight !== 0 &&
+        entry.differenceFromPerfectWeight.difference !== 0 &&
         !uniqueEntries[entry.date]
       ) {
         uniqueEntries[entry.date] = {
           differenceFromPerfectWeight: entry.differenceFromPerfectWeight
         };
       }
+    });
+
+    setDifferenceFromPerfectWeight({
+      difference:
+        allOrderedObjects[allOrderedObjects.length - 1]
+          .differenceFromPerfectWeight.difference,
+      isUnderOrAbove: allOrderedObjects[allOrderedObjects.length - 1]
+        .differenceFromPerfectWeight.isUnderOrAbove as "" | "under" | "above"
     });
 
     // Create an array of entries sorted by date
@@ -330,7 +344,8 @@ export default function MealPlanner() {
     if (sortedData.length >= 2) {
       const differenceFromPerfectWeightChange = calculateChange(
         sortedData,
-        "differenceFromPerfectWeight"
+        "differenceFromPerfectWeight",
+        "difference"
       );
       setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
 
@@ -485,7 +500,7 @@ export default function MealPlanner() {
 
   React.useEffect(() => {
     calculatePerfectWeightChange();
-  }, [perfectWeight]);
+  }, [perfectWeight, isUserDataForTodaySaved]);
 
   // React.useEffect(() => {
   //   const auth = getAuth();
@@ -618,6 +633,7 @@ export default function MealPlanner() {
       if (user) {
         try {
           const userId: string = user.uid;
+          console.log("kalatatest user userId: ", userId);
 
           // Fetch user document separately to get gender and goal fields
           const userDocRef = doc(db, "additionalData2", userId);
@@ -672,14 +688,19 @@ export default function MealPlanner() {
                 date: key,
                 height: userDataTimestamp?.height || 0,
                 weight: userDataTimestamp?.weight || 0,
-                bmi: userDataTimestamp?.BMI ? userDataTimestamp.BMI.bmi : 0,
+                bmi: userDataTimestamp.BMI.bmi || 0,
+                health: userDataTimestamp.BMI.health || 0,
                 bodyFat: userDataTimestamp?.BodyMassData?.bodyFat || 0,
                 bodyFatMass: userDataTimestamp?.BodyMassData?.bodyFatMass || 0,
                 leanBodyMass:
                   userDataTimestamp?.BodyMassData?.leanBodyMass || 0,
-                differenceFromPerfectWeight:
-                  userDataTimestamp?.PerfectWeightData
-                    ?.differenceFromPerfectWeight?.difference || 0
+                perfectWeight:
+                  userDataTimestamp?.PerfectWeightData?.perfectWeight || 0,
+                differenceFromPerfectWeight: userDataTimestamp
+                  ?.PerfectWeightData?.differenceFromPerfectWeight || {
+                  isUnderOrAbove: "",
+                  difference: 0
+                }
               };
 
               orderedTimestampObjects.push(orderedObject);
@@ -708,6 +729,14 @@ export default function MealPlanner() {
             }
           });
 
+          setHealth(
+            orderedTimestampObjects[orderedTimestampObjects.length - 1].health
+          );
+
+          setPerfectWeight(
+            orderedTimestampObjects[orderedTimestampObjects.length - 1]
+              .perfectWeight
+          );
           // Set state with extracted data
           setAllOrderedObjects(orderedTimestampObjects);
           setAllUsersPreferences(allUsersPreferencesObjects);
@@ -723,9 +752,28 @@ export default function MealPlanner() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [isUserDataForTodaySaved]);
 
-  console.log("kalatatest allUsersPreferences: ", allUsersPreferences);
+  React.useEffect(() => {
+    const currentDay = new Date().toISOString().slice(0, 10);
+
+    const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
+      onSnapshot(
+        doc(db, "additionalData2", user.uid, "dataEntries", currentDay),
+        (doc) => {
+          if (doc.exists()) {
+            setIsUserDataForTodaySaved(true);
+          } else {
+            // Document doesn't exist, handle the case if needed
+            console.log("Today's document doesn't exist.");
+          }
+        }
+      );
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
