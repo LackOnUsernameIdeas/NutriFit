@@ -144,6 +144,68 @@ export default function MealPlannerForm(props: {
   }, [chosenCalories, chosenNutrients]);
 
   console.log(userPreferences);
+
+  const prompt = `Вие сте опитен диетолог, който наблюдава пациентите да консумират само ядлива храна от
+      ${
+        Array.isArray(userPreferences.Cuisine)
+          ? userPreferences.Cuisine.length === 0
+            ? "всяка"
+            : userPreferences.Cuisine.length === 1
+            ? userPreferences.Cuisine[0]
+            : "следната"
+          : userPreferences.Cuisine
+      } кухня/кухни. Фокусирайте се върху създаването на ТОЧЕН, разнообразен и вкусен дневен хранителен план, съставен от следните ограничения: калории (${
+    userPreferences.Calories
+  }), протеин (${userPreferences.Protein}), мазнини (${
+    userPreferences.Fat
+  }) и въглехидрати (${
+    userPreferences.Carbohydrates
+  }). Никога не превишавайте или намалявайте предоставените лимити и се УВЕРЕТЕ, че калориите и мазнините ВИНАГИ са същите като предоставените лимити. 
+    Осигурете точността на количествата, като същевременно се придържате към лимитите. 
+    Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. 
+    Експортирайте в JSON ТОЧНО КАТО ПРЕДОСТАВЕНАТА СТРУКТУРА в съдържанието на този заявка, без да добавяте 'json' ключова дума с обратни кавички. 
+    Отговорът трябва да бъде чист JSON, нищо друго. Това означава, че вашият отговор не трябва да започва с 'json*backticks*{data}*backticks*' или '*backticks*{data}*backticks*'.
+    Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
+    Менюто трябва стриктно да спазва следните лимити: да съдържа ${
+      userPreferences.Calories
+    } калории, ${userPreferences.Protein} грама протеин, ${
+    userPreferences.Fat
+  } грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
+    НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${
+      userPreferences.Calories
+    } калории, ${userPreferences.Protein} грама протеин, ${
+    userPreferences.Fat
+  } грама мазнини и ${
+    userPreferences.Carbohydrates
+  } грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
+    Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
+    Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
+    Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
+    Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${
+      userPreferences.Exclude
+    }. 
+    Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
+    Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
+    Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
+    Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
+    Форматирай ЦЯЛАТА информация в JSON точно така: '{
+    breakfast':{
+      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+    },
+    'lunch':{
+      'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+      'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+    }, 
+    'dinner':{
+      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+      'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+    }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
+    Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
+    Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
+    Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
+    Името на ястието е ЗАДЪЛЖИТЕЛНО на български`;
+
   const openAIKey = process.env.REACT_APP_API_KEY;
   const generatePlanWithOpenAI = async () => {
     try {
@@ -165,68 +227,7 @@ export default function MealPlannerForm(props: {
             messages: [
               {
                 role: "user",
-                content: `Вие сте опитен диетолог, който наблюдава пациентите да консумират само ядлива храна от
-                  ${
-                    Array.isArray(userPreferences.Cuisine)
-                      ? userPreferences.Cuisine.length === 0
-                        ? "всяка"
-                        : userPreferences.Cuisine.length === 1
-                        ? userPreferences.Cuisine[0]
-                        : "следната"
-                      : userPreferences.Cuisine
-                  } кухня/кухни. Фокусирайте се върху създаването на ТОЧЕН, разнообразен и вкусен дневен хранителен план, съставен от следните ограничения: калории (${
-                  userPreferences.Calories
-                }), протеин (${userPreferences.Protein}), мазнини (${
-                  userPreferences.Fat
-                }) и въглехидрати (${
-                  userPreferences.Carbohydrates
-                }). Никога не превишавайте или намалявайте предоставените лимити и се УВЕРЕТЕ, че калориите и мазнините ВИНАГИ са същите като предоставените лимити. 
-                Осигурете точността на количествата, като същевременно се придържате към лимитите. 
-                Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. 
-                Експортирайте в JSON ТОЧНО КАТО ПРЕДОСТАВЕНАТА СТРУКТУРА в съдържанието на този заявка, без да добавяте 'json' ключова дума с обратни кавички. 
-                Отговорът трябва да бъде чист JSON, нищо друго. Това означава, че вашият отговор не трябва да започва с 'json*backticks*{data}*backticks*' или '*backticks*{data}*backticks*'.
-                Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
-                Менюто трябва стриктно да спазва следните лимити: да съдържа ${
-                  userPreferences.Calories
-                } калории, ${userPreferences.Protein} грама протеин, ${
-                  userPreferences.Fat
-                } грама мазнини и ${
-                  userPreferences.Carbohydrates
-                } грама въглехидрати. 
-                НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${
-                  userPreferences.Calories
-                } калории, ${userPreferences.Protein} грама протеин, ${
-                  userPreferences.Fat
-                } грама мазнини и ${
-                  userPreferences.Carbohydrates
-                } грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
-                Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
-                Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
-                Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
-                Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${
-                  userPreferences.Exclude
-                }. 
-                Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
-                Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
-                Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
-                Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
-                Форматирай ЦЯЛАТА информация в JSON точно така: '{
-                breakfast':{
-                  'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-                },
-                'lunch':{
-                  'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-                  'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-                  'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-                }, 
-                'dinner':{
-                  'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-                  'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-                }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
-                Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
-                Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
-                Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
-                Името на ястието е ЗАДЪЛЖИТЕЛНО на български`
+                content: prompt
               }
             ]
           })
@@ -422,67 +423,6 @@ export default function MealPlannerForm(props: {
       setIsPlanGeneratedWithGemini(true);
       setIsPlanGeneratedWithOpenAI(false);
       setIsLoading(true);
-
-      const prompt = `Вие сте опитен диетолог, който наблюдава пациентите да консумират само ядлива храна от
-      ${
-        Array.isArray(userPreferences.Cuisine)
-          ? userPreferences.Cuisine.length === 0
-            ? "всяка"
-            : userPreferences.Cuisine.length === 1
-            ? userPreferences.Cuisine[0]
-            : "следната"
-          : userPreferences.Cuisine
-      } кухня/кухни. Фокусирайте се върху създаването на ТОЧЕН, разнообразен и вкусен дневен хранителен план, съставен от следните ограничения: калории (${
-        userPreferences.Calories
-      }), протеин (${userPreferences.Protein}), мазнини (${
-        userPreferences.Fat
-      }) и въглехидрати (${
-        userPreferences.Carbohydrates
-      }). Никога не превишавайте или намалявайте предоставените лимити и се УВЕРЕТЕ, че калориите и мазнините ВИНАГИ са същите като предоставените лимити. 
-    Осигурете точността на количествата, като същевременно се придържате към лимитите. 
-    Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. 
-    Експортирайте в JSON ТОЧНО КАТО ПРЕДОСТАВЕНАТА СТРУКТУРА в съдържанието на този заявка, без да добавяте 'json' ключова дума с обратни кавички. 
-    Отговорът трябва да бъде чист JSON, нищо друго. Това означава, че вашият отговор не трябва да започва с 'json*backticks*{data}*backticks*' или '*backticks*{data}*backticks*'.
-    Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
-    Менюто трябва стриктно да спазва следните лимити: да съдържа ${
-      userPreferences.Calories
-    } калории, ${userPreferences.Protein} грама протеин, ${
-        userPreferences.Fat
-      } грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
-    НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${
-      userPreferences.Calories
-    } калории, ${userPreferences.Protein} грама протеин, ${
-        userPreferences.Fat
-      } грама мазнини и ${
-        userPreferences.Carbohydrates
-      } грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
-    Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
-    Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
-    Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
-    Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${
-      userPreferences.Exclude
-    }. 
-    Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
-    Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
-    Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
-    Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
-    Форматирай ЦЯЛАТА информация в JSON точно така: '{
-    breakfast':{
-      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-    },
-    'lunch':{
-      'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-      'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-    }, 
-    'dinner':{
-      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-      'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-    }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
-    Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
-    Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
-    Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
-    Името на ястието е ЗАДЪЛЖИТЕЛНО на български`;
 
       // Make a request to your backend endpoint to generate a response
       const response = await fetch(

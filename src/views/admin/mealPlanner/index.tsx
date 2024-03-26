@@ -688,19 +688,17 @@ export default function MealPlanner() {
                 date: key,
                 height: userDataTimestamp?.height || 0,
                 weight: userDataTimestamp?.weight || 0,
-                bmi: userDataTimestamp.BMI.bmi || 0,
-                health: userDataTimestamp.BMI.health || 0,
+                bmi: userDataTimestamp?.BMI?.bmi || 0,
+                health: userDataTimestamp?.BMI?.health || 0,
                 bodyFat: userDataTimestamp?.BodyMassData?.bodyFat || 0,
                 bodyFatMass: userDataTimestamp?.BodyMassData?.bodyFatMass || 0,
                 leanBodyMass:
                   userDataTimestamp?.BodyMassData?.leanBodyMass || 0,
                 perfectWeight:
                   userDataTimestamp?.PerfectWeightData?.perfectWeight || 0,
-                differenceFromPerfectWeight: userDataTimestamp
-                  ?.PerfectWeightData?.differenceFromPerfectWeight || {
-                  isUnderOrAbove: "",
-                  difference: 0
-                }
+                differenceFromPerfectWeight:
+                  userDataTimestamp?.PerfectWeightData
+                    ?.differenceFromPerfectWeight?.difference || 0
               };
 
               orderedTimestampObjects.push(orderedObject);
