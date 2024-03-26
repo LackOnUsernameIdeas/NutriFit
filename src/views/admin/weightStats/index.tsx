@@ -464,6 +464,7 @@ export default function WeightStats() {
         (doc) => {
           if (doc.exists()) {
             setIsUserDataForTodaySaved(true);
+            setIsLoading(false);
           } else {
             // Document doesn't exist, handle the case if needed
             console.log("Today's document doesn't exist.");

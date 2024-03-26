@@ -740,6 +740,7 @@ export default function MealPlanner() {
           setAllUsersPreferences(allUsersPreferencesObjects);
           setDailyCaloryRequirements(dailyCaloryRequirementsArray);
           setMacroNutrients(macroNutrientsData);
+          setIsGenerateStatsForCaloriesCalled(true);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
@@ -761,6 +762,7 @@ export default function MealPlanner() {
         (doc) => {
           if (doc.exists()) {
             setIsUserDataForTodaySaved(true);
+            setIsGenerateStatsForCaloriesCalled(true);
           } else {
             // Document doesn't exist, handle the case if needed
             console.log("Today's document doesn't exist.");
