@@ -62,7 +62,7 @@ import {
 import {
   onSnapshot,
   doc,
-  getFirestore,
+  getDocs,
   getDoc,
   collection
 } from "firebase/firestore";
@@ -617,117 +617,114 @@ export default function MealPlanner() {
 
       if (user) {
         try {
-          const userId = user.uid;
+          const userId: string = user.uid;
 
           // Fetch user document separately to get gender and goal fields
           const userDocRef = doc(db, "additionalData2", userId);
           const userDocSnapshot = await getDoc(userDocRef);
-          const userBasicData = userDocSnapshot.data();
+          const userBasicData = userDocSnapshot.data() as UserData;
 
-          // Subscribe to real-time updates using onSnapshot
+          // Fetch all data entries for the user
           const additionalDataRef = collection(
             db,
             "additionalData2",
             userId,
             "dataEntries"
           );
-          const unsubscribeData = onSnapshot(
-            additionalDataRef,
-            (querySnapshot) => {
-              const orderedTimestampObjects: any[] = [];
-              const allUsersPreferencesObjects: any[] = [];
-              const dailyCaloryRequirements: any[] = [];
-              const macroNutrientsData: any[] = [];
+          const dataEntriesSnapshot = await getDocs(additionalDataRef);
 
-              querySnapshot.forEach((doc) => {
-                const key = doc.id; // Assuming the key is the document ID
+          const orderedTimestampObjects: any[] = [];
+          const allUsersPreferencesObjects: any[] = [];
+          const dailyCaloryRequirementsArray: any[] = [];
+          const macroNutrientsData: any[] = [];
 
-                const macroNutrients_number = Array.from(
-                  { length: 6 },
-                  (_, i) => `macroNutrients_${i + 1}`
-                );
-                const dailyCaloryRequirements_number = Array.from(
-                  { length: 6 },
-                  (_, i) => `dailyCaloryRequirements_${i + 1}`
-                );
+          dataEntriesSnapshot.forEach((doc) => {
+            const key = doc.id;
 
-                if (
-                  !macroNutrients_number.includes(key) &&
-                  !dailyCaloryRequirements_number.includes(key)
-                ) {
-                  const userDataTimestamp = doc.data();
-                  // Set user data fetched from user document
-                  setUserData({
-                    gender: userBasicData.gender,
-                    goal: userBasicData.goal,
-                    age: userDataTimestamp.age,
-                    height: userDataTimestamp.height,
-                    waist: userDataTimestamp.waist,
-                    neck: userDataTimestamp.neck,
-                    hip: userDataTimestamp.hip,
-                    weight: userDataTimestamp.weight
-                  });
+            const macroNutrients_number = Array.from(
+              { length: 6 },
+              (_, i) => `macroNutrients_${i + 1}`
+            );
+            const dailyCaloryRequirements_number = Array.from(
+              { length: 6 },
+              (_, i) => `dailyCaloryRequirements_${i + 1}`
+            );
 
-                  // Example of processing data for each document
-                  const orderedObject = {
-                    date: key,
-                    height: userDataTimestamp?.height || 0,
-                    weight: userDataTimestamp?.weight || 0,
-                    bmi: userDataTimestamp?.BMI ? userDataTimestamp.BMI.bmi : 0,
-                    bodyFat: userDataTimestamp?.BodyMassData?.bodyFat || 0,
-                    bodyFatMass:
-                      userDataTimestamp?.BodyMassData?.bodyFatMass || 0,
-                    leanBodyMass:
-                      userDataTimestamp?.BodyMassData?.leanBodyMass || 0,
-                    differenceFromPerfectWeight:
-                      userDataTimestamp?.PerfectWeightData
-                        ?.differenceFromPerfectWeight?.difference || 0
-                  };
-
-                  orderedTimestampObjects.push(orderedObject);
-
-                  // If Preferences exist, add them to allUsersPreferencesObjects
-                  if (userDataTimestamp?.Preferences) {
-                    allUsersPreferencesObjects.push({
-                      date: key,
-                      ...userDataTimestamp.Preferences
-                    });
-                  }
-                } else {
-                  const additionalData = doc.data();
-                  dailyCaloryRequirements_number.includes(key) &&
-                    dailyCaloryRequirements.push(additionalData || []);
-                  macroNutrients_number.includes(key) &&
-                    macroNutrientsData.push(additionalData || []);
-
-                  // If Preferences exist, add them to allUsersPreferences
-                  if (additionalData?.Preferences) {
-                    allUsersPreferences.push({
-                      date: key,
-                      ...additionalData.Preferences
-                    });
-                  }
-                }
+            if (
+              !macroNutrients_number.includes(key) &&
+              !dailyCaloryRequirements_number.includes(key)
+            ) {
+              const userDataTimestamp = doc.data();
+              // Set user data fetched from user document
+              setUserData({
+                gender: userBasicData.gender,
+                goal: userBasicData.goal,
+                age: userDataTimestamp.age,
+                height: userDataTimestamp.height,
+                waist: userDataTimestamp.waist,
+                neck: userDataTimestamp.neck,
+                hip: userDataTimestamp.hip,
+                weight: userDataTimestamp.weight
               });
 
-              // Set state with extracted data
-              setAllOrderedObjects(orderedTimestampObjects);
-              setAllUsersPreferences(allUsersPreferencesObjects);
-              setDailyCaloryRequirements(dailyCaloryRequirements);
-              setMacroNutrients(macroNutrientsData);
-            }
-          );
+              // Example of processing data for each document
+              const orderedObject = {
+                date: key,
+                height: userDataTimestamp?.height || 0,
+                weight: userDataTimestamp?.weight || 0,
+                bmi: userDataTimestamp?.BMI ? userDataTimestamp.BMI.bmi : 0,
+                bodyFat: userDataTimestamp?.BodyMassData?.bodyFat || 0,
+                bodyFatMass: userDataTimestamp?.BodyMassData?.bodyFatMass || 0,
+                leanBodyMass:
+                  userDataTimestamp?.BodyMassData?.leanBodyMass || 0,
+                differenceFromPerfectWeight:
+                  userDataTimestamp?.PerfectWeightData
+                    ?.differenceFromPerfectWeight?.difference || 0
+              };
 
-          // Cleanup the subscription when the component unmounts
-          return () => {
-            unsubscribeData();
-          };
+              orderedTimestampObjects.push(orderedObject);
+
+              // If Preferences exist, add them to allUsersPreferencesObjects
+              if (userDataTimestamp?.Preferences) {
+                allUsersPreferencesObjects.push({
+                  date: key,
+                  ...userDataTimestamp.Preferences
+                });
+              }
+            } else {
+              const additionalData = doc.data() as any;
+              dailyCaloryRequirements_number.includes(key) &&
+                dailyCaloryRequirementsArray.push(additionalData || []);
+              macroNutrients_number.includes(key) &&
+                macroNutrientsData.push(additionalData || []);
+
+              // If Preferences exist, add them to allUsersPreferences
+              if (additionalData?.Preferences) {
+                allUsersPreferences.push({
+                  date: key,
+                  ...additionalData.Preferences
+                });
+              }
+            }
+          });
+
+          // Set state with extracted data
+          setAllOrderedObjects(orderedTimestampObjects);
+          setAllUsersPreferences(allUsersPreferencesObjects);
+          setDailyCaloryRequirements(dailyCaloryRequirementsArray);
+          setMacroNutrients(macroNutrientsData);
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
       }
     });
+
+    // Cleanup the subscription when the component unmounts
+    return () => {
+      unsubscribe();
+    };
   }, []);
+
   console.log("kalatatest allUsersPreferences: ", allUsersPreferences);
 
   React.useEffect(() => {

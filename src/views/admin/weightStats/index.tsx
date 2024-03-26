@@ -50,19 +50,14 @@ import {
   BMIInfo,
   BodyMass,
   UserData,
+  UserChartData,
   WeightDifference
 } from "../../../types/weightStats";
 
 import { LineChart } from "components/charts/LineCharts";
 
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  onSnapshot,
-  doc,
-  getFirestore,
-  getDoc,
-  collection
-} from "firebase/firestore";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { doc, getDoc, getDocs, collection } from "firebase/firestore";
 import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
 import { parseISO } from "date-fns";
 import { db } from "database/connection";
@@ -286,174 +281,184 @@ export default function WeightStats() {
   }, [dropdownVisible]);
 
   React.useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    let isMounted = true; // Variable to track if the component is mounted
+
+    const fetchData = async () => {
+      const auth = getAuth();
+      const user = await new Promise<User | null>((resolve) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          resolve(user);
+          unsubscribe();
+        });
+      });
+
+      console.log("User:", user); // Log user data
+
       setUser(user);
 
       if (user) {
         try {
           const userId = user.uid;
 
-          // Fetch user document separately to get gender and goal fields
+          // Fetch user document to get gender and goal
           const userDocRef = doc(db, "additionalData2", userId);
           const userDocSnapshot = await getDoc(userDocRef);
-          const userBasicData = userDocSnapshot.data();
+          console.log("User Doc Snapshot:", userDocSnapshot); // Log user document snapshot
 
-          // Subscribe to real-time updates using onSnapshot
-          const additionalDataRef = collection(
-            db,
-            "additionalData2",
-            userId,
-            "dataEntries"
-          );
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+            const { gender, goal } = userData;
 
-          const unsubscribeData = onSnapshot(
-            additionalDataRef,
-            (querySnapshot) => {
-              const userChartData: any[] = [];
+            console.log("Gender:", gender); // Log gender
+            console.log("Goal:", goal); // Log goal
 
-              const macroNutrients_number = Array.from(
-                { length: 6 },
-                (_, i) => `macroNutrients_${i + 1}`
-              );
-              const dailyCaloryRequirements_number = Array.from(
-                { length: 6 },
-                (_, i) => `dailyCaloryRequirements_${i + 1}`
-              );
+            // Fetch all dated documents
+            const dataEntriesRef = collection(
+              db,
+              "additionalData2",
+              userId,
+              "dataEntries"
+            );
+            const querySnapshot = await getDocs(dataEntriesRef);
+            console.log("Query Snapshot:", querySnapshot); // Log query snapshot
 
-              querySnapshot.forEach((doc) => {
-                const key = doc.id; // Assuming the date is the document ID
-                if (
-                  !macroNutrients_number.includes(key) &&
-                  !dailyCaloryRequirements_number.includes(key)
-                ) {
-                  // Assuming additionalData is the entire document data
-                  const additionalData = doc.data();
+            const userChartData: UserChartData[] = [];
 
-                  // Example of processing data for each document
-                  const userDataSaveable = {
-                    gender: userBasicData.gender,
-                    goal: userBasicData?.goal,
-                    age: additionalData?.age || 0,
-                    height: additionalData?.height || 0,
-                    waist: additionalData?.waist || 0,
-                    neck: additionalData?.neck || 0,
-                    hip: additionalData?.hip || 0,
-                    weight: additionalData?.weight || 0,
-                    bmi: additionalData?.BMI?.bmi || 0,
-                    bodyFat: additionalData?.BodyMassData?.bodyFat || 0,
-                    bodyFatMass: additionalData?.BodyMassData?.bodyFatMass || 0,
-                    leanBodyMass:
-                      additionalData?.BodyMassData?.leanBodyMass || 0,
-                    differenceFromPerfectWeight:
-                      additionalData?.PerfectWeightData
-                        ?.differenceFromPerfectWeight?.difference || 0
-                  };
+            querySnapshot.forEach((doc) => {
+              const date = doc.id; // Date is the document ID
+              const additionalData = doc.data();
 
-                  console.log(
-                    "kalata querySnapshot userDataSaveable: ",
-                    userDataSaveable
-                  );
-                  // Update state
-                  setUserData((prevUserData) => ({
-                    ...prevUserData,
-                    ...userDataSaveable
-                  }));
+              console.log("Date:", date); // Log date
 
-                  // Set BMI data
-                  const bmiData = {
-                    bmi: additionalData?.BMI?.bmi || 0,
-                    health: additionalData?.BMI?.health || "",
-                    healthy_bmi_range:
-                      additionalData?.BMI?.healthy_bmi_range || ""
-                  };
-                  setBMIIndex(bmiData);
+              // Exclude documents with specific prefixes
+              if (
+                !date.startsWith("dailyCaloryRequirements_") &&
+                !date.startsWith("macroNutrients_")
+              ) {
+                // Populate user chart data for each dated document
+                userChartData.push({
+                  date: date,
+                  height: additionalData.height || 0,
+                  weight: additionalData.weight || 0,
+                  bmi: additionalData?.BMI?.bmi || 0,
+                  bodyFat: additionalData?.BodyMassData?.bodyFat || 0,
+                  bodyFatMass: additionalData?.BodyMassData?.bodyFatMass || 0,
+                  leanBodyMass: additionalData?.BodyMassData?.leanBodyMass || 0,
+                  differenceFromPerfectWeight:
+                    additionalData?.PerfectWeightData
+                      ?.differenceFromPerfectWeight?.difference || 0,
+                  isUnderOrAbove:
+                    additionalData?.PerfectWeightData
+                      ?.differenceFromPerfectWeight?.isUnderOrAbove || ""
+                });
+              }
+            });
 
-                  console.log("kalata querySnapshot bmiData: ", bmiData);
+            // Sort userChartData by date in descending order
+            userChartData.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
 
-                  // Set body mass data
-                  const bodyMass = {
-                    "Body Fat (U.S. Navy Method)":
-                      additionalData?.BodyMassData?.bodyFat || 0,
-                    "Body Fat Mass":
-                      additionalData?.BodyMassData?.bodyFatMass || 0,
-                    "Lean Body Mass":
-                      additionalData?.BodyMassData?.leanBodyMass || 0
-                  };
-                  setBodyFatMassAndLeanMass(bodyMass);
+            // Get the most recent document
+            const mostRecentData = userChartData[0];
+            console.log("Most Recent Data:", mostRecentData); // Log most recent data for debugging
 
-                  console.log("kalata querySnapshot bodyMass: ", bodyMass);
+            // Fetch additional data from the most recent document
+            const mostRecentDate = mostRecentData.date;
+            const mostRecentDocRef = doc(
+              db,
+              "additionalData2",
+              userId,
+              "dataEntries",
+              mostRecentDate
+            );
+            const mostRecentDocSnapshot = await getDoc(mostRecentDocRef);
+            if (mostRecentDocSnapshot.exists()) {
+              const additionalData = mostRecentDocSnapshot.data();
+              console.log("Additional Data (Most Recent):", additionalData); // Log additional data for debugging
 
-                  // Set perfect weight
-                  const perfectWeight =
-                    additionalData?.PerfectWeightData?.perfectWeight || 0;
-                  setPerfectWeight(perfectWeight);
+              // Set all user data properties
+              if (isMounted) {
+                // Check if the component is still mounted
+                setUserData({
+                  gender: gender || "",
+                  goal: goal || "",
+                  age: additionalData?.age || 0,
+                  height: additionalData?.height || 0,
+                  waist: additionalData?.waist || 0,
+                  neck: additionalData?.neck || 0,
+                  hip: additionalData?.hip || 0,
+                  weight: additionalData?.weight || 0,
+                  bmi: additionalData?.BMI?.bmi || 0,
+                  bodyFat: additionalData?.BodyMassData?.bodyFat || 0,
+                  bodyFatMass: additionalData?.BodyMassData?.bodyFatMass || 0,
+                  leanBodyMass: additionalData?.BodyMassData?.leanBodyMass || 0,
+                  differenceFromPerfectWeight:
+                    additionalData?.PerfectWeightData
+                      ?.differenceFromPerfectWeight?.difference || 0
+                });
 
-                  console.log(
-                    "kalata querySnapshot perfectWeight: ",
-                    perfectWeight
-                  );
+                setBMIIndex({
+                  bmi: mostRecentData.bmi || 0,
+                  health: additionalData?.BMI?.health || "",
+                  healthy_bmi_range:
+                    additionalData?.BMI?.healthy_bmi_range || ""
+                });
 
-                  // Set difference from perfect weight
-                  const differenceFromPerfectWeight = additionalData
-                    ?.PerfectWeightData?.differenceFromPerfectWeight || {
-                    difference: 0,
-                    isUnderOrAbove: ""
-                  };
+                setBodyFatMassAndLeanMass({
+                  "Body Fat (U.S. Navy Method)": mostRecentData.bodyFat || 0,
+                  "Body Fat Mass": mostRecentData.bodyFatMass || 0,
+                  "Lean Body Mass": mostRecentData.leanBodyMass || 0
+                });
 
-                  console.log(
-                    "kalata querySnapshot differenceFromPerfectWeight: ",
-                    differenceFromPerfectWeight
-                  );
+                setPerfectWeight(
+                  additionalData?.PerfectWeightData?.perfectWeight || 0
+                );
 
-                  setDifferenceFromPerfectWeight(differenceFromPerfectWeight);
+                setDifferenceFromPerfectWeight(
+                  additionalData?.PerfectWeightData?.differenceFromPerfectWeight
+                );
 
-                  userChartData.push({
-                    date: key,
-                    height: additionalData.height || 0,
-                    weight: additionalData.weight || 0,
-                    bmi: additionalData.BMI.bmi || 0,
-                    bodyFat: additionalData.BodyMassData.bodyFat || 0,
-                    bodyFatMass: additionalData.BodyMassData.bodyFatMass || 0,
-                    leanBodyMass: additionalData.BodyMassData.leanBodyMass || 0,
-                    differenceFromPerfectWeight:
-                      additionalData.PerfectWeightData
-                        .differenceFromPerfectWeight.difference || 0,
-                    isUnderOrAbove:
-                      additionalData.PerfectWeightData
-                        .differenceFromPerfectWeight.isUnderOrAbove || ""
-                  });
-                }
-              });
-
-              console.log(
-                "kalata querySnapshot userChartData: ",
-                userChartData
-              );
-
-              // Set state for chart data
-              setUserDataForCharts(userChartData);
-              setIsLoading(false);
-              console.log(
-                "ID: ",
-                user.uid,
-                "Additional user data:",
-                additionalDataRef
-              );
-              console.log("userChartData:", userChartData);
+                // Set user chart data
+                console.log("User Chart Data:", userChartData); // Log user chart data for debugging
+                setUserDataForCharts(userChartData);
+                setIsLoading(false);
+              }
+            } else {
+              console.log("Most recent document does not exist.");
             }
-          );
-
-          // Cleanup the subscription when the component unmounts
-          return () => {
-            unsubscribeData();
-          };
+          } else {
+            console.log("User document does not exist.");
+          }
         } catch (error) {
           console.error("Error fetching additional user data:", error);
         }
       }
-    });
+    };
+
+    fetchData();
+
+    // Cleanup function to be called when the component unmounts
+    return () => {
+      isMounted = false; // Set isMounted to false when unmounting
+    };
   }, []);
+
+  React.useEffect(() => {
+    console.log("userData:", userData);
+    console.log("bmiIndex:", BMIIndex);
+    console.log("bodyFatMassAndLeanMass:", bodyFatMassAndLeanMass);
+    console.log("perfectWeight:", perfectWeight);
+    console.log("differenceFromPerfectWeight:", differenceFromPerfectWeight);
+    console.log("userDataForCharts:", userDataForCharts);
+  }, [
+    userData,
+    BMIIndex,
+    bodyFatMassAndLeanMass,
+    perfectWeight,
+    differenceFromPerfectWeight,
+    userDataForCharts
+  ]);
 
   const calculateChange = (sortedData: any[], property: string) => {
     const latestValue = sortedData[0][property];
@@ -671,12 +676,8 @@ export default function WeightStats() {
         pt={{ base: "130px", md: "80px", xl: "80px" }}
         style={{ overflow: "hidden" }}
       >
-        {isLoading || !isGenerateStatsCalled ? (
-          <Box
-            mt="37vh"
-            minH="600px"
-            opacity={isLoading || !isGenerateStatsCalled ? 1 : 0}
-          >
+        {isLoading ? (
+          <Box mt="37vh" minH="600px" opacity={isLoading ? 1 : 0}>
             <Loading />
           </Box>
         ) : (

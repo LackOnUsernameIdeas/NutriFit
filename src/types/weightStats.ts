@@ -105,6 +105,18 @@ export type UserData = {
   [key: string]: number | string;
 };
 
+export type UserChartData = {
+  date: string;
+  height: number;
+  weight: number;
+  bmi: number;
+  bodyFat: number;
+  bodyFatMass: number;
+  leanBodyMass: number;
+  differenceFromPerfectWeight: number;
+  isUnderOrAbove: string;
+};
+
 export type UserIntakes = {
   Calories: number;
   Protein: number;
