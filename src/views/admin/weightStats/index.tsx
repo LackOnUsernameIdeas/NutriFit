@@ -244,8 +244,6 @@ export default function WeightStats() {
     setUserDataLastSavedDateBeforeCurrentDate
   ] = useState("");
 
-  const [isUserDataForTodaySaved, setIsUserDataForTodaySaved] = useState(false);
-
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
     React.useState(false);
@@ -291,191 +289,90 @@ export default function WeightStats() {
     handleRestSlidePositionChange();
   }, [dropdownVisible]);
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   React.useEffect(() => {
-    let isMounted = true; // Variable to track if the component is mounted
-
-    const fetchData = async () => {
-      const auth = getAuth();
-      const user = await new Promise<User | null>((resolve) => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          resolve(user);
-          unsubscribe();
-        });
-      });
-
-      console.log("User:", user); // Log user data
-
-      setUser(user);
-
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        try {
-          const userId = user.uid;
-
-          // Fetch user document to get gender and goal
-          const userDocRef = doc(db, "additionalData2", userId);
-          const userDocSnapshot = await getDoc(userDocRef);
-          console.log("User Doc Snapshot:", userDocSnapshot); // Log user document snapshot
-
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            const { gender, goal } = userData;
-
-            console.log("Gender:", gender); // Log gender
-            console.log("Goal:", goal); // Log goal
-
-            // Fetch all dated documents
-            const dataEntriesRef = collection(
-              db,
-              "additionalData2",
-              userId,
-              "dataEntries"
-            );
-            const querySnapshot = await getDocs(dataEntriesRef);
-            console.log("Query Snapshot:", querySnapshot); // Log query snapshot
-
-            const userChartData: UserChartData[] = [];
-
-            querySnapshot.forEach((doc) => {
-              const date = doc.id; // Date is the document ID
-              const additionalData = doc.data();
-
-              console.log("Date:", date); // Log date
-
-              // Exclude documents with specific prefixes
-              if (
-                !date.startsWith("dailyCaloryRequirements_") &&
-                !date.startsWith("macroNutrients_")
-              ) {
-                // Populate user chart data for each dated document
-                userChartData.push({
-                  date: date,
-                  height: additionalData.height || 0,
-                  weight: additionalData.weight || 0,
-                  bmi: additionalData?.BMI?.bmi || 0,
-                  bodyFat: additionalData?.BodyMassData?.bodyFat || 0,
-                  bodyFatMass: additionalData?.BodyMassData?.bodyFatMass || 0,
-                  leanBodyMass: additionalData?.BodyMassData?.leanBodyMass || 0,
-                  differenceFromPerfectWeight:
-                    additionalData?.PerfectWeightData
-                      ?.differenceFromPerfectWeight?.difference || 0,
-                  isUnderOrAbove:
-                    additionalData?.PerfectWeightData
-                      ?.differenceFromPerfectWeight?.isUnderOrAbove || ""
-                });
-              }
-            });
-
-            // Sort userChartData by date in descending order
-            userChartData.sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-            );
-
-            // Get the most recent document
-            const mostRecentData = userChartData[0];
-            console.log("Most Recent Data:", mostRecentData); // Log most recent data for debugging
-
-            // Fetch additional data from the most recent document
-            const mostRecentDate = mostRecentData.date;
-            const mostRecentDocRef = doc(
-              db,
-              "additionalData2",
-              userId,
-              "dataEntries",
-              mostRecentDate
-            );
-            const mostRecentDocSnapshot = await getDoc(mostRecentDocRef);
-            if (mostRecentDocSnapshot.exists()) {
-              const additionalData = mostRecentDocSnapshot.data();
-              console.log("Additional Data (Most Recent):", additionalData); // Log additional data for debugging
-
-              // Set all user data properties
-              if (isMounted) {
-                // Check if the component is still mounted
-                setUserData({
-                  gender: gender || "",
-                  goal: goal || "",
-                  age: additionalData?.age || 0,
-                  height: additionalData?.height || 0,
-                  waist: additionalData?.waist || 0,
-                  neck: additionalData?.neck || 0,
-                  hip: additionalData?.hip || 0,
-                  weight: additionalData?.weight || 0,
-                  bmi: additionalData?.BMI?.bmi || 0,
-                  bodyFat: additionalData?.BodyMassData?.bodyFat || 0,
-                  bodyFatMass: additionalData?.BodyMassData?.bodyFatMass || 0,
-                  leanBodyMass: additionalData?.BodyMassData?.leanBodyMass || 0,
-                  differenceFromPerfectWeight:
-                    additionalData?.PerfectWeightData
-                      ?.differenceFromPerfectWeight?.difference || 0
-                });
-
-                setBMIIndex({
-                  bmi: mostRecentData.bmi || 0,
-                  health: additionalData?.BMI?.health || "",
-                  healthy_bmi_range:
-                    additionalData?.BMI?.healthy_bmi_range || ""
-                });
-
-                setBodyFatMassAndLeanMass({
-                  "Body Fat (U.S. Navy Method)": mostRecentData.bodyFat || 0,
-                  "Body Fat Mass": mostRecentData.bodyFatMass || 0,
-                  "Lean Body Mass": mostRecentData.leanBodyMass || 0
-                });
-
-                setPerfectWeight(
-                  additionalData?.PerfectWeightData?.perfectWeight || 0
-                );
-
-                setDifferenceFromPerfectWeight(
-                  additionalData?.PerfectWeightData?.differenceFromPerfectWeight
-                );
-
-                // Set user chart data
-                console.log("User Chart Data:", userChartData); // Log user chart data for debugging
-                setUserDataForCharts(userChartData);
-                setIsLoading(false);
-              }
-            } else {
-              console.log("Most recent document does not exist.");
-            }
-          } else {
-            console.log("User document does not exist.");
-          }
-        } catch (error) {
-          console.error("Error fetching additional user data:", error);
-        }
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
       }
-    };
-
-    fetchData();
-
-    // Cleanup function to be called when the component unmounts
-    return () => {
-      isMounted = false; // Set isMounted to false when unmounting
-    };
-  }, [isUserDataForTodaySaved]);
-
-  React.useEffect(() => {
-    const currentDay = new Date().toISOString().slice(0, 10);
-
-    const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
-      onSnapshot(
-        doc(db, "additionalData2", user.uid, "dataEntries", currentDay),
-        (doc) => {
-          if (doc.exists()) {
-            setIsUserDataForTodaySaved(true);
-            setIsLoading(false);
-          } else {
-            // Document doesn't exist, handle the case if needed
-            console.log("Today's document doesn't exist.");
-          }
-        }
-      );
     });
 
-    // Clean up the listener when the component unmounts
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      const fetchData = async () => {
+        try {
+          const uid = currentUser.uid;
+          const date = new Date().toISOString().slice(0, 10);
+          const response = await fetch(
+            "https://nutri-api.noit.eu/weightStatsAndMealPlanner",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                uid: uid, // Assuming user is defined somewhere in your component
+                date: date // Get today's date in YYYY-MM-DD format
+              })
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch weight stats");
+          }
+
+          const weightStatsData = await response.json();
+
+          // Set the states accordingly
+          setPerfectWeight(weightStatsData.perfectWeight || 0);
+          setDifferenceFromPerfectWeight(
+            {
+              difference:
+                weightStatsData.differenceFromPerfectWeight.difference,
+              isUnderOrAbove:
+                weightStatsData.differenceFromPerfectWeight.isUnderOrAbove
+            } || {
+              difference: 0,
+              isUnderOrAbove: ""
+            }
+          );
+          setBMIIndex(
+            weightStatsData.bmiIndex || {
+              bmi: 0,
+              health: "",
+              healthy_bmi_range: ""
+            }
+          );
+          setBodyFatMassAndLeanMass(
+            weightStatsData.bodyFatMassAndLeanMass || {
+              "Body Fat (U.S. Navy Method)": 0,
+              "Body Fat Mass": 0,
+              "Lean Body Mass": 0
+            }
+          );
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            ...weightStatsData.userDataSaveable
+          }));
+          console.log("userDataForCharts: ", userDataForCharts);
+          setUserDataForCharts(weightStatsData.userDataForCharts || []);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching weight stats:", error);
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [currentUser]);
 
   React.useEffect(() => {
     console.log("userData:", userData);
