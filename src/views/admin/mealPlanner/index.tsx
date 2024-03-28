@@ -678,15 +678,7 @@ export default function MealPlanner() {
           // Set the states accordingly
           setPerfectWeight(weightStatsData.perfectWeight || 0);
           setDifferenceFromPerfectWeight(
-            {
-              difference:
-                weightStatsData.differenceFromPerfectWeight.difference,
-              isUnderOrAbove:
-                weightStatsData.differenceFromPerfectWeight.isUnderOrAbove
-            } || {
-              difference: 0,
-              isUnderOrAbove: ""
-            }
+            weightStatsData.differenceFromPerfectWeight.difference || 0
           );
           setHealth(weightStatsData.bmiIndex.health);
 

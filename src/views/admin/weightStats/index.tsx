@@ -1666,275 +1666,279 @@ export default function WeightStats() {
                 )}
               </SimpleGrid>
             </Card>
-            <Card
-              onClick={handleDropdownToggle}
-              cursor="pointer"
-              zIndex="1"
-              position="relative"
-              bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-              transition="background-image 0.5s ease-in-out"
-              mb={renderDropdown ? "0px" : "20px"}
-            >
-              <Flex justify="space-between" alignItems="center">
-                <Text
-                  fontSize="2xl"
-                  style={
-                    dropdownVisible
-                      ? {
-                          backgroundImage: gradient,
-                          WebkitBackgroundClip: "text",
-                          color: "transparent"
-                        }
-                      : {}
-                  }
-                  userSelect="none"
-                >
-                  {dropdownVisible ? (
-                    <b>Статистики за вашето телесно изменение:</b>
-                  ) : (
-                    "Статистики за вашето телесно изменение:"
-                  )}
-                </Text>
-                <Icon
-                  as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                  boxSize={6}
-                  color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                />
-              </Flex>
-            </Card>
-            {renderDropdown && (
-              <animated.div
-                style={{ ...slideAnimationDrop, position: "relative" }}
-              >
+            {lineChartForBMI.length > 1 && (
+              <Box>
                 <Card
-                  bg={boxBg}
-                  minH={{ base: "800px", md: "300px", xl: "180px" }}
+                  onClick={handleDropdownToggle}
+                  cursor="pointer"
+                  zIndex="1"
+                  position="relative"
+                  bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+                  transition="background-image 0.5s ease-in-out"
+                  mb={renderDropdown ? "0px" : "20px"}
                 >
-                  <SimpleGrid
-                    columns={{ base: 1, md: 2, xl: 2 }}
-                    gap="20px"
-                    mt="50px"
+                  <Flex justify="space-between" alignItems="center">
+                    <Text
+                      fontSize="2xl"
+                      style={
+                        dropdownVisible
+                          ? {
+                              backgroundImage: gradient,
+                              WebkitBackgroundClip: "text",
+                              color: "transparent"
+                            }
+                          : {}
+                      }
+                      userSelect="none"
+                    >
+                      {dropdownVisible ? (
+                        <b>Статистики за вашето телесно изменение:</b>
+                      ) : (
+                        "Статистики за вашето телесно изменение:"
+                      )}
+                    </Text>
+                    <Icon
+                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
+                      boxSize={6}
+                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                    />
+                  </Flex>
+                </Card>
+                {renderDropdown && (
+                  <animated.div
+                    style={{ ...slideAnimationDrop, position: "relative" }}
                   >
                     <Card
-                      fontSize="3xl"
-                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                      p="20px" // Add padding to the card
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection="column"
+                      bg={boxBg}
+                      minH={{ base: "800px", md: "300px", xl: "180px" }}
                     >
-                      Вашето тегло (кг.)
-                    </Card>
-                    {!isSmallScreen && (
-                      <Card
-                        fontSize="3xl"
-                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                        p="20px" // Add padding to the card
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="column"
+                      <SimpleGrid
+                        columns={{ base: 1, md: 2, xl: 2 }}
+                        gap="20px"
+                        mt="50px"
                       >
-                        Вашият Индекс на Телесна Маса
-                      </Card>
-                    )}
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "100px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForKilogramsData}
-                        lineChartLabelName="Изменение на тегло(кг)"
-                        textColor={chartsColor}
-                        color="rgba(67,24,255,1)"
-                      />
+                        <Card
+                          fontSize="3xl"
+                          maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                          p="20px"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          flexDirection="column"
+                        >
+                          Вашето тегло (кг.)
+                        </Card>
+                        {!isSmallScreen && (
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашият Индекс на Телесна Маса
+                          </Card>
+                        )}
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "100px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForKilogramsData}
+                            lineChartLabelName="Изменение на тегло(кг)"
+                            textColor={chartsColor}
+                            color="rgba(67,24,255,1)"
+                          />
+                        </Card>
+                        {isSmallScreen && (
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашият Индекс на Телесна Маса
+                          </Card>
+                        )}
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForBMI}
+                            lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
+                            textColor={chartsColor}
+                            color="rgba(67,24,255,1)"
+                          />
+                        </Card>
+                        <Card
+                          fontSize="3xl"
+                          maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                          p="20px"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          flexDirection="column"
+                        >
+                          Вашият % телесни мазнини
+                        </Card>
+                        {!isSmallScreen && (
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашата мастна телесна маса (кг.)
+                          </Card>
+                        )}
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForBodyFatData}
+                            lineChartLabelName="Изменение на % телесни мазнини"
+                            textColor={chartsColor}
+                            color="#7c6bff"
+                          />
+                        </Card>
+                        {isSmallScreen && (
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                          >
+                            Вашата мастна телесна маса (кг.)
+                          </Card>
+                        )}
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForBodyFatMassData}
+                            lineChartLabelName="Изменение на мастна телесна маса"
+                            textColor={chartsColor}
+                            color="#7c6bff"
+                          />
+                        </Card>
+                        <Card
+                          fontSize="3xl"
+                          maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                          p="20px"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          flexDirection="column"
+                        >
+                          Вашата чиста телесна маса (кг.)
+                        </Card>
+                        {!isSmallScreen && (
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                            fontWeight="500"
+                          >
+                            Теглото ви под/над нормата (кг.)
+                          </Card>
+                        )}
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={lineChartForLeanBodyMassData}
+                            lineChartLabelName="Изменение на чиста телесна маса"
+                            textColor={chartsColor}
+                            color="#a194ff"
+                          />
+                        </Card>
+                        {isSmallScreen && (
+                          <Card
+                            fontSize="3xl"
+                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
+                            p="20px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="column"
+                            fontWeight="500"
+                          >
+                            Теглото ви под/над нормата (кг.)
+                          </Card>
+                        )}
+                        <Card
+                          alignItems="center"
+                          flexDirection="column"
+                          h="100%"
+                          w="100%"
+                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
+                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
+                        >
+                          <LineChart
+                            lineChartLabels={lineChartLabels}
+                            lineChartData={
+                              lineChartForDifferenceFromPerfectWeightData
+                            }
+                            lineChartLabelName={`Изменение в килограмите ви под/над нормата`}
+                            textColor={chartsColor}
+                            color="#a194ff"
+                          />
+                        </Card>
+                      </SimpleGrid>
                     </Card>
-                    {isSmallScreen && (
-                      <Card
-                        fontSize="3xl"
-                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                        p="20px" // Add padding to the card
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="column"
-                      >
-                        Вашият Индекс на Телесна Маса
-                      </Card>
-                    )}
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForBMI}
-                        lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
-                        textColor={chartsColor}
-                        color="rgba(67,24,255,1)"
-                      />
-                    </Card>
-                    <Card
-                      fontSize="3xl"
-                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                      p="20px" // Add padding to the card
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection="column"
-                    >
-                      Вашият % телесни мазнини
-                    </Card>
-                    {!isSmallScreen && (
-                      <Card
-                        fontSize="3xl"
-                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                        p="20px" // Add padding to the card
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="column"
-                      >
-                        Вашата мастна телесна маса (кг.)
-                      </Card>
-                    )}
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForBodyFatData}
-                        lineChartLabelName="Изменение на % телесни мазнини"
-                        textColor={chartsColor}
-                        color="#7c6bff"
-                      />
-                    </Card>
-                    {isSmallScreen && (
-                      <Card
-                        fontSize="3xl"
-                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                        p="20px" // Add padding to the card
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="column"
-                      >
-                        Вашата мастна телесна маса (кг.)
-                      </Card>
-                    )}
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForBodyFatMassData}
-                        lineChartLabelName="Изменение на мастна телесна маса"
-                        textColor={chartsColor}
-                        color="#7c6bff"
-                      />
-                    </Card>
-                    <Card
-                      fontSize="3xl"
-                      maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                      p="20px" // Add padding to the card
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      flexDirection="column"
-                    >
-                      Вашата чиста телесна маса (кг.)
-                    </Card>
-                    {!isSmallScreen && (
-                      <Card
-                        fontSize="3xl"
-                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                        p="20px" // Add padding to the card
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="column"
-                        fontWeight="500"
-                      >
-                        Теглото ви под/над нормата (кг.)
-                      </Card>
-                    )}
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={lineChartForLeanBodyMassData}
-                        lineChartLabelName="Изменение на чиста телесна маса"
-                        textColor={chartsColor}
-                        color="#a194ff"
-                      />
-                    </Card>
-                    {isSmallScreen && (
-                      <Card
-                        fontSize="3xl"
-                        maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                        p="20px" // Add padding to the card
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="column"
-                        fontWeight="500"
-                      >
-                        Теглото ви под/над нормата (кг.)
-                      </Card>
-                    )}
-                    <Card
-                      alignItems="center"
-                      flexDirection="column"
-                      h="100%"
-                      w="100%"
-                      minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                      maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                    >
-                      <LineChart
-                        lineChartLabels={lineChartLabels}
-                        lineChartData={
-                          lineChartForDifferenceFromPerfectWeightData
-                        }
-                        lineChartLabelName={`Изменение в килограмите ви под/над нормата`}
-                        textColor={chartsColor}
-                        color="#a194ff"
-                      />
-                    </Card>
-                  </SimpleGrid>
-                </Card>
-              </animated.div>
+                  </animated.div>
+                )}
+              </Box>
             )}
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <Alert
