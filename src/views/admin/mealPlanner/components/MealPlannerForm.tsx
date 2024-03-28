@@ -145,16 +145,54 @@ export default function MealPlannerForm(props: {
 
   console.log(userPreferences);
 
-  const prompt = `Вие сте опитен диетолог, който наблюдава пациентите да консумират само ядлива храна от
-      ${
-        Array.isArray(userPreferences.Cuisine)
-          ? userPreferences.Cuisine.length === 0
-            ? "всяка"
-            : userPreferences.Cuisine.length === 1
-            ? userPreferences.Cuisine[0]
-            : "следната"
-          : userPreferences.Cuisine
-      } кухня/кухни. Фокусирайте се върху създаването на ТОЧЕН, разнообразен и вкусен дневен хранителен план, съставен от следните ограничения: калории (${
+  const cuisineTranslation: { [key: string]: string } = {
+    Italian: "Италианска",
+    Bulgarian: "Българска",
+    Spanish: "Испанска",
+    French: "Френска"
+  };
+
+  function translateCuisine(
+    englishCuisine: string | string[]
+  ): string | string[] {
+    if (Array.isArray(englishCuisine)) {
+      return englishCuisine.map(
+        (cuisine) => cuisineTranslation[cuisine] || cuisine
+      );
+    } else {
+      return cuisineTranslation[englishCuisine] || englishCuisine; // Return Bulgarian translation if available, otherwise return original cuisine name
+    }
+  }
+
+  const translatedCuisine: string | string[] = translateCuisine(
+    userPreferences.Cuisine
+  );
+  let promptCuisine: string;
+
+  if (Array.isArray(translatedCuisine)) {
+    promptCuisine = translatedCuisine.join(", "); // Join multiple translated cuisine names with commas
+  } else {
+    promptCuisine = translatedCuisine as string; // Use the translated cuisine name
+  }
+
+  let cuisinePhrase: string;
+
+  if (Array.isArray(userPreferences.Cuisine)) {
+    if (userPreferences.Cuisine.length === 0) {
+      cuisinePhrase = "всяка";
+    } else if (userPreferences.Cuisine.length === 1) {
+      cuisinePhrase = userPreferences.Cuisine[0];
+    } else {
+      cuisinePhrase = "следните";
+    }
+  } else {
+    cuisinePhrase = userPreferences.Cuisine;
+  }
+
+  console.log("TRANSLATED --->", promptCuisine);
+
+  const prompt = `Вие сте опитен диетолог, който наблюдава пациентите да консумират само ядлива и традиционна храна от
+  ${cuisinePhrase} кухня/кухни (${promptCuisine}). Фокусирайте се върху създаването на ТОЧЕН, разнообразен и вкусен дневен хранителен план, съставен от следните ограничения: калории (${
     userPreferences.Calories
   }), протеин (${userPreferences.Protein}), мазнини (${
     userPreferences.Fat
@@ -162,7 +200,7 @@ export default function MealPlannerForm(props: {
     userPreferences.Carbohydrates
   }). Никога не превишавайте или намалявайте предоставените лимити и се УВЕРЕТЕ, че калориите и мазнините ВИНАГИ са същите като предоставените лимити. 
     Осигурете точността на количествата, като същевременно се придържате към лимитите. 
-    Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. 
+    Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. Давай винаги нови и вкусни храни, така че винаги да се създаде уникално и разнообразно меню.
     Експортирайте в JSON ТОЧНО КАТО ПРЕДОСТАВЕНАТА СТРУКТУРА в съдържанието на този заявка, без да добавяте 'json' ключова дума с обратни кавички. 
     Отговорът трябва да бъде чист JSON, нищо друго. Това означава, че вашият отговор не трябва да започва с 'json*backticks*{data}*backticks*' или '*backticks*{data}*backticks*'.
     Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
@@ -181,30 +219,30 @@ export default function MealPlannerForm(props: {
     Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
     Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
     Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
-    Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${
-      userPreferences.Exclude
-    }. 
-    Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.
+    ${
+      userPreferences.Exclude &&
+      `Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${userPreferences.Exclude}. 
+      Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.`
+    }
     Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
     Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
-    Форматирай сумираните стойности по абсолютно същият начин: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number}'. 
-    Форматирай ЦЯЛАТА информация в JSON точно така: '{
-    breakfast':{
-      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-    },
-    'lunch':{
-      'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-      'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-    }, 
-    'dinner':{
-      'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-      'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-    }', като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
-    Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
+    Форматирай ЦЯЛАТА информация във валиден JSON точно така: 
+    "'breakfast':{
+        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+      },
+      'lunch':{
+        'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+        'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+      }, 
+      'dinner':{
+        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+        'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+      }", като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
+    Съобрази се с подадената структура когато връщаш твоя отговор и където пише number, НЕ връщай string! Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
     Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
     Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
-    Името на ястието е ЗАДЪЛЖИТЕЛНО на български`;
+    Името на ястието трябва да е ЗАДЪЛЖИТЕЛНО на български, а не на искапнски или друг език.`;
 
   const openAIKey = process.env.REACT_APP_API_KEY;
   const generatePlanWithOpenAI = async () => {
@@ -213,6 +251,8 @@ export default function MealPlannerForm(props: {
       setIsPlanGeneratedWithOpenAI(true);
       setIsPlanGeneratedWithGemini(false);
       setIsLoading(true);
+      console.log("PROMPT --->", prompt);
+
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -252,8 +292,12 @@ export default function MealPlannerForm(props: {
       console.log("unescapedData: ", unescapedData);
       const escapedData = decodeURIComponent(unescapedData);
       console.log("escapedData: ", escapedData);
-      const data = JSON.parse(escapedData);
-      console.log("Parsed data: ", data);
+      let data;
+      try {
+        data = JSON.parse(escapedData);
+      } catch (parseError) {
+        throw new Error("Invalid JSON response from the server");
+      }
 
       console.log("CHATGPT: ", data);
 
@@ -385,45 +429,13 @@ export default function MealPlannerForm(props: {
     }
   };
 
-  const cuisineTranslation: { [key: string]: string } = {
-    Italian: "Италианска",
-    Bulgarian: "Българска",
-    Spanish: "Испанска",
-    French: "Френска"
-  };
-
-  function translateCuisine(
-    englishCuisine: string | string[]
-  ): string | string[] {
-    if (Array.isArray(englishCuisine)) {
-      return englishCuisine.map(
-        (cuisine) => cuisineTranslation[cuisine] || cuisine
-      );
-    } else {
-      return cuisineTranslation[englishCuisine] || englishCuisine; // Return Bulgarian translation if available, otherwise return original cuisine name
-    }
-  }
-
-  const translatedCuisine: string | string[] = translateCuisine(
-    userPreferences.Cuisine
-  );
-  let promptCuisine: string;
-
-  if (Array.isArray(translatedCuisine)) {
-    promptCuisine = translatedCuisine.join(", "); // Join multiple translated cuisine names with commas
-  } else {
-    promptCuisine = translatedCuisine as string; // Use the translated cuisine name
-  }
-
-  console.log("TRANSLATED --->", promptCuisine);
-
   const generatePlanWithGemini = async () => {
     try {
       setIsSubmitted(true);
       setIsPlanGeneratedWithGemini(true);
       setIsPlanGeneratedWithOpenAI(false);
       setIsLoading(true);
-
+      console.log("PROMPT --->", prompt);
       // Make a request to your backend endpoint to generate a response
       const response = await fetch(
         "https://nutri-api.noit.eu/geminiGenerateResponse",
@@ -448,7 +460,12 @@ export default function MealPlannerForm(props: {
         .replace(/^'|'$/g, "") // Remove single quotes at the beginning and end
         .trim();
 
-      const jsonObject = JSON.parse(stringToRepair);
+      let jsonObject;
+      try {
+        jsonObject = JSON.parse(stringToRepair);
+      } catch (parseError) {
+        throw new Error("Invalid JSON response from the server");
+      }
       console.log("jsonObject: ", jsonObject);
 
       const mealPlanImagesData: {
@@ -568,8 +585,8 @@ export default function MealPlannerForm(props: {
           lunch: jsonObject.lunch,
           dinner: jsonObject.dinner
         });
-        setIsLoading(false);
       }
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       setRequestFailed(true);
