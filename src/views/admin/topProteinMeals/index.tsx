@@ -24,13 +24,9 @@ import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { ColumnChart } from "components/charts/BarCharts";
 
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdFlatware
-} from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { NutrientMeal } from "../../../variables/weightStats";
-import LeaderBoardItemSmall from "../topCalorieMeals/components/leaderboardItemSmall";
+import LeaderBoardItemSmall from "components/rankings/LeaderboardItemSmall";
 interface DropdownState {
   currentPage: number;
 }

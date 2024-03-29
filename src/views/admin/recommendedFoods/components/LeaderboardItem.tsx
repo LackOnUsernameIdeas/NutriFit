@@ -27,7 +27,7 @@ import MiniStatistics from "components/card/MiniStatistics";
 import { ColumnChart } from "components/charts/BarCharts";
 import { SuggestedMeal, NutrientMeal } from "variables/weightStats";
 
-export default function NFT(props: {
+export default function LeaderboardItem(props: {
   image: string;
   name: string;
   count?: string;

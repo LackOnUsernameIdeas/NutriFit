@@ -18,7 +18,7 @@ import {
 import Loading from "../weightStats/components/Loading";
 import { ColumnChart } from "components/charts/BarCharts";
 import RecipeWidget from "components/card/NFT";
-import RecipeModal from "./components/RecipeModal";
+import RecipeModal from "components/rankings/RecipeModal";
 import MiniStatistics from "components/card/MiniStatistics";
 import Card from "components/card/Card";
 import IconBox from "components/icons/IconBox";

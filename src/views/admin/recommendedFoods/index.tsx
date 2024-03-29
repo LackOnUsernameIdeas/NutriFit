@@ -15,7 +15,7 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import HistoryItem from "views/admin/marketplace/HistoryItem";
+import LeaderboardItem from "./components/LeaderboardItem";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
@@ -291,7 +291,7 @@ export default function TopMeals() {
                   <Box mt="50px">
                     {mealsToShow.map((meal: SuggestedMeal, index: number) => {
                       return (
-                        <HistoryItem
+                        <LeaderboardItem
                           key={index}
                           name={meal.name}
                           count={"Брой препоръчвания: " + meal.count.toString()}

@@ -19,7 +19,7 @@ import {
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import LeaderBoardItemSmall from "./components/leaderboardItemSmall";
+import LeaderBoardItemSmall from "components/rankings/LeaderboardItemSmall";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
