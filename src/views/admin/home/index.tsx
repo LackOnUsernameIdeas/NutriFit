@@ -721,7 +721,7 @@ export default function UserReports() {
                   color: "transparent"
                 }}
               >
-                <b>Сравнение между OpenAI и Gemini</b>
+                <b>Съпоставка на отклоненията на OpenAI и Gemini</b>
               </Text>
             </Card>
             {deviationsLoading ? (
