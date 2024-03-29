@@ -286,27 +286,24 @@ export default function MealPlanner() {
     }, 1000);
   }
 
-  const calculateChange = (
-    sortedData: any[],
-    property: string,
-    subproperty?: string
-  ) => {
-    const latestValue = sortedData[0][property]?.[subproperty];
-    const previousValue = sortedData[1][property]?.[subproperty];
+  const calculateChange = (sortedData: any[], property: string) => {
+    const latestValue = sortedData[0][property];
+    const previousValue = sortedData[1][property];
     const change = latestValue - previousValue;
+    console.log("latestValue", latestValue);
+    console.log("previousValue", previousValue);
     setUserDataLastSavedDate(sortedData[1].date);
+    console.log("change", change);
     return change;
   };
 
   const calculatePerfectWeightChange = () => {
     // Create an object to store unique entries based on date
     const uniqueEntries: { [date: string]: any } = {};
-    console.log("called");
+
+    // Iterate over userDataForCharts to find the unique entries
     allOrderedObjects.forEach((entry) => {
-      if (
-        entry.differenceFromPerfectWeight.difference !== 0 &&
-        !uniqueEntries[entry.date]
-      ) {
+      if (entry.differenceFromPerfectWeight && !uniqueEntries[entry.date]) {
         uniqueEntries[entry.date] = {
           differenceFromPerfectWeight: entry.differenceFromPerfectWeight
         };
@@ -321,15 +318,21 @@ export default function MealPlanner() {
     if (sortedData.length >= 2) {
       const differenceFromPerfectWeightChange = calculateChange(
         sortedData,
-        "differenceFromPerfectWeight",
-        "difference"
+        "differenceFromPerfectWeight"
       );
       setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
 
       console.log("the last two entries for BMI222222: ", sortedData);
-      console.log("Perfect Weight Change: ", differenceFromPerfectWeightChange);
+      console.log(
+        "differenceFromPerfectWeightChange changes: ",
+        differenceFromPerfectWeightChange
+      );
     }
   };
+
+  React.useEffect(() => {
+    calculatePerfectWeightChange();
+  }, [allOrderedObjects]);
 
   const saveUserPreferencesAndIntakes = () => {
     const uid = getAuth().currentUser.uid;
@@ -475,10 +478,6 @@ export default function MealPlanner() {
 
     handleRestSlideTipPositionChange();
   }, [dropdownVisibleTip]);
-
-  React.useEffect(() => {
-    calculatePerfectWeightChange();
-  }, [perfectWeight]);
 
   // React.useEffect(() => {
   //   const auth = getAuth();
@@ -692,7 +691,7 @@ export default function MealPlanner() {
     }
   }, [currentUser]);
 
-  console.log("DIFFERENCE!!!! ", differenceFromPerfectWeight);
+  // console.log("DIFFERENCE!!!! ", differenceFromPerfectWeight);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
