@@ -72,11 +72,14 @@ const calculateMealTotals = (mealPlan: MealPlan2) => {
       // Iterate over each food item in the meal type
       Object.values(meal).forEach((foodItem: any) => {
         console.log("foodItem", foodItem);
-        // Add the nutrients of the food item to the totals for the day
-        totals.calories += foodItem.totals.calories;
-        totals.protein += foodItem.totals.protein;
-        totals.fat += foodItem.totals.fat;
-        totals.carbohydrates += foodItem.totals.carbohydrates;
+        // Check if foodItem has totals property
+        if (foodItem && foodItem.totals) {
+          // Add the nutrients of the food item to the totals for the day
+          totals.calories += foodItem.totals.calories || 0;
+          totals.protein += foodItem.totals.protein || 0;
+          totals.fat += foodItem.totals.fat || 0;
+          totals.carbohydrates += foodItem.totals.carbohydrates || 0;
+        }
       });
     }
   });

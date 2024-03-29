@@ -295,6 +295,7 @@ export default function MealPlannerForm(props: {
       let data;
       try {
         data = JSON.parse(escapedData);
+        checkTotals(data);
       } catch (parseError) {
         throw new Error("Invalid JSON response from the server");
       }
@@ -332,7 +333,8 @@ export default function MealPlannerForm(props: {
           dessert: ""
         }
       };
-
+      const updatedMealPlanImagesData: any = {}; // Initialize a variable to hold updated meal plan images data
+      const updatedMealPlan: any = {};
       // Iterate over each meal and make a separate image generation request
       for (const mealKey of Object.keys(filteredArr)) {
         const mealAppetizer = (filteredArr as any)[mealKey].appetizer;
@@ -410,17 +412,27 @@ export default function MealPlannerForm(props: {
           (mealPlanImagesData as any)[mealKey].dessert =
             imageDessertResponseData.items[0].link;
         }
+        updatedMealPlanImagesData[mealKey] = {
+          appetizer: imageAppetizerResponseData?.items?.[0]?.link || "",
+          main: imageMainResponseData.items[0].link,
+          dessert: imageDessertResponseData?.items?.[0]?.link || ""
+        };
+
+        // Set updated meal plan
+        updatedMealPlan[mealKey] = {
+          appetizer: data[mealKey].appetizer,
+          main: data[mealKey].main,
+          dessert: data[mealKey].dessert
+        };
       }
 
-      console.log("mealPlanImagesData:", mealPlanImagesData);
-
-      setMealPlanImages(mealPlanImagesData);
-
+      setMealPlanImages(updatedMealPlanImagesData);
       setMealPlan({
-        breakfast: data.breakfast,
-        lunch: data.lunch,
-        dinner: data.dinner
+        breakfast: updatedMealPlan.breakfast,
+        lunch: updatedMealPlan.lunch,
+        dinner: updatedMealPlan.dinner
       });
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -428,6 +440,29 @@ export default function MealPlannerForm(props: {
       console.error("Error generating meal plan:", error);
     }
   };
+
+  function checkTotals(obj: any) {
+    // Check if the object is an array
+    if (Array.isArray(obj)) {
+      obj.forEach((item) => checkTotals(item));
+    } else if (typeof obj === "object" && obj !== null) {
+      // Check if the object is an object (excluding null)
+      // Check if the object has a "totals" property
+      if (obj.hasOwnProperty("totals")) {
+        for (let key in obj.totals) {
+          if (typeof obj.totals[key] !== "number") {
+            throw new Error(
+              `Invalid value for ${key} in totals: Expected a number`
+            );
+          }
+        }
+      }
+      // Recursively check the nested objects
+      for (let key in obj) {
+        checkTotals(obj[key]);
+      }
+    }
+  }
 
   const generatePlanWithGemini = async () => {
     try {
@@ -463,9 +498,11 @@ export default function MealPlannerForm(props: {
       let jsonObject;
       try {
         jsonObject = JSON.parse(stringToRepair);
+        checkTotals(jsonObject);
       } catch (parseError) {
         throw new Error("Invalid JSON response from the server");
       }
+
       console.log("jsonObject: ", jsonObject);
 
       const mealPlanImagesData: {
@@ -495,7 +532,8 @@ export default function MealPlannerForm(props: {
           dessert: ""
         }
       };
-
+      const updatedMealPlanImagesData: any = {}; // Initialize a variable to hold updated meal plan images data
+      const updatedMealPlan: any = {};
       // Iterate over each meal and make a separate image generation request
       for (const mealKey of Object.keys(jsonObject)) {
         if (mealKey !== "totals") {
@@ -574,18 +612,29 @@ export default function MealPlannerForm(props: {
             (mealPlanImagesData as any)[mealKey].dessert =
               imageDessertResponseData.items[0].link;
           }
+
+          updatedMealPlanImagesData[mealKey] = {
+            appetizer: imageAppetizerResponseData?.items?.[0]?.link || "",
+            main: imageMainResponseData.items[0].link,
+            dessert: imageDessertResponseData?.items?.[0]?.link || ""
+          };
+
+          // Set updated meal plan
+          updatedMealPlan[mealKey] = {
+            appetizer: jsonObject[mealKey].appetizer,
+            main: jsonObject[mealKey].main,
+            dessert: jsonObject[mealKey].dessert
+          };
         }
-
-        console.log("mealPlanImagesData:", mealPlanImagesData);
-
-        setMealPlanImages(mealPlanImagesData);
-
-        setMealPlan({
-          breakfast: jsonObject.breakfast,
-          lunch: jsonObject.lunch,
-          dinner: jsonObject.dinner
-        });
       }
+
+      setMealPlanImages(updatedMealPlanImagesData);
+      setMealPlan({
+        breakfast: updatedMealPlan.breakfast,
+        lunch: updatedMealPlan.lunch,
+        dinner: updatedMealPlan.dinner
+      });
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);

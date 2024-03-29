@@ -313,14 +313,6 @@ export default function MealPlanner() {
       }
     });
 
-    setDifferenceFromPerfectWeight({
-      difference:
-        allOrderedObjects[allOrderedObjects.length - 1]
-          .differenceFromPerfectWeight.difference,
-      isUnderOrAbove: allOrderedObjects[allOrderedObjects.length - 1]
-        .differenceFromPerfectWeight.isUnderOrAbove as "" | "under" | "above"
-    });
-
     // Create an array of entries sorted by date
     const sortedData = Object.entries(uniqueEntries)
       .sort((a, b) => parseISO(b[0]).getTime() - parseISO(a[0]).getTime())
@@ -343,6 +335,7 @@ export default function MealPlanner() {
     const uid = getAuth().currentUser.uid;
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
   };
+
   const mapGoalToDisplayValue = (goal: string) => {
     switch (goal) {
       case "maintain":
@@ -661,15 +654,22 @@ export default function MealPlanner() {
             hip: weightStatsData.userDataSaveable.hip,
             weight: weightStatsData.userDataSaveable.weight
           });
-
+          console.log("weight stats", weightStatsData);
           // Set the states accordingly
-          setPerfectWeight(weightStatsData.perfectWeight || 0);
-          setDifferenceFromPerfectWeight(
-            weightStatsData.differenceFromPerfectWeight.difference || 0
+          setPerfectWeight(weightStatsData.perfectWeight);
+          console.log(
+            "DIFFERENCE FROM FETCH!!!! ",
+            weightStatsData.differenceFromPerfectWeight
           );
+          setDifferenceFromPerfectWeight({
+            difference:
+              weightStatsData?.differenceFromPerfectWeight?.difference || 0,
+            isUnderOrAbove:
+              weightStatsData?.differenceFromPerfectWeight?.isUnderOrAbove || ""
+          });
+
           setHealth(weightStatsData.bmiIndex.health);
 
-          setPerfectWeight(weightStatsData.perfectWeight);
           // Set state with extracted data
           setAllOrderedObjects(weightStatsData.userDataForCharts);
           const preferencesObjects =
@@ -691,6 +691,8 @@ export default function MealPlanner() {
       fetchData();
     }
   }, [currentUser]);
+
+  console.log("DIFFERENCE!!!! ", differenceFromPerfectWeight);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
