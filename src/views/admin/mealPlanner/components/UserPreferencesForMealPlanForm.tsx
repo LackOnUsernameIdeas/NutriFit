@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import OpenAIImage from "../../../../assets/img/layout/openai.png";
 import GeminiImage from "../../../../assets/img/layout/geminiStar.png";
-import { UserPreferencesForMealPlan } from "../../../../types/weightStats";
+import { UserPreferencesForMealPlan } from "../../../../variables/weightStats";
 import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
 

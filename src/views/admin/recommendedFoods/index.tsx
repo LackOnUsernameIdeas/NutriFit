@@ -1,60 +1,28 @@
 import React from "react";
 // Chakra imports
 import {
-  Avatar,
-  Button,
   Box,
-  Center,
   Flex,
-  FormLabel,
   Icon,
-  Select,
   SimpleGrid,
-  Tooltip,
-  useColorMode,
   useColorModeValue,
-  useBreakpointValue,
   Text,
-  Link,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useMediaQuery,
   IconButton
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { orderMealsByFrequency } from "database/getAdditionalUserData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import RecipeWidget from "components/card/NFT";
+import HistoryItem from "views/admin/marketplace/HistoryItem";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
-import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { ColumnChart } from "components/charts/BarCharts";
 
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  onSnapshot
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdFlatware
-} from "react-icons/md";
-import RecipeModal from "./components/RecipeModal";
-import { SuggestedMeal } from "../../../types/weightStats";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { SuggestedMeal } from "../../../variables/weightStats";
 interface DropdownState {
   currentPage: number;
 }

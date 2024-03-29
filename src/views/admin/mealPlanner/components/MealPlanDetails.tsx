@@ -3,7 +3,7 @@ import {
   MealPlan2,
   SaveableDeviations,
   UserPreferencesForMealPlan
-} from "../../../../types/weightStats";
+} from "../../../../variables/weightStats";
 import {
   Box,
   Text,
@@ -31,7 +31,7 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdFlatware
 } from "react-icons/md";
-import { saveDeviations, saveMealPlan } from "database/setWeightStatsData";
+import { saveDeviations, saveMealPlan } from "database/setFunctions";
 
 import { getAuth } from "firebase/auth";
 interface MealPlanDetailsProps {

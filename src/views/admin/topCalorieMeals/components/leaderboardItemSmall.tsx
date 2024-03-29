@@ -16,7 +16,6 @@ import {
   useMediaQuery,
   useDisclosure,
   SimpleGrid,
-  Spacer,
   Button
 } from "@chakra-ui/react";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -26,7 +25,7 @@ import IconBox from "components/icons/IconBox";
 import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import { ColumnChart } from "components/charts/BarCharts";
-import { SuggestedMeal, NutrientMeal } from "types/weightStats";
+import { SuggestedMeal, NutrientMeal } from "variables/weightStats";
 
 export default function LeaderBoardItemSmall(props: {
   image: string;

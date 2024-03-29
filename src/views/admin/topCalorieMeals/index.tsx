@@ -15,7 +15,7 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import {
   getFirstAndLastTopMealsByCollection,
   getFirst50TopMealsByCollection
-} from "database/getAdditionalUserData";
+} from "database/getFunctions";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
@@ -25,12 +25,8 @@ import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { ColumnChart } from "components/charts/BarCharts";
 
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdFlatware
-} from "react-icons/md";
-import { NutrientMeal } from "../../../types/weightStats";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { NutrientMeal } from "../../../variables/weightStats";
 interface DropdownState {
   currentPage: number;
 }

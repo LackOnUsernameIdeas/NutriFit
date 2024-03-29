@@ -18,8 +18,8 @@ import {
   UserPreferencesForMealPlan,
   MealPlan2,
   UserIntakes
-} from "../../../../types/weightStats";
-import { saveMealPlan } from "../../../../database/setWeightStatsData";
+} from "../../../../variables/weightStats";
+import { saveMealPlan } from "../../../../database/setFunctions";
 import UserPreferencesForMealPlanForm from "./UserPreferencesForMealPlanForm";
 import MealPlanDetails from "./MealPlanDetails";
 import Card from "components/card/Card";

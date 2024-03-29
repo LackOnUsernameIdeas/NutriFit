@@ -1,31 +1,8 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { fetchAdditionalUserData } from "database/getAdditionalUserData";
+import { fetchAdditionalUserData } from "database/getFunctions";
 // Chakra imports
 import {
   Box,
@@ -59,14 +36,8 @@ import {
   UserData,
   Goal,
   WeightDifference
-} from "../../types/weightStats";
-import {
-  fetchBMIData,
-  fetchPerfectWeightData,
-  fetchBodyFatAndLeanMassData,
-  fetchCaloriesForActivityLevels,
-  fetchMacroNutrients
-} from "./utils/fetchFunctions";
+} from "../../variables/weightStats";
+
 interface UserMeasurements {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -261,7 +232,7 @@ const UserMeasurements = () => {
       // Only proceed if saveUserData is successful
       if (saveResult) {
         triggerFetchAndSaveAllData();
-        history.push("/admin/default");
+        history.push("/admin/home");
       }
     } catch (error) {
       // Handle error

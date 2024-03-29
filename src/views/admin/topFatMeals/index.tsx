@@ -15,7 +15,7 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import {
   getFirstAndLastTopMealsByCollection,
   getFirst50TopMealsByCollection
-} from "database/getAdditionalUserData";
+} from "database/getFunctions";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
@@ -30,7 +30,7 @@ import {
   MdKeyboardArrowRight,
   MdFlatware
 } from "react-icons/md";
-import { NutrientMeal } from "../../../types/weightStats";
+import { NutrientMeal } from "../../../variables/weightStats";
 interface DropdownState {
   currentPage: number;
 }

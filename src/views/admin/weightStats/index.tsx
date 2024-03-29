@@ -27,8 +27,7 @@ import {
   Image,
   Heading,
   Stack,
-  StackDivider,
-  Button
+  StackDivider
 } from "@chakra-ui/react";
 
 // React Icons
@@ -50,23 +49,13 @@ import {
   BMIInfo,
   BodyMass,
   UserData,
-  UserChartData,
   WeightDifference
-} from "../../../types/weightStats";
+} from "../../../variables/weightStats";
 
 import { LineChart } from "components/charts/LineCharts";
 
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  getDocs,
-  collection,
-  onSnapshot
-} from "firebase/firestore";
-import { fetchAdditionalUserData } from "../../../database/getAdditionalUserData";
+import { getAuth } from "firebase/auth";
 import { parseISO } from "date-fns";
-import { db } from "database/connection";
 
 // Главен компонент
 export default function WeightStats() {
@@ -509,80 +498,6 @@ export default function WeightStats() {
       setIsGenerateStatsCalled(true);
     }
   }, [userData]);
-
-  // TODO: Make this work
-
-  // const [userDataForToday, setUserDataForToday] = useState(null);
-  // const [userDataLastSavedDateBeforeCurrentDate, setUserDataLastSavedDateBeforeCurrentDate] = useState(null);
-  // const [isTodaysDataFetched, setIsTodaysDataFetched] =
-  //   useState<boolean>(false);
-  // const isMounted = useRef(true);
-  // React.useEffect(() => {
-  //   const auth = getAuth();
-  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
-  //     if (isMounted.current) {
-  //       setUser(user);
-  //     }
-
-  //     if (user) {
-  //       try {
-  //         setIsLoading(true);
-
-  //         const additionalData = await fetchAdditionalUserData(user.uid);
-
-  //         // Extract date keys from additionalData
-  //         const dateKeys = Object.keys(additionalData).filter((key) =>
-  //           /^\d{4}-\d{2}-\d{2}$/.test(key)
-  //         );
-
-  //         // Sort date keys in descending order
-  //         dateKeys.sort(
-  //           (a, b) => new Date(b).getTime() - new Date(a).getTime()
-  //         );
-
-  //         // Find the first date before today
-  //         const today = new Date().toISOString().slice(0, 10);
-  //         const lastSavedDate = dateKeys.find((date) => date < today);
-  //         const rawUserDataForToday = additionalData[today];
-  //         const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
-
-  //         if (isMounted.current) {
-  //           setUserDataLastSavedDateBeforeCurrentDate(rawUserDataForLastSavedDate);
-  //           setUserDataForToday(rawUserDataForToday);
-  //           setIsTodaysDataFetched(true);
-  //         }
-
-  //         setTimeout(() => {
-  //           setIsLoading(false);
-  //         }, 1000);
-  //       } catch (error) {
-  //         console.error("Error fetching additional user data:", error);
-  //       }
-  //     }
-  //   });
-
-  //   return () => {
-  //     isMounted.current = false;
-  //     unsubscribe();
-  //   };
-  // }, []);
-
-  // const [highlightedFields, setHighlightedFields] = useState<string[]>([]);
-  // React.useEffect(() => {
-  //   if (userDataForToday && userDataLastSavedDateBeforeCurrentDate) {
-  //     const commonKeys = Object.keys(userDataForToday).filter((key) =>
-  //       Object.keys(userDataLastSavedDateBeforeCurrentDate).includes(key)
-  //     );
-
-  //     const differentFields = commonKeys.filter(
-  //       (key) => userDataForToday[key] !== userDataLastSavedDateBeforeCurrentDate[key]
-  //     );
-
-  //     setHighlightedFields(
-  //       differentFields.map((field) => `${field}Highlighted`)
-  //     );
-  //   }
-  // }, [userDataForToday, userDataLastSavedDateBeforeCurrentDate]);
 
   // Масиви с преведени имена
 

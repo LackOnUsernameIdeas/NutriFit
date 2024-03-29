@@ -16,12 +16,10 @@ import {
   Button,
   SimpleGrid,
   MenuButton,
-  MenuItem,
   MenuList,
   useDisclosure,
   useColorMode,
   useColorModeValue,
-  useBreakpointValue,
   Menu,
   Heading,
   Stack,
@@ -39,18 +37,16 @@ import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
-import CardHeader from "components/card/Card";
 import CardBody from "components/card/Card";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import DietTable from "views/admin/dataTables/components/ColumnsTable";
+import DietTable from "views/admin/dataTables/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "views/admin/weightStats/components/Loading";
 import MiniStatistics from "components/card/MiniStatistics";
 import { FaFireAlt } from "react-icons/fa";
 import IconBox from "components/icons/IconBox";
 import MealPlannerForm from "./components/MealPlannerForm";
-import { HSeparator } from "components/separator/Separator";
 // Types
 import {
   UserData,
@@ -58,20 +54,11 @@ import {
   AllUsersPreferences,
   DailyCaloryRequirements,
   WeightDifference
-} from "../../../types/weightStats";
-import {
-  onSnapshot,
-  doc,
-  getDocs,
-  getDoc,
-  collection
-} from "firebase/firestore";
+} from "../../../variables/weightStats";
 
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { db } from "database/connection";
+import { getAuth } from "firebase/auth";
 
-import { savePreferences } from "../../../database/setWeightStatsData";
-import { table } from "console";
+import { savePreferences } from "../../../database/setFunctions";
 
 import { LineChart } from "components/charts/LineCharts";
 import { parseISO } from "date-fns";

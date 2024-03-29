@@ -1,24 +1,3 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // Chakra imports
 import {
@@ -39,7 +18,7 @@ import {
 import Loading from "../weightStats/components/Loading";
 import { ColumnChart } from "components/charts/BarCharts";
 import RecipeWidget from "components/card/NFT";
-import RecipeModal from "../topMeals/components/RecipeModal";
+import RecipeModal from "./components/RecipeModal";
 import MiniStatistics from "components/card/MiniStatistics";
 import Card from "components/card/Card";
 import IconBox from "components/icons/IconBox";
@@ -50,32 +29,19 @@ import { BsPersonFillUp } from "react-icons/bs";
 import { RiWaterPercentFill } from "react-icons/ri";
 import { MdOutlineMale, MdOutlineFemale, MdFlatware } from "react-icons/md";
 import { HiMiniArrowUturnRight } from "react-icons/hi2";
-import { SuggestedMeal } from "../../../types/weightStats";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  onSnapshot,
-  DocumentData
-} from "firebase/firestore";
+import { SuggestedMeal } from "../../../variables/weightStats";
+
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import ChatGPT from "../../../assets/img/layout/chatlogo.png";
 import Gemini from "../../../assets/img/layout/gemini.png";
-import { getTotalUsers } from "database/getMeanUsersData";
-
-import {
-  orderMealsByFrequency,
-  getAllHealthStatus
-} from "database/getAdditionalUserData";
 
 // Types
-import { GenderAverageStats, Deviations } from "../../../types/weightStats";
+import { GenderAverageStats, Deviations } from "../../../variables/weightStats";
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
-import { db } from "database/connection";
 
 interface LinearGradientTextProps {
   text: any;
@@ -167,7 +133,6 @@ export default function UserReports() {
   const [mealLoading, setMealLoading] = React.useState(false);
   const [deviationsLoading, setDeviationsLoading] = React.useState(true);
   const [healthLoading, setHealthLoading] = React.useState(false);
-  const [totalUsers, setTotalUsers] = React.useState<number | null>(null);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
       totalUsers: 0,
@@ -346,17 +311,6 @@ export default function UserReports() {
 
     handleDropdownVisibilityChangeFemale();
   }, [dropdownVisibleFemale]);
-
-  React.useEffect(() => {
-    // Fetch the total number of users when the component mounts
-    getTotalUsers()
-      .then((users) => {
-        setTotalUsers(users);
-      })
-      .catch((error) => {
-        console.error("Error fetching total users:", error);
-      });
-  }, []);
 
   React.useEffect(() => {
     const fetchData = async () => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import { barChartOptions } from "../../variables/chartjs";
+import { barChartOptions } from "../../variables/chartOptions";
 import { useColorMode } from "@chakra-ui/react";
 
 type ChartProps = {

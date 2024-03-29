@@ -1,10 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import {
-  getAuth,
-  sendPasswordResetEmail,
-  onAuthStateChanged
-} from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import "firebase/compat/auth";
 // Chakra imports
 import {
@@ -23,7 +19,6 @@ import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/auth/Default";
 // Assets
 import illustration from "assets/img/auth/auth.png";
-import Cookies from "js-cookie";
 
 function ForgotPass() {
   const textColor = useColorModeValue("navy.700", "white");
@@ -39,16 +34,6 @@ function ForgotPass() {
   const handleForgotPass = async () => {
     try {
       const auth = getAuth();
-      // --------------------------------------------------------------
-      // DEPRECATED -- NO WAY TO CHECK FOR AN EXISTING EMAIL ADDRESS
-      // --------------------------------------------------------------
-      //
-      // const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      // if (signInMethods.length === 0) {
-      //     // Email is not registered
-      //     setError('Email is not registered. Create an account using the button below.');
-      //     return;
-      // }
       await sendPasswordResetEmail(auth, email);
       // Password reset email sent successfully
       setSuccessMessage(

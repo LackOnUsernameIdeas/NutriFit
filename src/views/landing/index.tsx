@@ -1,62 +1,16 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
-  Avatar,
   Box,
   Flex,
-  FormLabel,
-  Icon,
   useMediaQuery,
   SimpleGrid,
   useColorModeValue,
   Text,
   Link,
-  Button,
-  chakra,
-  shouldForwardProp
+  Button
 } from "@chakra-ui/react";
 // Animations
-import { motion, isValidMotionProp } from "framer-motion";
-// Assets
-import Bulgaria from "assets/img/dashboards/bulgaria.png";
-// Custom components
-import MiniStatistics from "components/card/MiniStatistics";
-
 import Card from "components/card/Card";
-import { HSeparator } from "components/separator/Separator";
-import IconBox from "components/icons/IconBox";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdBarChart,
-  MdFileCopy
-} from "react-icons/md";
-
-const ChakraBox = chakra(motion.div, {
-  shouldForwardProp: (prop) =>
-    isValidMotionProp(prop) || shouldForwardProp(prop)
-});
 
 interface LinearGradientTextProps {
   text: any;
@@ -91,8 +45,6 @@ const LinearGradientText: React.FC<LinearGradientTextProps> = ({
 
 export default function UserReports() {
   // Chakra Color Mode
-  const brandColor = useColorModeValue("secondaryGray.900", "white");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradientNutri = useColorModeValue(gradientLight, gradientDark);

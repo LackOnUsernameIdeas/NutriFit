@@ -15,11 +15,10 @@ import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import {
   getFirstAndLastTopMealsByCollection,
   getFirst50TopMealsByCollection
-} from "database/getAdditionalUserData";
+} from "database/getFunctions";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
@@ -30,7 +29,7 @@ import {
   MdKeyboardArrowRight,
   MdFlatware
 } from "react-icons/md";
-import { NutrientMeal } from "../../../types/weightStats";
+import { NutrientMeal } from "../../../variables/weightStats";
 import LeaderBoardItemSmall from "../topCalorieMeals/components/leaderboardItemSmall";
 interface DropdownState {
   currentPage: number;

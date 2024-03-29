@@ -7,13 +7,11 @@ import {
   setPersistence,
   browserSessionPersistence
 } from "firebase/auth";
-import { UserData } from "types/weightStats";
 // Chakra imports
-import { saveGenderOnSignUp } from "database/setGenderOnSignUp";
+import { saveGenderOnSignUp } from "database/setFunctions";
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -24,7 +22,6 @@ import {
   InputRightElement,
   Text,
   useColorModeValue,
-  Select,
   RadioGroup,
   Radio,
   HStack
@@ -36,10 +33,6 @@ import DefaultAuth from "layouts/auth/Default";
 import illustration from "assets/img/auth/auth.png";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
-
-type GenderData = {
-  gender: "male" | "female";
-};
 
 function SignUp() {
   const textColor = useColorModeValue("navy.700", "white");

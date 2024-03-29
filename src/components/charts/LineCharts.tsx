@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto"; // Import Chart.js
-import { lineChartOptions } from "../../variables/chartjs";
+import { lineChartOptions } from "../../variables/chartOptions";
 import { useColorMode } from "@chakra-ui/react";
 
 type ChartProps = {

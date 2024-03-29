@@ -1,14 +1,7 @@
 import { Icon } from "@chakra-ui/react";
-import {
-  MdBarChart,
-  MdPerson,
-  MdHome,
-  MdLock,
-  MdOutlineShoppingCart,
-  MdLeaderboard
-} from "react-icons/md";
+import { MdPerson, MdHome, MdLock, MdLeaderboard } from "react-icons/md";
 import { BiSolidBowlHot } from "react-icons/bi";
-import { IoMdMail, IoIosSpeedometer } from "react-icons/io";
+import { IoMdMail } from "react-icons/io";
 import {
   FaTrophy,
   FaFireAlt,
@@ -16,11 +9,8 @@ import {
   FaBreadSlice,
   FaFish
 } from "react-icons/fa";
-import { GiChickenOven, GiWheat } from "react-icons/gi";
 // Admin Imports
-import MainDashboard from "views/admin/default";
-import NFTMarketplace from "views/admin/marketplace";
-import DataTables from "views/admin/dataTables";
+import MainDashboard from "views/admin/home";
 import WeightStats from "views/admin/weightStats";
 import MealPlanner from "views/admin/mealPlanner";
 import UserMeasurements from "views/userMeasurements";
@@ -42,7 +32,7 @@ const routes: RoutesType[] = [
   {
     name: "Начало",
     layout: "/admin",
-    path: "/default",
+    path: "/home",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: MainDashboard
   },
@@ -163,30 +153,6 @@ const routes: RoutesType[] = [
     icon: <Icon as={IoMdMail} width="20px" height="20px" color="inherit" />,
     component: Contact,
     hideInSidebar: false
-  },
-  {
-    name: "NFT Marketplace",
-    layout: "/admin",
-    path: "/nft-marketplace",
-    icon: (
-      <Icon
-        as={MdOutlineShoppingCart}
-        width="20px"
-        height="20px"
-        color="inherit"
-      />
-    ),
-    component: NFTMarketplace,
-    secondary: true,
-    hideInSidebar: true
-  },
-  {
-    name: "Data Tables",
-    layout: "/admin",
-    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
-    path: "/data-tables",
-    component: DataTables,
-    hideInSidebar: true
   },
   {
     name: "Вход",
