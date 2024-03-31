@@ -124,8 +124,6 @@ export default function UserReports() {
     }
   ]);
   const [mealLoading, setMealLoading] = React.useState(false);
-  const [deviationsLoading, setDeviationsLoading] = React.useState(true);
-  const [healthLoading, setHealthLoading] = React.useState(false);
   const [averageStats, setAverageStats] = React.useState<GenderAverageStats>({
     male: {
       totalUsers: 0,
@@ -232,10 +230,8 @@ export default function UserReports() {
             averageDeviationPercentage: gemini.averageDeviationPercentage
           }
         });
-        setDeviationsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setDeviationsLoading(false);
       }
     };
 
@@ -271,8 +267,6 @@ export default function UserReports() {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
-        setHealthLoading(false); // Regardless of success or failure, stop loading
       }
     };
 

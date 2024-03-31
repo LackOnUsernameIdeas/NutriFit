@@ -82,7 +82,7 @@ const UserMeasurements = () => {
 
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingOnMount, setIsLoadingOnMount] = useState(true);
+  //const [isLoadingOnMount, setIsLoadingOnMount] = useState(true);
 
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
@@ -144,13 +144,13 @@ const UserMeasurements = () => {
     return () => unsubscribe();
   }, []);
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsLoadingOnMount(false);
-    }, 2000);
+  // React.useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setIsLoadingOnMount(false);
+  //   }, 2000);
 
-    return () => clearTimeout(timeout);
-  }, []);
+  //   return () => clearTimeout(timeout);
+  // }, []);
 
   // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -449,10 +449,10 @@ const UserMeasurements = () => {
   const waistImg = useColorModeValue(waistImgDark, waistImgWhite);
   const hipImg = useColorModeValue(hipImgDark, hipImgWhite);
   const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
-
+  // {isLoading || !isTodaysDataFetched || isLoadingOnMount ? (
   return (
     <Box>
-      {isLoading || !isTodaysDataFetched || isLoadingOnMount ? (
+      {isLoading || !isTodaysDataFetched ? (
         <Box mt="45vh">
           <Loading />
         </Box>
