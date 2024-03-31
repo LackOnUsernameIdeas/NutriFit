@@ -82,6 +82,7 @@ const UserMeasurements = () => {
 
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingOnMount, setIsLoadingOnMount] = useState(true);
 
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
@@ -141,6 +142,14 @@ const UserMeasurements = () => {
 
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
+  }, []);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoadingOnMount(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   // Event handler-и за реакция при промяна
@@ -351,27 +360,33 @@ const UserMeasurements = () => {
           setIsLoading(true);
 
           const additionalData = await fetchAdditionalUserData(
-            auth.currentUser.uid
+            auth.currentUser.uid,
+            true
           );
-
+          console.log("DEBUG ADDITIONAL DATA", additionalData);
           // Extract date keys from additionalData
           const dateKeys = Object.keys(additionalData).filter((key) =>
             /^\d{4}-\d{2}-\d{2}$/.test(key)
           );
-
+          console.log("DEBUG DATE KEYS", dateKeys);
           // Sort date keys in descending order
           dateKeys.sort(
             (a, b) => new Date(b).getTime() - new Date(a).getTime()
           );
-
+          console.log("DEBUG DATE KEYS SORTED", dateKeys);
           // Find the first date before today
           const today = new Date().toISOString().slice(0, 10);
           const lastSavedDate = dateKeys.find((date) => date < today);
           const rawUserDataForToday = additionalData[today];
           const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
-
+          console.log("DEBUG LAST SAVED DATE", lastSavedDate);
+          console.log(
+            "DEBUG rawUserDataForLastSavedDate",
+            additionalData[lastSavedDate]
+          );
           if (isMounted.current) {
             setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+            console.log("LAST DATE: ", userDataLastSavedDate);
             setUserDataForToday(rawUserDataForToday);
             setIsTodaysDataFetched(true);
             setIsLoading(false);
@@ -437,7 +452,7 @@ const UserMeasurements = () => {
 
   return (
     <Box>
-      {isLoading || !isTodaysDataFetched ? (
+      {isLoading || !isTodaysDataFetched || isLoadingOnMount ? (
         <Box mt="45vh">
           <Loading />
         </Box>

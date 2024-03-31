@@ -24,8 +24,10 @@ import {
   useColorModeValue,
   RadioGroup,
   Radio,
-  HStack
+  HStack,
+  useColorMode
 } from "@chakra-ui/react";
+import { Global } from "@emotion/react";
 // Custom components
 import { HSeparator } from "components/separator/Separator";
 import DefaultAuth from "layouts/auth/Default";
@@ -35,6 +37,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
 function SignUp() {
+  const { colorMode } = useColorMode();
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -130,190 +133,205 @@ function SignUp() {
 
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
-      <Flex
-        maxW={{ base: "100%", md: "max-content" }}
-        w="100%"
-        mx={{ base: "auto", lg: "0px" }}
-        me="auto"
-        h="100%"
-        alignItems="start"
-        justifyContent="center"
-        mb={{ base: "30px", md: "60px" }}
-        px={{ base: "25px", md: "0px" }}
-        mt={{ base: "40px", md: "14vh" }}
-        flexDirection="column"
-      >
-        <Box me="auto">
-          <Heading color={textColor} fontSize="36px" mb="10px">
-            Създаване на Профил
-          </Heading>
-          <Text
-            mb="36px"
-            ms="4px"
-            color={textColorSecondary}
-            fontWeight="400"
-            fontSize="md"
-          >
-            Попълнете вашият email и парола за да създадете профил!
-          </Text>
-        </Box>
+      <>
         <Flex
-          zIndex="2"
-          direction="column"
-          w={{ base: "100%", md: "420px" }}
-          maxW="100%"
-          background="transparent"
-          borderRadius="15px"
-          mx={{ base: "auto", lg: "unset" }}
+          maxW={{ base: "100%", md: "max-content" }}
+          w="100%"
+          mx={{ base: "auto", lg: "0px" }}
           me="auto"
-          mb={{ base: "20px", md: "auto" }}
+          h="100%"
+          alignItems="start"
+          justifyContent="center"
+          mb={{ base: "30px", md: "60px" }}
+          px={{ base: "25px", md: "0px" }}
+          mt={{ base: "40px", md: "14vh" }}
+          flexDirection="column"
         >
-          <Flex align="center" mb="25px">
-            <HSeparator />
-          </Flex>
-          <FormControl>
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Email<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="example@noit.eu"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-              onChange={(email) => setEmail(email.target.value)}
-            />
-            <FormLabel
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              display="flex"
-            >
-              Парола<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size="md">
-              <Input
-                isRequired={true}
-                fontSize="sm"
-                placeholder="Мин. 6 символа"
-                mb="24px"
-                size="lg"
-                type={show ? "text" : "password"}
-                variant="auth"
-                onChange={(password1) => setPassword1(password1.target.value)}
-              />
-              <InputRightElement display="flex" alignItems="center" mt="4px">
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick}
-                />
-              </InputRightElement>
-            </InputGroup>
-            <FormLabel
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              display="flex"
-            >
-              Потвърди Парола<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size="md">
-              <Input
-                isRequired={true}
-                fontSize="sm"
-                placeholder="Мин. 6 символа"
-                mb="24px"
-                size="lg"
-                type={show2 ? "text" : "password"}
-                variant="auth"
-                onChange={(password2) => setPassword2(password2.target.value)}
-              />
-              <InputRightElement display="flex" alignItems="center" mt="4px">
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show2 ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick2}
-                />
-              </InputRightElement>
-            </InputGroup>
-            <FormLabel
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              display="flex"
-            >
-              Пол
-            </FormLabel>
-            <Flex direction="row" mb="24px">
-              <RadioGroup
-                defaultValue="male"
-                onChange={(value) => setGender(value as "male" | "female")}
-              >
-                <HStack spacing="24px">
-                  <Radio value="male">Мъж</Radio>
-                  <Radio value="female">Жена</Radio>
-                </HStack>
-              </RadioGroup>
-            </Flex>
-            <Button
-              onClick={handleSignUp}
-              color="white"
-              bgColor="#5D4BD7"
-              fontSize="sm"
-              variant="brand"
-              fontWeight="500"
-              w="100%"
-              h="50"
-              mb="24px"
-            >
+          <Box me="auto">
+            <Heading color={textColor} fontSize="36px" mb="10px">
               Създаване на Профил
-            </Button>
-            {error && (
-              <Text color="red" fontSize="sm" mb="8px">
-                {error}
-              </Text>
-            )}
-          </FormControl>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="start"
-            maxW="100%"
-            mt="0px"
-          >
-            <Text color={textColorDetails} fontWeight="400" fontSize="14px">
-              Вече имате профил?
-              <NavLink to="/auth/sign-in">
-                <Text
-                  color={textColorBrand}
-                  as="span"
-                  ms="5px"
-                  fontWeight="500"
-                >
-                  Влизане.
-                </Text>
-              </NavLink>
+            </Heading>
+            <Text
+              mb="36px"
+              ms="4px"
+              color={textColorSecondary}
+              fontWeight="400"
+              fontSize="md"
+            >
+              Попълнете вашият email и парола за да създадете профил!
             </Text>
+          </Box>
+          <Flex
+            zIndex="2"
+            direction="column"
+            w={{ base: "100%", md: "420px" }}
+            maxW="100%"
+            background="transparent"
+            borderRadius="15px"
+            mx={{ base: "auto", lg: "unset" }}
+            me="auto"
+            mb={{ base: "20px", md: "auto" }}
+          >
+            <Flex align="center" mb="25px">
+              <HSeparator />
+            </Flex>
+            <FormControl>
+              <FormLabel
+                display="flex"
+                ms="4px"
+                fontSize="sm"
+                fontWeight="500"
+                color={textColor}
+                mb="8px"
+              >
+                Email<Text color={brandStars}>*</Text>
+              </FormLabel>
+              <Input
+                isRequired={true}
+                variant="auth"
+                fontSize="sm"
+                ms={{ base: "0px", md: "0px" }}
+                type="email"
+                placeholder="example@noit.eu"
+                mb="24px"
+                fontWeight="500"
+                size="lg"
+                onChange={(email) => setEmail(email.target.value)}
+              />
+              <FormLabel
+                ms="4px"
+                fontSize="sm"
+                fontWeight="500"
+                color={textColor}
+                display="flex"
+              >
+                Парола<Text color={brandStars}>*</Text>
+              </FormLabel>
+              <InputGroup size="md">
+                <Input
+                  isRequired={true}
+                  fontSize="sm"
+                  placeholder="Мин. 6 символа"
+                  mb="24px"
+                  size="lg"
+                  type={show ? "text" : "password"}
+                  variant="auth"
+                  onChange={(password1) => setPassword1(password1.target.value)}
+                />
+                <InputRightElement display="flex" alignItems="center" mt="4px">
+                  <Icon
+                    color={textColorSecondary}
+                    _hover={{ cursor: "pointer" }}
+                    as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                    onClick={handleClick}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormLabel
+                ms="4px"
+                fontSize="sm"
+                fontWeight="500"
+                color={textColor}
+                display="flex"
+              >
+                Потвърди Парола<Text color={brandStars}>*</Text>
+              </FormLabel>
+              <InputGroup size="md">
+                <Input
+                  isRequired={true}
+                  fontSize="sm"
+                  placeholder="Мин. 6 символа"
+                  mb="24px"
+                  size="lg"
+                  type={show2 ? "text" : "password"}
+                  variant="auth"
+                  onChange={(password2) => setPassword2(password2.target.value)}
+                />
+                <InputRightElement display="flex" alignItems="center" mt="4px">
+                  <Icon
+                    color={textColorSecondary}
+                    _hover={{ cursor: "pointer" }}
+                    as={show2 ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                    onClick={handleClick2}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormLabel
+                ms="4px"
+                fontSize="sm"
+                fontWeight="500"
+                color={textColor}
+                display="flex"
+              >
+                Пол
+              </FormLabel>
+              <Flex direction="row" mb="24px">
+                <RadioGroup
+                  defaultValue="male"
+                  onChange={(value) => setGender(value as "male" | "female")}
+                >
+                  <HStack spacing="24px">
+                    <Radio value="male">Мъж</Radio>
+                    <Radio value="female">Жена</Radio>
+                  </HStack>
+                </RadioGroup>
+              </Flex>
+              <Button
+                onClick={handleSignUp}
+                color="white"
+                bgColor="#5D4BD7"
+                fontSize="sm"
+                variant="brand"
+                fontWeight="500"
+                w="100%"
+                h="50"
+                mb="24px"
+              >
+                Създаване на Профил
+              </Button>
+              {error && (
+                <Text color="red" fontSize="sm" mb="8px">
+                  {error}
+                </Text>
+              )}
+            </FormControl>
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="start"
+              maxW="100%"
+              mt="0px"
+            >
+              <Text color={textColorDetails} fontWeight="400" fontSize="14px">
+                Вече имате профил?
+                <NavLink to="/auth/sign-in">
+                  <Text
+                    color={textColorBrand}
+                    as="span"
+                    ms="5px"
+                    fontWeight="500"
+                  >
+                    Влизане.
+                  </Text>
+                </NavLink>
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
+        <Global
+          styles={`
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus,
+            input:-webkit-autofill:active {
+              -webkit-text-fill-color: ${
+                colorMode === "dark" ? "#FFF" : "#000"
+              } !important; /* Set text color based on color mode */
+              transition: background-color 5000s ease-in-out 0s; /* Override the transition */
+            }
+          `}
+        />
+      </>
     </DefaultAuth>
   );
 }
