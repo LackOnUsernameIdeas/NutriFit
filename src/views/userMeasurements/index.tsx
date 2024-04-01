@@ -360,8 +360,7 @@ const UserMeasurements = () => {
           setIsLoading(true);
 
           const additionalData = await fetchAdditionalUserData(
-            auth.currentUser.uid,
-            true
+            auth.currentUser.uid
           );
           console.log("DEBUG ADDITIONAL DATA", additionalData);
           // Extract date keys from additionalData
