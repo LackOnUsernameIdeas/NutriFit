@@ -62,6 +62,7 @@ import { savePreferences } from "../../../database/setFunctions";
 
 import { LineChart } from "components/charts/LineCharts";
 import { parseISO } from "date-fns";
+import UserInfoCard from "components/infoCard/userInfoCard";
 
 // Главен компонент
 export default function MealPlanner() {
@@ -783,98 +784,7 @@ export default function MealPlanner() {
             </Box>
           ) : (
             <Box transition="0.2s ease-in-out">
-              <Card
-                p="20px"
-                alignItems="center"
-                flexDirection="column"
-                w="100%"
-                mb="20px"
-                backgroundImage={`url(${backgroundImage})`}
-                backgroundRepeat="no-repeat"
-                backgroundSize="cover"
-                backgroundPosition="center"
-                transition="background-image 0.25s ease-in-out"
-              >
-                <CardBody>
-                  <Stack divider={<StackDivider />} spacing="4">
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Години:</b> {userData.age}
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Пол:</b> {mapGenderToDisplayValue(userData.gender)}
-                      </Heading>
-                    </Box>
-                    {userData.goal && (
-                      <Box>
-                        <Heading
-                          size="xs"
-                          textTransform="uppercase"
-                          fontWeight={fontWeight}
-                        >
-                          <b>Последно избрана цел:</b>{" "}
-                          {mapGoalToDisplayValue(userData.goal)}
-                        </Heading>
-                      </Box>
-                    )}
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Височина:</b> {userData.height} (см)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Тегло:</b> {userData.weight} (кг)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Обиколка на врата:</b> {userData.neck} (см)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Обиколка на талията:</b> {userData.waist} (см)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Обиколка на таза:</b> {userData.hip} (см)
-                      </Heading>
-                    </Box>
-                  </Stack>
-                </CardBody>
-              </Card>
+              <UserInfoCard userData={userData} />
               <Alert
                 status="info"
                 borderRadius="20px"
