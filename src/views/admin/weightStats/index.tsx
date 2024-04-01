@@ -57,6 +57,7 @@ import { LineChart } from "components/charts/LineCharts";
 import { getAuth } from "firebase/auth";
 import { parseISO } from "date-fns";
 import UserInfoCard from "components/infoCard/userInfoCard";
+import AlertBox from "components/alert/alert";
 
 // Главен компонент
 export default function WeightStats() {
@@ -1724,19 +1725,12 @@ export default function WeightStats() {
               </Box>
             )}
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
-              <Alert
+              <AlertBox
                 status="warning"
-                borderRadius="20px"
-                fontWeight={tipFontWeight}
-                p="20px"
-                w="100%"
-                mb="20px"
-              >
-                <AlertIcon />
-                Тези стойности са приблизителни и може да е необходимо преценка
-                от диетолог или здравен специалист, за да се адаптират към
-                индивидуалните ви нужди.
-              </Alert>
+                text="Тези стойности са приблизителни и може да е необходимо
+                    преценка от диетолог или здравен специалист, за да се
+                    адаптират към индивидуалните ви нужди."
+              />
             </animated.div>
           </Box>
         )}
