@@ -64,6 +64,7 @@ import { LineChart } from "components/charts/LineCharts";
 import { parseISO } from "date-fns";
 import UserInfoCard from "components/infoCard/userInfoCard";
 import AlertBox from "components/alert/alert";
+import InfoBox from "components/infoBox/infoBox";
 
 // Главен компонент
 export default function MealPlanner() {
@@ -1296,165 +1297,17 @@ export default function MealPlanner() {
                           >
                             Изберете ниво на натовареност:
                           </Text>
-                          <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
-                            <MenuButton
-                              alignItems="center"
-                              justifyContent="center"
-                              bg={bgButton}
-                              _hover={bgHoverInfoBox}
-                              _focus={bgFocus}
-                              _active={bgFocus}
-                              w="30px"
-                              h="30px"
-                              lineHeight="50%"
-                              onClick={onOpenStats}
-                              borderRadius="20px"
-                              mt="2px"
-                            >
-                              <Icon
-                                as={MdOutlineInfo}
-                                color={infoBoxIconColor}
-                                w="24px"
-                                h="24px"
-                              />
-                            </MenuButton>
-                            <MenuList
-                              w="100%"
-                              minW="unset"
-                              ml={{ base: "2%", lg: 0 }}
-                              mr={{ base: "2%", lg: 0 }}
-                              maxW={{ base: "70%", lg: "80%" }}
-                              border="transparent"
-                              backdropFilter="blur(100px)"
-                              bg={bgList}
-                              borderRadius="20px"
-                              p="15px"
-                            >
-                              <Box
-                                transition="0.2s linear"
-                                color={textColor}
-                                p="0px"
-                                maxW={{ base: "80%", lg: "100%" }}
-                                borderRadius="8px"
-                              >
-                                <AlertDialog
-                                  isOpen={isOpenStats}
-                                  leastDestructiveRef={cancelRefStats}
-                                  onClose={onCloseStats}
-                                >
-                                  <AlertDialogOverlay>
-                                    <AlertDialogContent
-                                      border="2px"
-                                      borderRadius="25px"
-                                      borderColor={borderColor}
-                                      mx="20px"
-                                    >
-                                      <AlertDialogHeader
-                                        fontSize="lg"
-                                        fontWeight="bold"
-                                      >
-                                        Различните нива на натовареност са:
-                                      </AlertDialogHeader>
-
-                                      <AlertDialogCloseButton borderRadius="20px" />
-
-                                      <AlertDialogBody>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 1</b> - Малко или въобще не
-                                            спортувате. Примерни упражнения:
-                                            Кратка разходка, Лека Йога, Кратка
-                                            Тай Чи сесия (20 мин.)
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 2</b> - Спортувате умерено
-                                            1-3 пъти в седмицата. Примерни
-                                            упражнения: Умерена разходка за 30
-                                            мин, Работа в двора/градинарство за
-                                            45 мин, Каране на колело за 1 час,
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 3</b> - Спортувате умерено
-                                            4-5 пъти в седмицата. Примерни
-                                            упражнения: Тичане 30 мин, Плуване
-                                            за 30 мин, Играене на тенис/волейбол
-                                            за 45 мин.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 4</b> - Спортувате умерено
-                                            дневно или интензивно 3-4 пъти в
-                                            седмицата. Примерни упражнения:
-                                            Интервална тренировка с висока
-                                            интензивност 30 мин, Тренировка за
-                                            цялото тяло 45 мин. Бързо плуване за
-                                            45 минути.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 5</b> - Спортувате
-                                            интензивно 6-7 пъти в седмицата.
-                                            Примерни упражнения: По-тежка и
-                                            по-дълга интервална тренировка с
-                                            висока интензивност, Трениране на
-                                            Кик-бокс за 1 час, Трениране на
-                                            бойни изкуства.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                          >
-                                            <b>Ниво 6</b> - Спортувате много
-                                            интензивно цялата седмица. Примерни
-                                            упражнения: Тренировка за маратон,
-                                            Каране на колело из дълги растояния
-                                            за 2 часа, Вдигане на тежести за 1
-                                            час, Участвие в спортен турнир (90
-                                            мин.)
-                                          </Text>
-                                        </Flex>
-                                      </AlertDialogBody>
-                                      <AlertDialogFooter></AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialogOverlay>
-                                </AlertDialog>
-                              </Box>
-                            </MenuList>
-                          </Menu>
+                          <InfoBox
+                            buttonText="Нива на натовареност"
+                            infoText={[
+                              "<b>Ниво 22222</b> - Малко или въобще не спортувате. Примерни упражнения: Кратка разходка, Лека Йога, Кратка Тай Чи сесия (20 мин.)",
+                              "<b>Ниво 2</b> - Спортувате умерено 1-3 пъти в седмицата. Примерни упражнения: Умерена разходка за 30 мин, Работа в двора/градинарство за 45 мин, Каране на колело за 1 час",
+                              "<b>Ниво 3</b> - Спортувате умерено 4-5 пъти в седмицата. Примерни упражнения: Тичане 30 мин, Плуване за 30 мин, Играене на тенис/волейбол за 45 мин.",
+                              "<b>Ниво 4</b> - Спортувате умерено дневно или интензивно 3-4 пъти в седмицата. Примерни упражнения: Интервална тренировка с висока интензивност 30 мин, Тренировка за цялото тяло 45 мин. Бързо плуване за 45 минути.",
+                              "<b>Ниво 5</b> - Спортувате интензивно 6-7 пъти в седмицата. Примерни упражнения: По-тежка и по-дълга интервална тренировка с висока интензивност, Трениране на Кик-бокс за 1 час, Трениране на бойни изкуства.",
+                              "<b>Ниво 6</b> - Спортувате много интензивно цялата седмица. Примерни упражнения: Тренировка за маратон, Каране на колело из дълги растояния за 2 часа, Вдигане на тежести за 1 час, Участвие в спортен турнир (90 мин.)"
+                            ]}
+                          />
                         </Flex>
                       </>
                     ) : (
@@ -1469,163 +1322,17 @@ export default function MealPlanner() {
                           >
                             Изберете ниво на натовареност:
                           </Text>
-                          <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
-                            <MenuButton
-                              alignItems="center"
-                              justifyContent="center"
-                              bg={bgButton}
-                              _hover={bgHoverInfoBox}
-                              _focus={bgFocus}
-                              _active={bgFocus}
-                              w="30px"
-                              h="30px"
-                              lineHeight="50%"
-                              onClick={onOpenStats}
-                              borderRadius="20px"
-                            >
-                              <Icon
-                                as={MdOutlineInfo}
-                                color={infoBoxIconColor}
-                                w="24px"
-                                h="24px"
-                              />
-                            </MenuButton>
-                            <MenuList
-                              w="100%"
-                              minW="unset"
-                              ml={{ base: "2%", lg: 0 }}
-                              mr={{ base: "2%", lg: 0 }}
-                              maxW={{ base: "70%", lg: "80%" }}
-                              border="transparent"
-                              backdropFilter="blur(100px)"
-                              bg={bgList}
-                              borderRadius="20px"
-                              p="15px"
-                            >
-                              <Box
-                                transition="0.2s linear"
-                                color={textColor}
-                                p="0px"
-                                maxW={{ base: "80%", lg: "100%" }}
-                                borderRadius="8px"
-                              >
-                                <AlertDialog
-                                  isOpen={isOpenStats}
-                                  leastDestructiveRef={cancelRefStats}
-                                  onClose={onCloseStats}
-                                >
-                                  <AlertDialogOverlay>
-                                    <AlertDialogContent
-                                      border="2px"
-                                      borderRadius="25px"
-                                      borderColor={borderColor}
-                                    >
-                                      <AlertDialogHeader
-                                        fontSize="lg"
-                                        fontWeight="bold"
-                                      >
-                                        Различните нива на натовареност са:
-                                      </AlertDialogHeader>
-
-                                      <AlertDialogCloseButton borderRadius="20px" />
-
-                                      <AlertDialogBody>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 1</b> - Малко или въобще не
-                                            спортувате. Примерни упражнения:
-                                            Кратка разходка, Лека Йога, Кратка
-                                            Тай Чи сесия (20 мин.)
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 2</b> - Спортувате умерено
-                                            1-3 пъти в седмицата. Примерни
-                                            упражнения: Умерена разходка за 30
-                                            мин, Работа в двора/градинарство за
-                                            45 мин, Каране на колело за 1 час,
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 3</b> - Спортувате умерено
-                                            4-5 пъти в седмицата. Примерни
-                                            упражнения: Тичане 30 мин, Плуване
-                                            за 30 мин, Играене на тенис/волейбол
-                                            за 45 мин.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 4</b> - Спортувате умерено
-                                            дневно или интензивно 3-4 пъти в
-                                            седмицата. Примерни упражнения:
-                                            Интервална тренировка с висока
-                                            интензивност 30 мин, Тренировка за
-                                            цялото тяло 45 мин. Бързо плуване за
-                                            45 минути.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 5</b> - Спортувате
-                                            интензивно 6-7 пъти в седмицата.
-                                            Примерни упражнения: По-тежка и
-                                            по-дълга интервална тренировка с
-                                            висока интензивност, Трениране на
-                                            Кик-бокс за 1 час, Трениране на
-                                            бойни изкуства.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                          >
-                                            <b>Ниво 6</b> - Спортувате много
-                                            интензивно цялата седмица. Примерни
-                                            упражнения: Тренировка за маратон,
-                                            Каране на колело из дълги растояния
-                                            за 2 часа, Вдигане на тежести за 1
-                                            час, Участвие в спортен турнир (90
-                                            мин.)
-                                          </Text>
-                                        </Flex>
-                                      </AlertDialogBody>
-                                      <AlertDialogFooter></AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialogOverlay>
-                                </AlertDialog>
-                              </Box>
-                            </MenuList>
-                          </Menu>
+                          <InfoBox
+                            buttonText="Нива на натовареност"
+                            infoText={[
+                              "<b>Ниво 1</b> - Малко или въобще не спортувате. Примерни упражнения: Кратка разходка, Лека Йога, Кратка Тай Чи сесия (20 мин.)",
+                              "<b>Ниво 2</b> - Спортувате умерено 1-3 пъти в седмицата. Примерни упражнения: Умерена разходка за 30 мин, Работа в двора/градинарство за 45 мин, Каране на колело за 1 час",
+                              "<b>Ниво 3</b> - Спортувате умерено 4-5 пъти в седмицата. Примерни упражнения: Тичане 30 мин, Плуване за 30 мин, Играене на тенис/волейбол за 45 мин.",
+                              "<b>Ниво 4</b> - Спортувате умерено дневно или интензивно 3-4 пъти в седмицата. Примерни упражнения: Интервална тренировка с висока интензивност 30 мин, Тренировка за цялото тяло 45 мин. Бързо плуване за 45 минути.",
+                              "<b>Ниво 5</b> - Спортувате интензивно 6-7 пъти в седмицата. Примерни упражнения: По-тежка и по-дълга интервална тренировка с висока интензивност, Трениране на Кик-бокс за 1 час, Трениране на бойни изкуства.",
+                              "<b>Ниво 6</b> - Спортувате много интензивно цялата седмица. Примерни упражнения: Тренировка за маратон, Каране на колело из дълги растояния за 2 часа, Вдигане на тежести за 1 час, Участвие в спортен турнир (90 мин.)"
+                            ]}
+                          />
                         </Flex>
                       </>
                     )}
@@ -1711,202 +1418,15 @@ export default function MealPlanner() {
                                         >
                                           Изберете тип диета:
                                         </Text>
-                                        <Menu
-                                          isOpen={isOpenDiet}
-                                          onClose={onCloseDiet}
-                                        >
-                                          <MenuButton
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            bg={bgButton}
-                                            _hover={bgHoverInfoBox}
-                                            _focus={bgFocus}
-                                            _active={bgFocus}
-                                            w="30px"
-                                            h="30px"
-                                            lineHeight="50%"
-                                            onClick={onOpen}
-                                            borderRadius="20px"
-                                            order={1} // Set a higher order value
-                                          >
-                                            <Icon
-                                              as={MdOutlineInfo}
-                                              color={infoBoxIconColor}
-                                              w="24px"
-                                              h="24px"
-                                            />
-                                          </MenuButton>
-                                          <MenuList
-                                            w="100%"
-                                            minW="unset"
-                                            ml={{ base: "2%", lg: 0 }}
-                                            mr={{ base: "2%", lg: 0 }}
-                                            maxW={{ base: "47%", lg: "80%" }}
-                                            border="transparent"
-                                            backdropFilter="blur(100px)"
-                                            bg={bgList}
-                                            borderRadius="20px"
-                                          >
-                                            <Box
-                                              transition="0.2s linear"
-                                              color={textColor}
-                                              borderRadius="8px"
-                                              maxW={{
-                                                base: "2xl",
-                                                lg: "100%"
-                                              }}
-                                            >
-                                              <AlertDialog
-                                                isOpen={isOpen}
-                                                leastDestructiveRef={cancelRef}
-                                                onClose={onClose}
-                                              >
-                                                <AlertDialogOverlay>
-                                                  <AlertDialogContent
-                                                    border="2px"
-                                                    borderRadius="25px"
-                                                    borderColor={borderColor}
-                                                    mx={
-                                                      isSmallScreen
-                                                        ? "20px"
-                                                        : "0px"
-                                                    }
-                                                  >
-                                                    <AlertDialogHeader
-                                                      fontSize="lg"
-                                                      fontWeight="bold"
-                                                    >
-                                                      Изберете тип диета по
-                                                      вашите <br />
-                                                      предпочитания.
-                                                    </AlertDialogHeader>
-
-                                                    <AlertDialogCloseButton borderRadius="20px" />
-
-                                                    <AlertDialogBody>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>Балансирана:</b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="200"
-                                                          mb="10px"
-                                                        >
-                                                          Балансирано
-                                                          разпределение на
-                                                          макронутриенти с
-                                                          умерени нива на
-                                                          протеини, въглехидрати
-                                                          и мазнини. Идеална за
-                                                          поддържане на
-                                                          здравето.
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>
-                                                            Ниско съдържание на
-                                                            мазнини:
-                                                          </b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="200"
-                                                          mb="10px"
-                                                        >
-                                                          Набляга на намаляване
-                                                          на приема на мазнини и
-                                                          поддържане на
-                                                          адекватни нива на
-                                                          протеини и
-                                                          въглехидрати. Подходящ
-                                                          за тези, които се
-                                                          стремят да намалят
-                                                          общия прием на калории
-                                                          и да контролират
-                                                          теглото си.
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>
-                                                            Ниско съдържание на
-                                                            въглехидрати:
-                                                          </b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="400"
-                                                          mb="10px"
-                                                        >
-                                                          Фокусира се върху
-                                                          минимизиране на приема
-                                                          на въглехидрати, като
-                                                          същевременно осигурява
-                                                          достатъчно протеини и
-                                                          здравословни мазнини.
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>
-                                                            Високо съдържание на
-                                                            протеин:
-                                                          </b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="400"
-                                                        >
-                                                          Дава приоритет на
-                                                          по-висок прием на
-                                                          протеин с умерени нива
-                                                          на въглехидрати и
-                                                          мазнини. Идеална за
-                                                          тези, които искат да
-                                                          подпомогнат развитието
-                                                          на мускулите, особено
-                                                          при силови тренировки
-                                                          или фитнес програми.
-                                                        </Text>
-                                                      </Flex>
-                                                    </AlertDialogBody>
-                                                    <AlertDialogFooter></AlertDialogFooter>
-                                                  </AlertDialogContent>
-                                                </AlertDialogOverlay>
-                                              </AlertDialog>
-                                            </Box>
-                                          </MenuList>
-                                        </Menu>
+                                        <InfoBox
+                                          buttonText="Изберете тип диета според вашите предпочитания:"
+                                          infoText={[
+                                            "<b>Балансирана:</b><br /> Балансирано разпределение на макронутриенти с умерени нива на протеини, въглехидрати и мазнини. Идеална за поддържане на здравето.",
+                                            "<b>Ниско съдържание на мазнини:</b><br /> Набляга на намаляване на приема на мазнини и поддържане на адекватни нива на протеини и въглехидрати. Подходящ за тези, които се стремят да намалят общия прием на калории и да контролират теглото си.",
+                                            "<b>Ниско съдържание на въглехидрати:</b><br /> Фокусира се върху минимизиране на приема на въглехидрати, като същевременно осигурява достатъчно протеини и здравословни мазнини.",
+                                            "<b>Високо съдържание на протеин:</b><br /> Дава приоритет на по-висок прием на протеин с умерени нива на въглехидрати и мазнини. Идеална за тези, които искат да подпомогнат развитието на мускулите, особено при силови тренировки или фитнес програми."
+                                          ]}
+                                        />
                                       </Flex>
                                       <DietTable
                                         tableData={tableData}
