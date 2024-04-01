@@ -3,16 +3,13 @@ import React from "react";
 import {
   Box,
   Flex,
-  Icon,
   SimpleGrid,
   useColorModeValue,
   Text,
-  useMediaQuery,
   IconButton
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
 import LeaderboardItem from "./components/LeaderboardItem";
@@ -30,14 +27,8 @@ interface DropdownState {
 
 export default function TopMeals() {
   // Chakra Color Mode
-  const [isSm] = useMediaQuery("(max-width: 768px)");
-  const [isMd] = useMediaQuery("(min-width: 769px) and (max-width: 1400px)");
   const chartsColor = useColorModeValue("brand.500", "white");
   const [loading, setLoading] = React.useState(true);
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
-  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
-  const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const ITEMS_PER_PAGE = 5;
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
@@ -142,6 +133,7 @@ export default function TopMeals() {
   ]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
 
+  // Данни за диаграма
   const barChartLabels = allMeals
     .slice(0, 10)
     .map((_, index) => `#${index + 1}`);
@@ -149,9 +141,9 @@ export default function TopMeals() {
     .slice(0, 10)
     .map((entry) => entry.count);
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
+  // useEffect за fetch-ване на всички храни от нашето API
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -173,29 +165,16 @@ export default function TopMeals() {
       }
     };
 
-    fetchData(); // Call fetchData when component mounts
+    fetchData();
 
-    // No need for unsubscribe since we're not using onSnapshot
   }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
+  // Анимация за компонентите под дропдауна при негово движение.
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? 0 : 0}px)`,
     config: {
@@ -203,25 +182,6 @@ export default function TopMeals() {
       friction: dropdownVisible ? 12 : 20
     }
   });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
 
   const mealsToShow = allMeals.slice(
     dropdownState.currentPage * ITEMS_PER_PAGE,

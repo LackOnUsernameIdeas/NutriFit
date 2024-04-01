@@ -35,7 +35,6 @@ import AlertDropdown from "./components/AlertDropdown";
 
 // Главен компонент
 export default function MealPlanner() {
-  // Color values
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
@@ -148,7 +147,7 @@ export default function MealPlanner() {
       difference: 0,
       isUnderOrAbove: ""
     });
-
+  // Функция, която определя дали потребителя има нужда да сваля, запазва или качва кг.
   function calculateRecommendedGoal() {
     const difference = differenceFromPerfectWeight.difference;
     const underOrAbove = differenceFromPerfectWeight.isUnderOrAbove;
@@ -187,7 +186,7 @@ export default function MealPlanner() {
       setIsDietTableDataReady(true); // Set the state when data is ready
     }, 1000);
   }
-
+  // Функции, които калкулират изменението на стойностите на потребителя
   const calculateChange = (sortedData: any[], property: string) => {
     const latestValue = sortedData[0][property];
     const previousValue = sortedData[1][property];
@@ -240,7 +239,7 @@ export default function MealPlanner() {
     const uid = getAuth().currentUser.uid;
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
   };
-
+  // Данни за диаграмите
   const lineChartLabels = allUsersPreferences.map((entry) => entry.date);
   const lineChartForCalories = allUsersPreferences.map(
     (entry) => entry.Calories
@@ -250,7 +249,7 @@ export default function MealPlanner() {
   const lineChartForCarbs = allUsersPreferences.map(
     (entry) => entry.Carbohydrates
   );
-
+  // Стейтове и функции за дропдауните
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const [dropdownVisibleTip, setDropdownVisibleTip] = React.useState(false);
 
@@ -261,7 +260,7 @@ export default function MealPlanner() {
   const handleDropdownTipToggle = () => {
     setDropdownVisibleTip(!dropdownVisibleTip);
   };
-
+  // Анимации за компонентите под дропдауните при движението им
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? -50 : 0}px)`,
     config: {
@@ -307,8 +306,8 @@ export default function MealPlanner() {
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                uid: uid, // Assuming user is defined somewhere in your component
-                date: date // Get today's date in YYYY-MM-DD format
+                uid: uid,
+                date: date
               })
             }
           );
@@ -368,7 +367,6 @@ export default function MealPlanner() {
   }, [currentUser]);
 
   React.useEffect(() => {
-    // Check if numeric values in userData are different from 0 and not null
     const areValuesValid = Object.values(userData).every(
       (value) => value !== 0
     );
@@ -420,14 +418,12 @@ export default function MealPlanner() {
         ];
 
         tableData = savedData;
-        // You can use or save the 'savedData' object as needed.
       }
     });
   }
 
   console.log("tableData: ", tableData);
   React.useEffect(() => {
-    // Check if both clickedValueCalories and clickedValueNutrients are set
     if (
       clickedValueCalories !== null &&
       clickedValueNutrients.protein !== null

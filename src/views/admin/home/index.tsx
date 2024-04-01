@@ -4,7 +4,6 @@ import {
   Box,
   Flex,
   Icon,
-  Image,
   Tooltip,
   SimpleGrid,
   useColorMode,
@@ -13,30 +12,20 @@ import {
   Text,
   Link
 } from "@chakra-ui/react";
-// Assets
-// Custom components
 import GenderedDropdowns from "./components/GenderedDropdowns";
 import AllUsersDropdown from "./components/AllUsersDropdown";
 import Loading from "../weightStats/components/Loading";
 import { ColumnChart } from "components/charts/BarCharts";
 import RecipeWidget from "components/card/NFT";
 import RecipeModal from "components/rankings/RecipeModal";
-import MiniStatistics from "components/card/MiniStatistics";
 import Card from "components/card/Card";
-import IconBox from "components/icons/IconBox";
 import { useSpring, animated } from "react-spring";
-import { GiWeightScale } from "react-icons/gi";
 import { MdFlatware } from "react-icons/md";
 import { HiMiniArrowUturnRight } from "react-icons/hi2";
 import { SuggestedMeal } from "../../../variables/weightStats";
-
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
 import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import ChatGPT from "../../../assets/img/layout/chatlogo.png";
-import Gemini from "../../../assets/img/layout/gemini.png";
-
-// Types
 import { GenderAverageStats, Deviations } from "../../../variables/weightStats";
 import DeviationsAndHealthStatuses from "./components/DeviationsAndHealthStatuses";
 
@@ -72,7 +61,6 @@ const LinearGradientText: React.FC<LinearGradientTextProps> = ({
 );
 
 export default function UserReports() {
-  // Chakra Color Mode
   const { colorMode } = useColorMode();
   const backgroundImage =
     colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
@@ -92,6 +80,7 @@ export default function UserReports() {
     { bg: "secondaryGray.200" },
     { bg: "whiteAlpha.100" }
   );
+  // State-ове за данните от нашето API
   const [allMeals, setAllMeals] = React.useState<SuggestedMeal[] | []>([
     {
       name: "Шопска салата",
@@ -150,7 +139,7 @@ export default function UserReports() {
     React.useState<string[]>([]);
   const [allUsersHealthStatesData, setAllUsersHealthStatesData] =
     React.useState<number[]>([]);
-
+  // State-ове за дропдауните
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
@@ -165,6 +154,8 @@ export default function UserReports() {
   const handleDropdownToggleFemale = () => {
     setDropdownVisibleFemale(!dropdownVisibleFemale);
   };
+
+  // Анимации за компонентите под дропдауна при негово движение
   const slideAnimationStats = useSpring({
     transform: `translateY(${
       dropdownVisibleMale || dropdownVisibleFemale ? -50 : 0
@@ -183,6 +174,7 @@ export default function UserReports() {
     }
   });
 
+  // useEffect за дърпане на топ 10 най препоръчани ястия.
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -205,6 +197,7 @@ export default function UserReports() {
     fetchData();
   }, []);
 
+  // useEffect за дърпане на отклоненията на OpenAI и Gemini.
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -239,16 +232,13 @@ export default function UserReports() {
   }, []);
 
   console.log("deviations: ", deviations);
-
+  // useEffect за дърпане на състоянията на всички потребители.
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        // Make a GET request to your API endpoint
         const response = await fetch(
           "https://nutri-api.noit.eu/getAllHealthStatuses"
         );
-
-        // Check if the request was successful (status code 200)
         if (response.ok) {
           const { labels: healthStatuses, counts: healthStatusesCount } =
             await response.json();
@@ -262,7 +252,6 @@ export default function UserReports() {
           setAllUsersHealthStatesLabels(healthStatuses);
           setAllUsersHealthStatesData(healthStatusesCount);
         } else {
-          // Handle the error if the request fails
           console.error("Failed to fetch data:", response.statusText);
         }
       } catch (error) {
@@ -270,24 +259,20 @@ export default function UserReports() {
       }
     };
 
-    // Call fetchData once when the component mounts
     fetchData();
   }, []);
-
+  // useEffect за дърпане на средните данни на потребителите.
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        // Make a GET request to your API endpoint
         const response = await fetch(
           "https://nutri-api.noit.eu/getAverageStats"
         );
 
-        // Check if the request was successful (status code 200)
         if (response.ok) {
           const averageStats = await response.json();
           setAverageStats(averageStats);
         } else {
-          // Handle the error if the request fails
           console.error("Failed to fetch data:", response.statusText);
         }
       } catch (error) {
@@ -295,7 +280,6 @@ export default function UserReports() {
       }
     };
 
-    // Call fetchData once when the component mounts
     fetchData();
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -226,9 +226,9 @@ export default function LeaderBoardItemSmall(props: {
             )}
             <Icon
               as={renderDropdown ? FaAngleDown : FaAngleRight}
-              mr={renderDropdown ? undefined : "auto"} // Remove margin on right side if not rendering dropdown
-              ml={renderDropdown ? "auto" : undefined} // Remove margin on left side if rendering dropdown
-              mt={renderDropdown ? "25px" : undefined} // Adjust top margin only if rendering dropdown
+              mr={renderDropdown ? undefined : "auto"} 
+              ml={renderDropdown ? "auto" : undefined} 
+              mt={renderDropdown ? "25px" : undefined} 
               fontSize="lg"
               color={textColorDate}
             />

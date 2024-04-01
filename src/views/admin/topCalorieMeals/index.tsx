@@ -1,30 +1,23 @@
 import React from "react";
-// Chakra imports
 import {
   Box,
   Flex,
-  Icon,
   SimpleGrid,
   useColorModeValue,
   Text,
   useMediaQuery,
   IconButton
 } from "@chakra-ui/react";
-// Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import {
   getFirstAndLastTopMealsByCollection,
   getFirst50TopMealsByCollection
 } from "database/getFunctions";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-// Custom components
 import Loading from "views/admin/weightStats/components/Loading";
 import LeaderBoardItemSmall from "components/rankings/LeaderboardItemSmall";
-
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { ColumnChart } from "components/charts/BarCharts";
-
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { NutrientMeal } from "../../../variables/weightStats";
 import Dropdown from "components/dropdowns/Dropdown";
@@ -33,15 +26,8 @@ interface DropdownState {
 }
 
 export default function TopMeals() {
-  // Chakra Color Mode
-  const [isSm] = useMediaQuery("(max-width: 768px)");
-  const [isMd] = useMediaQuery("(min-width: 769px) and (max-width: 1400px)");
   const chartsColor = useColorModeValue("brand.500", "white");
   const [loading, setLoading] = React.useState(true);
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
-  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
-  const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const ITEMS_PER_PAGE = 5;
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
@@ -57,9 +43,8 @@ export default function TopMeals() {
   >([]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
-
+  // Данни за диаграмите
   const barChartLabels = allMeals
     .slice(0, 10)
     .map((_, index) => `#${index + 1}`);
@@ -73,7 +58,7 @@ export default function TopMeals() {
     .sort((a, b) => a.totals.calories - b.totals.calories)
     .slice(0, 10)
     .map((meal) => meal.totals.calories);
-
+  // useEffect за дърпане на данните от нашето API. Първо се дърпат първите 50 за да се минимизира зареждането на страницата
   React.useEffect(() => {
     let isMounted = true;
 
@@ -127,39 +112,21 @@ export default function TopMeals() {
     fetchData();
 
     return () => {
-      // Cleanup function to be called when component unmounts
       isMounted = false;
     };
   }, []);
-
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
-
-  const [miniStatisticsVisibleLowCalory, setMiniStatisticsVisibleLowCalory] =
-    React.useState(true);
-  const [renderDropdownLowCalory, setRenderDropdownLowCalory] =
-    React.useState(true);
+  // State за първия дропдаун
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
-  // State and function for the second dropdown
+  // State за втория дропдаун
   const [dropdownVisibleLowCalory, setDropdownVisibleLowCalory] =
     React.useState(true);
   const handleDropdownToggleLowCalory = () => {
     setDropdownVisibleLowCalory(!dropdownVisibleLowCalory);
   };
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
+  // Анимация за компонентите под дропдауна при негово движение.
   const slideAnimation = useSpring({
     transform: `translateY(${
       dropdownVisible || dropdownVisibleLowCalory ? -50 : -20
@@ -169,53 +136,6 @@ export default function TopMeals() {
       friction: dropdownVisible ? 12 : 20
     }
   });
-
-  const slideAnimationDropLowCalory = useSpring({
-    opacity: miniStatisticsVisibleLowCalory ? 1 : 0,
-    transform: `translateY(${dropdownVisibleLowCalory ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisibleLowCalory ? 170 : 200,
-      friction: dropdownVisibleLowCalory ? 12 : 20
-    }
-  });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChangeLowCalory = async () => {
-      if (dropdownVisibleLowCalory) {
-        setMiniStatisticsVisibleLowCalory(true);
-        setRenderDropdownLowCalory(true);
-      } else {
-        setMiniStatisticsVisibleLowCalory(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdownLowCalory(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChangeLowCalory();
-  }, [dropdownVisibleLowCalory]);
 
   const mealsToShow = allMeals.slice(
     dropdownState.currentPage * ITEMS_PER_PAGE,

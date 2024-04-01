@@ -1,29 +1,22 @@
 import React from "react";
-// Chakra imports
 import {
   Box,
   Flex,
-  Icon,
   SimpleGrid,
   useColorModeValue,
   Text,
   useMediaQuery,
   IconButton
 } from "@chakra-ui/react";
-// Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import {
   getFirstAndLastTopMealsByCollection,
   getFirst50TopMealsByCollection
 } from "database/getFunctions";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-// Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { ColumnChart } from "components/charts/BarCharts";
-
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { NutrientMeal } from "../../../variables/weightStats";
 import LeaderBoardItemSmall from "components/rankings/LeaderboardItemSmall";
@@ -33,15 +26,8 @@ interface DropdownState {
 }
 
 export default function TopMeals() {
-  // Chakra Color Mode
-  const [isSm] = useMediaQuery("(max-width: 768px)");
-  const [isMd] = useMediaQuery("(min-width: 769px) and (max-width: 1400px)");
   const chartsColor = useColorModeValue("brand.500", "white");
   const [loading, setLoading] = React.useState(true);
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
-  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
-  const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const ITEMS_PER_PAGE = 5;
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
@@ -55,7 +41,6 @@ export default function TopMeals() {
   const [allMeals, setAllMeals] = React.useState<NutrientMeal[] | []>([]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
   const barChartLabels = allMeals
@@ -75,6 +60,7 @@ export default function TopMeals() {
   const [leastProteinFoods, setLeastProteinFoods] = React.useState<
     NutrientMeal[] | []
   >([]);
+  // useEffect за дърпане на данните от нашето API. Първо се дърпат първите 50 за да се минимизира зареждането на страницата
   React.useEffect(() => {
     let isMounted = true;
 
@@ -130,16 +116,10 @@ export default function TopMeals() {
       isMounted = false;
     };
   }, []);
-
+  // State за първия дропдаун
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
+  // State за първия дропдаун
   const [dropdownVisibleLowProtein, setDropdownVisibleLowProtein] =
-    React.useState(true);
-  const [miniStatisticsVisibleLowProtein, setMiniStatisticsVisibleLowProtein] =
-    React.useState(true);
-  const [renderDropdownLowProtein, setRenderDropdownLowProtein] =
     React.useState(true);
 
   const handleDropdownToggle = () => {
@@ -150,24 +130,6 @@ export default function TopMeals() {
     setDropdownVisibleLowProtein(!dropdownVisibleLowProtein);
   };
 
-  const slideAnimationDropLowProtein = useSpring({
-    opacity: miniStatisticsVisibleLowProtein ? 1 : 0,
-    transform: `translateY(${dropdownVisibleLowProtein ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisibleLowProtein ? 170 : 200,
-      friction: dropdownVisibleLowProtein ? 12 : 20
-    }
-  });
-
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
   const slideAnimation = useSpring({
     transform: `translateY(${
       dropdownVisible || dropdownVisibleLowProtein ? -50 : -20
@@ -177,44 +139,6 @@ export default function TopMeals() {
       friction: dropdownVisible ? 12 : 20
     }
   });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChangeLowProtein = async () => {
-      if (dropdownVisibleLowProtein) {
-        setMiniStatisticsVisibleLowProtein(true);
-        setRenderDropdownLowProtein(true);
-      } else {
-        setMiniStatisticsVisibleLowProtein(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdownLowProtein(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChangeLowProtein();
-  }, [dropdownVisibleLowProtein]);
 
   const mealsToShow = allMeals.slice(
     dropdownState.currentPage * ITEMS_PER_PAGE,

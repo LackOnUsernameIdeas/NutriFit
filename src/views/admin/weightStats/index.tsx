@@ -6,7 +6,7 @@ import {
   Text,
   SimpleGrid,
   useColorModeValue,
-  useMediaQuery,
+  useMediaQuery
 } from "@chakra-ui/react";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
@@ -15,7 +15,6 @@ import Card from "components/card/Card";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import Loading from "views/admin/weightStats/components/Loading";
-// Types
 import {
   BMIInfo,
   BodyMass,
@@ -97,6 +96,14 @@ export default function WeightStats() {
     }
   ]);
 
+  const [perfectWeight, setPerfectWeight] = useState<number>(0);
+  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
+    useState<WeightDifference>({
+      difference: 0,
+      isUnderOrAbove: ""
+    });
+
+  // Данни за диаграмите
   userDataForCharts.sort((a, b) =>
     a.date < b.date ? -1 : a.date > b.date ? 1 : 0
   );
@@ -121,21 +128,11 @@ export default function WeightStats() {
   const isUnderOrAboveData = userDataForCharts.map(
     (entry) => entry.isUnderOrAbove
   );
-
-  const [perfectWeight, setPerfectWeight] = useState<number>(0);
-  const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
-    useState<WeightDifference>({
-      difference: 0,
-      isUnderOrAbove: ""
-    });
-
   const lineChartForDifferenceFromPerfectWeightData =
     differenceFromPerfectWeightData.map((difference, index) => {
-      // If the user is above perfect weight, keep the difference as is
       if (isUnderOrAboveData[index] === "above") {
         return difference;
       } else {
-        // If the user is below perfect weight, make the difference negative
         return -difference;
       }
     });
@@ -144,13 +141,13 @@ export default function WeightStats() {
     userDataLastSavedDateBeforeCurrentDate,
     setUserDataLastSavedDateBeforeCurrentDate
   ] = useState("");
-
+  // State-ове за дропдауна
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
+  // Анимация за компонентите под дропдауна при негово движение
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? -30 : 20}px)`,
     config: {
@@ -174,6 +171,7 @@ export default function WeightStats() {
     return unsubscribe;
   }, []);
 
+  // useEffect за дърпане на данните на потребителя от нашето API.
   React.useEffect(() => {
     if (currentUser) {
       const fetchData = async () => {
@@ -188,8 +186,8 @@ export default function WeightStats() {
                 "Content-Type": "application/json"
               },
               body: JSON.stringify({
-                uid: uid, // Assuming user is defined somewhere in your component
-                date: date // Get today's date in YYYY-MM-DD format
+                uid: uid,
+                date: date
               })
             }
           );
@@ -200,7 +198,6 @@ export default function WeightStats() {
 
           const weightStatsData = await response.json();
 
-          // Set the states accordingly
           setPerfectWeight(weightStatsData.perfectWeight || 0);
           setDifferenceFromPerfectWeight(
             {
@@ -259,7 +256,7 @@ export default function WeightStats() {
     differenceFromPerfectWeight,
     userDataForCharts
   ]);
-
+  // Функции, които калкулират изменението на стойностите на потребителя
   const calculateChange = (sortedData: any[], property: string) => {
     const latestValue = sortedData[0][property];
     const previousValue = sortedData[1][property];
@@ -269,10 +266,7 @@ export default function WeightStats() {
   };
 
   const calculateBMIChange = () => {
-    // Create an object to store unique entries based on date
     const uniqueEntries: { [date: string]: any } = {};
-
-    // Iterate over userDataForCharts to find the unique entries
     userDataForCharts.forEach((entry) => {
       if (entry.bmi !== 0 && !uniqueEntries[entry.date]) {
         uniqueEntries[entry.date] = {
@@ -285,7 +279,6 @@ export default function WeightStats() {
       }
     });
 
-    // Create an array of entries sorted by date
     const sortedData = Object.entries(uniqueEntries)
       .sort((a, b) => parseISO(b[0]).getTime() - parseISO(a[0]).getTime())
       .map(([date, values]) => ({ date, ...values }));
@@ -309,7 +302,7 @@ export default function WeightStats() {
       );
       setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
 
-      console.log("the last two entries for BMI222222: ", sortedData);
+      console.log("Сортирано: ", sortedData);
       console.log(
         "all changes: ",
         bmiChange,

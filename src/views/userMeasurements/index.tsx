@@ -88,17 +88,6 @@ const UserMeasurements = () => {
     [key: string]: string;
   }>({});
   // States за запазване на извличените данни
-  const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
-    bmi: null,
-    health: "",
-    healthy_bmi_range: "18.5 - 25"
-  });
-  const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
-    useState<BodyMass>({
-      "Body Fat (U.S. Navy Method)": 0,
-      "Body Fat Mass": 0,
-      "Lean Body Mass": 0
-    });
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
   const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
     useState<WeightDifference>({
@@ -140,7 +129,6 @@ const UserMeasurements = () => {
       }
     });
 
-    // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
   }, []);
 
