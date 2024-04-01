@@ -1,13 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Box,
-  Flex,
-  Icon,
-  SimpleGrid,
-  useColorMode,
-  useColorModeValue,
-  Text
-} from "@chakra-ui/react";
+import { Box, Flex, Icon, useColorModeValue, Text } from "@chakra-ui/react";
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
@@ -16,21 +8,25 @@ import { IconType } from "react-icons/lib";
 interface DropdownProps {
   title: string;
   dropdownVisible: boolean;
-  handleDropdownToggle: () => void;
-  icon?: IconType; // Make icon prop optional
+  handleDropdownToggle: () => void; // Функция за контролиране на state-та на дропдауна
+  icon?: IconType;
   children: React.ReactNode;
   isForMale?: boolean;
   isForFemale?: boolean;
+  titleBg?: string;
+  titleBorderColour?: string;
 }
 
 export default function Dropdown({
   title,
   dropdownVisible,
   handleDropdownToggle,
-  icon, // Destructure icon from props
+  icon,
   children,
   isForMale,
-  isForFemale
+  isForFemale,
+  titleBg,
+  titleBorderColour
 }: DropdownProps) {
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
@@ -42,6 +38,7 @@ export default function Dropdown({
     React.useState(false);
   const [renderDropdown, setRenderDropdown] = React.useState(false);
 
+  // useEffect за анимациите и рендъра на дропдауна.
   useEffect(() => {
     const handleDropdownVisibilityChange = async () => {
       if (dropdownVisible) {
@@ -61,6 +58,7 @@ export default function Dropdown({
     handleDropdownVisibilityChange();
   }, [dropdownVisible]);
 
+  // Custom анимация за сваляне/качване на children-ите на дропдауна.
   const slideAnimationDrop = useSpring({
     opacity: miniStatisticsVisible ? 1 : 0,
     transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
@@ -79,7 +77,15 @@ export default function Dropdown({
         cursor="pointer"
         zIndex="1"
         position="relative"
-        bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
+        bg={
+          titleBg
+            ? titleBg
+            : dropdownVisible
+            ? dropdownActiveBoxBg
+            : dropdownBoxBg
+        }
+        borderColor={titleBorderColour}
+        borderWidth={titleBorderColour && "5px"}
       >
         <Flex justify="space-between" alignItems="center">
           <Box>
@@ -121,7 +127,10 @@ export default function Dropdown({
       </Card>
       {renderDropdown && (
         <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
-          <Card bg={boxBg} minH={{ base: "700px", md: "300px", xl: "180px" }}>
+          <Card
+            bg={titleBorderColour ? "navy.800" : boxBg}
+            minH={{ base: "700px", md: "300px", xl: "180px" }}
+          >
             {children}
           </Card>
         </animated.div>

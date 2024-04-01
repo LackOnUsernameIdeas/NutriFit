@@ -8,6 +8,7 @@ import { GiWeightScale } from "react-icons/gi";
 import { RiWaterPercentFill } from "react-icons/ri";
 import { MdOutlineMale, MdOutlineFemale } from "react-icons/md";
 import { GenderAverageStats } from "../../../../variables/weightStats";
+import Loading from "views/admin/weightStats/components/Loading";
 
 interface GenderedDropdownsProps {
   averageStats: GenderAverageStats;
@@ -36,7 +37,7 @@ export default function GenderedDropdowns({
   if (loading) {
     return (
       <Center>
-        <CircularProgress isIndeterminate color="green.300" />
+        <Loading />
       </Center>
     );
   }

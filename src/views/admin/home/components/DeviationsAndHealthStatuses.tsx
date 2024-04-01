@@ -22,6 +22,7 @@ import Gemini from "../../../../assets/img/layout/gemini.png";
 
 // Types
 import { Deviations } from "../../../../variables/weightStats";
+import Loading from "views/admin/weightStats/components/Loading";
 
 interface DeviationsProps {
   allUsersHealthStatesLabels: string[];
@@ -61,7 +62,7 @@ export default function DeviationsAndHealthStatuses({
   if (deviationsLoading || healthLoading) {
     return (
       <Center>
-        <CircularProgress isIndeterminate color="green.300" />
+        <Loading />
       </Center>
     );
   }

@@ -3,51 +3,20 @@ import React, { useState } from "react";
 // Chakra UI components
 import {
   Box,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogCloseButton,
   Flex,
-  Icon,
   Text,
   Button,
   SimpleGrid,
-  MenuButton,
-  MenuList,
-  useDisclosure,
-  useColorMode,
   useColorModeValue,
-  Menu,
-  Heading,
-  Stack,
-  StackDivider,
-  Alert,
-  AlertIcon,
   useMediaQuery
 } from "@chakra-ui/react";
-
-// React Icons
-import { MdOutlineInfo } from "react-icons/md";
-// Custom components
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
-import CardBody from "components/card/Card";
-import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
-import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import DietTable from "views/admin/dataTables/ColumnsTable";
+import DietTable from "../../../components/table/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "views/admin/weightStats/components/Loading";
-import MiniStatistics from "components/card/MiniStatistics";
-import { FaFireAlt } from "react-icons/fa";
-import IconBox from "components/icons/IconBox";
 import MealPlannerForm from "./components/MealPlannerForm";
-// Types
 import {
   UserData,
   UserIntakes,
@@ -55,38 +24,23 @@ import {
   DailyCaloryRequirements,
   WeightDifference
 } from "../../../variables/weightStats";
-
 import { getAuth } from "firebase/auth";
-
 import { savePreferences } from "../../../database/setFunctions";
-
-import { LineChart } from "components/charts/LineCharts";
 import { parseISO } from "date-fns";
 import UserInfoCard from "components/infoCard/userInfoCard";
 import AlertBox from "components/alert/alert";
 import InfoBox from "components/infoBox/infoBox";
+import NutrientsDropdown from "./components/NutrientsDropdown";
+import AlertDropdown from "./components/AlertDropdown";
 
 // Главен компонент
 export default function MealPlanner() {
   // Color values
-  const { colorMode } = useColorMode();
-  const backgroundImage =
-    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
+  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
-  const chartsColor = useColorModeValue("brand.500", "white");
-  const fontWeight = useColorModeValue("550", "100");
-  const tipFontWeight = useColorModeValue("500", "100");
-  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
-  const TipBoxBg = useColorModeValue("#a7ddfc", "#395182");
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const textColor = useColorModeValue("black", "white");
-  const infoBoxIconColor = useColorModeValue("black", "white");
-  const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
-  const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
-  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const gradientHover = useColorModeValue(
     { bg: "linear-gradient(90deg, #4f3efb 0%, #8477fa 50%)" },
     { bg: "linear-gradient(90deg, #7e6afc 0%, #4f3efb 100%)" }
@@ -95,26 +49,6 @@ export default function MealPlanner() {
     { bg: "secondaryGray.400" },
     { bg: "whiteAlpha.100" }
   );
-  const bgHoverInfoBox = useColorModeValue(
-    { bg: "#C6C7D4" },
-    { bg: "whiteAlpha.100" }
-  );
-  const bgFocus = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.100" }
-  );
-  // State за разкриване на информация за менюто с информация
-  const {
-    isOpen: isOpenLevels,
-    onOpen: onOpenLevels,
-    onClose: onCloseLevels
-  } = useDisclosure();
-
-  const {
-    isOpen: isOpenDiet,
-    onOpen: onOpenDiet,
-    onClose: onCloseDiet
-  } = useDisclosure();
 
   const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<
     DailyCaloryRequirements[]
@@ -161,12 +95,6 @@ export default function MealPlanner() {
   const [activityLevel, setActivityLevel] = useState<number>(null);
   const [isDietTableDataReady, setIsDietTableDataReady] = useState(false);
   // State за зареждане на страницата
-  const [isLoadingForCalories, setIsLoadingForCalories] = useState(false);
-  const [isLoadingForMacroNutrients, setIsLoadingForMacroNutrients] =
-    useState(false);
-
-  // State-ове за въведени потребителски данни
-  const [user, setUser] = useState(null);
 
   const [userData, setUserData] = useState<UserData>({
     gender: "male" || "female",
@@ -240,30 +168,6 @@ export default function MealPlanner() {
   const [health, setHealth] = useState("");
   const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
 
-  const [showITM, setShowITM] = useState(false);
-
-  // Function to toggle the display of raw data
-  const toggleITM = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent the default behavior of the click event
-    setShowITM(!showITM);
-  };
-  const [showStatus, setShowStatus] = useState(false);
-
-  const cancelRef = React.useRef();
-  const cancelRefStats = React.useRef();
-
-  // Function to toggle the display of raw data
-  const toggleStatus = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent the default behavior of the click event
-    setShowStatus(!showStatus);
-  };
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenStats,
-    onOpen: onOpenStats,
-    onClose: onCloseStats
-  } = useDisclosure();
-
   const [
     isGenerateStatsForCaloriesCalled,
     setIsGenerateStatsForCaloriesCalled
@@ -275,16 +179,11 @@ export default function MealPlanner() {
   ] = useState<boolean>(false);
   // Функция за генериране на статистики
   function generateStatsForCalories() {
-    setIsLoadingForCalories(true);
-    setTimeout(() => {
-      setIsLoadingForCalories(false);
-    }, 1000);
+    setTimeout(() => {}, 1000);
   }
 
   function generateStatsForMacroNutrients() {
-    setIsLoadingForMacroNutrients(true);
     setTimeout(() => {
-      setIsLoadingForMacroNutrients(false);
       setIsDietTableDataReady(true); // Set the state when data is ready
     }, 1000);
   }
@@ -342,47 +241,6 @@ export default function MealPlanner() {
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
   };
 
-  const mapGoalToDisplayValue = (goal: string) => {
-    switch (goal) {
-      case "maintain":
-        return "Запазване на Тегло";
-        break;
-      case "mildlose":
-        return "Леко Сваляне на Тегло";
-        break;
-      case "weightlose":
-        return "Сваляне на Тегло";
-        break;
-      case "extremelose":
-        return "Екстремно Сваляне на Тегло";
-        break;
-      case "mildgain":
-        return "Леко Качване на Тегло";
-        break;
-      case "weightgain":
-        return "Качване на Тегло";
-        break;
-      case "extremegain":
-        return "Екстремно Качване на Тегло";
-        break;
-      default:
-        return goal; // Return the original value if not found in the mapping
-    }
-  };
-
-  const mapGenderToDisplayValue = (gender: string) => {
-    switch (gender) {
-      case "male":
-        return "Мъж";
-        break;
-      case "female":
-        return "Жена";
-        break;
-      default:
-        return gender; // Return the original value if not found in the mapping
-    }
-  };
-
   const lineChartLabels = allUsersPreferences.map((entry) => entry.date);
   const lineChartForCalories = allUsersPreferences.map(
     (entry) => entry.Calories
@@ -394,13 +252,7 @@ export default function MealPlanner() {
   );
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
   const [dropdownVisibleTip, setDropdownVisibleTip] = React.useState(false);
-  const [miniStatisticsVisibleTip, setMiniStatisticsVisibleTip] =
-    React.useState(false);
-  const [renderDropdownTip, setRenderDropdownTip] = React.useState(false);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
@@ -410,29 +262,11 @@ export default function MealPlanner() {
     setDropdownVisibleTip(!dropdownVisibleTip);
   };
 
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? -50 : 0}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
-    }
-  });
-
-  const slideAnimationDropTip = useSpring({
-    opacity: miniStatisticsVisibleTip ? 1 : 0,
-    transform: `translateY(${dropdownVisibleTip ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisibleTip ? 170 : 200,
-      friction: dropdownVisibleTip ? 12 : 20
     }
   });
 
@@ -443,167 +277,6 @@ export default function MealPlanner() {
       friction: dropdownVisibleTip ? 12 : 20
     }
   });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
-
-  React.useEffect(() => {
-    const handleRestSlideTipPositionChange = async () => {
-      if (dropdownVisibleTip) {
-        setMiniStatisticsVisibleTip(true);
-        setRenderDropdownTip(true);
-      } else {
-        setMiniStatisticsVisibleTip(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdownTip(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlideTipPositionChange();
-  }, [dropdownVisibleTip]);
-
-  // React.useEffect(() => {
-  //   const auth = getAuth();
-  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
-  //     setUser(user);
-
-  //     if (user) {
-  //       try {
-  //         const userId = user.uid;
-  //         const additionalDataRef = doc(db, "additionalData2", userId);
-
-  //         // Subscribe to real-time updates using onSnapshot
-  //         const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-  //           if (doc.exists()) {
-  //             const additionalData = doc.data();
-  //             const timestampKey = new Date().toISOString().slice(0, 10);
-  //             const userDataTimestamp = additionalData[timestampKey];
-
-  //             const timestampedObjects = Object.entries(additionalData)
-  //               .filter(
-  //                 ([key, value]) =>
-  //                   typeof value === "object" &&
-  //                   value.hasOwnProperty("Preferences")
-  //               )
-  //               .map(([key, value]) => ({ date: key, ...value.Preferences }));
-
-  //             const orderedTimestampObjects = [...timestampedObjects].sort(
-  //               (a, b) => {
-  //                 const keyA = a.key;
-  //                 const keyB = b.key;
-  //                 return new Date(keyB).getTime() - new Date(keyA).getTime();
-  //               }
-  //             );
-  //             const orderedAllTimestampObjects = [];
-
-  //             for (const key in additionalData) {
-  //               if (
-  //                 key !== "gender" &&
-  //                 key !== "goal" &&
-  //                 key !== "macroNutrientsData" &&
-  //                 key !== "dailyCaloryRequirements" &&
-  //                 typeof additionalData[key] === "object"
-  //               ) {
-  //                 const dateData = additionalData[key];
-  //                 orderedAllTimestampObjects.push({
-  //                   date: key,
-  //                   height: dateData?.height,
-  //                   weight: dateData?.weight,
-  //                   bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
-  //                   bodyFat: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.bodyFat
-  //                     : 0,
-  //                   bodyFatMass: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.bodyFatMass
-  //                     : 0,
-  //                   leanBodyMass: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.leanBodyMass
-  //                     : 0,
-  //                   differenceFromPerfectWeight: dateData?.PerfectWeightData
-  //                     ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
-  //                         ?.difference
-  //                     : 0
-  //                 });
-  //               }
-  //             }
-  //             setAllOrderedObjects(orderedAllTimestampObjects);
-  //             setAllUsersPreferences(orderedTimestampObjects);
-
-  //             if (userDataTimestamp?.age) {
-  //               setUserData({
-  //                 gender: additionalData?.gender,
-  //                 goal: additionalData?.goal,
-  //                 age: userDataTimestamp?.age,
-  //                 height: userDataTimestamp?.height,
-  //                 waist: userDataTimestamp?.waist,
-  //                 neck: userDataTimestamp?.neck,
-  //                 hip: userDataTimestamp?.hip,
-  //                 weight: userDataTimestamp?.weight
-  //               } as UserData);
-  //               setPerfectWeight(
-  //                 userDataTimestamp?.PerfectWeightData
-  //                   ? userDataTimestamp?.PerfectWeightData?.perfectWeight
-  //                   : 0
-  //               );
-  //               setDifferenceFromPerfectWeight(
-  //                 userDataTimestamp?.PerfectWeightData
-  //                   ?.differenceFromPerfectWeight
-  //                   ? userDataTimestamp.PerfectWeightData
-  //                       .differenceFromPerfectWeight
-  //                   : {
-  //                       difference: 0,
-  //                       isUnderOrAbove: ""
-  //                     }
-  //               );
-  //               setHealth(
-  //                 userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
-  //               );
-  //               setDailyCaloryRequirements(
-  //                 additionalData?.dailyCaloryRequirements
-  //                   ? additionalData?.dailyCaloryRequirements
-  //                   : []
-  //               );
-  //               const macroNutrientsData = Array.isArray(
-  //                 additionalData?.macroNutrientsData
-  //               )
-  //                 ? additionalData?.macroNutrientsData
-  //                 : [];
-
-  //               setMacroNutrients(macroNutrientsData);
-  //             }
-  //           }
-  //         });
-
-  //         // Cleanup the subscription when the component unmounts
-  //         return () => {
-  //           unsubscribeData();
-  //         };
-  //       } catch (error) {
-  //         console.error("Error fetching additional user data:", error);
-  //       }
-  //     }
-  //   });
-  // }, []);
 
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -693,8 +366,6 @@ export default function MealPlanner() {
       fetchData();
     }
   }, [currentUser]);
-
-  // console.log("DIFFERENCE!!!! ", differenceFromPerfectWeight);
 
   React.useEffect(() => {
     // Check if numeric values in userData are different from 0 and not null
@@ -787,491 +458,31 @@ export default function MealPlanner() {
           ) : (
             <Box transition="0.2s ease-in-out">
               <UserInfoCard userData={userData} />
-              <Alert
-                status="info"
-                borderRadius="20px"
-                fontWeight={tipFontWeight}
-                p="20px"
-                w="100%"
-                mb="20px"
-                bg={TipBoxBg}
-                onClick={handleDropdownTipToggle}
-                cursor="pointer"
-                zIndex="1"
-                position="relative"
-              >
-                <Flex
-                  justify="space-between"
-                  alignItems="center"
-                  direction="row"
-                  w="100%" // Ensure Flex container takes up the full width
-                >
-                  <Flex>
-                    <AlertIcon />
-                    <Text userSelect="none">
-                      <b>Съвет:</b> Натиснете тук, за да видите състоянието на
-                      вашето тегло, дали трябва да сваляте или да качвате тегло
-                      и тогава си съставете хранително меню за деня, за да
-                      прецените правилно каква цел да си поставите.
-                    </Text>
-                  </Flex>
-                  <Flex alignItems="center">
-                    <Icon
-                      as={dropdownVisibleTip ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Flex>
-              </Alert>
-              {renderDropdownTip && (
-                <animated.div
-                  style={{ ...slideAnimationDropTip, position: "relative" }}
-                >
-                  <Card
-                    bg={boxBg}
-                    minH={{ base: "800px", md: "300px", xl: "180px" }}
-                  >
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2, lg: 4 }}
-                      gap="20px"
-                      mt="40px"
-                    >
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightLiftingUp}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name="Перфектно тегло"
-                        value={perfectWeight + " kg"}
-                      />
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightLiftingUp}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name={`Вие сте ${
-                          differenceFromPerfectWeight.isUnderOrAbove == "above"
-                            ? "над"
-                            : "под"
-                        } нормата:`}
-                        value={
-                          Math.abs(
-                            differenceFromPerfectWeight.difference
-                          ).toFixed(2) + " kg"
-                        }
-                        growth={
-                          differenceFromPerfectWeightChange
-                            ? differenceFromPerfectWeightChange > 0
-                              ? `+${differenceFromPerfectWeightChange.toFixed(
-                                  2
-                                )}`
-                              : null
-                            : null
-                        }
-                        decrease={
-                          differenceFromPerfectWeightChange
-                            ? differenceFromPerfectWeightChange < 0
-                              ? `${differenceFromPerfectWeightChange.toFixed(
-                                  2
-                                )}`
-                              : null
-                            : null
-                        }
-                        subtext={`в сравнение с ${userDataLastSavedDate}`}
-                      />
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightScale}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name="Състояние"
-                        value={health}
-                      />
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightScale}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name="Препоръчително е да:"
-                        value={calculateRecommendedGoal() + " (кг.)"}
-                      />
-                    </SimpleGrid>
-                  </Card>
-                </animated.div>
-              )}
+              <AlertDropdown
+                userDataLastSavedDate={userDataLastSavedDate}
+                differenceFromPerfectWeight={differenceFromPerfectWeight}
+                differenceFromPerfectWeightChange={
+                  differenceFromPerfectWeightChange
+                }
+                perfectWeight={perfectWeight}
+                health={health}
+                dropdownVisible={dropdownVisibleTip}
+                handleDropdownToggle={handleDropdownTipToggle}
+                calculateRecommendedGoal={calculateRecommendedGoal}
+              />
               <animated.div
                 style={{ ...slideAnimationTip, position: "relative" }}
               >
                 {lineChartForCalories.length > 1 && (
-                  <Box>
-                    <Card
-                      onClick={handleDropdownToggle}
-                      cursor="pointer"
-                      zIndex="1"
-                      position="relative"
-                      bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-                    >
-                      <Flex justify="space-between" alignItems="center">
-                        <Text
-                          fontSize="2xl"
-                          style={
-                            dropdownVisible
-                              ? {
-                                  backgroundImage: gradient,
-                                  WebkitBackgroundClip: "text",
-                                  color: "transparent"
-                                }
-                              : {}
-                          }
-                          userSelect="none"
-                        >
-                          {dropdownVisible ? (
-                            <b>
-                              Статистики за ВАШИТЕ средно приети нутриенти и
-                              тяхното изменение:
-                            </b>
-                          ) : (
-                            "Статистики за ВАШИТЕ средно приети нутриенти и тяхното изменение:"
-                          )}
-                        </Text>
-                        <Icon
-                          as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                          boxSize={6}
-                          color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        />
-                      </Flex>
-                    </Card>
-                    {renderDropdown && (
-                      <animated.div
-                        style={{ ...slideAnimationDrop, position: "relative" }}
-                      >
-                        <Card
-                          bg={boxBg}
-                          minH={{ base: "800px", md: "300px", xl: "180px" }}
-                        >
-                          <SimpleGrid
-                            columns={{ base: 1, md: 2, lg: 4 }}
-                            gap="20px"
-                            mt="50px"
-                          >
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Калории"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForCalories.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Протеин"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForProtein.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Въглехидрати"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForCarbs.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Мазнини"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForFat.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                          </SimpleGrid>
-                          <SimpleGrid
-                            columns={{ base: 1, md: 2, xl: 2 }}
-                            gap="20px"
-                            mt="20px"
-                          >
-                            <Card
-                              fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                              p="20px" // Add padding to the card
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="column"
-                            >
-                              Вашите приети калории (kcal)
-                            </Card>
-                            {!isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px" // Add padding to the card
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашият приет протеин (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForCalories}
-                                lineChartLabelName="Изменение на калории(kcal)"
-                                textColor={chartsColor}
-                                color="rgba(67,24,255,1)"
-                              />
-                            </Card>
-                            {isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px" // Add padding to the card
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашият приет протеин (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForProtein}
-                                lineChartLabelName="Изменение на протеин(g)"
-                                textColor={chartsColor}
-                                color="rgba(67,24,255,1)"
-                              />
-                            </Card>
-                            <Card
-                              fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                              p="20px"
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="column"
-                            >
-                              Вашите приети мазнини (g.)
-                            </Card>
-                            {!isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашите приети въглехидрати (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForFat}
-                                lineChartLabelName="Изменение на мазнини(g)"
-                                textColor={chartsColor}
-                                color="#a194ff"
-                              />
-                            </Card>
-                            {isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашите приети въглехидрати (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForCarbs}
-                                lineChartLabelName="Изменение на въглехидрати(g)"
-                                textColor={chartsColor}
-                                color="#a194ff"
-                              />
-                            </Card>
-                          </SimpleGrid>
-                        </Card>
-                      </animated.div>
-                    )}
-                  </Box>
+                  <NutrientsDropdown
+                    lineChartForCalories={lineChartForCalories}
+                    lineChartForCarbs={lineChartForCarbs}
+                    lineChartForFat={lineChartForFat}
+                    lineChartForProtein={lineChartForProtein}
+                    lineChartLabels={lineChartLabels}
+                    handleDropdownToggle={handleDropdownToggle}
+                    dropdownVisible={dropdownVisible}
+                  />
                 )}
                 <animated.div
                   style={{ ...slideAnimation, position: "relative" }}

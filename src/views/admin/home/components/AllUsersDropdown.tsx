@@ -25,6 +25,7 @@ import {
 
 import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { LineAvaragesChart } from "components/charts/LineCharts";
+import Loading from "views/admin/weightStats/components/Loading";
 
 interface GenderedDropdownsProps {
   averageStats: GenderAverageStats;
@@ -78,7 +79,7 @@ export default function AllUsersDropdown({
   if (loading) {
     return (
       <Center>
-        <CircularProgress isIndeterminate color="green.300" />
+        <Loading />
       </Center>
     );
   }

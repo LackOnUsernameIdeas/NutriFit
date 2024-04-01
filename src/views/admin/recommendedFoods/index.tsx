@@ -23,6 +23,7 @@ import { ColumnChart } from "components/charts/BarCharts";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { SuggestedMeal } from "../../../variables/weightStats";
+import Dropdown from "components/dropdowns/Dropdown";
 interface DropdownState {
   currentPage: number;
 }
@@ -243,109 +244,68 @@ export default function TopMeals() {
             gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
           >
             <Card p="0px">
-              <Card
-                onClick={handleDropdownToggle}
-                cursor="pointer"
-                zIndex="1"
-                position="relative"
-                bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
-                borderColor={borderColor}
-                borderWidth="5px"
+              <Dropdown
+                title="Най-препоръчани храни от NutriFit!"
+                dropdownVisible={dropdownVisible}
+                handleDropdownToggle={handleDropdownToggle}
+                titleBg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
+                titleBorderColour={borderColor}
               >
-                <Flex
-                  align={{ sm: "flex-start", lg: "center" }}
-                  justify="space-between"
-                  w="100%"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="2xl"
-                    style={
-                      dropdownVisible
-                        ? {
-                            backgroundImage: gradient,
-                            WebkitBackgroundClip: "text",
-                            color: "transparent"
-                          }
-                        : {}
+                {mealsToShow.map((meal: SuggestedMeal, index: number) => {
+                  return (
+                    <LeaderboardItem
+                      key={index}
+                      name={meal.name}
+                      count={"Брой препоръчвания: " + meal.count.toString()}
+                      instructions={meal?.mealData.instructions}
+                      image={meal?.mealData.image}
+                      ingredients={meal?.mealData.ingredients}
+                      totals={meal?.mealData.totals}
+                      topMeals={allMeals}
+                      keepOpen={meal === allMeals[0] ? true : false}
+                    />
+                  );
+                })}
+                <Flex justify="center" mt="40px">
+                  <IconButton
+                    aria-label="Previous page"
+                    icon={<MdKeyboardArrowLeft />}
+                    onClick={() =>
+                      setDropdownState((prevState) => ({
+                        ...prevState,
+                        currentPage: Math.max(0, prevState.currentPage - 1)
+                      }))
                     }
-                    userSelect="none"
-                  >
-                    {dropdownVisible ? (
-                      <b>Най-препоръчани храни от NutriFit!</b>
-                    ) : (
-                      "Най-често препоръчани храни от NutriFit!"
-                    )}
+                    disabled={dropdownState.currentPage === 0}
+                    variant="unstyled"
+                    _hover={{ bg: "none" }}
+                    boxSize={8}
+                  />
+                  <Text mt="1px" mr="15px" fontSize="xl">
+                    <b>{`Страница ${
+                      dropdownState.currentPage + 1
+                    } от ${totalPages}`}</b>
                   </Text>
-                  <Icon
-                    as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                    boxSize={6}
-                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  <IconButton
+                    aria-label="Next page"
+                    icon={<MdKeyboardArrowRight />}
+                    onClick={() =>
+                      setDropdownState((prevState) => ({
+                        ...prevState,
+                        currentPage: Math.min(
+                          prevState.currentPage + 1,
+                          totalPages - 1
+                        )
+                      }))
+                    }
+                    ml="10px"
+                    disabled={dropdownState.currentPage === totalPages - 1}
+                    variant="unstyled"
+                    _hover={{ bg: "none" }}
+                    boxSize={8} // Adjust the box size to match the text size
                   />
                 </Flex>
-              </Card>
-              {renderDropdown && (
-                <animated.div
-                  style={{ ...slideAnimationDrop, position: "relative" }}
-                >
-                  <Box mt="50px">
-                    {mealsToShow.map((meal: SuggestedMeal, index: number) => {
-                      return (
-                        <LeaderboardItem
-                          key={index}
-                          name={meal.name}
-                          count={"Брой препоръчвания: " + meal.count.toString()}
-                          instructions={meal?.mealData.instructions}
-                          image={meal?.mealData.image}
-                          ingredients={meal?.mealData.ingredients}
-                          totals={meal?.mealData.totals}
-                          topMeals={allMeals}
-                          keepOpen={meal === allMeals[0] ? true : false}
-                        />
-                      );
-                    })}
-                    <Flex justify="center" mt="40px">
-                      <IconButton
-                        aria-label="Previous page"
-                        icon={<MdKeyboardArrowLeft />}
-                        onClick={() =>
-                          setDropdownState((prevState) => ({
-                            ...prevState,
-                            currentPage: Math.max(0, prevState.currentPage - 1)
-                          }))
-                        }
-                        disabled={dropdownState.currentPage === 0}
-                        variant="unstyled"
-                        _hover={{ bg: "none" }}
-                        boxSize={8}
-                      />
-                      <Text mt="1px" mr="15px" fontSize="xl">
-                        <b>{`Страница ${
-                          dropdownState.currentPage + 1
-                        } от ${totalPages}`}</b>
-                      </Text>
-                      <IconButton
-                        aria-label="Next page"
-                        icon={<MdKeyboardArrowRight />}
-                        onClick={() =>
-                          setDropdownState((prevState) => ({
-                            ...prevState,
-                            currentPage: Math.min(
-                              prevState.currentPage + 1,
-                              totalPages - 1
-                            )
-                          }))
-                        }
-                        ml="10px"
-                        disabled={dropdownState.currentPage === totalPages - 1}
-                        variant="unstyled"
-                        _hover={{ bg: "none" }}
-                        boxSize={8} // Adjust the box size to match the text size
-                      />
-                    </Flex>
-                  </Box>
-                </animated.div>
-              )}
+              </Dropdown>
             </Card>
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <SimpleGrid

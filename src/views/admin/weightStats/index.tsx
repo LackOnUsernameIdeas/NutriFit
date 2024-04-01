@@ -1,46 +1,17 @@
 import React, { useState } from "react";
-
-// Chakra UI components
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogCloseButton,
-  Alert,
-  AlertIcon,
   Box,
   Flex,
   Icon,
   Text,
   SimpleGrid,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  useDisclosure,
-  useColorMode,
   useColorModeValue,
   useMediaQuery,
-  Menu,
-  Image,
-  Heading,
-  Stack,
-  StackDivider
 } from "@chakra-ui/react";
-
-// React Icons
-import { MdOutlineInfo } from "react-icons/md";
 import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-// Custom components
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import { useSpring, animated } from "react-spring";
 import Card from "components/card/Card";
-import CardBody from "components/card/Card";
-import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
-import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import Loading from "views/admin/weightStats/components/Loading";
@@ -51,9 +22,6 @@ import {
   UserData,
   WeightDifference
 } from "../../../variables/weightStats";
-
-import { LineChart } from "components/charts/LineCharts";
-
 import { getAuth } from "firebase/auth";
 import { parseISO } from "date-fns";
 import UserInfoCard from "components/infoCard/userInfoCard";
@@ -61,69 +29,14 @@ import AlertBox from "components/alert/alert";
 import InfoBox from "components/infoBox/infoBox";
 import BMIDetailsSmallScreen from "./components/BMIDetailsSmallScreen";
 import BMIDetails from "./components/BMIDetails";
+import BodyChangeDropdown from "./components/BodyChangeDropdown";
 
 // Главен компонент
 export default function WeightStats() {
-  // Color values
-  const { colorMode } = useColorMode();
-  const backgroundImage =
-    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
-  const chartsColor = useColorModeValue("brand.500", "white");
-  const fontWeight = useColorModeValue("550", "100");
-  const tipFontWeight = useColorModeValue("500", "100");
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
-  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const textColor = useColorModeValue("black", "white");
-  const infoBoxIconColor = useColorModeValue("black", "white");
-  const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
-  const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
-  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const bgHover = useColorModeValue(
-    { bg: "secondaryGray.400" },
-    { bg: "whiteAlpha.50" }
-  );
-  const bgHoverInfoBox = useColorModeValue(
-    { bg: "#C6C7D4" },
-    { bg: "whiteAlpha.100" }
-  );
-  const bgFocus = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.100" }
-  );
-  const cancelRefPerfectWeightAlert = React.useRef();
-  const cancelRefStatus = React.useRef();
-  const cancelRefBMIAlert = React.useRef();
-  const {
-    isOpen: isOpenPerfectWeightAlert,
-    onOpen: onOpenPerfectWeightAlert,
-    onClose: onClosePerfectWeightAlert
-  } = useDisclosure();
-  const {
-    isOpen: isOpenStatus,
-    onOpen: onOpenStatus,
-    onClose: onCloseStatus
-  } = useDisclosure();
-
-  const {
-    isOpen: isOpenBMIAlert,
-    onOpen: onOpenBMIAlert,
-    onClose: onCloseBMIAlert
-  } = useDisclosure();
-
-  // State за разкриване на информация за менюто с информация
-  const { isOpen: isOpenPerfectWeight, onClose: onClosePerfectWeight } =
-    useDisclosure();
-
-  const {
-    isOpen: isOpenBMI,
-    onOpen: onOpenBMI,
-    onClose: onCloseBMI
-  } = useDisclosure();
-
   // States за запазване на извличените данни
   const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
     bmi: null,
@@ -153,9 +66,6 @@ export default function WeightStats() {
 
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(true);
-
-  // State-ове за потребителски данни
-  const [user, setUser] = useState(null);
 
   const [userData, setUserData] = useState<UserData>({
     gender: "male" || "female",
@@ -230,58 +140,24 @@ export default function WeightStats() {
       }
     });
 
-  const [isGenerateStatsCalled, setIsGenerateStatsCalled] =
-    useState<boolean>(false);
-
   const [
     userDataLastSavedDateBeforeCurrentDate,
     setUserDataLastSavedDateBeforeCurrentDate
   ] = useState("");
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -80}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
   const slideAnimation = useSpring({
-    transform: `translateY(${dropdownVisible ? -30 : 0}px)`,
+    transform: `translateY(${dropdownVisible ? -30 : 20}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
     }
   });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
 
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -451,17 +327,6 @@ export default function WeightStats() {
     calculateBMIChange();
   }, [userDataForCharts]);
 
-  React.useEffect(() => {
-    // Check if numeric values in userData are different from 0 and not null
-    const areValuesValid =
-      Object.values(userData).every((value) => value !== 0) &&
-      perfectWeight !== 0;
-
-    if (areValuesValid) {
-      setIsGenerateStatsCalled(true);
-    }
-  }, [userData]);
-
   // Масиви с преведени имена
 
   const bmiData: string[] = [
@@ -489,7 +354,7 @@ export default function WeightStats() {
             <Loading />
           </Box>
         ) : (
-          <Box transition="0.2s ease-in-out">
+          <Box transition="0.2s ease-in-out" mb="20px">
             <UserInfoCard userData={userData} />
             <Card
               p="20px"
@@ -782,278 +647,20 @@ export default function WeightStats() {
               </SimpleGrid>
             </Card>
             {lineChartForBMI.length > 1 && (
-              <Box>
-                <Card
-                  onClick={handleDropdownToggle}
-                  cursor="pointer"
-                  zIndex="1"
-                  position="relative"
-                  bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-                  transition="background-image 0.5s ease-in-out"
-                  mb={renderDropdown ? "0px" : "20px"}
-                >
-                  <Flex justify="space-between" alignItems="center">
-                    <Text
-                      fontSize="2xl"
-                      style={
-                        dropdownVisible
-                          ? {
-                              backgroundImage: gradient,
-                              WebkitBackgroundClip: "text",
-                              color: "transparent"
-                            }
-                          : {}
-                      }
-                      userSelect="none"
-                    >
-                      {dropdownVisible ? (
-                        <b>Статистики за вашето телесно изменение:</b>
-                      ) : (
-                        "Статистики за вашето телесно изменение:"
-                      )}
-                    </Text>
-                    <Icon
-                      as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Card>
-                {renderDropdown && (
-                  <animated.div
-                    style={{ ...slideAnimationDrop, position: "relative" }}
-                  >
-                    <Card
-                      bg={boxBg}
-                      minH={{ base: "800px", md: "300px", xl: "180px" }}
-                    >
-                      <SimpleGrid
-                        columns={{ base: 1, md: 2, xl: 2 }}
-                        gap="20px"
-                        mt="50px"
-                      >
-                        <Card
-                          fontSize="3xl"
-                          maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                          p="20px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          flexDirection="column"
-                        >
-                          Вашето тегло (кг.)
-                        </Card>
-                        {!isSmallScreen && (
-                          <Card
-                            fontSize="3xl"
-                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                          >
-                            Вашият Индекс на Телесна Маса
-                          </Card>
-                        )}
-                        <Card
-                          alignItems="center"
-                          flexDirection="column"
-                          h="100%"
-                          w="100%"
-                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          maxH={{ sm: "100px", md: "300px", lg: "auto" }}
-                        >
-                          <LineChart
-                            lineChartLabels={lineChartLabels}
-                            lineChartData={lineChartForKilogramsData}
-                            lineChartLabelName="Изменение на тегло(кг)"
-                            textColor={chartsColor}
-                            color="rgba(67,24,255,1)"
-                          />
-                        </Card>
-                        {isSmallScreen && (
-                          <Card
-                            fontSize="3xl"
-                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                          >
-                            Вашият Индекс на Телесна Маса
-                          </Card>
-                        )}
-                        <Card
-                          alignItems="center"
-                          flexDirection="column"
-                          h="100%"
-                          w="100%"
-                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                        >
-                          <LineChart
-                            lineChartLabels={lineChartLabels}
-                            lineChartData={lineChartForBMI}
-                            lineChartLabelName="Изменение на ИТМ(Индекс на Телесна Маса)"
-                            textColor={chartsColor}
-                            color="rgba(67,24,255,1)"
-                          />
-                        </Card>
-                        <Card
-                          fontSize="3xl"
-                          maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                          p="20px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          flexDirection="column"
-                        >
-                          Вашият % телесни мазнини
-                        </Card>
-                        {!isSmallScreen && (
-                          <Card
-                            fontSize="3xl"
-                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                          >
-                            Вашата мастна телесна маса (кг.)
-                          </Card>
-                        )}
-                        <Card
-                          alignItems="center"
-                          flexDirection="column"
-                          h="100%"
-                          w="100%"
-                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                        >
-                          <LineChart
-                            lineChartLabels={lineChartLabels}
-                            lineChartData={lineChartForBodyFatData}
-                            lineChartLabelName="Изменение на % телесни мазнини"
-                            textColor={chartsColor}
-                            color="#7c6bff"
-                          />
-                        </Card>
-                        {isSmallScreen && (
-                          <Card
-                            fontSize="3xl"
-                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                          >
-                            Вашата мастна телесна маса (кг.)
-                          </Card>
-                        )}
-                        <Card
-                          alignItems="center"
-                          flexDirection="column"
-                          h="100%"
-                          w="100%"
-                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                        >
-                          <LineChart
-                            lineChartLabels={lineChartLabels}
-                            lineChartData={lineChartForBodyFatMassData}
-                            lineChartLabelName="Изменение на мастна телесна маса"
-                            textColor={chartsColor}
-                            color="#7c6bff"
-                          />
-                        </Card>
-                        <Card
-                          fontSize="3xl"
-                          maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                          p="20px"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          flexDirection="column"
-                        >
-                          Вашата чиста телесна маса (кг.)
-                        </Card>
-                        {!isSmallScreen && (
-                          <Card
-                            fontSize="3xl"
-                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                            fontWeight="500"
-                          >
-                            Теглото ви под/над нормата (кг.)
-                          </Card>
-                        )}
-                        <Card
-                          alignItems="center"
-                          flexDirection="column"
-                          h="100%"
-                          w="100%"
-                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                        >
-                          <LineChart
-                            lineChartLabels={lineChartLabels}
-                            lineChartData={lineChartForLeanBodyMassData}
-                            lineChartLabelName="Изменение на чиста телесна маса"
-                            textColor={chartsColor}
-                            color="#a194ff"
-                          />
-                        </Card>
-                        {isSmallScreen && (
-                          <Card
-                            fontSize="3xl"
-                            maxH={{ sm: "100px", md: "150px", lg: "60px" }}
-                            p="20px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                            fontWeight="500"
-                          >
-                            Теглото ви под/над нормата (кг.)
-                          </Card>
-                        )}
-                        <Card
-                          alignItems="center"
-                          flexDirection="column"
-                          h="100%"
-                          w="100%"
-                          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-                          minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                          maxH={{ sm: "150px", md: "300px", lg: "auto" }}
-                        >
-                          <LineChart
-                            lineChartLabels={lineChartLabels}
-                            lineChartData={
-                              lineChartForDifferenceFromPerfectWeightData
-                            }
-                            lineChartLabelName={`Изменение в килограмите ви под/над нормата`}
-                            textColor={chartsColor}
-                            color="#a194ff"
-                          />
-                        </Card>
-                      </SimpleGrid>
-                    </Card>
-                  </animated.div>
-                )}
-              </Box>
+              //Статистики за вашето телесно изменение:
+              <BodyChangeDropdown
+                lineChartForBMI={lineChartForBMI}
+                lineChartForBodyFatData={lineChartForBodyFatData}
+                lineChartForBodyFatMassData={lineChartForBodyFatMassData}
+                lineChartForDifferenceFromPerfectWeightData={
+                  lineChartForDifferenceFromPerfectWeightData
+                }
+                lineChartForKilogramsData={lineChartForKilogramsData}
+                lineChartForLeanBodyMassData={lineChartForLeanBodyMassData}
+                lineChartLabels={lineChartLabels}
+                handleDropdownToggle={handleDropdownToggle}
+                dropdownVisible={dropdownVisible}
+              />
             )}
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <AlertBox
