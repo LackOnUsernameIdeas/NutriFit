@@ -455,6 +455,7 @@ export default function MealPlanner() {
           ) : (
             <Box transition="0.2s ease-in-out">
               <UserInfoCard userData={userData} />
+
               <AlertDropdown
                 userDataLastSavedDate={userDataLastSavedDate}
                 differenceFromPerfectWeight={differenceFromPerfectWeight}
@@ -467,6 +468,7 @@ export default function MealPlanner() {
                 handleDropdownToggle={handleDropdownTipToggle}
                 calculateRecommendedGoal={calculateRecommendedGoal}
               />
+
               <animated.div
                 style={{ ...slideAnimationTip, position: "relative" }}
               >
