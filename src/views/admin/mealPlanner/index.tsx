@@ -303,7 +303,8 @@ export default function MealPlanner() {
             {
               method: "POST",
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
               },
               body: JSON.stringify({
                 uid: uid,

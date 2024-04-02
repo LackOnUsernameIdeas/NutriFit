@@ -148,7 +148,11 @@ export default function TopMeals() {
     const fetchData = async () => {
       try {
         console.log("tryyy");
-        const response = await fetch("https://nutri-api.noit.eu/orderedMeals");
+        const response = await fetch("https://nutri-api.noit.eu/orderedMeals", {
+          headers: {
+            "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
+          }
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -166,7 +170,6 @@ export default function TopMeals() {
     };
 
     fetchData();
-
   }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
