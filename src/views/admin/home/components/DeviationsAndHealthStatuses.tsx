@@ -59,590 +59,616 @@ export default function DeviationsAndHealthStatuses({
     }
   }, [allUsersHealthStatesLabels, allUsersHealthStatesData]);
 
-  if (deviationsLoading || healthLoading) {
-    return (
-      <Center>
-        <Loading />
-      </Center>
-    );
-  }
-
   return (
-    <SimpleGrid
-      columns={{ base: 1, md: 1, lg: 1, "2xl": 1 }}
-      gap="20px"
-      mb="20px"
-    >
-      <Card borderColor={borderColor} borderWidth="3px">
-        <Text
-          fontSize="3xl"
-          alignContent="center"
-          textAlign="center"
-          style={{
-            backgroundImage: gradient,
-            WebkitBackgroundClip: "text",
-            color: "transparent"
-          }}
+    <>
+      {deviationsLoading || healthLoading ? (
+        <Center>
+          <Loading />
+        </Center>
+      ) : (
+        <SimpleGrid
+          columns={{ base: 1, md: 1, lg: 1, "2xl": 1 }}
+          gap="20px"
+          mb="20px"
         >
-          <b>Съпоставка на отклоненията на OpenAI и Gemini</b>
-        </Text>
-      </Card>
-      <Box>
-        <Card
-          alignItems="center"
-          flexDirection="column"
-          h="100%"
-          w="100%"
-          minH={{ sm: "400px", md: "300px", lg: "auto" }}
-          minW={{ sm: "200px", md: "200px", lg: "auto" }}
-          borderColor={borderColor}
-          borderWidth="3px"
-        >
-          <SimpleGrid columns={{ base: 1, md: 3, lg: 3 }} gap="80px" mb="10px">
-            {/* ChatGPT */}
-            <Box textAlign="center">
-              <Image
-                src={ChatGPT}
-                alt="ChatGPT"
-                boxSize="100px"
-                w="200px"
-                ml="24.5%"
-              />
-              <Text mt="4" fontSize="2xl" textColor="#00A67E" fontWeight="500">
-                {deviations &&
-                  deviations.openAI.averageDeviationPercentage?.overallAverage}
-              </Text>
-            </Box>
-
-            {/* vs */}
-            <Text textAlign="center" fontSize="5xl" mt="50px">
-              vs
+          <Card borderColor={borderColor} borderWidth="3px">
+            <Text
+              fontSize="3xl"
+              alignContent="center"
+              textAlign="center"
+              style={{
+                backgroundImage: gradient,
+                WebkitBackgroundClip: "text",
+                color: "transparent"
+              }}
+            >
+              <b>Съпоставка на отклоненията на OpenAI и Gemini</b>
             </Text>
+          </Card>
+          <Box>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "400px", md: "300px", lg: "auto" }}
+              minW={{ sm: "200px", md: "200px", lg: "auto" }}
+              borderColor={borderColor}
+              borderWidth="3px"
+            >
+              <SimpleGrid
+                columns={{ base: 1, md: 3, lg: 3 }}
+                gap="80px"
+                mb="10px"
+              >
+                {/* ChatGPT */}
+                <Box textAlign="center">
+                  <Image
+                    src={ChatGPT}
+                    alt="ChatGPT"
+                    boxSize="100px"
+                    w="200px"
+                    ml="24.5%"
+                  />
+                  <Text
+                    mt="4"
+                    fontSize="2xl"
+                    textColor="#00A67E"
+                    fontWeight="500"
+                  >
+                    {deviations &&
+                      deviations.openAI.averageDeviationPercentage
+                        ?.overallAverage}
+                  </Text>
+                </Box>
 
-            {/* gemini */}
-            <Box textAlign="center">
-              <Image src={Gemini} alt="gemini" boxSize="100px" w="200px" />
-              <Text mt="4" fontSize="2xl" textColor="#4992e6" fontWeight="500">
-                {deviations &&
-                  deviations.gemini.averageDeviationPercentage?.overallAverage}
-              </Text>
-            </Box>
-          </SimpleGrid>
+                {/* vs */}
+                <Text textAlign="center" fontSize="5xl" mt="50px">
+                  vs
+                </Text>
 
-          {/* Deviation stats */}
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 2 }} gap="80px" mb="10px">
-            {/* ChatGPT Deviation Stats */}
-            <Box>
-              <Text
-                fontSize="4xl"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <b>Средно отклонение на:</b>
-              </Text>
+                {/* gemini */}
+                <Box textAlign="center">
+                  <Image src={Gemini} alt="gemini" boxSize="100px" w="200px" />
+                  <Text
+                    mt="4"
+                    fontSize="2xl"
+                    textColor="#4992e6"
+                    fontWeight="500"
+                  >
+                    {deviations &&
+                      deviations.gemini.averageDeviationPercentage
+                        ?.overallAverage}
+                  </Text>
+                </Box>
+              </SimpleGrid>
+
+              {/* Deviation stats */}
               <SimpleGrid
                 columns={{ base: 1, md: 2, lg: 2 }}
-                gap="20px"
+                gap="80px"
                 mb="10px"
               >
-                {/* MiniStatistics components for gemini average deviation */}
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
+                {/* ChatGPT Deviation Stats */}
+                <Box>
+                  <Text
+                    fontSize="4xl"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <b>Средно отклонение на:</b>
+                  </Text>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2 }}
+                    gap="20px"
+                    mb="10px"
+                  >
+                    {/* MiniStatistics components for gemini average deviation */}
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
                         />
                       }
+                      name="Калории"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.averageDeviation?.calories.toFixed(2)
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.openAI.averageDeviationPercentage
+                          ?.categoryAverages?.calories
+                      })`}
                     />
-                  }
-                  name="Калории"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.averageDeviation?.calories.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.openAI.averageDeviationPercentage
-                      ?.categoryAverages?.calories
-                  })`}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
                         />
                       }
+                      name="Протеин"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.averageDeviation?.protein.toFixed(2)
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.openAI.averageDeviationPercentage
+                          ?.categoryAverages?.protein
+                      })`}
                     />
-                  }
-                  name="Протеин"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.averageDeviation?.protein.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.openAI.averageDeviationPercentage
-                      ?.categoryAverages?.protein
-                  })`}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
                         />
                       }
+                      name="Въглехидрати"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.averageDeviation?.carbohydrates.toFixed(
+                          2
+                        )
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.openAI.averageDeviationPercentage
+                          ?.categoryAverages?.carbohydrates
+                      })`}
                     />
-                  }
-                  name="Въглехидрати"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.averageDeviation?.carbohydrates.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.openAI.averageDeviationPercentage
-                      ?.categoryAverages?.carbohydrates
-                  })`}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
                         />
                       }
+                      name="Мазнини"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.averageDeviation?.fat.toFixed(2)
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.openAI.averageDeviationPercentage
+                          ?.categoryAverages?.fat
+                      })`}
                     />
-                  }
-                  name="Мазнини"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.averageDeviation?.fat.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.openAI.averageDeviationPercentage
-                      ?.categoryAverages?.fat
-                  })`}
-                />
+                  </SimpleGrid>
+                  <Text
+                    fontSize="4xl"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <b>Максимално отклонение на:</b>
+                  </Text>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2 }}
+                    gap="20px"
+                    mb="10px"
+                  >
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.maxDeviation?.calories.toFixed(2)
+                      } kCal`}
+                      loading={deviationsLoading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.maxDeviation?.protein.toFixed(2)
+                      } g`}
+                      loading={deviationsLoading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.maxDeviation?.carbohydrates.toFixed(2)
+                      } g`}
+                      loading={deviationsLoading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={`${
+                        deviations &&
+                        deviations.openAI.maxDeviation?.fat.toFixed(2)
+                      } g`}
+                      loading={deviationsLoading}
+                    />
+                  </SimpleGrid>
+                </Box>
+                {/* gemini Deviation Stats */}
+                <Box>
+                  <Text
+                    fontSize="4xl"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <b>Средно отклонение на:</b>
+                  </Text>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2 }}
+                    gap="20px"
+                    mb="10px"
+                  >
+                    {/* MiniStatistics components for gemini average deviation */}
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.averageDeviation?.calories.toFixed(2)
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.gemini.averageDeviationPercentage
+                          ?.categoryAverages?.calories
+                      })`}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.averageDeviation?.protein.toFixed(2)
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.gemini.averageDeviationPercentage
+                          ?.categoryAverages?.protein
+                      })`}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.averageDeviation?.carbohydrates.toFixed(
+                          2
+                        )
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.gemini.averageDeviationPercentage
+                          ?.categoryAverages?.carbohydrates
+                      })`}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.averageDeviation?.fat.toFixed(2)
+                      } g `}
+                      loading={deviationsLoading}
+                      growth={`(${
+                        deviations &&
+                        deviations.gemini.averageDeviationPercentage
+                          ?.categoryAverages?.fat
+                      })`}
+                    />
+                  </SimpleGrid>
+                  <Text
+                    fontSize="4xl"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <b>Максимално отклонение на:</b>
+                  </Text>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2, lg: 2 }}
+                    gap="20px"
+                    mb="10px"
+                  >
+                    {/* MiniStatistics components for gemini max deviation */}
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Калории"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.maxDeviation?.calories.toFixed(2)
+                      } kCal`}
+                      loading={deviationsLoading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Протеин"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.maxDeviation?.protein.toFixed(2)
+                      } g`}
+                      loading={deviationsLoading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Въглехидрати"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.maxDeviation?.carbohydrates.toFixed(2)
+                      } g`}
+                      loading={deviationsLoading}
+                    />
+                    <MiniStatistics
+                      startContent={
+                        <IconBox
+                          w="56px"
+                          h="56px"
+                          bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                          icon={
+                            <Icon
+                              w="32px"
+                              h="32px"
+                              as={GiWeightScale}
+                              color="white"
+                            />
+                          }
+                        />
+                      }
+                      name="Мазнини"
+                      value={`${
+                        deviations &&
+                        deviations.gemini.maxDeviation?.fat.toFixed(2)
+                      } g`}
+                      loading={deviationsLoading}
+                    />
+                  </SimpleGrid>
+                </Box>
               </SimpleGrid>
-              <Text
-                fontSize="4xl"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <b>Максимално отклонение на:</b>
-              </Text>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 2 }}
-                gap="20px"
-                mb="10px"
-              >
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Калории"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.maxDeviation?.calories.toFixed(2)
-                  } kCal`}
-                  loading={deviationsLoading}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Протеин"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.maxDeviation?.protein.toFixed(2)
-                  } g`}
-                  loading={deviationsLoading}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Въглехидрати"
-                  value={`${
-                    deviations &&
-                    deviations.openAI.maxDeviation?.carbohydrates.toFixed(2)
-                  } g`}
-                  loading={deviationsLoading}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Мазнини"
-                  value={`${
-                    deviations && deviations.openAI.maxDeviation?.fat.toFixed(2)
-                  } g`}
-                  loading={deviationsLoading}
-                />
-              </SimpleGrid>
-            </Box>
-            {/* gemini Deviation Stats */}
-            <Box>
-              <Text
-                fontSize="4xl"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <b>Средно отклонение на:</b>
-              </Text>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 2 }}
-                gap="20px"
-                mb="10px"
-              >
-                {/* MiniStatistics components for gemini average deviation */}
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Калории"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.averageDeviation?.calories.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.gemini.averageDeviationPercentage
-                      ?.categoryAverages?.calories
-                  })`}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Протеин"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.averageDeviation?.protein.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.gemini.averageDeviationPercentage
-                      ?.categoryAverages?.protein
-                  })`}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Въглехидрати"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.averageDeviation?.carbohydrates.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.gemini.averageDeviationPercentage
-                      ?.categoryAverages?.carbohydrates
-                  })`}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Мазнини"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.averageDeviation?.fat.toFixed(2)
-                  } g `}
-                  loading={deviationsLoading}
-                  growth={`(${
-                    deviations &&
-                    deviations.gemini.averageDeviationPercentage
-                      ?.categoryAverages?.fat
-                  })`}
-                />
-              </SimpleGrid>
-              <Text
-                fontSize="4xl"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <b>Максимално отклонение на:</b>
-              </Text>
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 2 }}
-                gap="20px"
-                mb="10px"
-              >
-                {/* MiniStatistics components for gemini max deviation */}
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Калории"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.maxDeviation?.calories.toFixed(2)
-                  } kCal`}
-                  loading={deviationsLoading}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Протеин"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.maxDeviation?.protein.toFixed(2)
-                  } g`}
-                  loading={deviationsLoading}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Въглехидрати"
-                  value={`${
-                    deviations &&
-                    deviations.gemini.maxDeviation?.carbohydrates.toFixed(2)
-                  } g`}
-                  loading={deviationsLoading}
-                />
-                <MiniStatistics
-                  startContent={
-                    <IconBox
-                      w="56px"
-                      h="56px"
-                      bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                      icon={
-                        <Icon
-                          w="32px"
-                          h="32px"
-                          as={GiWeightScale}
-                          color="white"
-                        />
-                      }
-                    />
-                  }
-                  name="Мазнини"
-                  value={`${
-                    deviations && deviations.gemini.maxDeviation?.fat.toFixed(2)
-                  } g`}
-                  loading={deviationsLoading}
-                />
-              </SimpleGrid>
-            </Box>
-          </SimpleGrid>
-        </Card>
-      </Box>
-      <Card
-        borderColor={borderColor}
-        borderWidth="3px"
-        maxH={{ sm: "400px", md: "600px", lg: "530px" }}
-      >
-        <Text
-          fontSize="3xl"
-          alignContent="center"
-          textAlign="center"
-          style={{
-            backgroundImage: gradient,
-            WebkitBackgroundClip: "text",
-            color: "transparent"
-          }}
-        >
-          <b>Състояния на всички потребители</b>
-        </Text>
-      </Card>
-      <Box maxH={{ sm: "400px", md: "595px", lg: "530px" }}>
-        <Card
-          alignItems="center"
-          flexDirection="column"
-          h="100%"
-          w="100%"
-          minH={{ sm: "400px", md: "300px", lg: "auto" }}
-          minW={{ sm: "200px", md: "200px", lg: "auto" }}
-          borderColor={borderColor}
-          borderWidth="3px"
-        >
-          <ColumnChart
-            chartLabels={allUsersHealthStatesLabels}
-            chartData={allUsersHealthStatesData}
-            chartLabelName="Състояния на всички потребители"
-            textColor={chartsColor}
-            color="#523bff"
-          />
-        </Card>
-      </Box>
-    </SimpleGrid>
+            </Card>
+          </Box>
+          <Card
+            borderColor={borderColor}
+            borderWidth="3px"
+            maxH={{ sm: "400px", md: "600px", lg: "530px" }}
+          >
+            <Text
+              fontSize="3xl"
+              alignContent="center"
+              textAlign="center"
+              style={{
+                backgroundImage: gradient,
+                WebkitBackgroundClip: "text",
+                color: "transparent"
+              }}
+            >
+              <b>Състояния на всички потребители</b>
+            </Text>
+          </Card>
+          <Box maxH={{ sm: "400px", md: "595px", lg: "530px" }}>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              h="100%"
+              w="100%"
+              minH={{ sm: "400px", md: "300px", lg: "auto" }}
+              minW={{ sm: "200px", md: "200px", lg: "auto" }}
+              borderColor={borderColor}
+              borderWidth="3px"
+            >
+              <ColumnChart
+                chartLabels={allUsersHealthStatesLabels}
+                chartData={allUsersHealthStatesData}
+                chartLabelName="Състояния на всички потребители"
+                textColor={chartsColor}
+                color="#523bff"
+              />
+            </Card>
+          </Box>
+        </SimpleGrid>
+      )}
+    </>
   );
 }

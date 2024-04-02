@@ -76,122 +76,130 @@ export default function AllUsersDropdown({
   ];
   const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
 
-  if (loading) {
-    return (
-      <Center>
-        <Loading />
-      </Center>
-    );
-  }
-
   return (
-    <Dropdown
-      title="Средни статистики за ВСИЧКИ потребители:"
-      handleDropdownToggle={handleDropdownToggle}
-      dropdownVisible={dropdownVisible}
-    >
-      <SimpleGrid
-        columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
-        gap="20px"
-        mt="50px"
-        mb="20px"
-      >
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-              icon={<Icon w="32px" h="32px" as={MdOutlineMale} color="white" />}
-            />
-          }
-          name="Мъже"
-          value={
-            averageStats.male.totalUsers !== null
-              ? averageStats.male.totalUsers.toString()
-              : "0"
-          }
-          loading={loading}
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-              icon={
-                <Icon w="32px" h="32px" as={BsPersonFillUp} color="white" />
-              }
-            />
-          }
-          name="Потребители"
-          value={
-            averageStats.male.totalUsers !== null
-              ? (
-                  averageStats.male.totalUsers + averageStats.female.totalUsers
-                ).toString()
-              : "0"
-          }
-          loading={loading}
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-              icon={
-                <Icon w="32px" h="32px" as={MdOutlineFemale} color="white" />
-              }
-            />
-          }
-          name="Жени"
-          value={
-            averageStats.female.totalUsers !== null
-              ? averageStats.female.totalUsers.toString()
-              : "0"
-          }
-          loading={loading}
-        />
-      </SimpleGrid>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, xl: 2 }}
-        gap="20px"
-        mt={isSmallScreen ? "0px" : "40px"}
-      >
-        <Card
-          alignItems="center"
-          flexDirection="column"
-          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-          minW={{ sm: "200px", md: "200px", lg: "auto" }}
-          maxH="400px"
+    <>
+      {loading ? (
+        <Center>
+          <Loading />
+        </Center>
+      ) : (
+        <Dropdown
+          title="Средни статистики за ВСИЧКИ потребители:"
+          handleDropdownToggle={handleDropdownToggle}
+          dropdownVisible={dropdownVisible}
         >
-          <LineAvaragesChart
-            lineChartData={maleChartData}
-            lineChartData2={femaleChartData}
-            lineChartLabels={allUsersStatsLabels}
-            lineChartLabelName={"Мъже"}
-            lineChartLabelName2={"Жени"}
-            textColor={chartsColor}
-          />
-        </Card>
-        <Card
-          alignItems="center"
-          flexDirection="column"
-          minH={{ sm: "400px", md: "300px", lg: "300px" }}
-          minW={{ sm: "200px", md: "200px", lg: "auto" }}
-          maxH="400px"
-        >
-          <ColumnAvaragesChart
-            chartData={maleChartData}
-            chartData2={femaleChartData}
-            chartLabels={allUsersStatsLabels}
-            chartLabelName={"Мъже"}
-            chartLabelName2={"Жени"}
-            textColor={chartsColor}
-          />
-        </Card>
-      </SimpleGrid>
-    </Dropdown>
+          <SimpleGrid
+            columns={{ base: 1, md: 3, lg: 3, "2xl": 3 }}
+            gap="20px"
+            mt="50px"
+            mb="20px"
+          >
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  icon={
+                    <Icon w="32px" h="32px" as={MdOutlineMale} color="white" />
+                  }
+                />
+              }
+              name="Мъже"
+              value={
+                averageStats.male.totalUsers !== null
+                  ? averageStats.male.totalUsers.toString()
+                  : "0"
+              }
+              loading={loading}
+            />
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  icon={
+                    <Icon w="32px" h="32px" as={BsPersonFillUp} color="white" />
+                  }
+                />
+              }
+              name="Потребители"
+              value={
+                averageStats.male.totalUsers !== null
+                  ? (
+                      averageStats.male.totalUsers +
+                      averageStats.female.totalUsers
+                    ).toString()
+                  : "0"
+              }
+              loading={loading}
+            />
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  icon={
+                    <Icon
+                      w="32px"
+                      h="32px"
+                      as={MdOutlineFemale}
+                      color="white"
+                    />
+                  }
+                />
+              }
+              name="Жени"
+              value={
+                averageStats.female.totalUsers !== null
+                  ? averageStats.female.totalUsers.toString()
+                  : "0"
+              }
+              loading={loading}
+            />
+          </SimpleGrid>
+          <SimpleGrid
+            columns={{ base: 1, md: 2, xl: 2 }}
+            gap="20px"
+            mt={isSmallScreen ? "0px" : "40px"}
+          >
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              minH={{ sm: "400px", md: "300px", lg: "300px" }}
+              minW={{ sm: "200px", md: "200px", lg: "auto" }}
+              maxH="400px"
+            >
+              <LineAvaragesChart
+                lineChartData={maleChartData}
+                lineChartData2={femaleChartData}
+                lineChartLabels={allUsersStatsLabels}
+                lineChartLabelName={"Мъже"}
+                lineChartLabelName2={"Жени"}
+                textColor={chartsColor}
+              />
+            </Card>
+            <Card
+              alignItems="center"
+              flexDirection="column"
+              minH={{ sm: "400px", md: "300px", lg: "300px" }}
+              minW={{ sm: "200px", md: "200px", lg: "auto" }}
+              maxH="400px"
+            >
+              <ColumnAvaragesChart
+                chartData={maleChartData}
+                chartData2={femaleChartData}
+                chartLabels={allUsersStatsLabels}
+                chartLabelName={"Мъже"}
+                chartLabelName2={"Жени"}
+                textColor={chartsColor}
+              />
+            </Card>
+          </SimpleGrid>
+        </Dropdown>
+      )}
+    </>
   );
 }

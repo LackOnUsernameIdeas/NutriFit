@@ -24,7 +24,7 @@ interface GenderedDropdownsProps {
   calculateRecommendedGoal: () => string;
 }
 
-export default function AlertDropdown({
+const AlertDropdown: React.FC<GenderedDropdownsProps> = ({
   userDataLastSavedDate,
   differenceFromPerfectWeight,
   differenceFromPerfectWeightChange,
@@ -33,7 +33,7 @@ export default function AlertDropdown({
   dropdownVisible,
   handleDropdownToggle,
   calculateRecommendedGoal
-}: GenderedDropdownsProps) {
+}) => {
   const [loading, setLoading] = React.useState(true);
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
@@ -46,7 +46,7 @@ export default function AlertDropdown({
       perfectWeight &&
       differenceFromPerfectWeightChange !== undefined &&
       differenceFromPerfectWeight !== undefined &&
-      userDataLastSavedDate &&
+      (userDataLastSavedDate || userDataLastSavedDate == "") &&
       loading
     ) {
       setLoading(false);
@@ -60,98 +60,115 @@ export default function AlertDropdown({
     loading
   ]);
 
-  if (loading) {
-    return (
-      <Center>
-        <Loading />
-      </Center>
-    );
-  }
-
   return (
-    <DropdownAlternate
-      handleDropdownToggle={handleDropdownToggle}
-      dropdownVisible={dropdownVisible}
-    >
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mt="40px">
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={gradient}
-              transition="background-image 0.5s ease-in-out"
-              icon={
-                <Icon w="32px" h="32px" as={GiWeightLiftingUp} color="white" />
+    <>
+      {loading ? (
+        <Center>
+          <Loading />
+        </Center>
+      ) : (
+        <DropdownAlternate
+          handleDropdownToggle={handleDropdownToggle}
+          dropdownVisible={dropdownVisible}
+        >
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap="20px" mt="40px">
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={gradient}
+                  transition="background-image 0.5s ease-in-out"
+                  icon={
+                    <Icon
+                      w="32px"
+                      h="32px"
+                      as={GiWeightLiftingUp}
+                      color="white"
+                    />
+                  }
+                />
               }
+              name="Перфектно тегло"
+              value={perfectWeight + " kg"}
             />
-          }
-          name="Перфектно тегло"
-          value={perfectWeight + " kg"}
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={gradient}
-              transition="background-image 0.5s ease-in-out"
-              icon={
-                <Icon w="32px" h="32px" as={GiWeightLiftingUp} color="white" />
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={gradient}
+                  transition="background-image 0.5s ease-in-out"
+                  icon={
+                    <Icon
+                      w="32px"
+                      h="32px"
+                      as={GiWeightLiftingUp}
+                      color="white"
+                    />
+                  }
+                />
               }
+              name={`Вие сте ${
+                differenceFromPerfectWeight.isUnderOrAbove == "above"
+                  ? "над"
+                  : "под"
+              } нормата:`}
+              value={
+                Math.abs(differenceFromPerfectWeight.difference).toFixed(2) +
+                " kg"
+              }
+              growth={
+                differenceFromPerfectWeightChange
+                  ? differenceFromPerfectWeightChange > 0
+                    ? `+${differenceFromPerfectWeightChange.toFixed(2)}`
+                    : null
+                  : null
+              }
+              decrease={
+                differenceFromPerfectWeightChange
+                  ? differenceFromPerfectWeightChange <= 0
+                    ? `${differenceFromPerfectWeightChange.toFixed(2)}`
+                    : null
+                  : null
+              }
+              subtext={`в сравнение с ${userDataLastSavedDate}`}
             />
-          }
-          name={`Вие сте ${
-            differenceFromPerfectWeight.isUnderOrAbove == "above"
-              ? "над"
-              : "под"
-          } нормата:`}
-          value={
-            Math.abs(differenceFromPerfectWeight.difference).toFixed(2) + " kg"
-          }
-          growth={
-            differenceFromPerfectWeightChange
-              ? differenceFromPerfectWeightChange > 0
-                ? `+${differenceFromPerfectWeightChange.toFixed(2)}`
-                : null
-              : null
-          }
-          decrease={
-            differenceFromPerfectWeightChange
-              ? differenceFromPerfectWeightChange <= 0
-                ? `${differenceFromPerfectWeightChange.toFixed(2)}`
-                : null
-              : null
-          }
-          subtext={`в сравнение с ${userDataLastSavedDate}`}
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={gradient}
-              transition="background-image 0.5s ease-in-out"
-              icon={<Icon w="32px" h="32px" as={GiWeightScale} color="white" />}
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={gradient}
+                  transition="background-image 0.5s ease-in-out"
+                  icon={
+                    <Icon w="32px" h="32px" as={GiWeightScale} color="white" />
+                  }
+                />
+              }
+              name="Състояние"
+              value={health}
             />
-          }
-          name="Състояние"
-          value={health}
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={gradient}
-              transition="background-image 0.5s ease-in-out"
-              icon={<Icon w="32px" h="32px" as={GiWeightScale} color="white" />}
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={gradient}
+                  transition="background-image 0.5s ease-in-out"
+                  icon={
+                    <Icon w="32px" h="32px" as={GiWeightScale} color="white" />
+                  }
+                />
+              }
+              name="Препоръчително е да:"
+              value={calculateRecommendedGoal() + " (кг.)"}
             />
-          }
-          name="Препоръчително е да:"
-          value={calculateRecommendedGoal() + " (кг.)"}
-        />
-      </SimpleGrid>
-    </DropdownAlternate>
+          </SimpleGrid>
+        </DropdownAlternate>
+      )}
+    </>
   );
-}
+};
+
+export default AlertDropdown;
