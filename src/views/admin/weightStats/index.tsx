@@ -663,7 +663,7 @@ export default function WeightStats() {
                     преценка от диетолог или здравен специалист, за да се
                     адаптират към индивидуалните ви нужди."
               />
-              {lineChartForBMI.length == 1 && <Box mb="40px"></Box>}
+              <Box mb="40px"></Box>
             </animated.div>
           </Box>
         )}
