@@ -1,74 +1,34 @@
 import React from "react";
 // Chakra imports
 import {
-  Avatar,
-  Button,
   Box,
-  Center,
   Flex,
-  FormLabel,
-  Icon,
-  Select,
   SimpleGrid,
-  Tooltip,
-  useColorMode,
   useColorModeValue,
-  useBreakpointValue,
   Text,
-  Link,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useMediaQuery,
   IconButton
 } from "@chakra-ui/react";
 // Assets
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
-import { orderMealsByFrequency } from "database/getAdditionalUserData";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 // Custom components
 import Loading from "views/admin/weightStats/components/Loading";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import RecipeWidget from "components/card/NFT";
+import LeaderboardItem from "./components/LeaderboardItem";
 
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
-import { ColumnAvaragesChart } from "components/charts/BarCharts";
 import { ColumnChart } from "components/charts/BarCharts";
 
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  onSnapshot
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdFlatware
-} from "react-icons/md";
-import RecipeModal from "./components/RecipeModal";
-import { SuggestedMeal } from "../../../types/weightStats";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { SuggestedMeal } from "../../../variables/weightStats";
+import Dropdown from "components/dropdowns/Dropdown";
 interface DropdownState {
   currentPage: number;
 }
 
 export default function TopMeals() {
   // Chakra Color Mode
-  const [isSm] = useMediaQuery("(max-width: 768px)");
-  const [isMd] = useMediaQuery("(min-width: 769px) and (max-width: 1400px)");
   const chartsColor = useColorModeValue("brand.500", "white");
   const [loading, setLoading] = React.useState(true);
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
-  const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
-  const gradient = useColorModeValue(gradientLight, gradientDark);
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const ITEMS_PER_PAGE = 5;
   const [dropdownState, setDropdownState] = React.useState<DropdownState>({
@@ -173,6 +133,7 @@ export default function TopMeals() {
   ]);
   const totalPages = Math.ceil(allMeals.length / ITEMS_PER_PAGE);
 
+  // Данни за диаграма
   const barChartLabels = allMeals
     .slice(0, 10)
     .map((_, index) => `#${index + 1}`);
@@ -180,9 +141,9 @@ export default function TopMeals() {
     .slice(0, 10)
     .map((entry) => entry.count);
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
+  // useEffect за fetch-ване на всички храни от нашето API
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -204,29 +165,15 @@ export default function TopMeals() {
       }
     };
 
-    fetchData(); // Call fetchData when component mounts
-
-    // No need for unsubscribe since we're not using onSnapshot
+    fetchData();
   }, []);
 
   const [dropdownVisible, setDropdownVisible] = React.useState(true);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(true);
-  const [renderDropdown, setRenderDropdown] = React.useState(true);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
   };
-
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
+  // Анимация за компонентите под дропдауна при негово движение.
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? 0 : 0}px)`,
     config: {
@@ -234,25 +181,6 @@ export default function TopMeals() {
       friction: dropdownVisible ? 12 : 20
     }
   });
-
-  React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
-      } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
 
   const mealsToShow = allMeals.slice(
     dropdownState.currentPage * ITEMS_PER_PAGE,
@@ -275,109 +203,68 @@ export default function TopMeals() {
             gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
           >
             <Card p="0px">
-              <Card
-                onClick={handleDropdownToggle}
-                cursor="pointer"
-                zIndex="1"
-                position="relative"
-                bg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
-                borderColor={borderColor}
-                borderWidth="5px"
+              <Dropdown
+                title="Най-препоръчани храни от NutriFit!"
+                dropdownVisible={dropdownVisible}
+                handleDropdownToggle={handleDropdownToggle}
+                titleBg={dropdownVisible ? dropdownBoxBg : dropdownBoxBg}
+                titleBorderColour={borderColor}
               >
-                <Flex
-                  align={{ sm: "flex-start", lg: "center" }}
-                  justify="space-between"
-                  w="100%"
-                >
-                  <Text
-                    color={textColor}
-                    fontSize="2xl"
-                    style={
-                      dropdownVisible
-                        ? {
-                            backgroundImage: gradient,
-                            WebkitBackgroundClip: "text",
-                            color: "transparent"
-                          }
-                        : {}
+                {mealsToShow.map((meal: SuggestedMeal, index: number) => {
+                  return (
+                    <LeaderboardItem
+                      key={index}
+                      name={meal.name}
+                      count={"Брой препоръчвания: " + meal.count.toString()}
+                      instructions={meal?.mealData.instructions}
+                      image={meal?.mealData.image}
+                      ingredients={meal?.mealData.ingredients}
+                      totals={meal?.mealData.totals}
+                      topMeals={allMeals}
+                      keepOpen={meal === allMeals[0] ? true : false}
+                    />
+                  );
+                })}
+                <Flex justify="center" mt="40px">
+                  <IconButton
+                    aria-label="Previous page"
+                    icon={<MdKeyboardArrowLeft />}
+                    onClick={() =>
+                      setDropdownState((prevState) => ({
+                        ...prevState,
+                        currentPage: Math.max(0, prevState.currentPage - 1)
+                      }))
                     }
-                    userSelect="none"
-                  >
-                    {dropdownVisible ? (
-                      <b>Най-препоръчани храни от NutriFit!</b>
-                    ) : (
-                      "Най-често препоръчани храни от NutriFit!"
-                    )}
+                    disabled={dropdownState.currentPage === 0}
+                    variant="unstyled"
+                    _hover={{ bg: "none" }}
+                    boxSize={8}
+                  />
+                  <Text mt="1px" mr="15px" fontSize="xl">
+                    <b>{`Страница ${
+                      dropdownState.currentPage + 1
+                    } от ${totalPages}`}</b>
                   </Text>
-                  <Icon
-                    as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                    boxSize={6}
-                    color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
+                  <IconButton
+                    aria-label="Next page"
+                    icon={<MdKeyboardArrowRight />}
+                    onClick={() =>
+                      setDropdownState((prevState) => ({
+                        ...prevState,
+                        currentPage: Math.min(
+                          prevState.currentPage + 1,
+                          totalPages - 1
+                        )
+                      }))
+                    }
+                    ml="10px"
+                    disabled={dropdownState.currentPage === totalPages - 1}
+                    variant="unstyled"
+                    _hover={{ bg: "none" }}
+                    boxSize={8} // Adjust the box size to match the text size
                   />
                 </Flex>
-              </Card>
-              {renderDropdown && (
-                <animated.div
-                  style={{ ...slideAnimationDrop, position: "relative" }}
-                >
-                  <Box mt="50px">
-                    {mealsToShow.map((meal: SuggestedMeal, index: number) => {
-                      return (
-                        <HistoryItem
-                          key={index}
-                          name={meal.name}
-                          count={"Брой препоръчвания: " + meal.count.toString()}
-                          instructions={meal?.mealData.instructions}
-                          image={meal?.mealData.image}
-                          ingredients={meal?.mealData.ingredients}
-                          totals={meal?.mealData.totals}
-                          topMeals={allMeals}
-                          keepOpen={meal === allMeals[0] ? true : false}
-                        />
-                      );
-                    })}
-                    <Flex justify="center" mt="40px">
-                      <IconButton
-                        aria-label="Previous page"
-                        icon={<MdKeyboardArrowLeft />}
-                        onClick={() =>
-                          setDropdownState((prevState) => ({
-                            ...prevState,
-                            currentPage: Math.max(0, prevState.currentPage - 1)
-                          }))
-                        }
-                        disabled={dropdownState.currentPage === 0}
-                        variant="unstyled"
-                        _hover={{ bg: "none" }}
-                        boxSize={8}
-                      />
-                      <Text mt="1px" mr="15px" fontSize="xl">
-                        <b>{`Страница ${
-                          dropdownState.currentPage + 1
-                        } от ${totalPages}`}</b>
-                      </Text>
-                      <IconButton
-                        aria-label="Next page"
-                        icon={<MdKeyboardArrowRight />}
-                        onClick={() =>
-                          setDropdownState((prevState) => ({
-                            ...prevState,
-                            currentPage: Math.min(
-                              prevState.currentPage + 1,
-                              totalPages - 1
-                            )
-                          }))
-                        }
-                        ml="10px"
-                        disabled={dropdownState.currentPage === totalPages - 1}
-                        variant="unstyled"
-                        _hover={{ bg: "none" }}
-                        boxSize={8} // Adjust the box size to match the text size
-                      />
-                    </Flex>
-                  </Box>
-                </animated.div>
-              )}
+              </Dropdown>
             </Card>
             <animated.div style={{ ...slideAnimation, position: "relative" }}>
               <SimpleGrid

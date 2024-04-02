@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useDisclosure, Button } from "@chakra-ui/react";
 
-import { UserData } from "../../../types/weightStats";
+import { UserData } from "../../../variables/weightStats";
 
 function MeasurementsAlertDialog(props: {
   handleSubmit: (event: React.FormEvent) => void;

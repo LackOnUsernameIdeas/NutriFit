@@ -15,9 +15,9 @@ import {
 import {
   DailyCaloryRequirements,
   UserData
-} from "../../../../types/weightStats";
+} from "../../../../variables/weightStats";
 import { useState, useEffect } from "react";
-import { saveGoal } from "database/setGoalUserData";
+import { saveGoal } from "database/setFunctions";
 import { getAuth } from "firebase/auth";
 export default function CalorieRequirements(props: {
   calorieRequirements: DailyCaloryRequirements[];
@@ -28,8 +28,6 @@ export default function CalorieRequirements(props: {
   setUserData?: React.Dispatch<React.SetStateAction<UserData>>;
 }) {
   const bgHover = useColorModeValue("secondaryGray.200", "whiteAlpha.50");
-  const brandColor = useColorModeValue("brand.500", "white");
-  const boxBg = useColorModeValue("secondaryGray.400", "whiteAlpha.100");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);

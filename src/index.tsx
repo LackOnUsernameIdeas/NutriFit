@@ -24,7 +24,7 @@ import {
   setPersistence,
   browserSessionPersistence
 } from "firebase/auth";
-import { fetchAdditionalUserData } from "database/getAdditionalUserData";
+import { fetchAdditionalUserData } from "database/getFunctions";
 
 interface PrivateRouteProps extends RouteProps {
   component: ComponentType<any>;
@@ -165,7 +165,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
           userDataForToday == undefined ? (
             <Component {...props} />
           ) : (
-            <Redirect to="/admin/default" />
+            <Redirect to="/admin/home" />
           )
         ) : (
           <Redirect to="/auth/sign-in" />
@@ -192,7 +192,7 @@ const LandingRoute: React.FC<PrivateRouteProps> = ({
       {...rest}
       render={(props) =>
         userData !== null || rememberedUser !== null ? (
-          <Redirect to="/admin/default" />
+          <Redirect to="/admin/home" />
         ) : (
           <Component {...props} />
         )

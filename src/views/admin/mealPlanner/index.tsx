@@ -3,62 +3,27 @@ import React, { useState } from "react";
 // Chakra UI components
 import {
   Box,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogCloseButton,
   Flex,
-  Icon,
   Text,
   Button,
   SimpleGrid,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  useDisclosure,
-  useColorMode,
   useColorModeValue,
-  useBreakpointValue,
-  Menu,
-  Heading,
-  Stack,
-  StackDivider,
-  Alert,
-  AlertIcon,
   useMediaQuery
 } from "@chakra-ui/react";
-
-// React Icons
-import { MdOutlineInfo } from "react-icons/md";
-// Custom components
 import FadeInWrapper from "components/wrapper/FadeInWrapper";
 import Card from "components/card/Card";
 import { useSpring, animated } from "react-spring";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import { GiWeightLiftingUp, GiWeightScale } from "react-icons/gi";
-import CardHeader from "components/card/Card";
-import CardBody from "components/card/Card";
-import backgroundImageWhite from "../../../assets/img/layout/blurry-gradient-haikei-light.svg";
-import backgroundImageDark from "../../../assets/img/layout/blurry-gradient-haikei-dark.svg";
-import DietTable from "views/admin/dataTables/components/ColumnsTable";
+import DietTable from "../../../components/table/ColumnsTable";
 import CalorieRequirements from "./components/CalorieRequirements";
 import Loading from "views/admin/weightStats/components/Loading";
-import MiniStatistics from "components/card/MiniStatistics";
-import { FaFireAlt } from "react-icons/fa";
-import IconBox from "components/icons/IconBox";
 import MealPlannerForm from "./components/MealPlannerForm";
-import { HSeparator } from "components/separator/Separator";
-// Types
 import {
   UserData,
   UserIntakes,
   AllUsersPreferences,
   DailyCaloryRequirements,
   WeightDifference
-} from "../../../types/weightStats";
+} from "../../../variables/weightStats";
 import {
   onSnapshot,
   doc,
@@ -66,37 +31,24 @@ import {
   getDoc,
   collection
 } from "firebase/firestore";
-
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "database/connection";
 
-import { savePreferences } from "../../../database/setWeightStatsData";
-import { table } from "console";
-
-import { LineChart } from "components/charts/LineCharts";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { savePreferences } from "../../../database/setFunctions";
 import { parseISO } from "date-fns";
+import UserInfoCard from "components/infoCard/userInfoCard";
+import AlertBox from "components/alert/alert";
+import InfoBox from "components/infoBox/infoBox";
+import NutrientsDropdown from "./components/NutrientsDropdown";
+import AlertDropdown from "./components/AlertDropdown";
 
 // Главен компонент
 export default function MealPlanner() {
-  // Color values
-  const { colorMode } = useColorMode();
-  const backgroundImage =
-    colorMode === "light" ? backgroundImageWhite : backgroundImageDark;
+  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 50%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
-  const chartsColor = useColorModeValue("brand.500", "white");
-  const fontWeight = useColorModeValue("550", "100");
-  const tipFontWeight = useColorModeValue("500", "100");
-  const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
-  const TipBoxBg = useColorModeValue("#a7ddfc", "#395182");
-  const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const textColor = useColorModeValue("black", "white");
-  const infoBoxIconColor = useColorModeValue("black", "white");
-  const bgList = useColorModeValue("secondaryGray.150", "whiteAlpha.100");
-  const borderColor = useColorModeValue("secondaryGray.200", "whiteAlpha.200");
-  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const gradientHover = useColorModeValue(
     { bg: "linear-gradient(90deg, #4f3efb 0%, #8477fa 50%)" },
     { bg: "linear-gradient(90deg, #7e6afc 0%, #4f3efb 100%)" }
@@ -105,26 +57,6 @@ export default function MealPlanner() {
     { bg: "secondaryGray.400" },
     { bg: "whiteAlpha.100" }
   );
-  const bgHoverInfoBox = useColorModeValue(
-    { bg: "#C6C7D4" },
-    { bg: "whiteAlpha.100" }
-  );
-  const bgFocus = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.100" }
-  );
-  // State за разкриване на информация за менюто с информация
-  const {
-    isOpen: isOpenLevels,
-    onOpen: onOpenLevels,
-    onClose: onCloseLevels
-  } = useDisclosure();
-
-  const {
-    isOpen: isOpenDiet,
-    onOpen: onOpenDiet,
-    onClose: onCloseDiet
-  } = useDisclosure();
 
   const [dailyCaloryRequirements, setDailyCaloryRequirements] = useState<
     DailyCaloryRequirements[]
@@ -171,13 +103,7 @@ export default function MealPlanner() {
   const [activityLevel, setActivityLevel] = useState<number>(null);
   const [isDietTableDataReady, setIsDietTableDataReady] = useState(false);
   // State за зареждане на страницата
-  const [isLoadingForCalories, setIsLoadingForCalories] = useState(false);
-  const [isLoadingForMacroNutrients, setIsLoadingForMacroNutrients] =
-    useState(false);
-
-  // State-ове за въведени потребителски данни
-  const [user, setUser] = useState(null);
-
+  const [isUserDataForTodaySaved, setIsUserDataForTodaySaved] = useState(false);
   const [userData, setUserData] = useState<UserData>({
     gender: "male" || "female",
     height: 0,
@@ -230,7 +156,7 @@ export default function MealPlanner() {
       difference: 0,
       isUnderOrAbove: ""
     });
-
+  // Функция, която определя дали потребителя има нужда да сваля, запазва или качва кг.
   function calculateRecommendedGoal() {
     const difference = differenceFromPerfectWeight.difference;
     const underOrAbove = differenceFromPerfectWeight.isUnderOrAbove;
@@ -250,32 +176,6 @@ export default function MealPlanner() {
   const [health, setHealth] = useState("");
   const [userDataLastSavedDate, setUserDataLastSavedDate] = useState("");
 
-  const [showITM, setShowITM] = useState(false);
-
-  const [isUserDataForTodaySaved, setIsUserDataForTodaySaved] = useState(false);
-
-  // Function to toggle the display of raw data
-  const toggleITM = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent the default behavior of the click event
-    setShowITM(!showITM);
-  };
-  const [showStatus, setShowStatus] = useState(false);
-
-  const cancelRef = React.useRef();
-  const cancelRefStats = React.useRef();
-
-  // Function to toggle the display of raw data
-  const toggleStatus = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent the default behavior of the click event
-    setShowStatus(!showStatus);
-  };
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenStats,
-    onOpen: onOpenStats,
-    onClose: onCloseStats
-  } = useDisclosure();
-
   const [
     isGenerateStatsForCaloriesCalled,
     setIsGenerateStatsForCaloriesCalled
@@ -287,56 +187,37 @@ export default function MealPlanner() {
   ] = useState<boolean>(false);
   // Функция за генериране на статистики
   function generateStatsForCalories() {
-    setIsLoadingForCalories(true);
-    setTimeout(() => {
-      setIsLoadingForCalories(false);
-    }, 1000);
+    setTimeout(() => {}, 1000);
   }
 
   function generateStatsForMacroNutrients() {
-    setIsLoadingForMacroNutrients(true);
     setTimeout(() => {
-      setIsLoadingForMacroNutrients(false);
-      setIsDietTableDataReady(true); // Set the state when data is ready
+      setIsDietTableDataReady(true);
     }, 1000);
   }
-
-  const calculateChange = (
-    sortedData: any[],
-    property: string,
-    subproperty?: string
-  ) => {
-    const latestValue = sortedData[0][property]?.[subproperty];
-    const previousValue = sortedData[1][property]?.[subproperty];
+  // Функции, които калкулират изменението на стойностите на потребителя
+  const calculateChange = (sortedData: any[], property: string) => {
+    const latestValue = sortedData[0][property];
+    const previousValue = sortedData[1][property];
     const change = latestValue - previousValue;
+    console.log("latestValue", latestValue);
+    console.log("previousValue", previousValue);
     setUserDataLastSavedDate(sortedData[1].date);
+    console.log("change", change);
     return change;
   };
 
   const calculatePerfectWeightChange = () => {
-    // Create an object to store unique entries based on date
     const uniqueEntries: { [date: string]: any } = {};
-    console.log("called");
+
     allOrderedObjects.forEach((entry) => {
-      if (
-        entry.differenceFromPerfectWeight.difference !== 0 &&
-        !uniqueEntries[entry.date]
-      ) {
+      if (entry.differenceFromPerfectWeight && !uniqueEntries[entry.date]) {
         uniqueEntries[entry.date] = {
           differenceFromPerfectWeight: entry.differenceFromPerfectWeight
         };
       }
     });
 
-    setDifferenceFromPerfectWeight({
-      difference:
-        allOrderedObjects[allOrderedObjects.length - 1]
-          .differenceFromPerfectWeight.difference,
-      isUnderOrAbove: allOrderedObjects[allOrderedObjects.length - 1]
-        .differenceFromPerfectWeight.isUnderOrAbove as "" | "under" | "above"
-    });
-
-    // Create an array of entries sorted by date
     const sortedData = Object.entries(uniqueEntries)
       .sort((a, b) => parseISO(b[0]).getTime() - parseISO(a[0]).getTime())
       .map(([date, values]) => ({ date, ...values }));
@@ -344,61 +225,27 @@ export default function MealPlanner() {
     if (sortedData.length >= 2) {
       const differenceFromPerfectWeightChange = calculateChange(
         sortedData,
-        "differenceFromPerfectWeight",
-        "difference"
+        "differenceFromPerfectWeight"
       );
       setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
 
       console.log("the last two entries for BMI222222: ", sortedData);
-      console.log("Perfect Weight Change: ", differenceFromPerfectWeightChange);
+      console.log(
+        "differenceFromPerfectWeightChange changes: ",
+        differenceFromPerfectWeightChange
+      );
     }
   };
+
+  React.useEffect(() => {
+    calculatePerfectWeightChange();
+  }, [allOrderedObjects]);
 
   const saveUserPreferencesAndIntakes = () => {
     const uid = getAuth().currentUser.uid;
     savePreferences(uid, clickedValueCalories, clickedValueNutrients);
   };
-  const mapGoalToDisplayValue = (goal: string) => {
-    switch (goal) {
-      case "maintain":
-        return "Запазване на Тегло";
-        break;
-      case "mildlose":
-        return "Леко Сваляне на Тегло";
-        break;
-      case "weightlose":
-        return "Сваляне на Тегло";
-        break;
-      case "extremelose":
-        return "Екстремно Сваляне на Тегло";
-        break;
-      case "mildgain":
-        return "Леко Качване на Тегло";
-        break;
-      case "weightgain":
-        return "Качване на Тегло";
-        break;
-      case "extremegain":
-        return "Екстремно Качване на Тегло";
-        break;
-      default:
-        return goal; // Return the original value if not found in the mapping
-    }
-  };
-
-  const mapGenderToDisplayValue = (gender: string) => {
-    switch (gender) {
-      case "male":
-        return "Мъж";
-        break;
-      case "female":
-        return "Жена";
-        break;
-      default:
-        return gender; // Return the original value if not found in the mapping
-    }
-  };
-
+  // Данни за диаграмите
   const lineChartLabels = allUsersPreferences.map((entry) => entry.date);
   const lineChartForCalories = allUsersPreferences.map(
     (entry) => entry.Calories
@@ -408,15 +255,9 @@ export default function MealPlanner() {
   const lineChartForCarbs = allUsersPreferences.map(
     (entry) => entry.Carbohydrates
   );
-
+  // Стейтове и функции за дропдауните
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
-  const [miniStatisticsVisible, setMiniStatisticsVisible] =
-    React.useState(false);
-  const [renderDropdown, setRenderDropdown] = React.useState(false);
   const [dropdownVisibleTip, setDropdownVisibleTip] = React.useState(false);
-  const [miniStatisticsVisibleTip, setMiniStatisticsVisibleTip] =
-    React.useState(false);
-  const [renderDropdownTip, setRenderDropdownTip] = React.useState(false);
 
   const handleDropdownToggle = () => {
     setDropdownVisible(!dropdownVisible);
@@ -425,30 +266,12 @@ export default function MealPlanner() {
   const handleDropdownTipToggle = () => {
     setDropdownVisibleTip(!dropdownVisibleTip);
   };
-
-  const slideAnimationDrop = useSpring({
-    opacity: miniStatisticsVisible ? 1 : 0,
-    transform: `translateY(${dropdownVisible ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisible ? 170 : 200,
-      friction: dropdownVisible ? 12 : 20
-    }
-  });
-
+  // Анимации за компонентите под дропдауните при движението им
   const slideAnimation = useSpring({
     transform: `translateY(${dropdownVisible ? -50 : 0}px)`,
     config: {
       tension: dropdownVisible ? 170 : 200,
       friction: dropdownVisible ? 12 : 20
-    }
-  });
-
-  const slideAnimationDropTip = useSpring({
-    opacity: miniStatisticsVisibleTip ? 1 : 0,
-    transform: `translateY(${dropdownVisibleTip ? -50 : -90}px)`,
-    config: {
-      tension: dropdownVisibleTip ? 170 : 200,
-      friction: dropdownVisibleTip ? 12 : 20
     }
   });
 
@@ -460,187 +283,33 @@ export default function MealPlanner() {
     }
   });
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   React.useEffect(() => {
-    const handleRestSlidePositionChange = async () => {
-      if (dropdownVisible) {
-        setMiniStatisticsVisible(true);
-        setRenderDropdown(true);
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user);
       } else {
-        setMiniStatisticsVisible(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdown(false);
-          }, 150)
-        );
+        setCurrentUser(null);
       }
-    };
+    });
 
-    handleRestSlidePositionChange();
-  }, [dropdownVisible]);
-
-  React.useEffect(() => {
-    const handleRestSlideTipPositionChange = async () => {
-      if (dropdownVisibleTip) {
-        setMiniStatisticsVisibleTip(true);
-        setRenderDropdownTip(true);
-      } else {
-        setMiniStatisticsVisibleTip(false);
-        await new Promise<void>((resolve) =>
-          setTimeout(() => {
-            resolve();
-            setRenderDropdownTip(false);
-          }, 150)
-        );
-      }
-    };
-
-    handleRestSlideTipPositionChange();
-  }, [dropdownVisibleTip]);
-
-  React.useEffect(() => {
-    calculatePerfectWeightChange();
-  }, [perfectWeight, isUserDataForTodaySaved]);
-
-  // React.useEffect(() => {
-  //   const auth = getAuth();
-  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
-  //     setUser(user);
-
-  //     if (user) {
-  //       try {
-  //         const userId = user.uid;
-  //         const additionalDataRef = doc(db, "additionalData2", userId);
-
-  //         // Subscribe to real-time updates using onSnapshot
-  //         const unsubscribeData = onSnapshot(additionalDataRef, (doc) => {
-  //           if (doc.exists()) {
-  //             const additionalData = doc.data();
-  //             const timestampKey = new Date().toISOString().slice(0, 10);
-  //             const userDataTimestamp = additionalData[timestampKey];
-
-  //             const timestampedObjects = Object.entries(additionalData)
-  //               .filter(
-  //                 ([key, value]) =>
-  //                   typeof value === "object" &&
-  //                   value.hasOwnProperty("Preferences")
-  //               )
-  //               .map(([key, value]) => ({ date: key, ...value.Preferences }));
-
-  //             const orderedTimestampObjects = [...timestampedObjects].sort(
-  //               (a, b) => {
-  //                 const keyA = a.key;
-  //                 const keyB = b.key;
-  //                 return new Date(keyB).getTime() - new Date(keyA).getTime();
-  //               }
-  //             );
-  //             const orderedAllTimestampObjects = [];
-
-  //             for (const key in additionalData) {
-  //               if (
-  //                 key !== "gender" &&
-  //                 key !== "goal" &&
-  //                 key !== "macroNutrientsData" &&
-  //                 key !== "dailyCaloryRequirements" &&
-  //                 typeof additionalData[key] === "object"
-  //               ) {
-  //                 const dateData = additionalData[key];
-  //                 orderedAllTimestampObjects.push({
-  //                   date: key,
-  //                   height: dateData?.height,
-  //                   weight: dateData?.weight,
-  //                   bmi: dateData?.BMI ? dateData?.BMI?.bmi : 0,
-  //                   bodyFat: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.bodyFat
-  //                     : 0,
-  //                   bodyFatMass: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.bodyFatMass
-  //                     : 0,
-  //                   leanBodyMass: dateData?.BodyMassData
-  //                     ? dateData?.BodyMassData?.leanBodyMass
-  //                     : 0,
-  //                   differenceFromPerfectWeight: dateData?.PerfectWeightData
-  //                     ? dateData?.PerfectWeightData?.differenceFromPerfectWeight
-  //                         ?.difference
-  //                     : 0
-  //                 });
-  //               }
-  //             }
-  //             setAllOrderedObjects(orderedAllTimestampObjects);
-  //             setAllUsersPreferences(orderedTimestampObjects);
-
-  //             if (userDataTimestamp?.age) {
-  //               setUserData({
-  //                 gender: additionalData?.gender,
-  //                 goal: additionalData?.goal,
-  //                 age: userDataTimestamp?.age,
-  //                 height: userDataTimestamp?.height,
-  //                 waist: userDataTimestamp?.waist,
-  //                 neck: userDataTimestamp?.neck,
-  //                 hip: userDataTimestamp?.hip,
-  //                 weight: userDataTimestamp?.weight
-  //               } as UserData);
-  //               setPerfectWeight(
-  //                 userDataTimestamp?.PerfectWeightData
-  //                   ? userDataTimestamp?.PerfectWeightData?.perfectWeight
-  //                   : 0
-  //               );
-  //               setDifferenceFromPerfectWeight(
-  //                 userDataTimestamp?.PerfectWeightData
-  //                   ?.differenceFromPerfectWeight
-  //                   ? userDataTimestamp.PerfectWeightData
-  //                       .differenceFromPerfectWeight
-  //                   : {
-  //                       difference: 0,
-  //                       isUnderOrAbove: ""
-  //                     }
-  //               );
-  //               setHealth(
-  //                 userDataTimestamp?.BMI ? userDataTimestamp?.BMI?.health : ""
-  //               );
-  //               setDailyCaloryRequirements(
-  //                 additionalData?.dailyCaloryRequirements
-  //                   ? additionalData?.dailyCaloryRequirements
-  //                   : []
-  //               );
-  //               const macroNutrientsData = Array.isArray(
-  //                 additionalData?.macroNutrientsData
-  //               )
-  //                 ? additionalData?.macroNutrientsData
-  //                 : [];
-
-  //               setMacroNutrients(macroNutrientsData);
-  //             }
-  //           }
-  //         });
-
-  //         // Cleanup the subscription when the component unmounts
-  //         return () => {
-  //           unsubscribeData();
-  //         };
-  //       } catch (error) {
-  //         console.error("Error fetching additional user data:", error);
-  //       }
-  //     }
-  //   });
-  // }, []);
+    return unsubscribe;
+  }, []);
 
   React.useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-
       if (user) {
         try {
           const userId: string = user.uid;
           console.log("kalatatest user userId: ", userId);
 
-          // Fetch user document separately to get gender and goal fields
           const userDocRef = doc(db, "additionalData2", userId);
           const userDocSnapshot = await getDoc(userDocRef);
           const userBasicData = userDocSnapshot.data() as UserData;
 
-          // Fetch all data entries for the user
           const additionalDataRef = collection(
             db,
             "additionalData2",
@@ -671,7 +340,6 @@ export default function MealPlanner() {
               !dailyCaloryRequirements_number.includes(key)
             ) {
               const userDataTimestamp = doc.data();
-              // Set user data fetched from user document
               setUserData({
                 gender: userBasicData.gender,
                 goal: userBasicData.goal,
@@ -683,7 +351,6 @@ export default function MealPlanner() {
                 weight: userDataTimestamp.weight
               });
 
-              // Example of processing data for each document
               const orderedObject = {
                 date: key,
                 height: userDataTimestamp?.height || 0,
@@ -703,7 +370,6 @@ export default function MealPlanner() {
 
               orderedTimestampObjects.push(orderedObject);
 
-              // If Preferences exist, add them to allUsersPreferencesObjects
               if (userDataTimestamp?.Preferences) {
                 allUsersPreferencesObjects.push({
                   date: key,
@@ -717,7 +383,6 @@ export default function MealPlanner() {
               macroNutrients_number.includes(key) &&
                 macroNutrientsData.push(additionalData || []);
 
-              // If Preferences exist, add them to allUsersPreferences
               if (additionalData?.Preferences) {
                 allUsersPreferences.push({
                   date: key,
@@ -735,7 +400,6 @@ export default function MealPlanner() {
             orderedTimestampObjects[orderedTimestampObjects.length - 1]
               .perfectWeight
           );
-          // Set state with extracted data
           setAllOrderedObjects(orderedTimestampObjects);
           setAllUsersPreferences(allUsersPreferencesObjects);
           setDailyCaloryRequirements(dailyCaloryRequirementsArray);
@@ -776,7 +440,6 @@ export default function MealPlanner() {
   }, []);
 
   React.useEffect(() => {
-    // Check if numeric values in userData are different from 0 and not null
     const areValuesValid = Object.values(userData).every(
       (value) => value !== 0
     );
@@ -828,14 +491,12 @@ export default function MealPlanner() {
         ];
 
         tableData = savedData;
-        // You can use or save the 'savedData' object as needed.
       }
     });
   }
 
   console.log("tableData: ", tableData);
   React.useEffect(() => {
-    // Check if both clickedValueCalories and clickedValueNutrients are set
     if (
       clickedValueCalories !== null &&
       clickedValueNutrients.protein !== null
@@ -865,583 +526,32 @@ export default function MealPlanner() {
             </Box>
           ) : (
             <Box transition="0.2s ease-in-out">
-              <Card
-                p="20px"
-                alignItems="center"
-                flexDirection="column"
-                w="100%"
-                mb="20px"
-                backgroundImage={`url(${backgroundImage})`}
-                backgroundRepeat="no-repeat"
-                backgroundSize="cover"
-                backgroundPosition="center"
-                transition="background-image 0.25s ease-in-out"
-              >
-                <CardBody>
-                  <Stack divider={<StackDivider />} spacing="4">
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Години:</b> {userData.age}
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Пол:</b> {mapGenderToDisplayValue(userData.gender)}
-                      </Heading>
-                    </Box>
-                    {userData.goal && (
-                      <Box>
-                        <Heading
-                          size="xs"
-                          textTransform="uppercase"
-                          fontWeight={fontWeight}
-                        >
-                          <b>Последно избрана цел:</b>{" "}
-                          {mapGoalToDisplayValue(userData.goal)}
-                        </Heading>
-                      </Box>
-                    )}
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Височина:</b> {userData.height} (см)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Тегло:</b> {userData.weight} (кг)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Обиколка на врата:</b> {userData.neck} (см)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Обиколка на талията:</b> {userData.waist} (см)
-                      </Heading>
-                    </Box>
-                    <Box>
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        fontWeight={fontWeight}
-                      >
-                        <b>Обиколка на таза:</b> {userData.hip} (см)
-                      </Heading>
-                    </Box>
-                  </Stack>
-                </CardBody>
-              </Card>
-              <Alert
-                status="info"
-                borderRadius="20px"
-                fontWeight={tipFontWeight}
-                p="20px"
-                w="100%"
-                mb="20px"
-                bg={TipBoxBg}
-                onClick={handleDropdownTipToggle}
-                cursor="pointer"
-                zIndex="1"
-                position="relative"
-              >
-                <Flex
-                  justify="space-between"
-                  alignItems="center"
-                  direction="row"
-                  w="100%" // Ensure Flex container takes up the full width
-                >
-                  <Flex>
-                    <AlertIcon />
-                    <Text userSelect="none">
-                      <b>Съвет:</b> Натиснете тук, за да видите състоянието на
-                      вашето тегло, дали трябва да сваляте или да качвате тегло
-                      и тогава си съставете хранително меню за деня, за да
-                      прецените правилно каква цел да си поставите.
-                    </Text>
-                  </Flex>
-                  <Flex alignItems="center">
-                    <Icon
-                      as={dropdownVisibleTip ? FaAngleUp : FaAngleDown}
-                      boxSize={6}
-                      color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                    />
-                  </Flex>
-                </Flex>
-              </Alert>
-              {renderDropdownTip && (
-                <animated.div
-                  style={{ ...slideAnimationDropTip, position: "relative" }}
-                >
-                  <Card
-                    bg={boxBg}
-                    minH={{ base: "800px", md: "300px", xl: "180px" }}
-                  >
-                    <SimpleGrid
-                      columns={{ base: 1, md: 2, lg: 4 }}
-                      gap="20px"
-                      mt="40px"
-                    >
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightLiftingUp}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name="Перфектно тегло"
-                        value={perfectWeight + " kg"}
-                      />
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightLiftingUp}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name={`Вие сте ${
-                          differenceFromPerfectWeight.isUnderOrAbove == "above"
-                            ? "над"
-                            : "под"
-                        } нормата:`}
-                        value={
-                          Math.abs(
-                            differenceFromPerfectWeight.difference
-                          ).toFixed(2) + " kg"
-                        }
-                        growth={
-                          differenceFromPerfectWeightChange
-                            ? differenceFromPerfectWeightChange > 0
-                              ? `+${differenceFromPerfectWeightChange.toFixed(
-                                  2
-                                )}`
-                              : null
-                            : null
-                        }
-                        decrease={
-                          differenceFromPerfectWeightChange
-                            ? differenceFromPerfectWeightChange < 0
-                              ? `${differenceFromPerfectWeightChange.toFixed(
-                                  2
-                                )}`
-                              : null
-                            : null
-                        }
-                        subtext={`в сравнение с ${userDataLastSavedDate}`}
-                      />
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightScale}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name="Състояние"
-                        value={health}
-                      />
-                      <MiniStatistics
-                        startContent={
-                          <IconBox
-                            w="56px"
-                            h="56px"
-                            bg={gradient}
-                            transition="background-image 0.5s ease-in-out"
-                            icon={
-                              <Icon
-                                w="32px"
-                                h="32px"
-                                as={GiWeightScale}
-                                color="white"
-                              />
-                            }
-                          />
-                        }
-                        name="Препоръчително е да:"
-                        value={calculateRecommendedGoal() + " (кг.)"}
-                      />
-                    </SimpleGrid>
-                  </Card>
-                </animated.div>
-              )}
+              <UserInfoCard userData={userData} />
+              <AlertDropdown
+                userDataLastSavedDate={userDataLastSavedDate}
+                differenceFromPerfectWeight={differenceFromPerfectWeight}
+                differenceFromPerfectWeightChange={
+                  differenceFromPerfectWeightChange
+                }
+                perfectWeight={perfectWeight}
+                health={health}
+                dropdownVisible={dropdownVisibleTip}
+                handleDropdownToggle={handleDropdownTipToggle}
+                calculateRecommendedGoal={calculateRecommendedGoal}
+              />
               <animated.div
                 style={{ ...slideAnimationTip, position: "relative" }}
               >
                 {lineChartForCalories.length > 1 && (
-                  <Box>
-                    <Card
-                      onClick={handleDropdownToggle}
-                      cursor="pointer"
-                      zIndex="1"
-                      position="relative"
-                      bg={dropdownVisible ? dropdownActiveBoxBg : dropdownBoxBg}
-                    >
-                      <Flex justify="space-between" alignItems="center">
-                        <Text
-                          fontSize="2xl"
-                          style={
-                            dropdownVisible
-                              ? {
-                                  backgroundImage: gradient,
-                                  WebkitBackgroundClip: "text",
-                                  color: "transparent"
-                                }
-                              : {}
-                          }
-                          userSelect="none"
-                        >
-                          {dropdownVisible ? (
-                            <b>
-                              Статистики за ВАШИТЕ средно приети нутриенти и
-                              тяхното изменение:
-                            </b>
-                          ) : (
-                            "Статистики за ВАШИТЕ средно приети нутриенти и тяхното изменение:"
-                          )}
-                        </Text>
-                        <Icon
-                          as={dropdownVisible ? FaAngleUp : FaAngleDown}
-                          boxSize={6}
-                          color="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                        />
-                      </Flex>
-                    </Card>
-                    {renderDropdown && (
-                      <animated.div
-                        style={{ ...slideAnimationDrop, position: "relative" }}
-                      >
-                        <Card
-                          bg={boxBg}
-                          minH={{ base: "800px", md: "300px", xl: "180px" }}
-                        >
-                          <SimpleGrid
-                            columns={{ base: 1, md: 2, lg: 4 }}
-                            gap="20px"
-                            mt="50px"
-                          >
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Калории"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForCalories.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Протеин"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForProtein.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Въглехидрати"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForCarbs.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                            <MiniStatistics
-                              startContent={
-                                <IconBox
-                                  w="56px"
-                                  h="56px"
-                                  bg="linear-gradient(90deg, #422afb 0%, #715ffa 100%)"
-                                  icon={
-                                    <Icon
-                                      w="32px"
-                                      h="32px"
-                                      as={FaFireAlt}
-                                      color="white"
-                                    />
-                                  }
-                                />
-                              }
-                              name="Мазнини"
-                              value={
-                                lineChartLabels.length > 0
-                                  ? (
-                                      lineChartForFat.reduce(
-                                        (accumulator, currentValue) =>
-                                          accumulator + currentValue,
-                                        0
-                                      ) / lineChartLabels.length
-                                    ).toFixed(2)
-                                  : 0
-                              }
-                            />
-                          </SimpleGrid>
-                          <SimpleGrid
-                            columns={{ base: 1, md: 2, xl: 2 }}
-                            gap="20px"
-                            mt="20px"
-                          >
-                            <Card
-                              fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                              p="20px" // Add padding to the card
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="column"
-                            >
-                              Вашите приети калории (kcal)
-                            </Card>
-                            {!isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px" // Add padding to the card
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашият приет протеин (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForCalories}
-                                lineChartLabelName="Изменение на калории(kcal)"
-                                textColor={chartsColor}
-                                color="rgba(67,24,255,1)"
-                              />
-                            </Card>
-                            {isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px" // Add padding to the card
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашият приет протеин (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForProtein}
-                                lineChartLabelName="Изменение на протеин(g)"
-                                textColor={chartsColor}
-                                color="rgba(67,24,255,1)"
-                              />
-                            </Card>
-                            <Card
-                              fontSize="3xl"
-                              maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                              p="20px"
-                              display="flex"
-                              alignItems="center"
-                              justifyContent="center"
-                              flexDirection="column"
-                            >
-                              Вашите приети мазнини (g.)
-                            </Card>
-                            {!isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашите приети въглехидрати (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForFat}
-                                lineChartLabelName="Изменение на мазнини(g)"
-                                textColor={chartsColor}
-                                color="#a194ff"
-                              />
-                            </Card>
-                            {isSmallScreen && (
-                              <Card
-                                fontSize="3xl"
-                                maxH={{ sm: "100px", md: "150px", lg: "100px" }}
-                                p="20px"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                flexDirection="column"
-                              >
-                                Вашите приети въглехидрати (g.)
-                              </Card>
-                            )}
-                            <Card
-                              alignItems="center"
-                              flexDirection="column"
-                              h="100%"
-                              w="100%"
-                              minH={{ sm: "400px", md: "300px", lg: "auto" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                              maxH={{ sm: "400px", md: "300px", lg: "auto" }}
-                            >
-                              <LineChart
-                                lineChartLabels={lineChartLabels}
-                                lineChartData={lineChartForCarbs}
-                                lineChartLabelName="Изменение на въглехидрати(g)"
-                                textColor={chartsColor}
-                                color="#a194ff"
-                              />
-                            </Card>
-                          </SimpleGrid>
-                        </Card>
-                      </animated.div>
-                    )}
-                  </Box>
+                  <NutrientsDropdown
+                    lineChartForCalories={lineChartForCalories}
+                    lineChartForCarbs={lineChartForCarbs}
+                    lineChartForFat={lineChartForFat}
+                    lineChartForProtein={lineChartForProtein}
+                    lineChartLabels={lineChartLabels}
+                    handleDropdownToggle={handleDropdownToggle}
+                    dropdownVisible={dropdownVisible}
+                  />
                 )}
                 <animated.div
                   style={{ ...slideAnimation, position: "relative" }}
@@ -1467,165 +577,17 @@ export default function MealPlanner() {
                           >
                             Изберете ниво на натовареност:
                           </Text>
-                          <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
-                            <MenuButton
-                              alignItems="center"
-                              justifyContent="center"
-                              bg={bgButton}
-                              _hover={bgHoverInfoBox}
-                              _focus={bgFocus}
-                              _active={bgFocus}
-                              w="30px"
-                              h="30px"
-                              lineHeight="50%"
-                              onClick={onOpenStats}
-                              borderRadius="20px"
-                              mt="2px"
-                            >
-                              <Icon
-                                as={MdOutlineInfo}
-                                color={infoBoxIconColor}
-                                w="24px"
-                                h="24px"
-                              />
-                            </MenuButton>
-                            <MenuList
-                              w="100%"
-                              minW="unset"
-                              ml={{ base: "2%", lg: 0 }}
-                              mr={{ base: "2%", lg: 0 }}
-                              maxW={{ base: "70%", lg: "80%" }}
-                              border="transparent"
-                              backdropFilter="blur(100px)"
-                              bg={bgList}
-                              borderRadius="20px"
-                              p="15px"
-                            >
-                              <Box
-                                transition="0.2s linear"
-                                color={textColor}
-                                p="0px"
-                                maxW={{ base: "80%", lg: "100%" }}
-                                borderRadius="8px"
-                              >
-                                <AlertDialog
-                                  isOpen={isOpenStats}
-                                  leastDestructiveRef={cancelRefStats}
-                                  onClose={onCloseStats}
-                                >
-                                  <AlertDialogOverlay>
-                                    <AlertDialogContent
-                                      border="2px"
-                                      borderRadius="25px"
-                                      borderColor={borderColor}
-                                      mx="20px"
-                                    >
-                                      <AlertDialogHeader
-                                        fontSize="lg"
-                                        fontWeight="bold"
-                                      >
-                                        Различните нива на натовареност са:
-                                      </AlertDialogHeader>
-
-                                      <AlertDialogCloseButton borderRadius="20px" />
-
-                                      <AlertDialogBody>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 1</b> - Малко или въобще не
-                                            спортувате. Примерни упражнения:
-                                            Кратка разходка, Лека Йога, Кратка
-                                            Тай Чи сесия (20 мин.)
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 2</b> - Спортувате умерено
-                                            1-3 пъти в седмицата. Примерни
-                                            упражнения: Умерена разходка за 30
-                                            мин, Работа в двора/градинарство за
-                                            45 мин, Каране на колело за 1 час,
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 3</b> - Спортувате умерено
-                                            4-5 пъти в седмицата. Примерни
-                                            упражнения: Тичане 30 мин, Плуване
-                                            за 30 мин, Играене на тенис/волейбол
-                                            за 45 мин.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 4</b> - Спортувате умерено
-                                            дневно или интензивно 3-4 пъти в
-                                            седмицата. Примерни упражнения:
-                                            Интервална тренировка с висока
-                                            интензивност 30 мин, Тренировка за
-                                            цялото тяло 45 мин. Бързо плуване за
-                                            45 минути.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 5</b> - Спортувате
-                                            интензивно 6-7 пъти в седмицата.
-                                            Примерни упражнения: По-тежка и
-                                            по-дълга интервална тренировка с
-                                            висока интензивност, Трениране на
-                                            Кик-бокс за 1 час, Трениране на
-                                            бойни изкуства.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                          >
-                                            <b>Ниво 6</b> - Спортувате много
-                                            интензивно цялата седмица. Примерни
-                                            упражнения: Тренировка за маратон,
-                                            Каране на колело из дълги растояния
-                                            за 2 часа, Вдигане на тежести за 1
-                                            час, Участвие в спортен турнир (90
-                                            мин.)
-                                          </Text>
-                                        </Flex>
-                                      </AlertDialogBody>
-                                      <AlertDialogFooter></AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialogOverlay>
-                                </AlertDialog>
-                              </Box>
-                            </MenuList>
-                          </Menu>
+                          <InfoBox
+                            buttonText="Нива на натовареност"
+                            infoText={[
+                              "<b>Ниво 22222</b> - Малко или въобще не спортувате. Примерни упражнения: Кратка разходка, Лека Йога, Кратка Тай Чи сесия (20 мин.)",
+                              "<b>Ниво 2</b> - Спортувате умерено 1-3 пъти в седмицата. Примерни упражнения: Умерена разходка за 30 мин, Работа в двора/градинарство за 45 мин, Каране на колело за 1 час",
+                              "<b>Ниво 3</b> - Спортувате умерено 4-5 пъти в седмицата. Примерни упражнения: Тичане 30 мин, Плуване за 30 мин, Играене на тенис/волейбол за 45 мин.",
+                              "<b>Ниво 4</b> - Спортувате умерено дневно или интензивно 3-4 пъти в седмицата. Примерни упражнения: Интервална тренировка с висока интензивност 30 мин, Тренировка за цялото тяло 45 мин. Бързо плуване за 45 минути.",
+                              "<b>Ниво 5</b> - Спортувате интензивно 6-7 пъти в седмицата. Примерни упражнения: По-тежка и по-дълга интервална тренировка с висока интензивност, Трениране на Кик-бокс за 1 час, Трениране на бойни изкуства.",
+                              "<b>Ниво 6</b> - Спортувате много интензивно цялата седмица. Примерни упражнения: Тренировка за маратон, Каране на колело из дълги растояния за 2 часа, Вдигане на тежести за 1 час, Участвие в спортен турнир (90 мин.)"
+                            ]}
+                          />
                         </Flex>
                       </>
                     ) : (
@@ -1640,163 +602,17 @@ export default function MealPlanner() {
                           >
                             Изберете ниво на натовареност:
                           </Text>
-                          <Menu isOpen={isOpenLevels} onClose={onCloseLevels}>
-                            <MenuButton
-                              alignItems="center"
-                              justifyContent="center"
-                              bg={bgButton}
-                              _hover={bgHoverInfoBox}
-                              _focus={bgFocus}
-                              _active={bgFocus}
-                              w="30px"
-                              h="30px"
-                              lineHeight="50%"
-                              onClick={onOpenStats}
-                              borderRadius="20px"
-                            >
-                              <Icon
-                                as={MdOutlineInfo}
-                                color={infoBoxIconColor}
-                                w="24px"
-                                h="24px"
-                              />
-                            </MenuButton>
-                            <MenuList
-                              w="100%"
-                              minW="unset"
-                              ml={{ base: "2%", lg: 0 }}
-                              mr={{ base: "2%", lg: 0 }}
-                              maxW={{ base: "70%", lg: "80%" }}
-                              border="transparent"
-                              backdropFilter="blur(100px)"
-                              bg={bgList}
-                              borderRadius="20px"
-                              p="15px"
-                            >
-                              <Box
-                                transition="0.2s linear"
-                                color={textColor}
-                                p="0px"
-                                maxW={{ base: "80%", lg: "100%" }}
-                                borderRadius="8px"
-                              >
-                                <AlertDialog
-                                  isOpen={isOpenStats}
-                                  leastDestructiveRef={cancelRefStats}
-                                  onClose={onCloseStats}
-                                >
-                                  <AlertDialogOverlay>
-                                    <AlertDialogContent
-                                      border="2px"
-                                      borderRadius="25px"
-                                      borderColor={borderColor}
-                                    >
-                                      <AlertDialogHeader
-                                        fontSize="lg"
-                                        fontWeight="bold"
-                                      >
-                                        Различните нива на натовареност са:
-                                      </AlertDialogHeader>
-
-                                      <AlertDialogCloseButton borderRadius="20px" />
-
-                                      <AlertDialogBody>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 1</b> - Малко или въобще не
-                                            спортувате. Примерни упражнения:
-                                            Кратка разходка, Лека Йога, Кратка
-                                            Тай Чи сесия (20 мин.)
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 2</b> - Спортувате умерено
-                                            1-3 пъти в седмицата. Примерни
-                                            упражнения: Умерена разходка за 30
-                                            мин, Работа в двора/градинарство за
-                                            45 мин, Каране на колело за 1 час,
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 3</b> - Спортувате умерено
-                                            4-5 пъти в седмицата. Примерни
-                                            упражнения: Тичане 30 мин, Плуване
-                                            за 30 мин, Играене на тенис/волейбол
-                                            за 45 мин.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 4</b> - Спортувате умерено
-                                            дневно или интензивно 3-4 пъти в
-                                            седмицата. Примерни упражнения:
-                                            Интервална тренировка с висока
-                                            интензивност 30 мин, Тренировка за
-                                            цялото тяло 45 мин. Бързо плуване за
-                                            45 минути.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                            mb="5px"
-                                          >
-                                            <b>Ниво 5</b> - Спортувате
-                                            интензивно 6-7 пъти в седмицата.
-                                            Примерни упражнения: По-тежка и
-                                            по-дълга интервална тренировка с
-                                            висока интензивност, Трениране на
-                                            Кик-бокс за 1 час, Трениране на
-                                            бойни изкуства.
-                                          </Text>
-                                        </Flex>
-                                        <Flex align="center">
-                                          <Text
-                                            fontSize="sm"
-                                            fontWeight="400"
-                                            mt="10px"
-                                          >
-                                            <b>Ниво 6</b> - Спортувате много
-                                            интензивно цялата седмица. Примерни
-                                            упражнения: Тренировка за маратон,
-                                            Каране на колело из дълги растояния
-                                            за 2 часа, Вдигане на тежести за 1
-                                            час, Участвие в спортен турнир (90
-                                            мин.)
-                                          </Text>
-                                        </Flex>
-                                      </AlertDialogBody>
-                                      <AlertDialogFooter></AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialogOverlay>
-                                </AlertDialog>
-                              </Box>
-                            </MenuList>
-                          </Menu>
+                          <InfoBox
+                            buttonText="Нива на натовареност"
+                            infoText={[
+                              "<b>Ниво 1</b> - Малко или въобще не спортувате. Примерни упражнения: Кратка разходка, Лека Йога, Кратка Тай Чи сесия (20 мин.)",
+                              "<b>Ниво 2</b> - Спортувате умерено 1-3 пъти в седмицата. Примерни упражнения: Умерена разходка за 30 мин, Работа в двора/градинарство за 45 мин, Каране на колело за 1 час",
+                              "<b>Ниво 3</b> - Спортувате умерено 4-5 пъти в седмицата. Примерни упражнения: Тичане 30 мин, Плуване за 30 мин, Играене на тенис/волейбол за 45 мин.",
+                              "<b>Ниво 4</b> - Спортувате умерено дневно или интензивно 3-4 пъти в седмицата. Примерни упражнения: Интервална тренировка с висока интензивност 30 мин, Тренировка за цялото тяло 45 мин. Бързо плуване за 45 минути.",
+                              "<b>Ниво 5</b> - Спортувате интензивно 6-7 пъти в седмицата. Примерни упражнения: По-тежка и по-дълга интервална тренировка с висока интензивност, Трениране на Кик-бокс за 1 час, Трениране на бойни изкуства.",
+                              "<b>Ниво 6</b> - Спортувате много интензивно цялата седмица. Примерни упражнения: Тренировка за маратон, Каране на колело из дълги растояния за 2 часа, Вдигане на тежести за 1 час, Участвие в спортен турнир (90 мин.)"
+                            ]}
+                          />
                         </Flex>
                       </>
                     )}
@@ -1882,202 +698,15 @@ export default function MealPlanner() {
                                         >
                                           Изберете тип диета:
                                         </Text>
-                                        <Menu
-                                          isOpen={isOpenDiet}
-                                          onClose={onCloseDiet}
-                                        >
-                                          <MenuButton
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            bg={bgButton}
-                                            _hover={bgHoverInfoBox}
-                                            _focus={bgFocus}
-                                            _active={bgFocus}
-                                            w="30px"
-                                            h="30px"
-                                            lineHeight="50%"
-                                            onClick={onOpen}
-                                            borderRadius="20px"
-                                            order={1} // Set a higher order value
-                                          >
-                                            <Icon
-                                              as={MdOutlineInfo}
-                                              color={infoBoxIconColor}
-                                              w="24px"
-                                              h="24px"
-                                            />
-                                          </MenuButton>
-                                          <MenuList
-                                            w="100%"
-                                            minW="unset"
-                                            ml={{ base: "2%", lg: 0 }}
-                                            mr={{ base: "2%", lg: 0 }}
-                                            maxW={{ base: "47%", lg: "80%" }}
-                                            border="transparent"
-                                            backdropFilter="blur(100px)"
-                                            bg={bgList}
-                                            borderRadius="20px"
-                                          >
-                                            <Box
-                                              transition="0.2s linear"
-                                              color={textColor}
-                                              borderRadius="8px"
-                                              maxW={{
-                                                base: "2xl",
-                                                lg: "100%"
-                                              }}
-                                            >
-                                              <AlertDialog
-                                                isOpen={isOpen}
-                                                leastDestructiveRef={cancelRef}
-                                                onClose={onClose}
-                                              >
-                                                <AlertDialogOverlay>
-                                                  <AlertDialogContent
-                                                    border="2px"
-                                                    borderRadius="25px"
-                                                    borderColor={borderColor}
-                                                    mx={
-                                                      isSmallScreen
-                                                        ? "20px"
-                                                        : "0px"
-                                                    }
-                                                  >
-                                                    <AlertDialogHeader
-                                                      fontSize="lg"
-                                                      fontWeight="bold"
-                                                    >
-                                                      Изберете тип диета по
-                                                      вашите <br />
-                                                      предпочитания.
-                                                    </AlertDialogHeader>
-
-                                                    <AlertDialogCloseButton borderRadius="20px" />
-
-                                                    <AlertDialogBody>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>Балансирана:</b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="200"
-                                                          mb="10px"
-                                                        >
-                                                          Балансирано
-                                                          разпределение на
-                                                          макронутриенти с
-                                                          умерени нива на
-                                                          протеини, въглехидрати
-                                                          и мазнини. Идеална за
-                                                          поддържане на
-                                                          здравето.
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>
-                                                            Ниско съдържание на
-                                                            мазнини:
-                                                          </b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="200"
-                                                          mb="10px"
-                                                        >
-                                                          Набляга на намаляване
-                                                          на приема на мазнини и
-                                                          поддържане на
-                                                          адекватни нива на
-                                                          протеини и
-                                                          въглехидрати. Подходящ
-                                                          за тези, които се
-                                                          стремят да намалят
-                                                          общия прием на калории
-                                                          и да контролират
-                                                          теглото си.
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>
-                                                            Ниско съдържание на
-                                                            въглехидрати:
-                                                          </b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="400"
-                                                          mb="10px"
-                                                        >
-                                                          Фокусира се върху
-                                                          минимизиране на приема
-                                                          на въглехидрати, като
-                                                          същевременно осигурява
-                                                          достатъчно протеини и
-                                                          здравословни мазнини.
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="1xl"
-                                                          fontWeight="400"
-                                                          mt="4px"
-                                                        >
-                                                          <b>
-                                                            Високо съдържание на
-                                                            протеин:
-                                                          </b>
-                                                          <br />
-                                                        </Text>
-                                                      </Flex>
-                                                      <Flex align="center">
-                                                        <Text
-                                                          fontSize="sm"
-                                                          fontWeight="400"
-                                                        >
-                                                          Дава приоритет на
-                                                          по-висок прием на
-                                                          протеин с умерени нива
-                                                          на въглехидрати и
-                                                          мазнини. Идеална за
-                                                          тези, които искат да
-                                                          подпомогнат развитието
-                                                          на мускулите, особено
-                                                          при силови тренировки
-                                                          или фитнес програми.
-                                                        </Text>
-                                                      </Flex>
-                                                    </AlertDialogBody>
-                                                    <AlertDialogFooter></AlertDialogFooter>
-                                                  </AlertDialogContent>
-                                                </AlertDialogOverlay>
-                                              </AlertDialog>
-                                            </Box>
-                                          </MenuList>
-                                        </Menu>
+                                        <InfoBox
+                                          buttonText="Изберете тип диета според вашите предпочитания:"
+                                          infoText={[
+                                            "<b>Балансирана:</b><br /> Балансирано разпределение на макронутриенти с умерени нива на протеини, въглехидрати и мазнини. Идеална за поддържане на здравето.",
+                                            "<b>Ниско съдържание на мазнини:</b><br /> Набляга на намаляване на приема на мазнини и поддържане на адекватни нива на протеини и въглехидрати. Подходящ за тези, които се стремят да намалят общия прием на калории и да контролират теглото си.",
+                                            "<b>Ниско съдържание на въглехидрати:</b><br /> Фокусира се върху минимизиране на приема на въглехидрати, като същевременно осигурява достатъчно протеини и здравословни мазнини.",
+                                            "<b>Високо съдържание на протеин:</b><br /> Дава приоритет на по-висок прием на протеин с умерени нива на въглехидрати и мазнини. Идеална за тези, които искат да подпомогнат развитието на мускулите, особено при силови тренировки или фитнес програми."
+                                          ]}
+                                        />
                                       </Flex>
                                       <DietTable
                                         tableData={tableData}
@@ -2123,19 +752,12 @@ export default function MealPlanner() {
                       )}
                     </Box>
                   )}
-                  <Alert
+                  <AlertBox
                     status="warning"
-                    borderRadius="20px"
-                    fontWeight={tipFontWeight}
-                    p="20px"
-                    w="100%"
-                    mb="20px"
-                  >
-                    <AlertIcon />
-                    Тези стойности са приблизителни и може да е необходимо
+                    text="Тези стойности са приблизителни и може да е необходимо
                     преценка от диетолог или здравен специалист, за да се
-                    адаптират към индивидуалните ви нужди.
-                  </Alert>
+                    адаптират към индивидуалните ви нужди."
+                  />
                 </animated.div>
               </animated.div>
             </Box>

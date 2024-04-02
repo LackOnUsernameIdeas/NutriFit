@@ -41,7 +41,7 @@ function Sidebar({ routes }: { routes: RoutesType[] }) {
   const sidebarImageSmall = useColorModeValue(wavesLightSmall, wavesDarkSmall);
   const sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarMargins = "0px";
-  const [isSmallHeight] = useMediaQuery("(max-height: 769px)");
+  const [isSmallHeight] = useMediaQuery("(max-height: 990px)");
   const sidebarImage = isSmallHeight ? sidebarImageSmall : sidebarImageBig;
   // SIDEBAR
   return (

@@ -1,31 +1,8 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { fetchAdditionalUserData } from "database/getAdditionalUserData";
+import { fetchAdditionalUserData } from "database/getFunctions";
 // Chakra imports
 import {
   Box,
@@ -59,14 +36,8 @@ import {
   UserData,
   Goal,
   WeightDifference
-} from "../../types/weightStats";
-import {
-  fetchBMIData,
-  fetchPerfectWeightData,
-  fetchBodyFatAndLeanMassData,
-  fetchCaloriesForActivityLevels,
-  fetchMacroNutrients
-} from "./utils/fetchFunctions";
+} from "../../variables/weightStats";
+
 interface UserMeasurements {
   userData: UserData;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -111,22 +82,12 @@ const UserMeasurements = () => {
 
   // State за зареждане на страницата
   const [isLoading, setIsLoading] = useState(false);
+  //const [isLoadingOnMount, setIsLoadingOnMount] = useState(true);
 
   const [validationErrors, setValidationErrors] = React.useState<{
     [key: string]: string;
   }>({});
   // States за запазване на извличените данни
-  const [BMIIndex, setBMIIndex] = useState<BMIInfo>({
-    bmi: null,
-    health: "",
-    healthy_bmi_range: "18.5 - 25"
-  });
-  const [bodyFatMassAndLeanMass, setBodyFatMassAndLeanMass] =
-    useState<BodyMass>({
-      "Body Fat (U.S. Navy Method)": 0,
-      "Body Fat Mass": 0,
-      "Lean Body Mass": 0
-    });
   const [perfectWeight, setPerfectWeight] = useState<number>(0);
   const [differenceFromPerfectWeight, setDifferenceFromPerfectWeight] =
     useState<WeightDifference>({
@@ -168,9 +129,16 @@ const UserMeasurements = () => {
       }
     });
 
-    // Cleanup the subscription when the component unmounts
     return () => unsubscribe();
   }, []);
+
+  // React.useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setIsLoadingOnMount(false);
+  //   }, 2000);
+
+  //   return () => clearTimeout(timeout);
+  // }, []);
 
   // Event handler-и за реакция при промяна
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -261,7 +229,7 @@ const UserMeasurements = () => {
       // Only proceed if saveUserData is successful
       if (saveResult) {
         triggerFetchAndSaveAllData();
-        history.push("/admin/default");
+        history.push("/admin/home");
       }
     } catch (error) {
       // Handle error
@@ -382,25 +350,30 @@ const UserMeasurements = () => {
           const additionalData = await fetchAdditionalUserData(
             auth.currentUser.uid
           );
-
+          console.log("DEBUG ADDITIONAL DATA", additionalData);
           // Extract date keys from additionalData
           const dateKeys = Object.keys(additionalData).filter((key) =>
             /^\d{4}-\d{2}-\d{2}$/.test(key)
           );
-
+          console.log("DEBUG DATE KEYS", dateKeys);
           // Sort date keys in descending order
           dateKeys.sort(
             (a, b) => new Date(b).getTime() - new Date(a).getTime()
           );
-
+          console.log("DEBUG DATE KEYS SORTED", dateKeys);
           // Find the first date before today
           const today = new Date().toISOString().slice(0, 10);
           const lastSavedDate = dateKeys.find((date) => date < today);
           const rawUserDataForToday = additionalData[today];
           const rawUserDataForLastSavedDate = additionalData[lastSavedDate];
-
+          console.log("DEBUG LAST SAVED DATE", lastSavedDate);
+          console.log(
+            "DEBUG rawUserDataForLastSavedDate",
+            additionalData[lastSavedDate]
+          );
           if (isMounted.current) {
             setUserDataLastSavedDate(rawUserDataForLastSavedDate);
+            console.log("LAST DATE: ", userDataLastSavedDate);
             setUserDataForToday(rawUserDataForToday);
             setIsTodaysDataFetched(true);
             setIsLoading(false);
@@ -463,7 +436,7 @@ const UserMeasurements = () => {
   const waistImg = useColorModeValue(waistImgDark, waistImgWhite);
   const hipImg = useColorModeValue(hipImgDark, hipImgWhite);
   const [isSmallScreen] = useMediaQuery("(max-width: 767px)");
-
+  // {isLoading || !isTodaysDataFetched || isLoadingOnMount ? (
   return (
     <Box>
       {isLoading || !isTodaysDataFetched ? (
