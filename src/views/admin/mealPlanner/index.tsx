@@ -365,7 +365,7 @@ export default function MealPlanner() {
                   userDataTimestamp?.PerfectWeightData?.perfectWeight || 0,
                 differenceFromPerfectWeight:
                   userDataTimestamp?.PerfectWeightData
-                    ?.differenceFromPerfectWeight?.difference || 0
+                    ?.differenceFromPerfectWeight
               };
 
               orderedTimestampObjects.push(orderedObject);
@@ -399,6 +399,10 @@ export default function MealPlanner() {
           setPerfectWeight(
             orderedTimestampObjects[orderedTimestampObjects.length - 1]
               .perfectWeight
+          );
+          setDifferenceFromPerfectWeight(
+            orderedTimestampObjects[orderedTimestampObjects.length - 1]
+              .differenceFromPerfectWeight
           );
           setAllOrderedObjects(orderedTimestampObjects);
           setAllUsersPreferences(allUsersPreferencesObjects);
@@ -527,6 +531,12 @@ export default function MealPlanner() {
           ) : (
             <Box transition="0.2s ease-in-out">
               <UserInfoCard userData={userData} />
+              <>
+                {console.log(
+                  "differenceFromPerfectWeight: ",
+                  differenceFromPerfectWeight
+                )}
+              </>
               <AlertDropdown
                 userDataLastSavedDate={userDataLastSavedDate}
                 differenceFromPerfectWeight={differenceFromPerfectWeight}

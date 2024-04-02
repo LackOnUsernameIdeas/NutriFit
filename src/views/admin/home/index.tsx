@@ -42,11 +42,7 @@ import {
   Firestore,
   QueryDocumentSnapshot
 } from "firebase/firestore";
-import {
-  getTotalUsers,
-  orderMealsByFrequency,
-  getAllHealthStatus
-} from "../../../database/getFunctions";
+
 import { db } from "database/connection";
 
 interface LinearGradientTextProps {
@@ -199,7 +195,14 @@ export default function UserReports() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://nutri-api.noit.eu/getTop10Meals");
+        const response = await fetch(
+          "https://nutri-api.noit.eu/getTop10Meals",
+          {
+            headers: {
+              "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
+            }
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch data for top 10 meals");
         }
@@ -223,7 +226,12 @@ export default function UserReports() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nutri-api.noit.eu/getAllDeviations"
+          "https://nutri-api.noit.eu/getAllDeviations",
+          {
+            headers: {
+              "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
+            }
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -258,7 +266,12 @@ export default function UserReports() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nutri-api.noit.eu/getAllHealthStatuses"
+          "https://nutri-api.noit.eu/getAllHealthStatuses",
+          {
+            headers: {
+              "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
+            }
+          }
         );
         if (response.ok) {
           const { labels: healthStatuses, counts: healthStatusesCount } =
