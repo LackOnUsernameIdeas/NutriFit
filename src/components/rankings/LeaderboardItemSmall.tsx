@@ -226,9 +226,9 @@ export default function LeaderBoardItemSmall(props: {
             )}
             <Icon
               as={renderDropdown ? FaAngleDown : FaAngleRight}
-              mr={renderDropdown ? undefined : "auto"} 
-              ml={renderDropdown ? "auto" : undefined} 
-              mt={renderDropdown ? "25px" : undefined} 
+              mr={renderDropdown ? undefined : "auto"}
+              ml={renderDropdown ? "auto" : undefined}
+              mt={renderDropdown ? "25px" : undefined}
               fontSize="lg"
               color={textColorDate}
             />
