@@ -32,7 +32,7 @@ export default function Dropdown({
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
-  const bg = useColorModeValue("secondaryGray.200", "navy.800");
+  const bg = useColorModeValue("white", "navy.800");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
   const [miniStatisticsVisible, setMiniStatisticsVisible] =
