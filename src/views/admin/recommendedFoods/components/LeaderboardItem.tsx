@@ -145,66 +145,66 @@ export default function LeaderboardItem(props: {
         <Flex direction={{ base: "column" }} justify="center">
           <Flex position="relative" align="center" zIndex="1">
             {!renderDropdown && (
-              <Box mt="30px">
-                <>
-                  <Image
-                    src={image}
-                    minW="66px"
-                    maxW="66px"
-                    minH="66px"
-                    maxH="66px"
-                    borderRadius="20px"
-                    mx="16px"
-                  />
-                  <Flex
-                    direction="column"
-                    w={{ base: "70%", md: "100%" }}
-                    me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
-                  >
-                    <Flex>
-                      {rank && (
-                        <Text
-                          fontSize="2xl"
-                          mr="5px"
-                          color={
-                            rank === 1
-                              ? "gold"
-                              : rank === 2
-                              ? "silver"
-                              : rank === 3
-                              ? "#cd7f32"
-                              : textColor
-                          }
-                        >
-                          <b>#{rank}</b>
-                        </Text>
-                      )}
+              <>
+                <Image
+                  src={image}
+                  minW="66px"
+                  maxW="66px"
+                  minH="66px"
+                  maxH="66px"
+                  borderRadius="20px"
+                  mx="16px"
+                  mt="30px"
+                />
+                <Flex
+                  mt="30px"
+                  direction="column"
+                  w={{ base: "70%", md: "100%" }}
+                  me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
+                >
+                  <Flex>
+                    {rank && (
                       <Text
-                        color={textColor}
-                        fontSize={{
-                          base: "lg"
-                        }}
-                        mb="5px"
-                        fontWeight="bold"
-                        me="14px"
-                        mt="5px"
+                        fontSize="2xl"
+                        mr="5px"
+                        color={
+                          rank === 1
+                            ? "gold"
+                            : rank === 2
+                            ? "silver"
+                            : rank === 3
+                            ? "#cd7f32"
+                            : textColor
+                        }
                       >
-                        {name}
+                        <b>#{rank}</b>
                       </Text>
-                    </Flex>
+                    )}
                     <Text
-                      color="secondaryGray.600"
+                      color={textColor}
                       fontSize={{
-                        base: "md"
+                        base: "lg"
                       }}
-                      fontWeight="400"
+                      mb="5px"
+                      fontWeight="bold"
                       me="14px"
+                      mt="5px"
                     >
-                      {count}
+                      {name}
                     </Text>
                   </Flex>
-                </>
-              </Box>
+                  <Text
+                    color="secondaryGray.600"
+                    fontSize={{
+                      base: "md"
+                    }}
+                    fontWeight="400"
+                    me="14px"
+                  >
+                    {count}
+                  </Text>
+                </Flex>
+              </>
             )}
             <Icon
               as={renderDropdown ? FaAngleDown : FaAngleRight}
