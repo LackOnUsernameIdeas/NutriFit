@@ -31,6 +31,7 @@ export default function Dropdown({
   const gradientLight = "linear-gradient(90deg, #422afb 0%, #715ffa 100%)";
   const gradientDark = "linear-gradient(90deg, #715ffa 0%, #422afb 100%)";
   const gradient = useColorModeValue(gradientLight, gradientDark);
+  const bg = useColorModeValue("white", "navy.800");
   const boxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownBoxBg = useColorModeValue("secondaryGray.300", "navy.700");
   const dropdownActiveBoxBg = useColorModeValue("#d8dced", "#171F3D");
@@ -128,7 +129,7 @@ export default function Dropdown({
       {renderDropdown && (
         <animated.div style={{ ...slideAnimationDrop, position: "relative" }}>
           <Card
-            bg={titleBorderColour ? "navy.800" : boxBg}
+            bg={titleBorderColour ? bg : boxBg}
             minH={{ base: "700px", md: "300px", xl: "180px" }}
           >
             {children}
