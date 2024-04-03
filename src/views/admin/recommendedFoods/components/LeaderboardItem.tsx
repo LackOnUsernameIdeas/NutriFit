@@ -145,23 +145,40 @@ export default function LeaderboardItem(props: {
         <Flex direction={{ base: "column" }} justify="center">
           <Flex position="relative" align="center" zIndex="1">
             {!renderDropdown && (
-              <>
-                <Image
-                  src={image}
-                  minW="66px"
-                  maxW="66px"
-                  minH="66px"
-                  maxH="66px"
-                  borderRadius="20px"
-                  mx="16px"
-                />
-                <Flex
-                  direction="column"
-                  w={{ base: "70%", md: "100%" }}
-                  me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
-                >
-                  <Flex>
-                    {rank && (
+              <Box mt="30px">
+                <>
+                  <Image
+                    src={image}
+                    minW="66px"
+                    maxW="66px"
+                    minH="66px"
+                    maxH="66px"
+                    borderRadius="20px"
+                    mx="16px"
+                  />
+                  <Flex
+                    direction="column"
+                    w={{ base: "70%", md: "100%" }}
+                    me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
+                  >
+                    <Flex>
+                      {rank && (
+                        <Text
+                          fontSize="2xl"
+                          mr="5px"
+                          color={
+                            rank === 1
+                              ? "gold"
+                              : rank === 2
+                              ? "silver"
+                              : rank === 3
+                              ? "#cd7f32"
+                              : textColor
+                          }
+                        >
+                          <b>#{rank}</b>
+                        </Text>
+                      )}
                       <Text
                         color={textColor}
                         fontSize={{
