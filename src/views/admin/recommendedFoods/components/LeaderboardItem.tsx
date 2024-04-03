@@ -163,46 +163,31 @@ export default function LeaderboardItem(props: {
                   <Flex>
                     {rank && (
                       <Text
-                        fontSize="2xl"
-                        mr="5px"
-                        color={
-                          rank === 1
-                            ? "gold"
-                            : rank === 2
-                            ? "silver"
-                            : rank === 3
-                            ? "#cd7f32"
-                            : textColor
-                        }
+                        color={textColor}
+                        fontSize={{
+                          base: "lg"
+                        }}
+                        mb="5px"
+                        fontWeight="bold"
+                        me="14px"
+                        mt="5px"
                       >
-                        <b>#{rank}</b>
+                        {name}
                       </Text>
-                    )}
+                    </Flex>
                     <Text
-                      color={textColor}
+                      color="secondaryGray.600"
                       fontSize={{
-                        base: "lg"
+                        base: "md"
                       }}
-                      mb="5px"
-                      fontWeight="bold"
+                      fontWeight="400"
                       me="14px"
-                      mt="5px"
                     >
-                      {name}
+                      {count}
                     </Text>
                   </Flex>
-                  <Text
-                    color="secondaryGray.600"
-                    fontSize={{
-                      base: "md"
-                    }}
-                    fontWeight="400"
-                    me="14px"
-                  >
-                    {count}
-                  </Text>
-                </Flex>
-              </>
+                </>
+              </Box>
             )}
             <Icon
               as={renderDropdown ? FaAngleDown : FaAngleRight}
