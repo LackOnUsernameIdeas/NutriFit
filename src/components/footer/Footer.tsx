@@ -110,7 +110,7 @@ const Footer = (props: { isForLanding?: boolean }) => {
               </Text>
               <List lineHeight="2">
                 <LinkItem text="Калкулатор за Тегло" href="/#/admin/weight" />
-                <LinkItem text="Хранителен План" href="/#/admin/meal-plan" />
+                <LinkItem text="Хранителен План" href="/#/admin/mealplan" />
                 <LinkItem text="За Контакт" href="/#/admin/contact" />
               </List>
             </Box>
