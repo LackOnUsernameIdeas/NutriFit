@@ -1,6 +1,6 @@
 {
   "homepage": "./",
-  "name": "horizon-ui-chakra-typescript",
+  "name": "nutri-fit",
   "version": "1.1.0",
   "private": true,
   "dependencies": {
