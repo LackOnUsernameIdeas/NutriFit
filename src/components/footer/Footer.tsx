@@ -15,6 +15,8 @@ import backgroundImageWhite from "../../assets/img/layout/layered-waves-haikei-w
 import backgroundImageDark from "../../assets/img/layout/layered-waves-haikei-dark.svg";
 
 import techStackImage from "../../assets/img/layout/techStack.jpg";
+import { getAuth } from "firebase/auth";
+import Cookies from "js-cookie";
 const Footer = (props: { isForLanding?: boolean }) => {
   const { isForLanding } = props;
   const { colorMode } = useColorMode();
@@ -178,7 +180,6 @@ const LinkItem = ({ text, isTag = false, tagText, href }: LinkItemProps) => {
       <Link
         fontWeight="600"
         href={href}
-        target="_blank"
         color="rgba(113, 128, 150, 1)"
         _hover={{ color: "brand.500" }}
       >
