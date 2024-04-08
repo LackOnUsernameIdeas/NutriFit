@@ -61,7 +61,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ храни спрямо калории от NutriFit",
+    name: "Топ храни спрямо калории",
     layout: "/admin",
     path: "/calory",
     icon: <Icon as={FaFireAlt} width="20px" height="20px" color="inherit" />,
@@ -69,7 +69,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ храни спрямо мазнини от NutriFit",
+    name: "Топ храни спрямо мазнини",
     layout: "/admin",
     path: "/fat",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
@@ -77,7 +77,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ храни спрямо въглехидрати от NutriFit",
+    name: "Топ храни спрямо въглехидрати",
     layout: "/admin",
     path: "/carbs",
     icon: <Icon as={FaBreadSlice} width="20px" height="20px" color="inherit" />,
@@ -85,7 +85,7 @@ const routes: RoutesType[] = [
     hideInSidebar: true
   },
   {
-    name: "Топ храни спрямо протеин от NutriFit",
+    name: "Топ храни спрямо протеин",
     layout: "/admin",
     path: "/protein",
     icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
@@ -109,7 +109,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ храни спрямо калории от NutriFit",
+        name: "Топ храни спрямо калории",
         layout: "/admin",
         path: "/calory",
         icon: (
@@ -119,7 +119,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ храни спрямо мазнини от NutriFit",
+        name: "Топ храни спрямо мазнини",
         layout: "/admin",
         path: "/fat",
         icon: <Icon as={FaTint} width="20px" height="20px" color="inherit" />,
@@ -127,7 +127,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ храни спрямо въглехидрати от NutriFit",
+        name: "Топ храни спрямо въглехидрати",
         layout: "/admin",
         path: "/carbs",
         icon: (
@@ -137,7 +137,7 @@ const routes: RoutesType[] = [
         hideInSidebar: true
       },
       {
-        name: "Топ храни спрямо протеин от NutriFit",
+        name: "Топ храни спрямо протеин",
         layout: "/admin",
         path: "/protein",
         icon: <Icon as={FaFish} width="20px" height="20px" color="inherit" />,
