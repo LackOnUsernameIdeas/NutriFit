@@ -516,14 +516,14 @@ export default function MealPlannerForm(props: {
       } catch (parseError) {
         throw new Error("Invalid JSON response from the server");
       }
-
+      console.log("1");
       // Check if the parsed JSON is in the expected format
       if (!isValidJson(jsonObject)) {
         throw new Error("Invalid JSON structure");
       }
 
       console.log("jsonObject: ", jsonObject);
-
+      console.log("2");
       const mealPlanImagesData: {
         breakfast: {
           main: string;
@@ -556,6 +556,7 @@ export default function MealPlannerForm(props: {
       // Iterate over each meal and make a separate image generation request
       for (const mealKey of Object.keys(jsonObject)) {
         if (mealKey !== "totals") {
+          console.log("3");
           const mealAppetizer = (jsonObject as any)[mealKey].appetizer;
           const mealMain = (jsonObject as any)[mealKey].main;
           const mealDessert = (jsonObject as any)[mealKey].dessert;
@@ -589,71 +590,67 @@ export default function MealPlannerForm(props: {
               return null;
             }
           }
-
+          console.log("4");
           const imageAppetizer =
             mealKey === "lunch" ? await fetchImage(mealAppetizer.name) : null;
-
+          console.log("5");
           const imageMain = await fetchImage(mealMain.name);
-
+          console.log("6");
           const imageDessert =
             mealKey === "lunch" || mealKey === "dinner"
               ? await fetchImage(mealDessert.name)
               : null;
-
+          console.log("7");
           const imageAppetizerResponseData =
             imageAppetizer !== null ? await imageAppetizer.json() : null;
           const imageMainResponseData = await imageMain.json();
           const imageDessertResponseData =
             imageDessert !== null ? await imageDessert.json() : null;
-
-          console.log("imageDessert: ", imageDessert, mealKey);
-          // console.log(
-          //   `Image Generation Response for ${mealAppetizer.name}: `,
-          //   imageAppetizerResponseData.items[0].link
-          // );
+          console.log("8");
+          // Check if the response data is not null and has items array
           if (
             imageAppetizerResponseData !== null &&
-            imageAppetizerResponseData?.items?.[0]?.link
+            Array.isArray(imageAppetizerResponseData.items) &&
+            imageAppetizerResponseData.items.length > 0 &&
+            imageAppetizerResponseData?.items[0]?.link
           ) {
             (mealPlanImagesData as any)[mealKey].appetizer =
-              imageAppetizerResponseData.items[0].link;
+              imageAppetizerResponseData?.items[0]?.link;
           }
-
-          if (imageMainResponseData?.items?.[0]?.link) {
-            (mealPlanImagesData as any)[mealKey].main =
-              imageMainResponseData.items[0].link;
-          }
-
+          console.log("9");
           if (
             imageDessertResponseData !== null &&
-            imageDessertResponseData?.items?.[0]?.link
+            Array.isArray(imageDessertResponseData.items) &&
+            imageDessertResponseData.items.length > 0 &&
+            imageDessertResponseData?.items[0]?.link
           ) {
             (mealPlanImagesData as any)[mealKey].dessert =
-              imageDessertResponseData.items[0].link;
+              imageDessertResponseData?.items[0]?.link;
           }
-
+          console.log("10");
           updatedMealPlanImagesData[mealKey] = {
             appetizer: imageAppetizerResponseData?.items?.[0]?.link || "",
-            main: imageMainResponseData.items[0].link,
+            main: imageMainResponseData?.items?.[0]?.link || "", // Add a null check before accessing items
             dessert: imageDessertResponseData?.items?.[0]?.link || ""
           };
-
+          console.log("10.5");
           // Set updated meal plan
           updatedMealPlan[mealKey] = {
             appetizer: jsonObject[mealKey].appetizer,
             main: jsonObject[mealKey].main,
             dessert: jsonObject[mealKey].dessert
           };
+          console.log("10.8");
         }
       }
-
+      console.log("11");
       setMealPlanImages(updatedMealPlanImagesData);
       setMealPlan({
         breakfast: updatedMealPlan.breakfast,
         lunch: updatedMealPlan.lunch,
         dinner: updatedMealPlan.dinner
       });
-
+      console.log("12");
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
