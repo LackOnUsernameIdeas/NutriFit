@@ -300,6 +300,10 @@ export default function MealPlannerForm(props: {
         throw new Error("Invalid JSON response from the server");
       }
 
+      if (!isValidJson(data)) {
+        throw new Error("Invalid JSON structure");
+      }
+
       console.log("CHATGPT: ", data);
 
       const filteredArr = Object.fromEntries(
@@ -464,6 +468,15 @@ export default function MealPlannerForm(props: {
     }
   }
 
+  const isValidJson = (jsonObject: MealPlan2) => {
+    return (
+      jsonObject &&
+      jsonObject.breakfast &&
+      jsonObject.lunch &&
+      jsonObject.dinner
+    );
+  };
+
   const generatePlanWithGemini = async () => {
     try {
       setIsSubmitted(true);
@@ -502,6 +515,11 @@ export default function MealPlannerForm(props: {
         console.log("jsonObject11111: ", jsonObject);
       } catch (parseError) {
         throw new Error("Invalid JSON response from the server");
+      }
+
+      // Check if the parsed JSON is in the expected format
+      if (!isValidJson(jsonObject)) {
+        throw new Error("Invalid JSON structure");
       }
 
       console.log("jsonObject: ", jsonObject);
