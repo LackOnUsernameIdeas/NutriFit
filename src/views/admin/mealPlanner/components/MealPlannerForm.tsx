@@ -282,9 +282,9 @@ export default function MealPlannerForm(props: {
 
       const responseData = await response.json();
       console.log("responseData: ", responseData);
-
+      const responseJson = responseData.choices[0].message.content;
       // Process the data returned by OpenAI API
-      const unescapedData = responseData.choices[0].message.content
+      const unescapedData = responseJson
         .replace(/^```json([\s\S]*?)```$/, "$1")
         .replace(/^```JSON([\s\S]*?)```$/, "$1")
         .replace(/^'|'$/g, "") // Remove single quotes at the beginning and end
@@ -486,20 +486,20 @@ export default function MealPlannerForm(props: {
 
       // Parse the response from the backend
       const responseData = await response.json();
+      const responseJson = responseData.aiResponse;
+      console.log("Response from backend:", responseJson);
 
-      // Handle the response data as needed
-      console.log("Response from backend:", responseData.aiResponse);
-
-      const stringToRepair = responseData.aiResponse
+      const stringToRepair = responseJson
         .replace(/^```json([\s\S]*?)```$/, "$1")
         .replace(/^```JSON([\s\S]*?)```$/, "$1")
-        .replace(/^'|'$/g, "") // Remove single quotes at the beginning and end
+        .replace(/^'|'$/g, "")
         .trim();
-
       let jsonObject;
       try {
+        console.log("stringToRepair: ", stringToRepair);
         jsonObject = JSON.parse(stringToRepair);
         checkTotals(jsonObject);
+        console.log("jsonObject11111: ", jsonObject);
       } catch (parseError) {
         throw new Error("Invalid JSON response from the server");
       }
