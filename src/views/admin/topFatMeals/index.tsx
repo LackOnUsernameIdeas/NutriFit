@@ -94,7 +94,6 @@ export default function TopMeals() {
               );
 
             setLeastFatFoods(lowFatMeals);
-            console.log("FETCHED!");
           }
         );
       } catch (error) {

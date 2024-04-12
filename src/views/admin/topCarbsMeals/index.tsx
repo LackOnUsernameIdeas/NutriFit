@@ -101,7 +101,6 @@ export default function TopMeals() {
               );
 
             setLeastCarbsFoods(lowCarbsMeals);
-            console.log("FETCHED!");
           }
         );
       } catch (error) {

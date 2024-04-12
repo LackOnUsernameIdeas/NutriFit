@@ -425,7 +425,6 @@ export default function WeightStats() {
       );
       setDifferenceFromPerfectWeightChange(differenceFromPerfectWeightChange);
 
-      console.log("Сортирано: ", sortedData);
       console.log(
         "all changes: ",
         bmiChange,

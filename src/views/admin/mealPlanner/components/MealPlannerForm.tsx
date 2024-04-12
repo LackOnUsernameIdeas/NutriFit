@@ -341,9 +341,6 @@ export default function MealPlannerForm(props: {
         const mealMain = (filteredArr as any)[mealKey].main;
         const mealDessert = (filteredArr as any)[mealKey].dessert;
 
-        // console.log("meal: ", meal);
-        // console.log("meal name: ", meal.name);
-
         //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
         //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
         //NutriFit3: cx=527000b0fabcc4dab, key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA
@@ -388,10 +385,6 @@ export default function MealPlannerForm(props: {
           imageDessert !== null ? await imageDessert.json() : null;
 
         console.log("imageDessert: ", imageDessert, mealKey);
-        // console.log(
-        //   `Image Generation Response for ${mealAppetizer.name}: `,
-        //   imageAppetizerResponseData.items[0].link
-        // );
         if (
           imageAppetizerResponseData !== null &&
           imageAppetizerResponseData?.items?.[0]?.link
@@ -542,9 +535,6 @@ export default function MealPlannerForm(props: {
           const mealMain = (jsonObject as any)[mealKey].main;
           const mealDessert = (jsonObject as any)[mealKey].dessert;
 
-          // console.log("meal: ", meal);
-          // console.log("meal name: ", meal.name);
-
           //NutriFit: cx=10030740e88c842af, key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw
           //NutriFit2: cx=258e213112b4b4492, key=AIzaSyArE48NFh1befjjDxpSrJ0eBgQh_OmQ7RA
           //NutriFit3: cx=527000b0fabcc4dab, key=AIzaSyDwqaIBGxmhEc6GVR3lwOVk_-0EpwKvOPA
@@ -589,10 +579,6 @@ export default function MealPlannerForm(props: {
             imageDessert !== null ? await imageDessert.json() : null;
 
           console.log("imageDessert: ", imageDessert, mealKey);
-          // console.log(
-          //   `Image Generation Response for ${mealAppetizer.name}: `,
-          //   imageAppetizerResponseData.items[0].link
-          // );
           if (
             imageAppetizerResponseData !== null &&
             imageAppetizerResponseData?.items?.[0]?.link
@@ -646,10 +632,6 @@ export default function MealPlannerForm(props: {
 
   console.log("mealPlan: ", mealPlan);
   console.log("mealPlanImages: ", mealPlanImages);
-  // const filteredArr = Object.keys(mealPlan).map((mealType: any, index) => {
-  //   console.log((mealPlan as any)[mealType]?.name, index);
-  // });
-  // console.log("filteredArr: ", filteredArr);
 
   interface LinearGradientTextProps {
     text: any;

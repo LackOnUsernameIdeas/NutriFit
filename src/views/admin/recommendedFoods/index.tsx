@@ -147,7 +147,6 @@ export default function TopMeals() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("tryyy");
         const response = await fetch("https://nutri-api.noit.eu/orderedMeals", {
           headers: {
             "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
@@ -162,7 +161,6 @@ export default function TopMeals() {
         // Set only the top 10 meals
         setAllMeals(orderedMeals);
         setLoading(false);
-        console.log("FETCHED!");
       } catch (error) {
         console.error("Error fetching meals:", error);
         setLoading(false);

@@ -101,7 +101,6 @@ export default function TopMeals() {
               );
 
             setLeastProteinFoods(lowProteinMeals);
-            console.log("FETCHED!");
           }
         );
       } catch (error) {

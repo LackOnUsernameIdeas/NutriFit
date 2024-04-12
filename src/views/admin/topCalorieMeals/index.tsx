@@ -100,7 +100,6 @@ export default function TopMeals() {
               );
 
             setLeastCalorieFoods(lowCalorieMeals);
-            console.log("FETCHED!");
           }
         );
       } catch (error) {
