@@ -21,8 +21,10 @@ import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import routes from "routes";
 import Cookies from "js-cookie";
 import { getAuth, signOut } from "firebase/auth";
+import { useHistory } from "react-router-dom";
 
 export default function HeaderLinks(props: { secondary: boolean }) {
+  const history = useHistory(); // Initialize useHistory hook outside of the function
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   const navbarIcon = useColorModeValue("gray.400", "white");
@@ -42,6 +44,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
     const auth = getAuth();
     const uid = auth.currentUser.uid;
     Cookies.remove(btoa(uid));
+    history.push("/auth/sign-in");
     await signOut(auth);
   };
 

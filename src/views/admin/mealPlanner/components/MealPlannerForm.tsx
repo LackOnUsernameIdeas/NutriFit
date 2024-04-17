@@ -227,19 +227,21 @@ export default function MealPlannerForm(props: {
     Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
     Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
     Форматирай ЦЯЛАТА информация във валиден JSON точно така: 
-    "'breakfast':{
-        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-      },
-      'lunch':{
-        'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-        'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-      }, 
-      'dinner':{
-        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
-        'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
-      }", като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
-    Съобрази се с подадената структура когато връщаш твоя отговор и където пише number, НЕ връщай string! Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
+    {
+    "breakfast":{
+      "main":{"name":"string","totals":{"calories":number,"protein":number,"fat":number,"carbohydrates":number,"grams":number}, "ingredients":["quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient"...], "instructions":["1.string","2.string","3.string","4.string"...], "recipeQuantity": number (in grams)}
+    },
+    "lunch":{
+      "appetizer":{"name":"string","totals":{"calories":number,"protein":number,"fat":number,"carbohydrates":number,"grams":number}, "ingredients":["quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient"...], "instructions":["1.string","2.string","3.string","4.string"...], "recipeQuantity": number (in grams)}, 
+      "main":{"name":"string","totals":{"calories":number,"protein":number,"fat":number,"carbohydrates":number,"grams":number}, "ingredients":["quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient"...], "instructions":["1.string","2.string","3.string","4.string"...], "recipeQuantity": number (in grams)}, 
+      "dessert":{"name":"string","totals":{"calories":number,"protein":number,"fat":number,"carbohydrates":number,"grams":number}, "ingredients":["quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient"...], "instructions":["1.string","2.string","3.string","4.string"...], "recipeQuantity": number (in grams)}
+    }, 
+    "dinner":{
+      "main":{"name":"string","totals":{"calories":number,"protein":number,"fat":number,"carbohydrates":number,"grams":number}, "ingredients":["quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient"...], "instructions":["1.string","2.string","3.string","4.string"...], "recipeQuantity": number (in grams)}, 
+      "dessert":{"name":"string","totals":{"calories":number,"protein":number,"fat":number,"carbohydrates":number,"grams":number}, "ingredients":["quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient","quantity ingredient"...], "instructions":["1.string","2.string","3.string","4.string"...], "recipeQuantity": number (in grams)}
+    },
+    } като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК, ТОВА ВКЛЮЧВА: "breakfast", "lunch", "dinner", "appetizer", "main", "dessert", "name", "ingredients" и "instructions"!!!). 
+    Съобрази се с подадената структура когато връщаш твоя отговор и където пише number, НЕ връщай string! Не добавяй излишни кавички или думи, JSON формата трябва да е валиден за JavaScript JSON.parse(). 
     Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
     Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
     Името на ястието трябва да е ЗАДЪЛЖИТЕЛНО на български, а не на искапнски или друг език.`;
@@ -249,6 +251,7 @@ export default function MealPlannerForm(props: {
   const generatePlanWithOpenAI = async () => {
     try {
       setIsSubmitted(true);
+      setRequestFailed(false);
       setIsPlanGeneratedWithOpenAI(true);
       setIsPlanGeneratedWithGemini(false);
       setIsLoading(true);
@@ -480,11 +483,11 @@ export default function MealPlannerForm(props: {
   const generatePlanWithGemini = async () => {
     try {
       setIsSubmitted(true);
+      setRequestFailed(false);
       setIsPlanGeneratedWithGemini(true);
       setIsPlanGeneratedWithOpenAI(false);
       setIsLoading(true);
       console.log("PROMPT --->", prompt);
-      // Make a request to your backend endpoint to generate a response
       const response = await fetch(
         "https://nutri-api.noit.eu/geminiGenerateResponse",
         {
@@ -493,11 +496,10 @@ export default function MealPlannerForm(props: {
             "Content-Type": "application/json",
             "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
           },
-          body: JSON.stringify({ text: prompt }) // Send the prompt as the text in the request body
+          body: JSON.stringify({ text: prompt })
         }
       );
 
-      // Parse the response from the backend
       const responseData = await response.json();
       const responseJson = responseData.aiResponse;
       console.log("Response from backend:", responseJson);
@@ -505,6 +507,7 @@ export default function MealPlannerForm(props: {
       const stringToRepair = responseJson
         .replace(/^```json([\s\S]*?)```$/, "$1")
         .replace(/^```JSON([\s\S]*?)```$/, "$1")
+        .replace(/^```([\s\S]*?)```$/, "$1")
         .replace(/^'|'$/g, "")
         .trim();
       let jsonObject;
@@ -517,7 +520,6 @@ export default function MealPlannerForm(props: {
         throw new Error("Invalid JSON response from the server");
       }
       console.log("1");
-      // Check if the parsed JSON is in the expected format
       if (!isValidJson(jsonObject)) {
         throw new Error("Invalid JSON structure");
       }
@@ -551,9 +553,8 @@ export default function MealPlannerForm(props: {
           dessert: ""
         }
       };
-      const updatedMealPlanImagesData: any = {}; // Initialize a variable to hold updated meal plan images data
+      const updatedMealPlanImagesData: any = {};
       const updatedMealPlan: any = {};
-      // Iterate over each meal and make a separate image generation request
       for (const mealKey of Object.keys(jsonObject)) {
         if (mealKey !== "totals") {
           console.log("3");
