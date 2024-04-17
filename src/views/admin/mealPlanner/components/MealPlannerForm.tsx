@@ -244,7 +244,8 @@ export default function MealPlannerForm(props: {
     Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
     Името на ястието трябва да е ЗАДЪЛЖИТЕЛНО на български, а не на искапнски или друг език.`;
 
-  const openAIKey = process.env.REACT_APP_API_KEY;
+  // Hosting: REACT_APP_API_KEY_HOSTING
+  const openAIKey = process.env.REACT_APP_API_KEY_HOSTING;
   const generatePlanWithOpenAI = async () => {
     try {
       setIsSubmitted(true);
@@ -261,7 +262,6 @@ export default function MealPlannerForm(props: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${openAIKey}`
           },
-          // Hosting: REACT_APP_API_KEY_HOSTING
           body: JSON.stringify({
             model: "gpt-4-0125-preview",
             messages: [
