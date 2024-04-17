@@ -756,8 +756,7 @@ export default function MealPlannerForm(props: {
                         generatePlanWithGemini={generatePlanWithGemini}
                       />
                     </SimpleGrid>
-                    {(mealPlan.lunch !== null && mealPlan.dinner !== null) ||
-                    requestFailed == false ? (
+                    {mealPlan.dinner !== null && requestFailed == false ? (
                       <Flex justify="center" w="100%" mb="5px">
                         <SimpleGrid
                           columns={{ base: 1, md: 1, xl: 1 }}
