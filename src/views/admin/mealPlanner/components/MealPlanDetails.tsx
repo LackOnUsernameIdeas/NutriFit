@@ -263,6 +263,8 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
       case "Crema Catalana":
       case "Crema catalana":
         return "Каталунски крем";
+      case "Ягодов сорбет":
+        return "Ягодово сорбе";
       default:
         return mealName;
     }
