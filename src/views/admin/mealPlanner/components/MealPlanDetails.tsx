@@ -258,6 +258,16 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
     calculateTotalsData();
   }, [mealPlan]);
 
+  const checkName = (mealName: string) => {
+    switch (mealName) {
+      case "Crema Catalana":
+      case "Crema catalana":
+        return "Каталунски крем";
+      default:
+        return mealName;
+    }
+  };
+
   return (
     <FadeInWrapper>
       {errorMessage !== "" ? (
@@ -285,8 +295,15 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 if (mealType === "breakfast") {
                   const meal = (mealPlan as any)[mealType];
                   const appetizer = meal.appetizer ? meal.appetizer : "none";
+                  let appetizerName = checkName(
+                    appetizer?.name || "Няма рецепта"
+                  );
+
                   const main = meal.main;
+                  let mainName = checkName(main?.name || "Няма рецепта");
+
                   const dessert = meal.dessert ? meal.dessert : "none";
+                  let dessertName = checkName(dessert?.name || "Няма рецепта");
 
                   console.log("meal:", mealType, meal);
                   return (
@@ -307,7 +324,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   overflow="hidden"
                                 >
                                   <Tooltip
-                                    label={appetizer?.name}
+                                    label={appetizerName}
                                     borderRadius="10px"
                                   >
                                     <Text
@@ -331,7 +348,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }
                                       textAlign="center"
                                     >
-                                      {appetizer?.name || "Няма рецепта"}
+                                      {appetizerName}
                                     </Text>
                                   </Tooltip>
                                 </Flex>
@@ -518,7 +535,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <RecipeWidget
                             name={
                               <Flex justify="center" w="100%" overflow="hidden">
-                                <Tooltip label={main?.name} borderRadius="10px">
+                                <Tooltip label={mainName} borderRadius="10px">
                                   <Text
                                     fontSize="2xl"
                                     whiteSpace={{
@@ -538,7 +555,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     textOverflow={!isSmallScreen && "ellipsis"}
                                     textAlign="center"
                                   >
-                                    {main?.name || "Няма рецепта"}
+                                    {mainName}
                                   </Text>
                                 </Tooltip>
                               </Flex>
@@ -729,7 +746,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   overflow="hidden"
                                 >
                                   <Tooltip
-                                    label={dessert?.name}
+                                    label={dessertName}
                                     borderRadius="10px"
                                   >
                                     <Text
@@ -753,7 +770,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }
                                       textAlign="center"
                                     >
-                                      {dessert?.name || "Няма рецепта"}
+                                      {dessertName}
                                     </Text>
                                   </Tooltip>
                                 </Flex>
@@ -974,8 +991,13 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 if (mealType === "lunch") {
                   const meal = (mealPlan as any)[mealType];
                   const appetizer = meal.appetizer ? meal.appetizer : "none";
+                  let appetizerName = checkName(appetizer.name);
+
                   const main = meal.main;
+                  let mainName = checkName(main.name);
+
                   const dessert = meal.dessert ? meal.dessert : "none";
+                  let dessertName = checkName(dessert.name);
 
                   console.log("meal:", mealType, meal);
                   return (
@@ -996,7 +1018,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   overflow="hidden"
                                 >
                                   <Tooltip
-                                    label={appetizer?.name}
+                                    label={appetizerName}
                                     borderRadius="10px"
                                   >
                                     <Text
@@ -1020,7 +1042,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }
                                       textAlign="center"
                                     >
-                                      {appetizer?.name || "Няма рецепта"}
+                                      {appetizerName}
                                     </Text>
                                   </Tooltip>
                                 </Flex>
@@ -1207,7 +1229,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <RecipeWidget
                             name={
                               <Flex justify="center" w="100%" overflow="hidden">
-                                <Tooltip label={main?.name} borderRadius="10px">
+                                <Tooltip label={mainName} borderRadius="10px">
                                   <Text
                                     fontSize="2xl"
                                     whiteSpace={{
@@ -1227,7 +1249,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     textOverflow={!isSmallScreen && "ellipsis"}
                                     textAlign="center"
                                   >
-                                    {main?.name || "Няма рецепта"}
+                                    {mainName}
                                   </Text>
                                 </Tooltip>
                               </Flex>
@@ -1418,7 +1440,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   overflow="hidden"
                                 >
                                   <Tooltip
-                                    label={dessert?.name}
+                                    label={dessertName}
                                     borderRadius="10px"
                                   >
                                     <Text
@@ -1442,7 +1464,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }
                                       textAlign="center"
                                     >
-                                      {dessert?.name || "Няма рецепта"}
+                                      {dessertName}
                                     </Text>
                                   </Tooltip>
                                 </Flex>
@@ -1653,8 +1675,13 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                 if (mealType === "dinner") {
                   const meal = (mealPlan as any)[mealType];
                   const appetizer = meal.appetizer ? meal.appetizer : "none";
+                  let appetizerName = checkName(appetizer.name);
+
                   const main = meal.main;
+                  let mainName = checkName(main.name);
+
                   const dessert = meal.dessert ? meal.dessert : "none";
+                  let dessertName = checkName(dessert.name);
 
                   console.log("meal:", mealType, meal);
                   return (
@@ -1675,7 +1702,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   overflow="hidden"
                                 >
                                   <Tooltip
-                                    label={appetizer?.name}
+                                    label={appetizerName}
                                     borderRadius="10px"
                                   >
                                     <Text
@@ -1699,7 +1726,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }
                                       textAlign="center"
                                     >
-                                      {appetizer?.name || "Няма рецепта"}
+                                      {appetizerName}
                                     </Text>
                                   </Tooltip>
                                 </Flex>
@@ -1886,7 +1913,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                           <RecipeWidget
                             name={
                               <Flex justify="center" w="100%" overflow="hidden">
-                                <Tooltip label={main?.name} borderRadius="10px">
+                                <Tooltip label={mainName} borderRadius="10px">
                                   <Text
                                     fontSize="2xl"
                                     whiteSpace={{
@@ -1906,7 +1933,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                     textOverflow={!isSmallScreen && "ellipsis"}
                                     textAlign="center"
                                   >
-                                    {main?.name || "Няма рецепта"}
+                                    {mainName}
                                   </Text>
                                 </Tooltip>
                               </Flex>
@@ -2097,7 +2124,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                   overflow="hidden"
                                 >
                                   <Tooltip
-                                    label={dessert?.name}
+                                    label={dessertName}
                                     borderRadius="10px"
                                   >
                                     <Text
@@ -2121,7 +2148,7 @@ const MealPlanDetails: React.FC<MealPlanDetailsProps> = ({
                                       }
                                       textAlign="center"
                                     >
-                                      {dessert?.name || "Няма рецепта"}
+                                      {dessertName}
                                     </Text>
                                   </Tooltip>
                                 </Flex>
