@@ -25,6 +25,7 @@ import TopCarbsMeals from "views/admin/topCarbsMeals";
 import SignInCentered from "views/auth/signIn";
 import SignUpCentered from "views/auth/signUp";
 import ForgotPass from "views/auth/forgotPass";
+import EULA from "views/auth/eula";
 
 import Landing from "views/landing";
 
@@ -168,6 +169,14 @@ const routes: RoutesType[] = [
     path: "/sign-up",
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: SignUpCentered,
+    hideInSidebar: true
+  },
+  {
+    name: "Условия за регистриране на потребител",
+    layout: "/auth",
+    path: "/eula",
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: EULA,
     hideInSidebar: true
   },
   {

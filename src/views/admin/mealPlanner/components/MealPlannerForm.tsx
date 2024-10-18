@@ -203,6 +203,59 @@ export default function MealPlannerForm(props: {
     Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. Давай винаги нови и вкусни храни, така че винаги да се създаде уникално и разнообразно меню.
     Експортирайте в JSON ТОЧНО КАТО ПРЕДОСТАВЕНАТА СТРУКТУРА в съдържанието на този заявка, без да добавяте 'json' ключова дума с обратни кавички. 
     Отговорът трябва да бъде чист JSON, нищо друго. Това означава, че вашият отговор не трябва да започва с 'json*backticks*{data}*backticks*' или '*backticks*{data}*backticks*'.
+    Създайте ми дневно меню с ниско съдържание на мазнини, включващо едно ястие за закуска, три за обяд (третото трябва да е десерт) и две за вечеря (второто да бъде десерт). 
+    Менюто трябва стриктно да спазва следните лимити: да съдържа ${
+      userPreferences.Calories
+    } калории, ${userPreferences.Protein} грама протеин, ${
+    userPreferences.Fat
+  } грама мазнини и ${userPreferences.Carbohydrates} грама въглехидрати. 
+    НЕ Предоставяйте храни, които накрая имат значително по-малко количество калории, въглехидрати, протеин и мазнини в сравнение с посочените общи лимити (${
+      userPreferences.Calories
+    } калории, ${userPreferences.Protein} грама протеин, ${
+    userPreferences.Fat
+  } грама мазнини и ${
+    userPreferences.Carbohydrates
+  } грама въглехидрати) и НИКОГА, АБСОЛЮТНО НИКОГА не давай хранителен план, чийто сумирани стойности са с отклонение от лимитите на потребителя - 100 калории, 10 грама протеини, 20 грама въглехидрати, 10 грама мазнини. ДАВАЙ ВСЕКИ ПЪТ РАЗЛИЧНИ храни, а не еднакви или измислени рецепти.
+    Включвай само съществуващи в реалния свят храни в хранителния план. Предоставете точни мерки и точни стойности за калории, протеин, въглехидрати и мазнини за закуска, обяд, вечеря и общо. Включете само реалистични храни за консумация. 
+    Подсигури рецепти за приготвянето на храните и нужните продукти(съставки) към всяко едно ястие. Направи рецептите и съставките, така че да се получи накрая точното количество, което ще се яде, не повече от това.
+    Имената на храните трябва да бъдат адекватно преведени и написани на български език и да са реални ястия за консумация. 
+    ${
+      userPreferences.Exclude &&
+      `Добави всички останали условия към менюто, но се увери, че избягваш стриктно да включваш следните елементи в менюто на храните: ${userPreferences.Exclude}. 
+      Съобрази се с начина на приготвяне и рецептите вече като имаш в предвид какво НЕ ТРЯБВА да се включва.`
+    }
+    Имената на храните трябва да са адекватно преведени и написани, така че да са съществуващи храни. 
+    Форматирай общата информацията за калориите, протеина, въглехидратите и мазнините по следния начин И ВНИМАВАЙ ТЯ ДА НЕ Е РАЗЛИЧНА ОТ ОБЩАТА СТОЙНОСТ НА КАЛОРИИТЕ, ВЪГЛЕХИДРАТИТЕ, ПРОТЕИНА И МАЗНИНИТЕ НА ЯСТИЯТА: 'totals: {'calories': number,'protein': number,'fat': number,'carbohydrates': number,'grams':number}'. 
+    Форматирай ЦЯЛАТА информация във валиден JSON точно така: 
+    "'breakfast':{
+        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+      },
+      'lunch':{
+        'appetizer':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+        'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+      }, 
+      'dinner':{
+        'main':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}, 
+        'dessert':{'name':'string','totals':{'calories':number,'protein':number,'fat':number,'carbohydrates':number,'grams':number}, 'ingredients':['quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient','quantity ingredient'...], 'instructions':['1.string','2.string','3.string','4.string'...], 'recipeQuantity': number (in grams)}
+      }", като не превеждаш имената на нито едно property (ТЕ ТРЯБВА ДА СА САМО НА АНГЛИЙСКИ ЕЗИК). 
+    Съобрази се с подадената структура когато връщаш твоя отговор и където пише number, НЕ връщай string! Не добавяй излишни кавички или думи, JSON формата трябва да е валиден. 
+    Преведи САМО стойностите на БЪЛГАРСКИ, без нито едно property. Те трябва ЗАДЪЛЖИТЕЛНО да са на английски. 
+    Грамажът на ястията е ЗАДЪЛЖИТЕЛНА стойност, която НЕ трябва да е повече от 500 грама. Не включвай грамажа в името на ястието, а го дай САМО като стойност в totals. 
+    Името на ястието трябва да е ЗАДЪЛЖИТЕЛНО на български, а не на искапнски или друг език.`;
+
+  const promptGemini = `Вие сте опитен диетолог, който наблюдава пациентите да консумират само ядлива и традиционна храна от
+  ${cuisinePhrase} кухня/кухни (${promptCuisine}). Фокусирайте се върху създаването на ТОЧЕН, разнообразен и вкусен дневен хранителен план, съставен от следните ограничения: калории (${
+    userPreferences.Calories
+  }), протеин (${userPreferences.Protein}), мазнини (${
+    userPreferences.Fat
+  }) и въглехидрати (${
+    userPreferences.Carbohydrates
+  }). Никога не превишавайте или намалявайте предоставените лимити и се УВЕРЕТЕ, че калориите и мазнините ВИНАГИ са същите като предоставените лимити. 
+    Осигурете точността на количествата, като същевременно се придържате към лимитите. 
+    Уверете се, че предоставените от вас хранения се различават от тези, които сте предоставили в предишни заявки. Давай винаги нови и вкусни храни, така че винаги да се създаде уникално и разнообразно меню.
+    Експортирайте в JSON ТОЧНО КАТО ПРЕДОСТАВЕНАТА СТРУКТУРА в съдържанието на този заявка, без да добавяте 'json' ключова дума с обратни кавички. 
+    Отговорът трябва да бъде чист JSON, нищо друго. Това означава, че вашият отговор не трябва да започва с 'json*backticks*{data}*backticks*' или '*backticks*{data}*backticks*'.
     Създайте ми дневно меню с ниско съдържание на мазнини, включващо САМО ЕДНО ястие за закуска, ТРИ за обяд (третото трябва да е десерт) и ДВЕ за вечеря (второто да бъде десерт). 
     Менюто трябва стриктно да спазва следните лимити: да съдържа ${
       userPreferences.Calories
@@ -359,13 +412,13 @@ export default function MealPlannerForm(props: {
         async function fetchImage(name: string): Promise<any> {
           try {
             let response = await fetch(
-              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBGskRKof9dkcoXtReamm4-h7UorF1G7yM&cx=10030740e88c842af&q=${encodeURIComponent(
+              `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyAefnCBUG8640RF8b2pd1cWyS6ZBXBXIeQ&cx=10030740e88c842af&q=${encodeURIComponent(
                 name
               )}&searchType=image`
             );
             if (response.status === 429) {
               let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBpwC_IdPQ2u-16x_9QwoqJDu-zMhuFKxs&cx=258e213112b4b4492&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyB27VKeq5GAyeI0mNSZprT9nY0ttgkXnFI&cx=258e213112b4b4492&q=${encodeURIComponent(
                   name
                 )}&searchType=image`
               );
@@ -497,7 +550,7 @@ export default function MealPlannerForm(props: {
             "Content-Type": "application/json",
             "x-api-key": "349f35fa-fafc-41b9-89ed-ff19addc3494"
           },
-          body: JSON.stringify({ text: prompt })
+          body: JSON.stringify({ text: promptGemini })
         }
       );
 
@@ -520,13 +573,11 @@ export default function MealPlannerForm(props: {
       } catch (parseError) {
         throw new Error("Invalid JSON response from the server");
       }
-      console.log("1");
       if (!isValidJson(jsonObject)) {
         throw new Error("Invalid JSON structure");
       }
 
       console.log("jsonObject: ", jsonObject);
-      console.log("2");
       const mealPlanImagesData: {
         breakfast: {
           main: string;
@@ -558,7 +609,6 @@ export default function MealPlannerForm(props: {
       const updatedMealPlan: any = {};
       for (const mealKey of Object.keys(jsonObject)) {
         if (mealKey !== "totals") {
-          console.log("3");
           const mealAppetizer = (jsonObject as any)[mealKey].appetizer;
           const mealMain = (jsonObject as any)[mealKey].main;
           const mealDessert = (jsonObject as any)[mealKey].dessert;
@@ -573,13 +623,13 @@ export default function MealPlannerForm(props: {
           async function fetchImage(name: string): Promise<any> {
             try {
               let response = await fetch(
-                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyDqUez1TEmLSgZAvIaMkWfsq9rSm0kDjIw&cx=10030740e88c842af&q=${encodeURIComponent(
+                `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyAefnCBUG8640RF8b2pd1cWyS6ZBXBXIeQ&cx=10030740e88c842af&q=${encodeURIComponent(
                   name
                 )}&searchType=image`
               );
               if (response.status === 429) {
                 let response = await fetch(
-                  `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyBQMvBehFDpwqhNc9_q-lIfPh8O2xdQ1Mc&cx=258e213112b4b4492&q=${encodeURIComponent(
+                  `https://customsearch.googleapis.com/customsearch/v1?key=AIzaSyB27VKeq5GAyeI0mNSZprT9nY0ttgkXnFI&cx=258e213112b4b4492&q=${encodeURIComponent(
                     name
                   )}&searchType=image`
                 );
@@ -592,23 +642,18 @@ export default function MealPlannerForm(props: {
               return null;
             }
           }
-          console.log("4");
           const imageAppetizer =
             mealKey === "lunch" ? await fetchImage(mealAppetizer.name) : null;
-          console.log("5");
           const imageMain = await fetchImage(mealMain.name);
-          console.log("6");
           const imageDessert =
             mealKey === "lunch" || mealKey === "dinner"
               ? await fetchImage(mealDessert.name)
               : null;
-          console.log("7");
           const imageAppetizerResponseData =
             imageAppetizer !== null ? await imageAppetizer.json() : null;
           const imageMainResponseData = await imageMain.json();
           const imageDessertResponseData =
             imageDessert !== null ? await imageDessert.json() : null;
-          console.log("8");
           // Check if the response data is not null and has items array
           if (
             imageAppetizerResponseData !== null &&
@@ -619,7 +664,6 @@ export default function MealPlannerForm(props: {
             (mealPlanImagesData as any)[mealKey].appetizer =
               imageAppetizerResponseData?.items[0]?.link;
           }
-          console.log("9");
           if (
             imageDessertResponseData !== null &&
             Array.isArray(imageDessertResponseData.items) &&
@@ -629,30 +673,25 @@ export default function MealPlannerForm(props: {
             (mealPlanImagesData as any)[mealKey].dessert =
               imageDessertResponseData?.items[0]?.link;
           }
-          console.log("10");
           updatedMealPlanImagesData[mealKey] = {
             appetizer: imageAppetizerResponseData?.items?.[0]?.link || "",
             main: imageMainResponseData?.items?.[0]?.link || "", // Add a null check before accessing items
             dessert: imageDessertResponseData?.items?.[0]?.link || ""
           };
-          console.log("10.5");
           // Set updated meal plan
           updatedMealPlan[mealKey] = {
             appetizer: jsonObject[mealKey].appetizer,
             main: jsonObject[mealKey].main,
             dessert: jsonObject[mealKey].dessert
           };
-          console.log("10.8");
         }
       }
-      console.log("11");
       setMealPlanImages(updatedMealPlanImagesData);
       setMealPlan({
         breakfast: updatedMealPlan.breakfast,
         lunch: updatedMealPlan.lunch,
         dinner: updatedMealPlan.dinner
       });
-      console.log("12");
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);

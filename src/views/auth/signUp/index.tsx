@@ -25,7 +25,8 @@ import {
   RadioGroup,
   Radio,
   HStack,
-  useColorMode
+  useColorMode,
+  Checkbox
 } from "@chakra-ui/react";
 import { Global } from "@emotion/react";
 // Custom components
@@ -54,11 +55,19 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [gender, setGender] = useState<"male" | "female">("male");
+  const [eulaChecked, setEulaChecked] = useState(false);
 
   const handleSignUp = async () => {
     try {
       if (!passwordsMatch) {
-        setError("Passwords do not match");
+        setError("Паролите не съвпадат");
+        return;
+      }
+
+      if (!eulaChecked) {
+        setError(
+          "Трябва да се съгласите с условията, преди да се регистрирате."
+        );
         return;
       }
 
@@ -78,7 +87,7 @@ function SignUp() {
             history.push("/measurements/userData");
             setError("");
           } else {
-            setError("Unable to retrieve user token");
+            setError("Не успяхме да вземем вашия потребителски token.");
           }
         });
       });
@@ -126,7 +135,7 @@ function SignUp() {
       setPasswordsMatch(true);
       setError("");
     } else {
-      setError("Passwords do not match");
+      setError("Паролите не съвпадат");
       setPasswordsMatch(false);
     }
   }, [password1, password2]);
@@ -275,6 +284,26 @@ function SignUp() {
                     <Radio value="female">Жена</Radio>
                   </HStack>
                 </RadioGroup>
+              </Flex>
+              <Flex align="center" mb="24px">
+                <Checkbox
+                  isChecked={eulaChecked}
+                  onChange={(e) => setEulaChecked(e.target.checked)}
+                  size="lg"
+                  mr="10px" // Adds margin to the right for spacing
+                />
+                <Text
+                  fontSize="sm"
+                  color={textColor}
+                  fontWeight="400"
+                  _hover={{ textDecoration: "underline", cursor: "pointer" }} // Add hover effect
+                  onClick={() => {
+                    // Redirect to EULA page
+                    history.push("/auth/EULA");
+                  }}
+                >
+                  Потвърждавам, че прочетох и съм съгласен с условията.
+                </Text>
               </Flex>
               <Button
                 onClick={handleSignUp}
